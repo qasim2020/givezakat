@@ -1,0 +1,30 @@
+{
+  "name": "givezakat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Miscellaneous-Pk/givezakat.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Miscellaneous-Pk/givezakat/issues"
+  },
+  "homepage": "https://github.com/Miscellaneous-Pk/givezakat#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "cloudinary": "^1.13.2",
+    "express": "^4.16.4",
+    "hbs": "^4.0.1",
+    "jsonwebtoken": "^8.4.0",
+    "lodash": "^4.17.11",
+    "mongoose": "^5.4.8",
+    "nodemailer": "^5.1.1"
+  }
+}
