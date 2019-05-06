@@ -17,7 +17,7 @@
       .jumbotron {
         height: 100vh;
         margin-bottom: 0rem !important;
-        background-image: url(https://images.unsplash.com/photo-1529520161780-2573a0926b31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80);
+        background: url(https://images.unsplash.com/photo-1529520161780-2573a0926b31?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1500&q=80) no-repeat center center fixed;
         background-size: cover;
         padding-top: 6rem;
       }
@@ -26,18 +26,27 @@
         padding: 0px;
         margin: 0px;
       }
+
+      @media(max-width:767px){
+
+        .jumbotron {
+          height: auto;
+        }
+
+      }
+
     </style>
 
     <title>giveZakat</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Navbar</a>
+  <a class="navbar-brand" href="#">Give zakat</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNav">
-    <ul class="navbar-nav">
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item active">
         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
       </li>
@@ -47,24 +56,34 @@
       <li class="nav-item">
         <a class="nav-link" href="#">Pricing</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-      </li>
     </ul>
   </div>
 </nav>
 
-<div class="jumbotron d-flex align-items-start flex-column text-light ">
+<div class="jumbotron d-md-flex align-items-start justify-content-center flex-column text-light ">
   <!-- <img src="https://images.unsplash.com/photo-1468421870903-4df1664ac249?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1778&q=80" alt=""> -->
-  <h1 class="display-3 w-100">Hello World!</h1>
-  <p class="lead">give zakat to people who are really in need.</p>
+  <h1 class="display-md-1 display-4 w-100">Give to people who are really in need !</h1>
   <div class="w-25">
   <hr class="my-4 bg-light">
   </div>
 
-  <p>I am managing a crowd sourced (list updated by real people) of people who needs help followed by on ground verification. You can participate and we will uplift somebody's life.</p>
-  <button class="btn btn-primary btn-lg" role="button">Learn more</button>
+  <p class="lead">I am managing a crowd sourced (list updated by real people) of people who needs help followed by on ground verification. You can participate and we will uplift somebody's life.</p>
+
+
+  <h4>Funding:</h4>
+  <div class="progress mb-4 w-md-75 w-100" style="height: 20px;">
+    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <h4>People helped:</h4>
+  <div class="progress mb-4 w-md-75 w-100" style="height: 20px;">
+    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <button class="btn btn-warning btn-lg" role="button">Learn more</button>
 </div>
+
+
 
 
     <!-- Optional JavaScript -->
