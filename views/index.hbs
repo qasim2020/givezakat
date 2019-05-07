@@ -27,10 +27,27 @@
         margin: 0px;
       }
 
+      .people {
+        /* height: 50vh; */
+      }
+
+      .table {
+        border-radius: 2px;
+      }
+
+      .status-circle {
+        width: 44px;
+        height: 44px;
+      }
+
       @media(max-width:767px){
 
         .jumbotron {
           height: auto;
+        }
+
+        .people {
+          margin-top: 4rem;
         }
 
       }
@@ -60,27 +77,66 @@
   </div>
 </nav>
 
-<div class="jumbotron d-md-flex align-items-start justify-content-center flex-column text-light ">
-  <!-- <img src="https://images.unsplash.com/photo-1468421870903-4df1664ac249?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1778&q=80" alt=""> -->
-  <h1 class="display-md-1 display-4 w-100">Give to people who are really in need !</h1>
-  <div class="w-25">
-  <hr class="my-4 bg-light">
+<div class="jumbotron d-flex align-items-center justify-content-center flex-wrap text-light ">
+
+  <div class="col-lg-6 col-12 flex-column">
+    <h1 class="display-md-1 display-4 w-100">Give to people who are really in need !</h1>
+    <div class="w-25">
+    <hr class="my-4 bg-light">
+    </div>
+
+    <p class="lead">I am managing a crowd sourced (list updated by real people) of people who needs help followed by on ground verification. You can participate and we will uplift somebody's life.</p>
+
+
+    <h4>Funding:</h4>
+    <div class="progress mb-4 w-75" style="height: 20px;">
+      <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <h4>People helped:</h4>
+    <div class="progress mb-4 w-75" style="height: 20px;">
+      <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+    </div>
+
+    <button class="btn btn-warning btn-lg" role="button">Learn more</button>
   </div>
 
-  <p class="lead">I am managing a crowd sourced (list updated by real people) of people who needs help followed by on ground verification. You can participate and we will uplift somebody's life.</p>
+  <div class="people col-lg-6 col-12">
+    <table class="col-lg-6 col-12 table p-2 table-bordered bg-light mx-auto">
+      <tbody>
+        <tr>
+          <th scope="row" rowspan="2"> <h3>&#9996;</h3> </th>
+          <td>Irshad Ahmed <br>
+              5x Members in a family<br>
+              Earning Rs 24000/- per month </td>
+        </tr>
+        <tr>
+          <td class="text-left"> <small> <b>Status:</b> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small> </td>
+        </tr>
 
+        <tr>
+          <th scope="row" rowspan="2"> <h3>&#9994;</h3> </th>
+          <td>Hamayun Saeed <br>
+              10x Members in a family<br>
+              Earning Rs 14000/- per month </td>
+        </tr>
+        <tr>
+          <td class="text-left"> <small> <b>Status:</b> Pending money collection</small> </td>
+        </tr>
 
-  <h4>Funding:</h4>
-  <div class="progress mb-4 w-md-75 w-100" style="height: 20px;">
-    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+        <tr>
+          <th scope="row" rowspan="2" class=""> <h3>&#9995;</h3> </th>
+          <td>Abrar Saeed <br>
+              20x Members in a family<br>
+              Earning Rs 24000/- per month </td>
+        </tr>
+        <tr>
+          <td class="text-left"> <small> <b>Status:</b> Ration Order parked at nearby CSD</small> </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 
-  <h4>People helped:</h4>
-  <div class="progress mb-4 w-md-75 w-100" style="height: 20px;">
-    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-  </div>
-
-  <button class="btn btn-warning btn-lg" role="button">Learn more</button>
 </div>
 
 
