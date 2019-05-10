@@ -18,6 +18,13 @@ app.get('/',(req,res) => {
   // res.render('main.hbs');
 });
 
+app.get('/home',(req,res) => {
+  console.log('logged in');
+  res.render('home.hbs');
+  // res.render('main.hbs');
+});
+
+
 app.listen(port, () => {
   console.log(`listening on port ${port}...`);
 })
