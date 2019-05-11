@@ -11,8 +11,8 @@
     <style type="text/css">
       nav {
         /* position: absolute !important; */
-        top: 0px;
-        width: 100%;
+        /* top: 0px;
+        width: 100%; */
       }
 
       body {
@@ -41,32 +41,68 @@
             <a class="nav-link" href="/">Sign out</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Pricing</a>
+            <a class="nav-link" href="#">Cart</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" tabindex="-1" aria-disabled="true">Blog</a>
+            <a class="nav-link" href="#">Blog</a>
           </li>
         </ul>
       </div>
     </nav>
 
 
-    <div class="px-3 jumbotron jumbotron-fluid bg-light">
+    <div class="px-3 mt-4 jumbotron jumbotron-fluid bg-light">
       <h1 class="display-2 font-weight-lighter">Qasim</h1>
 
       <br>
-      <div class="d-flex">
-        <button type="button" class="btn btn-light shadow mr-3">
-          Delivered <span class="badge badge-light">423</span>
+      <div class="d-flex flex-wrap">
+        <button type="button" class="btn btn-light shadow mr-3 mb-3">
+          Delivered <span class="badge badge-success">423</span>
         </button>
-        <button type="button" class="btn btn-light shadow mr-3">
-          In progress <span class="badge badge-light">41</span>
+        <button type="button" class="btn btn-light shadow mr-3 mb-3">
+          In progress <span class="badge badge-primary">41</span>
         </button>
-        <button type="button" class="btn btn-light shadow mr-3">
-          Pending <span class="badge badge-light">24</span>
+        <button type="button" class="btn btn-light shadow mr-3 mb-3">
+          Pending <span class="badge badge-dark">24</span>
         </button>
       </div>
     </div>
+
+    <div class="d-flex justify-content-start">
+      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
+        <table class="table shadow table-bordered mx-auto my-0">
+          <tbody>
+
+            <tr>
+              <td><b>34.</b> <br> Irshad Ahmed <br>
+                  5x Members in a family<br>
+                  Earning Rs 24000/- per month </td>
+            </tr>
+            <tr class="">
+              <td class="text-left"> <b class="badge badge-success">Status:</b> <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small> </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
+        <table class="table shadow table-bordered mx-auto my-0">
+          <tbody>
+
+            <tr>
+              <th scope="row" rowspan="2" class="d-sm-block d-none text-center"> 4 </th>
+              <td>Irshad Ahmed <br>
+                  5x Members in a family<br>
+                  Earning Rs 24000/- per month </td>
+            </tr>
+            <tr class="">
+              <td class="text-left"> <b class="badge badge-dark">Status:</b> <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small> </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
 
 
 
