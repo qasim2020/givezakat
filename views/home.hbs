@@ -79,6 +79,18 @@
         border-radius: 50%;
       }
 
+      .bg-done {
+        background-color: #236d45;
+      }
+
+      .bg-inprogress {
+        background-color: #20548c;
+      }
+
+      .bg-pending {
+        background-color: #a02e38;
+      }
+
       @media(max-width:767px){
 
       }
@@ -90,7 +102,11 @@
   <body class="bg-light">
 
     <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light d-flex justify-content-between">
-      <a class="navbar-brand" href="#">Life for all</a>
+      <div class="brand">
+        <img src="/logo5.png" alt="" class="" style="height:44px">
+        <a class="navbar-brand" href="#">Life for all</a>
+      </div>
+
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -110,7 +126,7 @@
     </nav>
 
 
-    <div class="px-1 mt-4 jumbotron jumbotron-fluid bg-light">
+    <div class="px-1 mt-4 mb-0 pb-3 jumbotron jumbotron-fluid bg-light">
 
       <h1 class="px-2 display-2 font-weight-lighter">Qasim</h1>
 
@@ -125,52 +141,72 @@
         </div>
         <br>
         <div class="d-flex flex-wrap">
-          <button type="button" class="btn btn-light shadow mr-3 mb-3">
-            Delivered <span class="badge badge-success">423</span>
+          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 mb-3">
+            <span class="lead pr-2">Delivered</span>
+            <span class="badge bg-done text-light pt-1">423</span>
           </button>
-          <button type="button" class="btn btn-light shadow mr-3 mb-3">
-            In progress <span class="badge badge-primary">41</span>
+          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 mb-3">
+            <span class="lead pr-2">In progress</span>
+            <span class="badge bg-inprogress text-light pt-1">12</span>
           </button>
-          <button type="button" class="btn btn-light shadow mr-3 mb-3">
-            Pending <span class="badge badge-dark">24</span>
+          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 mb-3">
+            <span class="lead pr-2">Pending</span>
+            <span class="badge bg-pending text-light pt-1">23</span>
           </button>
         </div>
+
+        <span class="border rounded p-2 lead">Showing entire list of people.</span>
       </div>
 
     </div>
 
-    <div class="d-flex justify-content-start">
-      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
-        <table class="table shadow table-bordered mx-auto my-0">
-          <tbody>
-
-            <tr>
-              <td><b class="">34.</b> <br> Irshad Ahmed <br>
-                  5x Members in a family<br>
-                  Earning Rs 24000/- per month </td>
-            </tr>
-            <tr class="">
-              <td class="text-left"> <b class="badge badge-success">Status:</b> <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small> </td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="d-flex justify-content-start flex-wrap">
+      <div class="col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
+        <div class="shadow-lg bg-done text-light rounded">
+          <div class="p-2">
+            <b class="">34.</b> <br>
+            Irshad Ahmed <br>
+            5x Members in a family<br>
+            Earning Rs 24000/- per month
+          </div>
+          <hr class="my-1">
+          <div class="p-2">
+            <b class="badge badge-success">Status:</b>
+            <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small>
+          </div>
+        </div>
       </div>
 
       <div class="col-lg-3 col-md-4 col-6 rounded px-2">
-        <table class="table shadow table-bordered mx-auto my-0">
-          <tbody>
+        <div class="shadow bg-inprogress text-light rounded">
+          <div class="p-2">
+            <b class="">35.</b> <br>
+            Masood Ahmed <br>
+            51x Members in a family<br>
+            Earning Rs 24000/- per month
+          </div>
+          <hr class="my-1">
+          <div class="p-2">
+            <b class="badge badge-primary">Status:</b>
+            <small> Order parked at nearby CSD.</small>
+          </div>
+        </div>
+      </div>
 
-            <tr>
-              <th scope="row" rowspan="2" class="d-sm-block d-none text-center"> 4 </th>
-              <td>Irshad Ahmed <br>
-                  5x Members in a family<br>
-                  Earning Rs 24000/- per month </td>
-            </tr>
-            <tr class="">
-              <td class="text-left"> <b class="badge badge-dark">Status:</b> <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small> </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
+        <div class="shadow bg-pending text-light rounded">
+          <div class="p-2">
+            <b class="">3.</b> <br>
+            Iqbal Kareem <br>
+            51x Members in a family<br>
+            Earning Rs 23400/- per month
+          </div>
+          <hr class="my-1">
+          <div class="p-2">
+            <b class="badge badge-danger">Status:</b>
+            <small> Pending nomination.</small>
+          </div>
+        </div>
       </div>
     </div>
 
