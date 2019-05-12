@@ -131,25 +131,27 @@
       <h1 class="px-2 display-2 font-weight-lighter">Qasim</h1>
 
       <div class="p-2">
-        <div class="d-flex justify-content-start align-items-center mx-3 my-1">
-          <h4 class="">All</h4>
-          <label class="switch mx-3">
+        <button class="btn btn-light border d-flex align-items-center">
+          <span class="lead">Show list of</span>
+          <span class="pl-2 lead">all</span>
+          <label class="switch mx-3 my-0">
             <input type="checkbox">
             <span class="slider round"></span>
           </label>
-          <h4 class="text-muted">Only mine</h4>
-        </div>
-        <br>
-        <div class="d-flex flex-wrap">
-          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 mb-3">
+          <span class="pr-2 text-muted lead text-strike"> <s>tagged</s> </span>
+          <span class="lead">people.</span>
+        </button>
+
+        <div class="d-flex flex-wrap my-0 py-0">
+          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 my-2">
             <span class="lead pr-2">Delivered</span>
             <span class="badge bg-done text-light pt-1">423</span>
           </button>
-          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 mb-3">
+          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 my-2">
             <span class="lead pr-2">In progress</span>
             <span class="badge bg-inprogress text-light pt-1">12</span>
           </button>
-          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 mb-3">
+          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 my-2">
             <span class="lead pr-2">Pending</span>
             <span class="badge bg-pending text-light pt-1">23</span>
           </button>
