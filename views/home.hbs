@@ -20,6 +20,65 @@
         margin: 0px;
       }
 
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 30px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #212529;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 24px;
+        width: 24px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color: #28A745;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #28A745;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(30px);
+        -ms-transform: translateX(30px);
+        transform: translateX(30px);
+      }
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+
       @media(max-width:767px){
 
       }
@@ -51,21 +110,33 @@
     </nav>
 
 
-    <div class="px-3 mt-4 jumbotron jumbotron-fluid bg-light">
-      <h1 class="display-2 font-weight-lighter">Qasim</h1>
+    <div class="px-1 mt-4 jumbotron jumbotron-fluid bg-light">
 
-      <br>
-      <div class="d-flex flex-wrap">
-        <button type="button" class="btn btn-light shadow mr-3 mb-3">
-          Delivered <span class="badge badge-success">423</span>
-        </button>
-        <button type="button" class="btn btn-light shadow mr-3 mb-3">
-          In progress <span class="badge badge-primary">41</span>
-        </button>
-        <button type="button" class="btn btn-light shadow mr-3 mb-3">
-          Pending <span class="badge badge-dark">24</span>
-        </button>
+      <h1 class="px-2 display-2 font-weight-lighter">Qasim</h1>
+
+      <div class="p-2">
+        <div class="d-flex justify-content-start align-items-center mx-3 my-1">
+          <h4 class="">All</h4>
+          <label class="switch mx-3">
+            <input type="checkbox">
+            <span class="slider round"></span>
+          </label>
+          <h4 class="text-muted">Only mine</h4>
+        </div>
+        <br>
+        <div class="d-flex flex-wrap">
+          <button type="button" class="btn btn-light shadow mr-3 mb-3">
+            Delivered <span class="badge badge-success">423</span>
+          </button>
+          <button type="button" class="btn btn-light shadow mr-3 mb-3">
+            In progress <span class="badge badge-primary">41</span>
+          </button>
+          <button type="button" class="btn btn-light shadow mr-3 mb-3">
+            Pending <span class="badge badge-dark">24</span>
+          </button>
+        </div>
       </div>
+
     </div>
 
     <div class="d-flex justify-content-start">
@@ -74,7 +145,7 @@
           <tbody>
 
             <tr>
-              <td><b>34.</b> <br> Irshad Ahmed <br>
+              <td><b class="">34.</b> <br> Irshad Ahmed <br>
                   5x Members in a family<br>
                   Earning Rs 24000/- per month </td>
             </tr>
