@@ -103,6 +103,15 @@
         margin-top: 80px;
       }
 
+      .payment {
+        cursor: pointer;
+        background-color: #eab2b6 !important;
+      }
+
+      .payment:hover {
+        background-color: #82e096 !important;
+      }
+
       @media(max-width:767px){
 
       }
@@ -241,39 +250,86 @@
                   <th scope="row" class="text-danger">Status:</th>
                   <td colspan="2">Delivered!</td>
                 </tr>
-                <tr class="bg-light">
-                  <th colspan="2">Available methods to help:</th>
-                  <td colspan="1">
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="Western" id="Western" value="Western Union" checked>
-                      <label class="form-check-label" for="Western">Western Union / Online bank transfer</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="Western" id="Paypal" value="Western Union">
-                      <label class="form-check-label" for="Paypal">Paypal</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="Western" id="Stripe" value="Western Union">
-                      <label class="form-check-label" for="Stripe">Credit Card</label>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="bg-light">
-                  <th></th>
-                  <td></td>
-                  <td><button type="button" class="btn btn-success">Help</button></td>
-                </tr>
               </tbody>
             </table>
             <hr>
-            <h5>Western Union / Online bank transfer</h5>
-            <p><b>Note:</b> You can transfer online on following account number:-</p>
-            <b>Account title:</b> Qasim Ali and Iram Riaz <br>
-            <b>Account Number:</b> 09787638267 <br>
-            <b>International Banking Account Number (IBAN):</b> 89736482648291734 <br><br>
-            <p>After transferring amount please press 'Done' below.</p>
-            <button type="button" class="btn btn-outline-success" name="button">Done</button> <br>
-            <small>If you press 'Yes' middle man will be intimated over the text message about transanction. On receipt he will update the status and you will know the amount has been delivered.</small>
+            <div class="pl-2 pb-2">
+              <h5 class="text-danger">Payment options</h5>
+              <small >These payment options were included by Ahmed Iqbal (Middle Man). Click one below:-</small>
+            </div>
+            <div class="accordion" id="accordionExample">
+              <h5 class="pl-2 payment py-2 my-0" data-toggle="collapse" data-target="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Western Union / Online bank transfer</h5>
+              <div class="pl-2 collapse" id="collapseExample" data-parent="#accordionExample">
+                <p class="py-2">Please make a deposit on following account and press 'Done' below:-</p>
+                <ul class="pl-3 pb-0">
+                  <li><b>Account title:</b> Qasim Ali and Iram Riaz <br></li>
+                  <li><b>Account Number:</b> 09787638267 <br></li>
+                  <li class="pb-0"><b>International Banking Account Number (IBAN):</b> 89736482648291734 <br><br></li>
+                </ul>
+                <div class="text-center">
+                  <button type="button" class="btn btn-outline-success btn-block" name="button">Done</button>
+                </div>
+                <small class="text-left">Ahmed Iqbal (Middle Man) will be notified over a text message to update this status on reciept of payment.</small>
+                <hr>
+              </div>
+              <h5 class="pl-2 payment py-2 my-0" data-toggle="collapse" data-target="#collapseExample1" role="button" aria-expanded="false" aria-controls="collapseExample1">Paypal</h5>
+              <h5 class="pl-2 payment py-2 my-0" data-toggle="collapse" data-target="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">Credit Card</h5>
+              <div class="collapse pl-2 pt-2" id="collapseExample2" data-parent="#accordionExample">
+                <form action="/echo" method="post" novalidate="novalidate" class="needs-validation">
+                    <div class="form-group">
+                        <label for="cc-payment" class="control-label mb-1">Payment amount in USD</label>
+                        <input id="cc-payment" name="cc-payment" type="text" class="form-control" aria-required="true" aria-invalid="false" required value="100.00">
+                        <span class="invalid-feedback">Enter the payment amount</span>
+                    </div>
+                    <div class="form-group has-success">
+                        <label for="cc-name" class="control-label mb-1">Name on card</label>
+                        <input id="cc-name" name="cc-name" type="text" class="form-control cc-name" required autocomplete="cc-name" aria-required="true" aria-invalid="false" aria-describedby="cc-name-error">
+                        <span class="invalid-feedback">Enter the name as shown on credit card</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="cc-number" class="control-label mb-1">Card number</label>
+                        <input id="cc-number" name="cc-number" type="tel" class="form-control cc-number identified visa" required="" pattern="[0-9]{16}">
+                        <span class="invalid-feedback">Enter a valid 16 digit card number</span>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cc-exp" class="control-label mb-1">Expiration</label>
+                                <input id="cc-exp" name="cc-exp" type="tel" class="form-control cc-exp" required placeholder="MM / YY" autocomplete="cc-exp">
+                                <span class="invalid-feedback">Enter the expiration date</span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="x_card_code" class="control-label mb-1">Security code</label>
+                            <div class="input-group">
+                                <input id="x_card_code" name="x_card_code" type="tel" class="form-control cc-cvc" required autocomplete="off">
+                                <span class="invalid-feedback order-last">Enter the 3-digit code on back</span>
+                                <div class="input-group-append">
+                                    <div class="input-group-text">
+                                    <span class="fa fa-question-circle fa-lg" data-toggle="popover" data-container="body" data-html="true" data-title="Security Code"
+                                    data-content="<div class='text-center one-card'>The 3 digit code on back of the card..<div class='visa-mc-cvc-preview'></div></div>"
+                                    data-trigger="hover"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="x_zip" class="control-label mb-1">Postal code</label>
+                        <input id="x_zip" name="x_zip" type="text" class="form-control" value="" data-val="true" data-val-required="Please enter the ZIP/Postal code" autocomplete="postal-code">
+                        <span class="help-block" data-valmsg-for="x_zip" data-valmsg-replace="true"></span>
+                    </div>
+                    <div class="text-center">
+                        <button id="payment-button" type="submit" class="btn btn-outline-success btn-block">
+                            <span id="payment-button-amount">Pay</span>
+                            <span id="payment-button-sending" style="display:none;">Sending…</span>
+                        </button>
+                    </div>
+                </form>
+              </div>
+            </div>
+
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-success">Edit</button>
@@ -337,5 +393,11 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+      let ht = $(window).height();
+      console.log(ht);
+
+    </script>
   </body>
 </html>
