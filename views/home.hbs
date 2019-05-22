@@ -125,7 +125,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="#">Qasim</a>
+            <a class="nav-link active" href="#">Signed in as <b>Qasim</b></a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/">Sign out</a>
@@ -138,11 +138,10 @@
     </nav>
 
     <div class="mt-80 d-flex justify-content-start flex-wrap">
-      <div class="col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
+      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
         <div class="card bg-done text-light rounded" data-toggle="modal" data-target="#exampleModal">
-          <h6 class="p-2 pb-0"><img src="/resolved.svg" width="34px" height="34px" alt=""></h6>
-          <hr class="my-1">
           <div class="p-2">
+            <b class="">32.</b> <br>
             Irshad Ahmed <br>
             5x Members in a family<br>
             Earning Rs 24000/- per month
@@ -155,7 +154,7 @@
         </div>
       </div>
 
-      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
+      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2">
         <div class="card bg-inprogress text-light rounded" data-toggle="modal" data-target="#exampleModal2">
           <div class="p-2">
             <b class="">35.</b> <br>
@@ -171,7 +170,7 @@
         </div>
       </div>
 
-      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
+      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2">
         <div class="card bg-pending text-light rounded">
           <div class="p-2">
             <b class="">3.</b> <br>
@@ -187,7 +186,7 @@
         </div>
       </div>
 
-      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
+      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2">
         <div class="card bg-issue text-light rounded">
           <div class="p-2">
             <b class="">19.</b> <br>
@@ -206,7 +205,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
+      <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title pl-3" id="exampleModalLabel"><img src="/resolved.svg" width="34px" height="34px" alt="" class="mr-4">Iqbal Hussain</h5>
@@ -240,18 +239,14 @@
                 </tr>
                 <tr>
                   <th scope="row" class="text-danger">Status:</th>
-                  <td colspan="2">Ration delivered!</td>
+                  <td colspan="2">Delivered!</td>
                 </tr>
                 <tr class="bg-light">
                   <th colspan="2">Available methods to help:</th>
                   <td colspan="1">
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="Western" id="Western" value="Western Union" checked>
-                      <label class="form-check-label" for="Western">Western Union</label>
-                    </div>
-                    <div class="form-check">
-                      <input class="form-check-input" type="radio" name="Western" id="Online" value="Western Union">
-                      <label class="form-check-label" for="Online">Online Bank Transfer</label>
+                      <label class="form-check-label" for="Western">Western Union / Online bank transfer</label>
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="Western" id="Paypal" value="Western Union">
@@ -259,7 +254,7 @@
                     </div>
                     <div class="form-check">
                       <input class="form-check-input" type="radio" name="Western" id="Stripe" value="Western Union">
-                      <label class="form-check-label" for="Stripe">Stripe</label>
+                      <label class="form-check-label" for="Stripe">Credit Card</label>
                     </div>
                   </td>
                 </tr>
@@ -270,6 +265,15 @@
                 </tr>
               </tbody>
             </table>
+            <hr>
+            <h5>Western Union / Online bank transfer</h5>
+            <p><b>Note:</b> You can transfer online on following account number:-</p>
+            <b>Account title:</b> Qasim Ali and Iram Riaz <br>
+            <b>Account Number:</b> 09787638267 <br>
+            <b>International Banking Account Number (IBAN):</b> 89736482648291734 <br><br>
+            <p>After transferring amount please press 'Done' below.</p>
+            <button type="button" class="btn btn-outline-success" name="button">Done</button> <br>
+            <small>If you press 'Yes' middle man will be intimated over the text message about transanction. On receipt he will update the status and you will know the amount has been delivered.</small>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-success">Edit</button>
