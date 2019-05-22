@@ -62,7 +62,7 @@
       }
 
       input:focus + .slider {
-        box-shadow: 0 0 1px #28A745;
+        box-: 0 0 1px #28A745;
       }
 
       input:checked + .slider:before {
@@ -84,11 +84,23 @@
       }
 
       .bg-inprogress {
-        background-color: #20548c;
+        background-color: #1E555C;
       }
 
       .bg-pending {
-        background-color: #a02e38;
+        background-color: #3A2E39;
+      }
+
+      .bg-issue {
+        background-color: #C03221;
+      }
+
+      .card {
+        cursor: pointer;
+      }
+
+      .mt-80 {
+        margin-top: 80px;
       }
 
       @media(max-width:767px){
@@ -104,7 +116,7 @@
     <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light d-flex justify-content-between">
       <div class="brand">
         <img src="/logo5.png" alt="" class="" style="height:44px">
-        <a class="navbar-brand" href="#">Life for all</a>
+        <a class="navbar-brand" href="#">Help my friend</a>
       </div>
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -113,10 +125,10 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
-            <a class="nav-link" href="/">Sign out</a>
+            <a class="nav-link active" href="#">Qasim</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Cart</a>
+            <a class="nav-link" href="/">Sign out</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Blog</a>
@@ -125,49 +137,12 @@
       </div>
     </nav>
 
-
-    <div class="px-1 mt-4 mb-0 pb-3 jumbotron jumbotron-fluid bg-light">
-
-      <h1 class="px-2 display-2 font-weight-lighter">Qasim</h1>
-
-      <div class="p-2">
-
-        <button class="btn btn-light border d-flex align-items-center">
-          <span class="lead">Show list of</span>
-          <span class="pl-2 lead">all</span>
-          <label class="switch mx-3 my-0">
-            <input type="checkbox">
-            <span class="slider round"></span>
-          </label>
-          <span class="pr-2 text-muted lead text-strike"> <s>tagged</s> </span>
-          <span class="lead">people.</span>
-        </button>
-
-        <div class="d-flex flex-wrap my-0 py-0">
-          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 my-2">
-            <span class="lead pr-2">Delivered</span>
-            <span class="badge bg-done text-light pt-1">423</span>
-          </button>
-          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 my-2">
-            <span class="lead pr-2">In progress</span>
-            <span class="badge bg-inprogress text-light pt-1">12</span>
-          </button>
-          <button type="button" class="btn btn-light border d-flex align-items-center mr-3 my-2">
-            <span class="lead pr-2">Pending</span>
-            <span class="badge bg-pending text-light pt-1">23</span>
-          </button>
-        </div>
-
-        <button class="btn btn-light m-0 border rounded p-2"> <span class="lead">Showing entire list of people.</span> </button>
-      </div>
-
-    </div>
-
-    <div class="d-flex justify-content-start flex-wrap">
+    <div class="mt-80 d-flex justify-content-start flex-wrap">
       <div class="col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="shadow-lg bg-done text-light rounded">
+        <div class="card bg-done text-light rounded" data-toggle="modal" data-target="#exampleModal">
+          <h6 class="p-2 pb-0"><img src="/resolved.svg" width="34px" height="34px" alt=""></h6>
+          <hr class="my-1">
           <div class="p-2">
-            <b class="">34.</b> <br>
             Irshad Ahmed <br>
             5x Members in a family<br>
             Earning Rs 24000/- per month
@@ -181,7 +156,7 @@
       </div>
 
       <div class="col-lg-3 col-md-4 col-6 rounded px-2">
-        <div class="shadow bg-inprogress text-light rounded">
+        <div class="card bg-inprogress text-light rounded" data-toggle="modal" data-target="#exampleModal2">
           <div class="p-2">
             <b class="">35.</b> <br>
             Masood Ahmed <br>
@@ -197,7 +172,7 @@
       </div>
 
       <div class="col-lg-3 col-md-4 col-6 rounded px-2">
-        <div class="shadow bg-pending text-light rounded">
+        <div class="card bg-pending text-light rounded">
           <div class="p-2">
             <b class="">3.</b> <br>
             Iqbal Kareem <br>
@@ -208,6 +183,142 @@
           <div class="p-2">
             <b class="badge badge-danger">Status:</b>
             <small> Pending nomination.</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-4 col-6 rounded px-2">
+        <div class="card bg-issue text-light rounded">
+          <div class="p-2">
+            <b class="">19.</b> <br>
+            Iqbal Kareem <br>
+            51x Members in a family<br>
+            Earning Rs 23400/- per month
+          </div>
+          <hr class="my-1">
+          <div class="p-2">
+            <b class="badge badge-danger">Status:</b>
+            <small> Not able to reach the person.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title pl-3" id="exampleModalLabel"><img src="/resolved.svg" width="34px" height="34px" alt="" class="mr-4">Iqbal Hussain</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <table class="table table-borderless">
+              <tbody>
+                <tr>
+                  <th scope="row">Contact No:</th>
+                  <td colspan="2" class="text-danger font-weight-bold">+92 323 5168638</td>
+                </tr>
+                <tr>
+                  <th scope="row" colspan="2">Dependant Family Members:</th>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="text-danger">Help needed:</th>
+                  <td colspan="2">Financially broken, need ration to feed the entire family for 1 month.</td>
+                </tr>
+                <tr>
+                  <th scope="row">Address:</th>
+                  <td colspan="2">Wazirabad Teh, Dist Multan, <span class="text-danger font-weight-bold">Pakistan</span>.</td>
+                </tr>
+                <tr class="">
+                  <th scope="row">Middle Man:</th>
+                  <td>Ahmed Iqbal</td>
+                  <td>+92 323 5145644</td>
+                </tr>
+                <tr>
+                  <th scope="row" class="text-danger">Status:</th>
+                  <td colspan="2">Ration delivered!</td>
+                </tr>
+                <tr class="bg-light">
+                  <th colspan="2">Available methods to help:</th>
+                  <td colspan="1">
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Western" id="Western" value="Western Union" checked>
+                      <label class="form-check-label" for="Western">Western Union</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Western" id="Online" value="Western Union">
+                      <label class="form-check-label" for="Online">Online Bank Transfer</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Western" id="Paypal" value="Western Union">
+                      <label class="form-check-label" for="Paypal">Paypal</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="Western" id="Stripe" value="Western Union">
+                      <label class="form-check-label" for="Stripe">Stripe</label>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="bg-light">
+                  <th></th>
+                  <td></td>
+                  <td><button type="button" class="btn btn-success">Help</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-success">Edit</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Sign Up or Login -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title pl-4" id="exampleModalLabel">Sign in to view credentials</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="px-4 py-3">
+              <a class="btn bg-primary text-light rounded" href="/home" name="button"><i class="fab fa-google"></i> | Sign in with Google</a>
+            </div>
+            <div class="dropdown-divider"></div>
+            <form class="px-4 py-3">
+              <div class="form-group">
+                <label for="exampleDropdownFormEmail1">Email address</label>
+                <input type="email" class="form-control" id="exampleDropdownFormEmail1" placeholder="email@example.com">
+              </div>
+              <div class="form-group">
+                <label for="exampleDropdownFormPassword1">Password</label>
+                <input type="password" class="form-control" id="exampleDropdownFormPassword1" placeholder="Password">
+              </div>
+              <div class="form-group">
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="dropdownCheck">
+                  <label class="form-check-label" for="dropdownCheck">
+                    Remember me
+                  </label>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Sign in</button>
+            </form>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">New around here? Sign up</a>
+            <a class="dropdown-item" href="#">Forgot password?</a>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
