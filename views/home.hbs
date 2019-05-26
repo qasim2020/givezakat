@@ -217,7 +217,7 @@
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none">Iqbal Hussain</span><span>Data entry</span> </h5>
+            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none edit-toggle">Iqbal Hussain</span><span class=" edit-toggle">Edit</span> </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -225,38 +225,38 @@
           <div class="modal-body">
             <table class="table table-borderless">
               <tbody>
-                <tr>
+                <tr class=" edit-toggle">
                   <th scope="row">Name:</th>
                   <td colspan="2"><input type="text" name="" value="" class="form-control" placeholder="Name of person who needs help."></td>
                 </tr>
                 <tr>
                   <th scope="row">Contact No:</th>
-                  <td colspan="2" class="d-none text-danger font-weight-bold">+92 323 5168638</td>
-                  <td colspan="2" class=""><input class="form-control" type="text" name="" value="" placeholder="Mobile Number with country code."> </td>
+                  <td colspan="2" class="d-none text-danger font-weight-bold edit-toggle">+92 323 5168638</td>
+                  <td colspan="2" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Mobile Number with country code."> </td>
                 </tr>
                 <tr>
                   <th scope="row" colspan="2">Dependant Family Members:</th>
-                  <td class="d-none">3</td>
-                  <td class=""><input class="form-control" type="text" name="" value="" placeholder="Enter the number of family members dependant."> </td>
+                  <td class="d-none edit-toggle">3</td>
+                  <td class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Enter the number of family members dependant."> </td>
                 </tr>
                 <tr>
                   <th scope="row" class="text-danger">Help needed:</th>
-                  <td colspan="2" class="d-none">Financially broken, need ration to feed the entire family for 1 month.</td>
-                  <td colspan="2" class=""><input class="form-control" type="text" name="" value="" placeholder="Please enter the problem in detail."> </td>
+                  <td colspan="2" class="d-none edit-toggle">Financially broken, need ration to feed the entire family for 1 month.</td>
+                  <td colspan="2" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Please enter the problem in detail."> </td>
                 </tr>
                 <tr>
                   <th scope="row">Address:</th>
-                  <td colspan="2" class="d-none">Wazirabad Teh, Dist Multan, <span class="text-danger font-weight-bold">Pakistan</span>.</td>
-                  <td colspan="2" class=""><input class="form-control" type="text" name="" value="" placeholder="Address with name of distt."> </td>
+                  <td colspan="2" class="d-none edit-toggle">Wazirabad Teh, Dist Multan, <span class="text-danger font-weight-bold">Pakistan</span>.</td>
+                  <td colspan="2" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Address with name of distt."> </td>
                 </tr>
                 <tr class="">
                   <th scope="row">Middle Man:</th>
-                  <td class="d-none">Ahmed Iqbal</td>
-                  <td colspan="" class=""><input class="form-control" type="text" name="" value="" placeholder="Your Name."> </td>
-                  <td class="d-none">+92 323 5145644</td>
-                  <td colspan="" class=""><input class="form-control" type="text" name="" value="" placeholder="Your Cell No."> </td>
+                  <td class="d-none edit-toggle">Ahmed Iqbal</td>
+                  <td colspan="" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Your Name."> </td>
+                  <td class="d-none edit-toggle">+92 323 5145644</td>
+                  <td colspan="" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Your Cell No."> </td>
                 </tr>
-                <tr>
+                <tr class="d-none edit-toggle">
                   <th scope="row" class="text-danger">Status:</th>
                   <td colspan="2">Delivered!</td>
                 </tr>
@@ -265,20 +265,20 @@
             <hr>
             <div class="pl-2 pb-2">
               <h5 class="text-danger">Payment options</h5>
-              <small class="d-none">These payment options were included by Ahmed Iqbal (Middle Man). Click one below:-</small>
-              <span class="">Please enter your account details to receive the payments.</span>
+              <span class="d-none edit-toggle">Click one below:-</span>
+              <span class="edit-toggle">Click below to enter the account details:-</span>
             </div>
             <div class="accordion" id="accordionExample">
               <h5 class="pl-2 payment py-2 my-0"  data-toggle="collapse" data-target="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">Western Union / Online bank transfer</h5>
-              <div class="pl-2 collapse show" id="collapseExample" data-parent="#accordionExample">
-                <p class="py-2">Please make a deposit on following account and press 'Done' below:-</p>
+              <div class="pl-2 collapse" id="collapseExample" data-parent="#accordionExample">
+                <p class="py-2 edit-toggle">Please make a deposit on following account and press 'Done' below:-</p>
                 <ul class="pl-3 pb-0">
-                  <li><b>Account title:</b> <span class="d-none">Qasim Ali and Iram Riaz</span> <span class=""><input type="text" name="" value="" class="form-control" placeholder="Account title."> </span></li>
-                  <li><b>Bank:</b> <span class="d-none">Askari Bank Haider Road Rawalpindi</span> <span class=""><input type="text" name="" value="" class="form-control" placeholder="Bank"></span> </li>
-                  <li><b>Account Number:</b> <span class="d-none">09787638267</span> <span class=""><input type="text" name="" value="" class="form-control" placeholder="Account Number."> </span>  </li>
-                  <li class="pb-0"><b>International Banking Account Number (IBAN):</b> <span class="d-none">89736482648291734</span> <span class=""><input type="text" name="" value="" class="form-control" placeholder="International Bank Account No."> </span> </li>
+                  <li><b>Account title:</b> <span class="d-none edit-toggle">Qasim Ali and Iram Riaz</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="Account title."> </span></li>
+                  <li><b>Bank:</b> <span class="d-none edit-toggle">Askari Bank Haider Road Rawalpindi</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="Bank"></span> </li>
+                  <li><b>Account Number:</b> <span class="d-none edit-toggle">09787638267</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="Account Number."> </span>  </li>
+                  <li class="pb-0"><b>International Banking Account Number (IBAN):</b> <span class="d-none edit-toggle">89736482648291734</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="International Bank Account No."> </span> </li>
                 </ul>
-                <div class="d-none">
+                <div class="d-none edit-toggle">
                   <h5>After deposit details</h5>
                   <p>Please fill following details after making the depsoit:-</p>
                   <div class="form-group row">
@@ -309,8 +309,8 @@
                 </div>
                 <hr>
               </div>
-              <h5 class="d-none pl-4 payment py-2 my-0" data-toggle="collapse" data-target="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">Credit / Debit Card</h5>
-              <div class="collapse pl-2 pt-2" id="collapseExample2" data-parent="#accordionExample">
+              <h5 class="d-none pl-2 payment py-2 my-0 edit-toggle" data-toggle="collapse" data-target="#collapseExample2" role="button" aria-expanded="false" aria-controls="collapseExample2">Credit / Debit Card</h5>
+              <div class="d-none edit-toggle collapse pl-2 pt-2" id="collapseExample2" data-parent="#accordionExample">
                 <form action="/echo" method="post" novalidate="novalidate" class="needs-validation">
                     <div class="form-group">
                         <label for="cc-payment" class="control-label mb-1">Payment amount in USD</label>
@@ -358,7 +358,7 @@
                     <div class="text-center">
                         <button id="payment-button" type="submit" class="btn btn-outline-success btn-block">
                             <span id="payment-button-amount">Pay Now</span>
-                            <span id="payment-button-sending" style="display:none;">Sending…</span>
+                            <span id="payment-button-sending" class="d-none">Sending…</span>
                         </button>
                     </div>
                 </form>
@@ -368,7 +368,10 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-success edit-btn">Edit</button>
+            <button type="button" class="btn btn-success edit-btn">
+              <span class="d-none edit-toggle">Edit</span>
+              <span class="edit-toggle">Cancel</span>
+            </button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -431,8 +434,13 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
     <script type="text/javascript">
-      $(document).on('click','.edit-btn',() => {
+
+      $('.edit-toggle').toggleClass('d-none');
+
+      $(document).on('click','.edit-btn',function() {
         console.log('edit clicked');
+        $('.edit-toggle').toggleClass('d-none');
+        $(this).toggleClass('btn-success btn-outline-success');
       })
 
     </script>
