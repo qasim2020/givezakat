@@ -21,10 +21,12 @@
   },
   "homepage": "https://github.com/Miscellaneous-Pk/givezakat#readme",
   "dependencies": {
+    "axios": "^0.18.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.13.2",
     "express": "^4.16.4",
+    "googleapis": "^40.0.0",
     "hbs": "^4.0.1",
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",

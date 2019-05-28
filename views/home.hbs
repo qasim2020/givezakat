@@ -147,7 +147,24 @@
     </nav>
 
     <div class="mt-80 d-flex justify-content-start flex-wrap">
+      {{#each data}}
       <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
+        <div class="card bg-done text-light rounded" data-toggle="modal" data-target="#exampleModal">
+          <div class="p-2">
+            <b class="">{{this}}</b> <br>
+            Iqbal ahmed<br>
+            5x Members in a family<br>
+            Earning Rs 24000/- per month
+          </div>
+          <hr class="my-1">
+          <div class="p-2">
+            <b class="badge badge-success">Status:</b>
+            <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+      <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
         <div class="card bg-done text-light rounded" data-toggle="modal" data-target="#exampleModal">
           <div class="p-2">
             <b class="">32.</b> <br>
@@ -209,7 +226,7 @@
             <small> Not able to reach the person.</small>
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- Modal -->
