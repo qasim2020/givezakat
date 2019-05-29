@@ -22,7 +22,6 @@ app.set('view engine','hbs');
 app.get('/',(req,res) => {
   console.log('home page opened');
   sheet('ramadan','read').then((msg) => {
-    console.log(msg[0].values);
     res.render('home.hbs',{
       data: msg[0].values,
     });
