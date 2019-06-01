@@ -240,7 +240,7 @@
       {{#each data}}
       {{#if this.[15]}}
       <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="person-card card bg-{{this.[15]}} text-light rounded" data-toggle="modal" data-target="#exampleModal">
+        <div class="person-card card bg-{{this.[15]}} text-light rounded" data-toggle="modal" data-target="#exampleModal" data="{{this.[1]}},{{this.[6]}},{{this.[4]}},,{{this.[7]}} {{this.[8]}} {{this.[9]}} {{this.[10]}}, {{this.[2]}},,{{this.[15]}},,,,">
           <div class="p-2">
             <b class="">{{this.[0]}}.</b> <br>
             {{this.[1]}}<br>
@@ -256,69 +256,7 @@
       </div>
       {{/if}}
       {{/each}}
-      <!-- <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="card bg-done text-light rounded" data-toggle="modal" data-target="#exampleModal">
-          <div class="p-2">
-            <b class="">32.</b> <br>
-            Irshad Ahmed <br>
-            5x Members in a family<br>
-            Earning Rs 24000/- per month
-          </div>
-          <hr class="my-1">
-          <div class="p-2">
-            <b class="badge badge-success">Status:</b>
-            <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2">
-        <div class="card bg-inprogress text-light rounded" data-toggle="modal" data-target="#exampleModal2">
-          <div class="p-2">
-            <b class="">35.</b> <br>
-            Masood Ahmed <br>
-            51x Members in a family<br>
-            Earning Rs 24000/- per month
-          </div>
-          <hr class="my-1">
-          <div class="p-2">
-            <b class="badge badge-primary">Status:</b>
-            <small> Order parked at nearby CSD.</small>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2">
-        <div class="card bg-pending text-light rounded">
-          <div class="p-2">
-            <b class="">3.</b> <br>
-            Iqbal Kareem <br>
-            51x Members in a family<br>
-            Earning Rs 23400/- per month
-          </div>
-          <hr class="my-1">
-          <div class="p-2">
-            <b class="badge badge-danger">Status:</b>
-            <small> Pending nomination.</small>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2">
-        <div class="card bg-issue text-light rounded">
-          <div class="p-2">
-            <b class="">19.</b> <br>
-            Iqbal Kareem <br>
-            51x Members in a family<br>
-            Earning Rs 23400/- per month
-          </div>
-          <hr class="my-1">
-          <div class="p-2">
-            <b class="badge badge-danger">Status:</b>
-            <small> Not able to reach the person.</small>
-          </div>
-        </div>
-      </div> -->
     </div>
 
     <!-- Modal -->
@@ -326,7 +264,7 @@
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none edit-toggle">Iqbal Hussain</span><span class=" edit-toggle">Edit</span> </h5>
+            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none edit-toggle modal-name">Iqbal Hussain</span><span class=" edit-toggle">Edit</span> </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -336,38 +274,38 @@
               <tbody>
                 <tr class=" edit-toggle">
                   <th scope="row">Name:</th>
-                  <td colspan="2"><input type="text" name="" value="" class="form-control" placeholder="Name of person who needs help."></td>
+                  <td colspan="2"><input type="text" name="" value="" class="form-control modal-name" placeholder="Name of person who needs help."></td>
                 </tr>
                 <tr>
                   <th scope="row">Contact No:</th>
-                  <td colspan="2" class="d-none text-danger font-weight-bold edit-toggle">+92 323 5168638</td>
-                  <td colspan="2" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Mobile Number with country code."> </td>
+                  <td colspan="2" class="d-none text-danger font-weight-bold edit-toggle modal-mob">+92 323 5168638</td>
+                  <td colspan="2" class=" edit-toggle"><input class="form-control modal-mob" type="text" name="" value="" placeholder="Mobile Number with country code."> </td>
                 </tr>
                 <tr>
                   <th scope="row" colspan="2">Dependant Family Members:</th>
-                  <td class="d-none edit-toggle">3</td>
-                  <td class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Enter the number of family members dependant."> </td>
+                  <td class="d-none edit-toggle modal-familyMembers">3</td>
+                  <td class=" edit-toggle"><input class="form-control modal-familyMembers" type="text" name="" value="" placeholder="Enter the number of family members dependant."> </td>
                 </tr>
                 <tr>
                   <th scope="row" class="text-danger">Help needed:</th>
-                  <td colspan="2" class="d-none edit-toggle">Financially broken, need ration to feed the entire family for 1 month.</td>
-                  <td colspan="2" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Please enter the problem in detail."> </td>
+                  <td colspan="2" class="d-none edit-toggle modal-helpType">Financially broken, need ration to feed the entire family for 1 month.</td>
+                  <td colspan="2" class=" edit-toggle"><input class="form-control modal-helpType" type="text" name="" value="" placeholder="Please enter the problem in detail."> </td>
                 </tr>
                 <tr>
                   <th scope="row">Address:</th>
-                  <td colspan="2" class="d-none edit-toggle">Wazirabad Teh, Dist Multan, <span class="text-danger font-weight-bold">Pakistan</span>.</td>
-                  <td colspan="2" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Address with name of distt."> </td>
+                  <td colspan="2" class="d-none edit-toggle modal-address">Wazirabad Teh, Dist Multan, <span class="text-danger font-weight-bold">Pakistan</span>.</td>
+                  <td colspan="2" class=" edit-toggle"><input class="form-control modal-address" type="text" name="" value="" placeholder="Address with name of distt."> </td>
                 </tr>
                 <tr class="">
                   <th scope="row">Middle Man:</th>
-                  <td class="d-none edit-toggle">Ahmed Iqbal</td>
-                  <td colspan="" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Your Name."> </td>
-                  <td class="d-none edit-toggle">+92 323 5145644</td>
-                  <td colspan="" class=" edit-toggle"><input class="form-control" type="text" name="" value="" placeholder="Your Cell No."> </td>
+                  <td class="d-none edit-toggle modal-sponserName">Ahmed Iqbal</td>
+                  <td colspan="" class=" edit-toggle"><input class="form-control modal-sponserName" type="text" name="" value="" placeholder="Your Name."> </td>
+                  <td class="d-none edit-toggle modal-sponserMob">+92 323 5145644</td>
+                  <td colspan="" class=" edit-toggle"><input class="form-control modal-sponserMob" type="text" name="" value="" placeholder="Your Cell No."> </td>
                 </tr>
                 <tr class="d-none edit-toggle">
                   <th scope="row" class="text-danger">Status:</th>
-                  <td colspan="2">Delivered!</td>
+                  <td colspan="2" class="modal-status">Delivered!</td>
                 </tr>
               </tbody>
             </table>
@@ -382,10 +320,18 @@
               <div class="pl-2 collapse" id="collapseExample" data-parent="#accordionExample">
                 <p class="py-2 edit-toggle">Please make a deposit on following account and press 'Done' below:-</p>
                 <ul class="pl-3 pb-0">
-                  <li><b>Account title:</b> <span class="d-none edit-toggle">Qasim Ali and Iram Riaz</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="Account title."> </span></li>
-                  <li><b>Bank:</b> <span class="d-none edit-toggle">Askari Bank Haider Road Rawalpindi</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="Bank"></span> </li>
-                  <li><b>Account Number:</b> <span class="d-none edit-toggle">09787638267</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="Account Number."> </span>  </li>
-                  <li class="pb-0"><b>International Banking Account Number (IBAN):</b> <span class="d-none edit-toggle">89736482648291734</span> <span class="edit-toggle"><input type="text" name="" value="" class="form-control" placeholder="International Bank Account No."> </span> </li>
+                  <li><b>Account title:</b>
+                    <span class="d-none edit-toggle modal-accountTitle">Qasim Ali and Iram Riaz</span>
+                    <span class="edit-toggle"><input type="text" name="" value="" class="form-control modal-accountTitle" placeholder="Account title."> </span></li>
+                  <li><b>Bank:</b>
+                    <span class="d-none edit-toggle modal-accountBank">Askari Bank Haider Road Rawalpindi</span>
+                    <span class="edit-toggle"><input type="text" name="" value="" class="form-control modal-accountBank" placeholder="Bank"></span> </li>
+                  <li><b>Account Number:</b>
+                    <span class="d-none edit-toggle modal-accountNumber">09787638267</span>
+                    <span class="edit-toggle"><input type="text" name="" value="" class="form-control modal-accountNumber" placeholder="Account Number."> </span>  </li>
+                  <li class="pb-0"><b>International Banking Account Number (IBAN):</b>
+                    <span class="d-none edit-toggle modal-accountIBAN">89736482648291734</span>
+                    <span class="edit-toggle"><input type="text" name="" value="" class="form-control modal-accountIBAN" placeholder="International Bank Account No."> </span> </li>
                 </ul>
                 <div class="d-none edit-toggle">
                   <h5>After deposit details</h5>
@@ -477,7 +423,8 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-success edit-btn">
+            <button type="button" name="button" class="btn btn-success edit-toggle save-btn">Save</button>
+            <button type="button" class="btn btn-danger edit-btn">
               <span class="d-none edit-toggle">Edit</span>
               <span class="edit-toggle">Cancel</span>
             </button>
@@ -538,7 +485,7 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
@@ -554,10 +501,81 @@
 
       $(document).on('click','.filter-btn',function(){
         let className = $(this).attr('data-toggle');
-        console.log(className);
         $('.person-card').parent('.rounded').addClass('d-none');
         $(`.${className}`).parent('.rounded').removeClass('d-none');
       })
+
+      $(document).on('click','.card',function(){
+        let myData = $(this).attr('data').split(',');
+        console.log(myData);
+        $('.modal-name').html(myData[0].trim()).attr({placeholder:myData[0].trim(), value:myData[0].trim()});
+        $('.modal-mob').html(myData[1].trim()).attr({placeholder:myData[1].trim(), value:myData[1].trim()});
+        $('.modal-familyMembers').html(myData[2].trim()).attr({placeholder:myData[2].trim(), value:myData[2].trim()});
+        $('.modal-helpType').html(myData[3].trim()).attr({placeholder:myData[3].trim(), value:myData[3].trim()});
+        $('.modal-address').html(myData[4].trim()).attr({placeholder:myData[4].trim(), value:myData[4].trim()});
+        $('.modal-sponserName').html(myData[5].trim()).attr({placeholder:myData[5].trim(), value:myData[5].trim()});
+        $('.modal-sponserMob').html(myData[6].trim()).attr({placeholder:myData[6].trim(), value:myData[6].trim()});
+        $('.modal-status').html(myData[7].trim()).attr({placeholder:myData[7].trim(), value:myData[7].trim()});
+        $('.modal-accountTitle').html(myData[8].trim()).attr({placeholder:myData[8].trim(), value:myData[8].trim()});
+        $('.modal-accountBank').html(myData[9].trim()).attr({placeholder:myData[9].trim(), value:myData[9].trim()});
+        $('.modal-accountNumber').html(myData[10].trim()).attr({placeholder:myData[10].trim(), value:myData[10].trim()});
+        $('.modal-accountIBAN').html(myData[11].trim()).attr({placeholder:myData[11].trim(), value:myData[11].trim()});
+      });
+
+      $(document).on('click','.save-btn',function(){
+
+        let data = {
+          name:$('.modal-name:eq(-1)').val(),
+          mob:$('.modal-mob:eq(-1)').val(),
+          familyMembers:$('.modal-familyMembers:eq(-1)').val(),
+          helpType:$('.modal-helpType:eq(-1)').val(),
+          address:$('.modal-address:eq(-1)').val(),
+          sponserName:$('.modal-sponserName:eq(-1)').val(),
+          sponserMob:$('.modal-sponserMob:eq(-1)').val(),
+          status:$('.modal-status:eq(-1)').html(),
+          accountTitle:$('.modal-accountTitle:eq(-1)').val(),
+          accountBank:$('.modal-accountBank:eq(-1)').val(),
+          accountNumber:$('.modal-accountNumber:eq(-1)').val(),
+          accountIBAN:$('.modal-accountIBAN:eq(-1)').val(),
+        }
+
+        console.log(data);
+
+        if (
+          $('.modal-name:eq(-1)').val() == ''  ||
+          $('.modal-mob:eq(-1)').val() == '' ||
+          $('.modal-familyMembers:eq(-1)').val() == '' ||
+          $('.modal-helpType:eq(-1)').val() == '' ||
+          $('.modal-address:eq(-1)').val() == '' ||
+          $('.modal-sponserName:eq(-1)').val() == '' ||
+          $('.modal-sponserMob:eq(-1)').val() == '' ||
+          $('.modal-status:eq(-1)').html() == '' ||
+          $('.modal-accountTitle:eq(-1)').val() == '' ||
+          $('.modal-accountBank:eq(-1)').val() == '' ||
+          $('.modal-accountNumber:eq(-1)').val() == '' ||
+          $('.modal-accountIBAN:eq(-1)').val() == ''
+        ) return console.log('please fill all values');
+
+
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: '/data',
+            type: 'post',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+          }).fail((e) => {
+            console.log(e.responseText);
+          });
+
+      });
+
+
 
     </script>
   </body>

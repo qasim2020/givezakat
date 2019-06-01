@@ -31,6 +31,17 @@ app.get('/',(req,res) => {
 
 });
 
+app.post('/data',(req,res) => {
+
+  console.log(req.body);
+  if (req.body) {
+    return res.status(200).send('data recieved');
+  }
+
+  res.status(400).send('sorry no data recieved');
+
+});
+
 app.listen(port, () => {
   console.log(`listening on port ${port}...`);
 })
