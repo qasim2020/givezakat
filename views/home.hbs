@@ -194,7 +194,8 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
       <div class="brand">
-        <img src="/logo5.png" alt="" class="" style="height:44px">
+        <!-- <img src="/logo5.png" alt="" class="" style="height:44px"> -->
+        <a href="#" class="navbar-brand">Give Zakat</a>
       </div>
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -217,16 +218,19 @@
 
     <div class="mt-1 pl-3 btn-container-holder">
       <div class="btn-container">
-        <button type="button" class="mr-2 btn btn-done">
+        <button type="button" class="filter-btn mr-2 btn btn-outline-info" data-toggle="card">
+          Show All <span class="badge badge-done">4</span>
+        </button>
+        <button type="button" class="filter-btn mr-2 btn btn-done" data-toggle="bg-done">
           Done <span class="badge badge-done">4</span>
         </button>
-        <button type="button" class="mr-2 btn btn-inprogress">
+        <button type="button" class="filter-btn mr-2 btn btn-inprogress"  data-toggle="bg-inprogress">
           In Progress <span class="badge badge-inprogress">4</span>
         </button>
-        <button type="button" class="mr-2 btn btn-issue">
+        <button type="button" class="filter-btn mr-2 btn btn-issue" data-toggle="bg-issue">
           Issues <span class="badge badge-issues">4</span>
         </button>
-        <button type="button" class="mr-2 btn btn-pending">
+        <button type="button" class="filter-btn mr-2 btn btn-pending" data-toggle="bg-pending">
           Pending <span class="badge badge-pending">4</span>
         </button>
       </div>
@@ -236,7 +240,7 @@
       {{#each data}}
       {{#if this.[15]}}
       <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="card bg-{{this.[15]}} text-light rounded" data-toggle="modal" data-target="#exampleModal">
+        <div class="person-card card bg-{{this.[15]}} text-light rounded" data-toggle="modal" data-target="#exampleModal">
           <div class="p-2">
             <b class="">{{this.[0]}}.</b> <br>
             {{this.[1]}}<br>
@@ -546,6 +550,13 @@
         console.log('edit clicked');
         $('.edit-toggle').toggleClass('d-none');
         $(this).toggleClass('btn-success btn-outline-success');
+      })
+
+      $(document).on('click','.filter-btn',function(){
+        let className = $(this).attr('data-toggle');
+        console.log(className);
+        $('.person-card').parent('.rounded').addClass('d-none');
+        $(`.${className}`).parent('.rounded').removeClass('d-none');
       })
 
     </script>
