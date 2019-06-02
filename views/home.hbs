@@ -552,12 +552,23 @@
     <script type="text/javascript">
 
       $('.edit-toggle').toggleClass('d-none');
+      let editStatus = false;
 
       $(document).on('click','.edit-btn',function() {
         console.log('edit clicked');
         $('.edit-toggle').toggleClass('d-none');
         $(this).toggleClass('btn-success btn-outline-success');
+        editStatus = !editStatus;
+        console.log(editStatus);
+        $('#exampleModal').attr({editStatus: !editStatus});
+      });
+
+      $('#exampleModal').on('hidden.bs.modal', function (e) {
+        if (editStatus) {
+          $('.edit-btn').trigger('click');
+        };
       })
+
 
       $(document).on('click','.filter-btn',function(){
         let className = $(this).attr('data-toggle');
