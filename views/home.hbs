@@ -193,7 +193,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
       <div class="brand">
         <!-- <img src="/logo5.png" alt="" class="" style="height:44px"> -->
-        <a href="#" class="navbar-brand">Give Zakat</a>
+        <a href="#" class="navbar-brand">needyList</a>
       </div>
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -206,6 +206,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/">Sign out</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal3">Add People</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Blog</a>
@@ -236,20 +239,43 @@
 
     <div class="mt-3 d-flex justify-content-start flex-wrap">
       {{#each data}}
-      {{#if this.[15]}}
+      {{#if this.[23]}}
       <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="person-card card bg-{{this.[15]}} text-light rounded" data-toggle="modal" data-target="#exampleModal" data="{{this.[1]}},{{this.[6]}},{{this.[4]}},,{{this.[7]}} {{this.[8]}} {{this.[9]}} {{this.[10]}}, {{this.[2]}},,{{this.[15]}},,,,">
+        <div class="person-card card bg-{{this.[23]}} text-light rounded" data-toggle="modal" data-target="#exampleModal" data="
+        {{this.[1]}},
+        {{this.[2]}},
+        {{this.[3]}},
+        {{this.[4]}},
+        {{this.[5]}},
+        {{this.[6]}} {{this.[7]}} {{this.[8]}} {{this.[9]}},
+        {{this.[10]}},
+        {{this.[11]}},
+        {{this.[23]}},
+        {{this.[12]}},
+        {{this.[13]}},
+        {{this.[14]}},
+        {{this.[15]}}
+        ">
           <div class="p-2">
             <b class="">{{this.[0]}}.</b> <br>
             {{this.[1]}}<br>
             {{this.[4]}} x Members in a family<br>
-            Earning Rs {{this.[5]}}/- per month
+            Earning Rs {{this.[3]}}/- per month
           </div>
           <hr class="my-1">
           <div class="p-2">
-            <b class="badge badge-{{this.[15]}}">Status:</b>
-            <small> 1 x Month Ration Delivered in Rs 6250 sponsored by id 3432</small>
+            <b class="badge badge-warning">Order Details</b> <br>
+            <small>
+               Package: {{this.[17]}} in Rs {{this.[16]}} <br>
+               Ordered On: {{this.[18]}} <br>
+               Delivered On: {{this.[19]}}
+             </small>
+             <br>
+             <b class="badge badge-warning">Status</b>
+             <small>{{this.[23]}}</small>
           </div>
+          <hr class="my-1">
+          <small class="p-2 text-light">Click to view details.</small>
         </div>
       </div>
       {{/if}}
@@ -262,7 +288,7 @@
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none edit-toggle modal-name">Iqbal Hussain</span><span class=" edit-toggle">Edit</span> </h5>
+            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none edit-toggle">Details of Person</span><span class=" edit-toggle">Edit</span> </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -270,14 +296,20 @@
           <div class="modal-body">
             <table class="table table-borderless">
               <tbody>
-                <tr class=" edit-toggle">
+                <tr class="">
                   <th scope="row">Name:</th>
-                  <td colspan="2"><input type="text" name="" value="" class="form-control modal-name" placeholder="Name of person who needs help."></td>
+                  <td colspan="2" class="d-none edit-toggle modal-name">Qasim Ali</td>
+                  <td colspan="2" class="edit-toggle"><input type="text" name="" value="" class="form-control modal-name" placeholder="Name of person who needs help."></td>
                 </tr>
                 <tr>
                   <th scope="row">Contact No:</th>
                   <td colspan="2" class="d-none text-danger font-weight-bold edit-toggle modal-mob">+92 323 5168638</td>
-                  <td colspan="2" class=" edit-toggle"><input class="form-control modal-mob" type="text" name="" value="" placeholder="Mobile Number with country code."> </td>
+                  <td colspan="2" class="edit-toggle"><input class="form-control modal-mob" type="text" name="" value="" placeholder="Mobile Number with country code."> </td>
+                </tr>
+                <tr>
+                  <th scope="row">Salary in PKR (Rs):</th>
+                  <td colspan="2" class="d-none text-danger font-weight-bold edit-toggle modal-salary">5872</td>
+                  <td colspan="2" class="edit-toggle"><input class="form-control modal-salary" type="number" name="" value="" placeholder="Please enter salary of the person in PKR."> </td>
                 </tr>
                 <tr>
                   <th scope="row" colspan="2">Dependant Family Members:</th>
@@ -477,6 +509,36 @@
       </div>
     </div>
 
+    <!-- Modal Add People -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="addpeopleModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title pl-4" id="addpeopleModal">Add people</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="px-4 py-3">
+              <p class="lead">Add a person in your neighbourhood who might need help.</p>
+              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2">Add 1 Person</button>
+
+              <p class="text-center lead font-weight-bold">OR</p>
+
+              <p class="lead">Add entire list by uploading data in this google sheet:-</p>
+              <a name="button" class="btn btn-outline-dark mr-2 mb-2" href="#googlesheets">Step 1: Edit this Google Sheet</a> <br>
+
+              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2">Step 2: Fetch Data from Google Sheet</button> <br>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
 
 
@@ -508,17 +570,19 @@
         console.log(myData);
         $('.modal-name').html(myData[0].trim()).attr({placeholder:myData[0].trim(), value:myData[0].trim()});
         $('.modal-mob').html(myData[1].trim()).attr({placeholder:myData[1].trim(), value:myData[1].trim()});
-        $('.modal-familyMembers').html(myData[2].trim()).attr({placeholder:myData[2].trim(), value:myData[2].trim()});
-        $('.modal-helpType').html(myData[3].trim()).attr({placeholder:myData[3].trim(), value:myData[3].trim()});
-        $('.modal-address').html(myData[4].trim()).attr({placeholder:myData[4].trim(), value:myData[4].trim()});
-        $('.modal-sponserName').html(myData[5].trim()).attr({placeholder:myData[5].trim(), value:myData[5].trim()});
-        $('.modal-sponserMob').html(myData[6].trim()).attr({placeholder:myData[6].trim(), value:myData[6].trim()});
-        $('.modal-status').html(myData[7].trim()).attr({placeholder:myData[7].trim(), value:myData[7].trim()});
-        $('.modal-accountTitle').html(myData[8].trim()).attr({placeholder:myData[8].trim(), value:myData[8].trim()});
-        $('.modal-accountBank').html(myData[9].trim()).attr({placeholder:myData[9].trim(), value:myData[9].trim()});
-        $('.modal-accountNumber').html(myData[10].trim()).attr({placeholder:myData[10].trim(), value:myData[10].trim()});
-        $('.modal-accountIBAN').html(myData[11].trim()).attr({placeholder:myData[11].trim(), value:myData[11].trim()});
+        $('.modal-salary').html(myData[2].trim()).attr({placeholder:myData[2].trim(), value:myData[2].trim()});
+        $('.modal-familyMembers').html(myData[3].trim()).attr({placeholder:myData[3].trim(), value:myData[3].trim()});
+        $('.modal-helpType').html(myData[4].trim()).attr({placeholder:myData[4].trim(), value:myData[4].trim()});
+        $('.modal-address').html(myData[5].trim()).attr({placeholder:myData[5].trim(), value:myData[5].trim()});
+        $('.modal-sponserName').html(myData[6].trim()).attr({placeholder:myData[6].trim(), value:myData[6].trim()});
+        $('.modal-sponserMob').html(myData[7].trim()).attr({placeholder:myData[7].trim(), value:myData[7].trim()});
+        $('.modal-status').html(myData[8].trim()).attr({placeholder:myData[8].trim(), value:myData[8].trim()});
+        $('.modal-accountTitle').html(myData[9].trim()).attr({placeholder:myData[9].trim(), value:myData[9].trim()});
+        $('.modal-accountBank').html(myData[10].trim()).attr({placeholder:myData[10].trim(), value:myData[10].trim()});
+        $('.modal-accountNumber').html(myData[11].trim()).attr({placeholder:myData[11].trim(), value:myData[11].trim()});
+        $('.modal-accountIBAN').html(myData[12].trim()).attr({placeholder:myData[12].trim(), value:myData[12].trim()});
       });
+
 
       $(document).on('click','.save-btn',function(){
 
@@ -573,7 +637,11 @@
 
       });
 
-
+      {{#each data}}
+        {{#each this}}
+          console.log('{{@index}}:{{this}}');
+        {{/each}}
+      {{/each}}
 
     </script>
   </body>
