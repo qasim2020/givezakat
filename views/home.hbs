@@ -172,6 +172,10 @@
         background-color: #82e096 !important;
       }
 
+      .modal {
+        overflow: scroll !important;
+      }
+
       @media(max-width:767px){
         .btn-container {
           min-width: 600px;
@@ -288,7 +292,7 @@
       <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none edit-toggle">Details of Person</span><span class=" edit-toggle">Edit</span> </h5>
+            <h5 class="modal-title pl-3" id="exampleModalLabel"><span class="d-none edit-toggle">Details of Person</span><span class="edit-modal-title edit-toggle">Edit</span> </h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -522,18 +526,21 @@
           <div class="modal-body">
             <div class="px-4 py-3">
               <p class="lead">Add a person in your neighbourhood who might need help.</p>
-              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2">Add 1 Person</button>
+              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2" id="add-one-btn">Add 1 Person</button>
 
               <p class="text-center lead font-weight-bold">OR</p>
 
-              <p class="lead">Add entire list by uploading data in this google sheet:-</p>
-              <a name="button" class="btn btn-outline-dark mr-2 mb-2" href="#googlesheets">Step 1: Edit this Google Sheet</a> <br>
-
-              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2">Step 2: Fetch Data from Google Sheet</button> <br>
+              <p class="lead">Add entire list by uploading the excel sheet:-</p>
+              <a href="/sample.xlsx" name="button" class="btn btn-outline-dark mr-2 mb-2" download>1: Download Sample Excel File</a> <br>
+              <div class="custom-file mb-2">
+                <input type="file" class="custom-file-input" id="fileInp" aria-describedby="inputGroupFileAddon01">
+                <label class="custom-file-label border border-dark text-dark" for="fileInp">2: Upload File</label>
+              </div>
+              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2">3: Update</button>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default close-modal" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -565,8 +572,10 @@
 
       $('#exampleModal').on('hidden.bs.modal', function (e) {
         if (editStatus) {
-          $('.edit-btn').trigger('click');
+          $('.edit-btn').trigger('click').show();
         };
+        $('.edit-modal-title').html('Edit');
+
       })
 
 
@@ -579,19 +588,19 @@
       $(document).on('click','.card',function(){
         let myData = $(this).attr('data').split(',');
         console.log(myData);
-        $('.modal-name').html(myData[0].trim()).attr({placeholder:myData[0].trim(), value:myData[0].trim()});
-        $('.modal-mob').html(myData[1].trim()).attr({placeholder:myData[1].trim(), value:myData[1].trim()});
-        $('.modal-salary').html(myData[2].trim()).attr({placeholder:myData[2].trim(), value:myData[2].trim()});
-        $('.modal-familyMembers').html(myData[3].trim()).attr({placeholder:myData[3].trim(), value:myData[3].trim()});
-        $('.modal-helpType').html(myData[4].trim()).attr({placeholder:myData[4].trim(), value:myData[4].trim()});
-        $('.modal-address').html(myData[5].trim()).attr({placeholder:myData[5].trim(), value:myData[5].trim()});
-        $('.modal-sponserName').html(myData[6].trim()).attr({placeholder:myData[6].trim(), value:myData[6].trim()});
-        $('.modal-sponserMob').html(myData[7].trim()).attr({placeholder:myData[7].trim(), value:myData[7].trim()});
-        $('.modal-status').html(myData[8].trim()).attr({placeholder:myData[8].trim(), value:myData[8].trim()});
-        $('.modal-accountTitle').html(myData[9].trim()).attr({placeholder:myData[9].trim(), value:myData[9].trim()});
-        $('.modal-accountBank').html(myData[10].trim()).attr({placeholder:myData[10].trim(), value:myData[10].trim()});
-        $('.modal-accountNumber').html(myData[11].trim()).attr({placeholder:myData[11].trim(), value:myData[11].trim()});
-        $('.modal-accountIBAN').html(myData[12].trim()).attr({placeholder:myData[12].trim(), value:myData[12].trim()});
+        $('.modal-name').html(myData[0].trim()).attr({value:myData[0].trim()});
+        $('.modal-mob').html(myData[1].trim()).attr({value:myData[1].trim()});
+        $('.modal-salary').html(myData[2].trim()).attr({value:myData[2].trim()});
+        $('.modal-familyMembers').html(myData[3].trim()).attr({value:myData[3].trim()});
+        $('.modal-helpType').html(myData[4].trim()).attr({value:myData[4].trim()});
+        $('.modal-address').html(myData[5].trim()).attr({value:myData[5].trim()});
+        $('.modal-sponserName').html(myData[6].trim()).attr({value:myData[6].trim()});
+        $('.modal-sponserMob').html(myData[7].trim()).attr({value:myData[7].trim()});
+        $('.modal-status').html(myData[8].trim()).attr({value:myData[8].trim()});
+        $('.modal-accountTitle').html(myData[9].trim()).attr({value:myData[9].trim()});
+        $('.modal-accountBank').html(myData[10].trim()).attr({value:myData[10].trim()});
+        $('.modal-accountNumber').html(myData[11].trim()).attr({value:myData[11].trim()});
+        $('.modal-accountIBAN').html(myData[12].trim()).attr({value:myData[12].trim()});
       });
 
 
@@ -648,11 +657,55 @@
 
       });
 
-      {{#each data}}
-        {{#each this}}
-          console.log('{{@index}}:{{this}}');
-        {{/each}}
-      {{/each}}
+      $(document).on('click','#add-one-btn',function(){
+        $('#exampleModal3').modal('hide');
+        $('#exampleModal').modal('show');
+        $('.edit-btn').trigger('click').hide();
+        $('input').val('');
+        $('.edit-modal-title').html('Add a person');
+      });
+
+      function readURL(input) {
+
+          if (input.files && input.files[0] && (/\.(xlsx)$/i.test(input.files[0].name))) {
+
+              var reader = new FileReader();
+
+              reader.addEventListener("load", function(e) {
+
+                var data = e.target.result();
+                var workbook = XLSX.read(data, {
+                  type: 'binary'
+                });
+
+                workbook.SheetNames.forEach(function(sheetName) {
+                // Here is your object
+                  var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                  var json_object = JSON.stringify(XL_row_object);
+                  console.log(json_object);
+
+                })
+
+              });
+
+              reader.onerror = function(ex) {
+                console.log(ex);
+              };
+
+          } else {
+
+              console.log('not proper format of file');
+
+          }
+
+      }
+
+      $("#fileInp").change(function() {
+
+          readURL(this);
+
+      });
+
 
     </script>
   </body>
