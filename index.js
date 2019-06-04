@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const _ = require('lodash');
+const readXlsxFile = require('read-excel-file/node');
 
 const {sheet} = require('./server/sheets.js');
 
@@ -19,15 +20,23 @@ app.set('view engine','hbs');
 // [new Date().toString(),'MES','Sand','2000', 'cft','Brought it for const of Washroom']
 // ]);
 
+// sheet('ramadan','read').then((msg) => {
+//   res.render('home.hbs',{
+//     data: msg[0].values,
+//   });
+// }).catch((e) => {
+//   console.log(e);
+// });
+
 app.get('/',(req,res) => {
   console.log('home page opened');
-  sheet('ramadan','read').then((msg) => {
+
+  readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
+    console.log(rows[0]);
     res.render('home.hbs',{
-      data: msg[0].values,
+      sampleRows: rows[0]
     });
-  }).catch((e) => {
-    console.log(e);
-  });
+  })
 
 });
 

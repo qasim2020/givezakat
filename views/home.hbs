@@ -533,8 +533,8 @@
               <p class="lead">Add entire list by uploading the excel sheet:-</p>
               <a href="/sample.xlsx" name="button" class="btn btn-outline-dark mr-2 mb-2" download>1: Download Sample Excel File</a> <br>
               <div class="custom-file mb-2">
-                <input type="file" class="custom-file-input" id="fileInp" aria-describedby="inputGroupFileAddon01">
-                <label class="custom-file-label border border-dark text-dark" for="fileInp">2: Upload File</label>
+                <input type="file" class="custom-file-input" id="fileInp" aria-describedby="fileInp">
+                <label class="custom-file-label border border-dark text-dark" for="fileInp" data="{{sampleRows}}">2: Upload File</label>
               </div>
               <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2">3: Update</button>
             </div>
@@ -717,7 +717,12 @@
       $("#fileInp").change(function() {
 
           readURL(this).then((msg) => {
-            console.log(msg);
+            // console.log(msg);
+            $.each(msg, (key,val) => {
+              $.each(val, (key2,val2) => {
+                console.log(key2);
+              })
+            })
             $(this).siblings('label').toggleClass('text-dark text-success border-dark border-success').html('Ok! All entries are valid.');
           }).catch((e) => {
             console.log(e);

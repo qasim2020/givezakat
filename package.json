@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/Miscellaneous-Pk/givezakat#readme",
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.13.2",
@@ -31,6 +31,7 @@
     "jsonwebtoken": "^8.4.0",
     "lodash": "^4.17.11",
     "mongoose": "^5.4.8",
-    "nodemailer": "^5.1.1"
+    "nodemailer": "^5.1.1",
+    "read-excel-file": "^4.0.1"
   }
 }
