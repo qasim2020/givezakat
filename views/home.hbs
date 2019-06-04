@@ -176,6 +176,10 @@
         overflow: scroll !important;
       }
 
+      .file-error {
+        word-break: break-all;
+      }
+
       @media(max-width:767px){
         .btn-container {
           min-width: 600px;
@@ -532,11 +536,12 @@
 
               <p class="lead">Add entire list by uploading the excel sheet:-</p>
               <a href="/sample.xlsx" name="button" class="btn btn-outline-dark mr-2 mb-2" download>1: Download Sample Excel File</a> <br>
-              <div class="custom-file mb-2">
+              <div class="custom-file mb-2 text-wrap">
                 <input type="file" class="custom-file-input" id="fileInp" aria-describedby="fileInp">
                 <label class="custom-file-label border border-dark text-dark" for="fileInp" data="{{sampleRows}}">2: Upload File</label>
               </div>
-              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2">3: Update</button>
+              <small class="file-error text-danger mb-2"></small>
+              <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2" id="uploadData" disabled>3: Update</button>
             </div>
           </div>
           <div class="modal-footer">
@@ -684,14 +689,8 @@
                 });
 
                 workbook.SheetNames.forEach(function(sheetName) {
-
                   var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
-                  var json_object = JSON.stringify(XL_row_object);
-                  // console.log(json_object);
-                  console.log('completed reading data');
                   resolve(XL_row_object);
-                  // resolve(json_object);
-
                 })
 
               });
@@ -703,32 +702,66 @@
               reader.readAsBinaryString(input.files[0]);
 
           } else {
-
               reject('not proper format of file');
-
           }
 
         });
 
-
-
       }
 
-      $("#fileInp").change(function() {
+      let uploadedData;
 
-          readURL(this).then((msg) => {
-            // console.log(msg);
-            $.each(msg, (key,val) => {
-              $.each(val, (key2,val2) => {
-                console.log(key2);
-              })
-            })
-            $(this).siblings('label').toggleClass('text-dark text-success border-dark border-success').html('Ok! All entries are valid.');
-          }).catch((e) => {
-            console.log(e);
+      $("#fileInp").change(function() {
+        let dataLength = $(this).siblings('label').attr('data').split(',').length;
+        let incomplete = [];
+        readURL(this).then((msg) => {
+          console.log(msg);
+          if (msg.length < 1) incomplete.push(1);
+          $.each(msg, (key,val) => {
+            let count = 0;
+            for (i in val) {
+                if (val.hasOwnProperty(i)) {
+                    count++;
+                }
+            }
+            console.log(dataLength, count);
+            if (count < dataLength) return incomplete.push([key,val.Name]);
+          })
+          if (incomplete.length) {
+            uploadedData = '';
+            $('.file-error').addClass('d-block').removeClass('d-none').html(`Incomplete data entry at row(s): ${JSON.stringify(incomplete).substr(1).slice(0, -1)}`);
+            return $(this).siblings('label').removeClass('text-dark text-success border-dark border-success').addClass('text-danger border-danger').html('2: Sorry! Invalid Data.');
+          }
+          uploadedData = msg;
+          $('#uploadData').attr({disabled:false});
+          $('.file-error').addClass('d-none').removeClass('d-block');
+          $(this).siblings('label').removeClass('text-danger border-danger text-dark border-dark').addClass('text-success border-success').html('2: Ok! All entries are valid.');
+        }).catch((e) => {
+          $('.file-error').addClass('d-block').removeClass('d-none').html(e);
+          return $(this).siblings('label').removeClass('text-dark text-success border-dark border-success').addClass('text-danger border-danger').html('2: Sorry! Bad Error.');
+        });
+      });
+
+      $('#uploadData').on('click',function() {
+
+        if (uploadedData.length < 1) return console.log('no file added');
+
+        data = JSON.stringify(uploadedData);
+        console.log(data);
+        $.ajax({
+            url: '/excelData',
+            type: 'post',
+            data: data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+          }).fail((e) => {
+            console.log(e.responseText);
           });
 
-      });
+      })
 
 
     </script>
