@@ -56,8 +56,6 @@ app.post('/excelData',(req,res) => {
     val.addedBy = 'Qaism Ali ki id here';
     body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
   });
-  // console.log(body);
-  // var people = new People(body);
   People.insertMany(body).then((msg) => {
     console.log(msg);
   }).catch((e) => {
