@@ -50,11 +50,19 @@ app.post('/data',(req,res) => {
 });
 
 app.post('/excelData',(req,res) => {
-  // console.log(req.body);
-  var body = _.pick(req.body,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
+  var body = [];
   _.each(req.body,(val,key)=> {
-    console.log(val.Name);
-  })
+    console.log(val.name);
+    val.addedBy = 'Qaism Ali ki id here';
+    body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
+  });
+  // console.log(body);
+  // var people = new People(body);
+  People.insertMany(body).then((msg) => {
+    console.log(msg);
+  }).catch((e) => {
+    console.log(e.errors);
+  });
   if (req.body) {
     return res.status(200).send('data received');
   }
