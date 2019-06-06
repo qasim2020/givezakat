@@ -180,6 +180,10 @@
         word-break: break-all;
       }
 
+      .upload-msgs {
+        word-break: break-all;
+      }
+
       @media(max-width:767px){
         .btn-container {
           min-width: 600px;
@@ -542,6 +546,10 @@
               </div>
               <small class="file-error text-danger mb-2"></small>
               <button type="button" name="button" class="btn btn-outline-dark mr-2 mb-2" id="uploadData" disabled>3: Update</button>
+              <div class="upload-msgs">
+                <small class="upload-success text-success d-none"></small>
+                <small class="upload-error text-danger d-none"></small>
+              </div>
             </div>
           </div>
           <div class="modal-footer">
@@ -743,11 +751,10 @@
       });
 
       $('#uploadData').on('click',function() {
-
         if (uploadedData.length < 1) return console.log('no file added');
-
+        $('.upload-msgs').children().addClass('d-none');
         data = JSON.stringify(uploadedData);
-        console.log(data);
+        // console.log(data);
         $.ajax({
             url: '/excelData',
             type: 'post',
@@ -757,8 +764,14 @@
             }
           }).done((res) => {
             console.log(res);
+            $('.upload-success').removeClass('d-none').html(res);
           }).fail((e) => {
-            console.log(e.responseText);
+            // console.log(JSON.parse(e.responseText));
+            let errorMsg = '';
+            $.each(JSON.parse(e.responseText),(key,val) => {
+              errorMsg += val + '<br>'
+            })
+            $('.upload-error').removeClass('d-none').html(errorMsg);
           });
 
       })

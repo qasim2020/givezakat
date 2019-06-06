@@ -56,15 +56,21 @@ app.post('/excelData',(req,res) => {
     val.addedBy = 'Qaism Ali ki id here';
     body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
   });
-  People.insertMany(body).then((msg) => {
-    console.log(msg);
+
+  People.insertMany(body,{ordered:false}).then((msg) => {
+    console.log(msg.length);
+    res.status(200).send(`Successfully added <b>${msg.length} rows</b>.`);
   }).catch((e) => {
-    console.log(e.errors);
+    let errors = [];
+    // console.log(e.result.result);
+    console.log(e.result.result.writeErrors);
+    _.each(e.result.result.writeErrors,(val,key) => {
+      errors.push(val.err.errmsg);
+    })
+    console.log(errors);
+    res.status(400).send(errors);
   });
-  if (req.body) {
-    return res.status(200).send('data received');
-  }
-  res.status(400).send('no data receieved');
+
 });
 
 app.listen(port, () => {
