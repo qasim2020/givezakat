@@ -223,6 +223,9 @@
             <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal3">Add People</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal4">Zakat Calculator</a>
+            </li>
+          <li class="nav-item">
             <a class="nav-link" href="#">Blog</a>
           </li>
         </ul>
@@ -551,6 +554,110 @@
                 <small class="upload-success text-success d-none"></small>
                 <small class="upload-error text-danger d-none"></small>
               </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-dark close-modal" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Zakat Calculator -->
+    <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="zakatcalculator" aria-hidden="true">
+      <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title pl-4" id="zakatcalculator">Zakat Calculator</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="">
+              <form>
+                <h3>Zakat Eligible Assets</h3>
+                <small>This is the first step in figuring out how much zakat you'll pay. You exclude the assets you use for everyday life. For example, your primary residence, car, clothes and business equipment are not used in you zakat asset calculations. It is  based on what is left after you take care of you and your family's living expenses.</small>
+                <div class="form-group row">
+                  <label for="stocks" class="col-sm-2 col-form-label">Stocks</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="stocks" value="" placeholder="$ USD">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="savings" class="col-sm-2 col-form-label">Savings</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="savings" placeholder="$ USD">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="investment" class="col-sm-2 col-form-label">Investment Properties</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="investment" placeholder="$ USD">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="cash" class="col-sm-2 col-form-label">Cash</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="cash" placeholder="$ USD">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="business" class="col-sm-2 col-form-label">Business Income</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="business" placeholder="$ USD">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="jewelery" class="col-sm-2 col-form-label">Jewelery (Gold / Silver / Metals)</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="jewelery" placeholder="$ USD">
+                  </div>
+                </div>
+
+                <h3>Zakat Liabilities</h3>
+                <small>Debt from credit cards, college or other loans subtracts from your personal net worth. These outstanding debts are deducted from your total zakat-eligible assets.</small>
+
+                <div class="form-group row">
+                  <label for="creditCard" class="col-sm-2 col-form-label">Credit Cards Payments</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="creditCard" placeholder="$ USD">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="collegeDebt" class="col-sm-2 col-form-label">College Debt Payment</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="collegeDebt" placeholder="$ USD">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="loans" class="col-sm-2 col-form-label">Other Loans</label>
+                  <div class="col-sm-10">
+                    <input type="number" class="form-control" id="loans" placeholder="$ USD">
+                  </div>
+                </div>
+
+                <h3>Nisab</h3>
+                <small>For example, your zakat net worth is $4,000. Each ounce of silver is currently worth $15, so the nisab using the silver calculation is $315 ($15 X 21 ounces = $315). You have more than the nisab so you owe zakat.</small>
+
+                <div class="form-group row">
+                  <div class="col-12">
+                    <input type="text" readonly class="form-control" id="nisab" value="$ 236.00">
+                  </div>
+                </div>
+
+                <h3>Total Obligatory</h3>
+                <small>Western calendar uses 2.557% of your net worth. Hijri calendar uses 2.5% of your net worth. We are using Western calendar cycle of <b>2.557%</b> to calculate your zakat.</small>
+
+                <div class="form-group row">
+                  <div class="col-12">
+                    <input type="text" readonly class="form-control" id="total" value="$ 356.00">
+                  </div>
+                </div>
+
+                <button type="button" name="button" class="btn btn-dark">Give Zakat</button>
+
+              </form>
             </div>
           </div>
           <div class="modal-footer">
