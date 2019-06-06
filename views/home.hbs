@@ -205,7 +205,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
       <div class="brand">
         <!-- <img src="/logo5.png" alt="" class="" style="height:44px"> -->
-        <a href="#" class="navbar-brand">needyList</a>
+        <a href="#" class="navbar-brand">Give Zakat</a>
       </div>
 
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -251,9 +251,8 @@
 
     <div class="mt-3 d-flex justify-content-start flex-wrap">
       {{#each data}}
-      {{#if this.[23]}}
       <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="person-card card bg-{{this.[23]}} text-light rounded" data-toggle="modal" data-target="#exampleModal" data="
+        <div class="person-card card bg-{{this.cardClass}} text-light rounded" data-toggle="modal" data-target="#exampleModal" data="
         {{this.[1]}},
         {{this.[2]}},
         {{this.[3]}},
@@ -269,28 +268,27 @@
         {{this.[15]}}
         ">
           <div class="p-2">
-            <b class="">{{this.[0]}}.</b> <br>
-            {{this.[1]}}<br>
-            {{this.[4]}} x Members in a family<br>
-            Earning Rs {{this.[3]}}/- per month
+            <b class="">{{inc @index}}.</b> <br>
+            {{this.name}}<br>
+            {{this.fMembers}} x Members in a family<br>
+            Earning Rs {{this.salary}}/- per month
           </div>
           <hr class="my-1">
           <div class="p-2">
             <b class="badge badge-warning">Order Details</b> <br>
             <small>
-               Package: {{this.[17]}} in Rs {{this.[16]}} <br>
-               Ordered On: {{this.[18]}} <br>
-               Delivered On: {{this.[19]}}
+               Package: {{this.package}} in Rs {{this.packageCost}} <br>
+               Ordered On: {{this.orderDate}} <br>
+               Delivered On: {{this.deliveryDate}}
              </small>
              <br>
              <b class="badge badge-warning">Status</b>
-             <small>{{this.[23]}}</small>
+             <small>{{this.cardClass}}</small>
           </div>
           <hr class="my-1">
           <small class="p-2 text-light">Click to view details.</small>
         </div>
       </div>
-      {{/if}}
       {{/each}}
 
     </div>
@@ -553,7 +551,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default close-modal" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-outline-dark close-modal" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
@@ -765,8 +763,9 @@
           }).done((res) => {
             console.log(res);
             $('.upload-success').removeClass('d-none').html(res);
+            $(this).toggleClass('btn-outline-dark btn-outline-success');
           }).fail((e) => {
-            // console.log(JSON.parse(e.responseText));
+            $(this).toggleClass('btn-outline-dark btn-outline-danger');
             let errorMsg = '';
             $.each(JSON.parse(e.responseText),(key,val) => {
               errorMsg += val + '<br>'

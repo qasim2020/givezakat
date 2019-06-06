@@ -18,6 +18,11 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine','hbs');
 
+hbs.registerHelper("inc", function(value, options)
+{
+    return parseInt(value) + 1;
+});
+
 // sheet('construction','read');
 // sheet('material','read');
 // sheet('material','update',[
@@ -33,10 +38,18 @@ app.set('view engine','hbs');
 
 app.get('/',(req,res) => {
   console.log('home page opened.');
-  readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
+  People.find().then((msg) => {
+    res.data = msg;
+    return readXlsxFile(__dirname+'/static/sample.xlsx')
+  }).then((rows) => {
+    console.log(res.data);
     res.render('home.hbs',{
+      data: res.data,
       sampleRows: rows[0]
     });
+  }).catch((e) => {
+    console.log(e);
+    res.status(404).send(e);
   });
 });
 
@@ -52,7 +65,6 @@ app.post('/data',(req,res) => {
 app.post('/excelData',(req,res) => {
   var body = [];
   _.each(req.body,(val,key)=> {
-    console.log(val.name);
     val.addedBy = 'Qaism Ali ki id here';
     body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
   });
@@ -63,12 +75,18 @@ app.post('/excelData',(req,res) => {
   }).catch((e) => {
     let errors = [];
     // console.log(e.result.result);
-    console.log(e.result.result.writeErrors);
-    _.each(e.result.result.writeErrors,(val,key) => {
-      errors.push(val.err.errmsg);
-    })
-    console.log(errors);
-    res.status(400).send(errors);
+    if (e.result.result) {
+      errors.push(`Updated <b>${e.result.result.nInserted}</b> rows!`);
+      errors.push(`Failed to update <b>${e.result.result.writeErrors.length}</b> rows due to duplicates:-`)
+      _.each(e.result.result.writeErrors,(val,key) => {
+        // console.log(val.err.op);
+        errors.push(key + '. ' + val.err.op.name + ', ' + val.err.op.mob);
+      })
+      console.log(errors);
+      return res.status(400).send(errors);
+    }
+    res.status(400).send(e);
+
   });
 
 });
