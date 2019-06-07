@@ -36,6 +36,10 @@ hbs.registerHelper("inc", function(value, options)
 //   console.log(e);
 // });
 
+app.get('/hacks',(req,res) => {
+  res.render('hacks.hbs');
+})
+
 app.get('/',(req,res) => {
   console.log('home page opened.');
   People.find().then((msg) => {
