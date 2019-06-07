@@ -57,6 +57,14 @@ app.get('/',(req,res) => {
   });
 });
 
+app.get('/signup',(req,res) => {
+  res.render('signup.hbs');
+})
+
+app.get('/forgotpw',(req,res) => {
+  res.render('forgotpw.hbs');
+})
+
 app.post('/data',(req,res) => {
 
   if (req.body) {
