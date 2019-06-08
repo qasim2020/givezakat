@@ -10,6 +10,8 @@ const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
 const {People} = require('./models/people');
 const {Users} = require('./models/users');
+const {sendmail} = require('./js/sendmail');
+const {serverRunning} = require('./js/serverRunning');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -200,7 +202,8 @@ app.post('/signing',(req,res) => {
       res.status(200).send('Mail sent !');
     }).catch((e) => {
       console.log(e);
-      res.status(404).send(e.errno);
+      if (e.errno) return res.status(404).send(e.errno);
+      res.status(400).send(`${e}`);
     });
   };
 
@@ -243,6 +246,7 @@ app.post('/signing',(req,res) => {
 
 });
 
+serverRunning();
 
 app.listen(port, () => {
   console.log(`listening on port ${port}...`);

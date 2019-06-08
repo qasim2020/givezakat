@@ -11,17 +11,17 @@
     <title>Zakat Lists</title>
   </head>
   <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-center">
       <div class="brand">
-        <!-- <img src="/logo5.png" alt="" class="" style="height:44px"> -->
-        <a href="/" class="navbar-brand">Zakat Lists</a>
+        <img src="/4.png" alt="" class="" style="height:84px">
       </div>
     </nav>
+
     <h1 class="text-center font-weight-bolder mb-4">Forgot Password</h1>
 
     <div class="d-flex justify-content-center px-4">
 
-      <div class="col-lg-4 col-md-6 col-sm-8 col-12 bg-dark rounded p-3 text-light bg-shadow">
+      <div class="col-lg-4 col-md-6 col-sm-8 col-12 shadow rounded p-3">
 
         <form role="form" id="forgotpassword" novalidate action="/home" method="get">
 
@@ -31,7 +31,7 @@
 
               <label class="level-0" for="fp-email">Your email address</label>
 
-              <small class="text-warning pl-2 text-right"><label for="fp-email" generated="true" class="error fp-email-error"></label></small>
+              <small class="text-danger pl-2 text-right"><label for="fp-email" generated="true" class="error fp-email-error"></label></small>
 
             </div>
 
@@ -41,44 +41,42 @@
 
           </div>
 
-          <button type="button" id="rx-code" class="mb-2 btn btn-light" name="button">Recieve code</button>
+          <button type="button" id="rx-code" class="mb-2 btn btn-primary" name="button">Recieve code</button>
           <br>
 
-          <span class="mail-notif d-none text-success"><i class="fas fa-check-circle"></i><small id="mail_sent" class="text-light"> <b> Mail sent !</b></small></span>
+          <span class="mail-notif d-none text-success"><i class="fas fa-check-circle"></i><small id="mail_sent" class=""> <b> Mail sent !</b></small></span>
 
 
-          <hr class="bg-info">
+          <hr class="bg-light">
 
           <div class="form-group">
 
             <div class="d-flex justify-content-between align-items-center">
 
-              <!-- <label id="level-1" class="level-1 text-muted" for="fp-code"></label> -->
-
-              <small class="text-warning text-right"><label for="fp-code" generated="true" class="fp-error d-none"></label></small>
+              <small class="text-danger text-right"><label for="fp-code" generated="true" class="fp-error d-none"></label></small>
 
             </div>
 
-            <input disabled name="fp-code" type="text" class="level-1 form-control bg-dark" id="fp-code" aria-describedby="emailHelp" placeholder="123asd" value="" maxlength="6">
+            <input disabled name="fp-code" type="text" class="level-1 form-control" id="fp-code" aria-describedby="emailHelp" placeholder="Check your email for code!" value="">
 
             <small class="text-muted">Check your email for the code and write above.</small>
             <br>
-            <span class="code-notif d-none text-success"><i class="fas fa-check-circle"></i><small id="mail_sent" class="text-light"> <b> Code Verified !</b></small></span>
+            <span class="code-notif d-none text-success"><i class="fas fa-check-circle"></i><small id="mail_sent" class=""> <b> Code Verified !</b></small></span>
 
           </div>
 
-          <hr class="bg-info">
+          <hr class="bg-light">
 
           <div class="form-group">
 
             <div class="d-flex justify-content-between align-items-center">
               <label class="level-2 text-muted" for="fp-pass">Password</label>
-              <small class="text-warning pl-2 text-right"><label for="fp-pass" generated="true" class="error"></label></small>
+              <small class="text-danger pl-2 text-right"><label for="fp-pass" generated="true" class="error"></label></small>
             </div>
 
-            <input disabled name="fp-pass" type="password" class="level-2 form-control bg-dark" id="fp-pass" placeholder="Password" value="pakistani">
+            <input disabled name="fp-pass" type="password" class="level-2 form-control" id="fp-pass" placeholder="Password" value="pakistani">
 
-            <small class="text-muted">Create an easy password. Np :)</small>
+            <small class="text-muted">Please create a difficult password.</small>
 
           </div>
 
@@ -86,21 +84,22 @@
 
             <div class="d-flex justify-content-between align-items-center">
               <label class="level-2 text-muted" for="fp-pass2">Confirm Password</label>
-              <small class="text-warning pl-2 text-right"><label for="fp-pass2" generated="true" class="error"></label></small>
+              <small class="text-danger pl-2 text-right"><label for="fp-pass2" generated="true" class="error"></label></small>
             </div>
 
-            <input disabled name="fp-pass2" type="password" class="level-2 form-control bg-dark" id="fp-pass2" placeholder="Password" value="pakistani">
+            <input disabled name="fp-pass2" type="password" class="level-2 form-control" id="fp-pass2" placeholder="Password" value="pakistani">
 
             <small class="text-muted">Please enter same as you entered in previous field.</small>
 
           </div>
 
-          <p class=""><small class="d-none text-warning check-label"><label for="agreeTerms" generated="true" class="forgotpassword-error"></label></small></p>
-          <button disabled type="button" id="click-forgotpassword" class="btn btn-light">Submit</button>
-          <button type="button" id="login-forgotpassword" class="signIn btn btn-outline-light">Log In</button>
-          <button type="button" class="signUp btn btn-outline-light">Sign Up</button>
+          <p class=""><small class="d-none text-danger check-label"><label for="agreeTerms" generated="true" class="forgotpassword-error"></label></small></p>
+          <button disabled type="button" id="click-forgotpassword" class="btn btn-primary mb-2">Change Password</button>
+          <hr class="bg-light">
+          <a href="/" id="login-forgotpassword" class="signIn btn btn-outline-primary">Sign In</a>
+          <a href="/signup" class="signUp btn btn-outline-primary">Sign Up</a>
           <div class="mt-2 pb-0 d-none password-notif ">
-              <span class="text-success"><i class="fas fa-check-circle"></i><small id="mail_sent" class="text-light"> <b> </b></small></span>
+              <span class="text-success"><i class="fas fa-check-circle"></i><small id="mail_sent" class=""> <b> </b></small></span>
           </div>
 
         </form>
@@ -111,8 +110,116 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+    $('#rx-code').click(() => {
+
+      if ( $('#fp-email').val() === '' || !((/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/).test($('#fp-email').val())) ) return $('.fp-email-error').html('<i class="fas fa-exclamation-circle"></i> Invalid field.');
+
+      $('.fp-email-error').html('');
+      $('.loader').toggleClass('d-none d-flex');
+
+      let data = {
+        "query": 'Email_Verify',
+        "email": $('#fp-email').val(),
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log('Done:',msg);
+          $('.level-1').removeClass('text-muted').attr('disabled',false);
+          $('.level-0').attr('disabled',true).addClass('text-muted');
+          $('#rx-code').attr('disabled',true);
+          $('.mail-notif').removeClass('d-none');
+          $('.loader').toggleClass('d-none d-flex');
+        }).fail((e) => {
+          console.log(e.responseText);
+          $('.loader').toggleClass('d-none d-flex');
+          return $('.fp-email-error').html(`<i class="fas fa-exclamation-circle"></i> ${e.responseText}`);
+        });
+
+    })
+
+    $('#fp-code').keyup(() => {
+      if ($('#fp-code').val().length < 6) return console.log('less then 6 yet');
+
+      let data = {
+        "query": 'Test_Code',
+        "email": $('#fp-email').val(),
+        "code": $('#fp-code').val(),
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log('Done:',msg);
+          $('.level-2').removeClass('text-muted').attr('disabled',false);
+          $('.level-1').addClass('').attr('disabled',true);
+          $('.code-notif').removeClass('d-none');
+          $('.fp-error').addClass('d-none');
+          $('#click-forgotpassword').attr('disabled',false);
+        }).fail((e) => {
+          console.log(e.responseText,e);
+          $('.fp-error').removeClass('d-none').html(e.responseText);
+        });
+    });
+
+    $('#click-forgotpassword').click(() => {
+      console.log('click the button');
+      if ($('#fp-pass').val() === '' || $('#fp-pass2').val() === '') return $('.forgotpassword-error').html('Please fill in valid fields for the passwords.').closest('small').removeClass('d-none');
+
+      if ($('#fp-pass').val() !== $('#fp-pass2').val()) return $('.forgotpassword-error').html('Your passwords do not match.').closest('small').removeClass('d-none');
+
+      if ($('#fp-pass').val().length < 6) return $('.forgotpassword-error').html('Minimum 6 figure password please.').closest('small').removeClass('d-none');
+
+      $('.forgotpassword-error').closest('small').addClass('d-none');
+
+      let data = {
+        "query": 'new_password',
+        "email": $('#fp-email').val(),
+        "code": $('#fp-code').val(),
+        "password": $('#fp-pass').val()
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log('Done:',msg);
+          $('.password-notif').removeClass('d-none').find('b').html(msg);
+          $('.level-2').addClass('text-muted').attr('disabled',true);
+        }).fail((e) => {
+          console.log(e.responseText,e);
+          return $('.forgotpassword-error').html(e.responseText).closest('small').removeClass('d-none');
+        });
+
+    })
+
+    </script>
   </body>
 </html>
