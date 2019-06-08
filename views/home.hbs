@@ -217,11 +217,15 @@
             {{#if token}}
             <a class="nav-link active" href="/logout/{{token}}" data-toggle="" data-target="#">Sign out of {{name}}</a>
             {{else}}
-            <a class="nav-link active" href="#" data-toggle="modal" data-target="#exampleModal2">Sign In</a>
+            <a class="nav-link active sign-in-modalOpener" href="#" data-toggle="modal" data-target="#exampleModal2" modal-header="Sign In">Sign In</a>
             {{/if}}
           </li>
           <li class="nav-item">
+            {{#if token}}
             <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal3">Add People</a>
+            {{else}}
+            <a class="nav-link sign-in-modalOpener" href="#" data-toggle="modal" data-target="#exampleModal2" modal-header="Sign in to Add People">Sign in to Add People</a>
+            {{/if}}
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal4">Zakat Calculator</a>
@@ -692,6 +696,11 @@
 
     <script type="text/javascript">
 
+    $(document).ready(() => {
+      if (`{{error}}`.length) return window.location.assign(`/`);
+      console.log('window loaded fine');
+    })
+
       $('.edit-toggle').toggleClass('d-none');
       let editStatus = false;
 
@@ -709,7 +718,13 @@
           $('.edit-btn').trigger('click').show();
         };
         $('.edit-modal-title').html('Edit');
-      })
+      });
+
+
+      $('.sign-in-modalOpener').on('click',function() {
+        let header = $(this).attr('modal-header')
+        $('#exampleModal2').find('.modal-title').html(header);
+      });
 
 
       $(document).on('click','.filter-btn',function(){

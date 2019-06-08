@@ -45,7 +45,9 @@ let authenticate = (req,res,next) => {
     next();
   }).catch((e) => {
     console.log(e);
-    return res.status(404).render('home.hbs');
+    return res.status(404).render('home.hbs', {
+      error: 'Bad Request! Please use proper URL to open app.'
+    });
   });
 };
 
