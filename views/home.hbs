@@ -214,7 +214,11 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
+            {{#if token}}
+            <a class="nav-link active" href="/logout/{{token}}" data-toggle="" data-target="#">Sign out of {{name}}</a>
+            {{else}}
             <a class="nav-link active" href="#" data-toggle="modal" data-target="#exampleModal2">Sign In</a>
+            {{/if}}
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal3">Add People</a>
@@ -489,7 +493,7 @@
           </div>
           <div class="modal-body">
             <div class="px-4 py-3">
-              <a class="btn bg-primary text-light rounded" href="/home" name="button"><i class="fab fa-google"></i> | Sign in with Google</a>
+              <a class="btn bg-primary text-light rounded d-block" href="/home" name="button"><i class="fab fa-google"></i> | Sign in with Google</a>
             </div>
             <div class="dropdown-divider"></div>
             <form class="px-4 py-3" role="form" id="sign-in" novalidate action="/home" method="get">
@@ -513,15 +517,10 @@
   							<input name="in-pass" type="password" class="form-control" id="in-pass" placeholder="Password" value="pakistani">
 
   						</div>
-              <div class="form-group">
-                <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="dropdownCheck">
-                  <label class="form-check-label" for="dropdownCheck">
-                    Remember me
-                  </label>
-                </div>
-              </div>
-              <button type="submit" class="btn btn-primary">Sign in</button>
+
+              <p class="d-none"><small class="text-danger check-label"><label for="agreeTerms" generated="true" class="signup-error"></label></small></p>
+
+              <button type="button" id="click-login" class="btn btn-primary">Sign In</button>
             </form>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="/signup">New around here? Sign up</a>
@@ -687,6 +686,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+		<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
 
 
     <script type="text/javascript">
@@ -708,7 +709,6 @@
           $('.edit-btn').trigger('click').show();
         };
         $('.edit-modal-title').html('Edit');
-
       })
 
 
@@ -892,7 +892,37 @@
             $('.upload-error').removeClass('d-none').html(errorMsg);
           });
 
-      })
+      });
+
+      $('#click-login').click(function(e) {
+
+        console.log('log in clicked');
+				if (!($("#sign-in").valid()))	return;
+
+				let data = {
+					"query": 'Login',
+					"email": $('#in-email').val(),
+					"password": $('#in-pass').val()
+				};
+
+				data = JSON.stringify(data);
+
+				$.ajax({
+				    url: '/signing',
+				    type: 'post',
+				    data,
+				    headers: {
+				        'content-type': 'application/json',
+				    }
+					}).done((token) => {
+						console.log('successful login: ', token);
+						window.location.replace(`/home/${token}`);
+					}).fail((e) => {
+						console.log('error here', e);
+						return $('.signup-error').html(`<i class="fas fa-exclamation-circle"></i> ` + e.responseText).closest('p').removeClass('d-none');
+					});
+
+			});
 
 
     </script>

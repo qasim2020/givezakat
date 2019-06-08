@@ -12,17 +12,16 @@
     <title>Zakat Lists</title>
   </head>
   <body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-center">
       <div class="brand">
-        <!-- <img src="/logo5.png" alt="" class="" style="height:44px"> -->
-        <a href="/" class="navbar-brand">Zakat Lists</a>
+        <img src="/4.png" alt="" class="" style="height:84px">
       </div>
     </nav>
     <h1 class="text-center font-weight-bolder mb-4">Sign Up</h1>
 
     <div class="d-flex justify-content-center px-4">
 
-      <div class="col-lg-4 col-md-6 col-sm-8 col-12 bg-dark rounded p-3 text-light bg-shadow">
+      <div class="col-lg-4 col-md-6 col-sm-8 col-12 shadow rounded p-3">
 
         <a class="btn bg-primary text-light rounded mb-3 d-block" href="/home" name="button"><i class="fab fa-google"></i> | Sign up with Google</a>
 
@@ -36,7 +35,7 @@
 
               <label for="user-name">Name</label>
 
-              <small class="text-warning pl-2 text-right"><label for="user-name" generated="true" class="error"></label></small>
+              <small class="text-danger pl-2 text-right"><label for="user-name" generated="true" class="error"></label></small>
 
             </div>
 
@@ -48,7 +47,7 @@
 
             <div class="d-flex justify-content-between align-items-center">
               <label for="user-email">Email address</label>
-              <small class="text-warning pl-2 text-right"><label for="user-email" generated="true" class="error"></label></small>
+              <small class="text-danger pl-2 text-right"><label for="user-email" generated="true" class="error"></label></small>
             </div>
 
             <input name="user-email" class="form-control" id="user-email" aria-describedby="emailHelp" placeholder="Enter email" >
@@ -63,7 +62,7 @@
 
             <div class="d-flex justify-content-between align-items-center">
               <label for="user-pass">Password</label>
-              <small class="text-warning pl-2 text-right"><label for="user-pass" generated="true" class="error"></label></small>
+              <small class="text-danger pl-2 text-right"><label for="user-pass" generated="true" class="error"></label></small>
             </div>
 
             <input name="user-pass" type="password" class="form-control" id="user-pass" placeholder="Password" value="pakistani">
@@ -72,24 +71,10 @@
 
           </div>
 
-          <div class="form-group">
+          <p class="d-none"><small class="text-danger check-label"><label for="agreeTerms" generated="true" class="signup-error"></label></small></p>
 
-            <div class="d-flex justify-content-between align-items-center">
-
-              <div class="custom-control custom-checkbox">
-                <input name="agreeTerms" type="checkbox" class="custom-control-input" id="agreeTerms" checked>
-                <span class="custom-control-indicator"></span>
-                <label class="custom-control-label" for="agreeTerms">I agree to terms and policy</label>
-              </div>
-
-            </div>
-
-          </div>
-
-          <p class="d-none"><small class="text-warning text-right check-label"><label for="agreeTerms" generated="true" class="signup-error"></label></small></p>
-
-          <button type="button" id="click-signup" class="btn btn-light">Submit</button>
-          <button type="button" class="signIn btn btn-outline-light">Login</button>
+          <button type="button" id="click-signup" class="btn btn-primary">Submit</button>
+          <a href="/" class="signIn btn btn-outline-primary">Sign in</a>
 
         </form>
 
@@ -99,7 +84,7 @@
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
@@ -119,6 +104,8 @@
 
       }
 
+      console.log('valid entries');
+
       let data = {
         'query': 'Register',
         "name": $('#user-name').val(),
@@ -129,7 +116,7 @@
       data = JSON.stringify(data);
 
       $.ajax({
-          url: '/data',
+          url: '/signing',
           type: 'post',
           data,
           headers: {
@@ -141,19 +128,9 @@
           $("#sign-up").submit();
         }).fail((e) => {
           console.log('error here', e.responseText);
-          return $('.signup-error').html(`<i class="fas fa-exclamation-circle"></i> ` + e.responseText)
+          return $('.signup-error').html(`<i class="fas fa-exclamation-circle"></i> ` + e.responseText).closest('p').removeClass('d-none');
         });
-    });
 
-    $.validator.setDefaults({
-
-      highlight: function(element, errorClass, validClass) {
-
-      },
-
-      unhighlight: function(element, errorClass, validClass) {
-
-      }
     });
 
     $("#sign-up").validate({
@@ -172,30 +149,26 @@
         'user-pass' : {
           required: true,
           minlength: 5
-        },
-        agreeTerms: {
-          required: true
         }
 
       },
       messages: {
         'user-name': {
           required: `<i class="fas fa-exclamation-circle"></i>`+" Please write your name",
-          lettersonly: `<i class="fas fa-exclamation-circle"></i>`+" a name can not have symbols and numbers",
-          minlength: `<i class="fas fa-exclamation-circle"></i>`+" atleast 2 characters"
+          lettersonly: `<i class="fas fa-exclamation-circle"></i>`+" A name can not have symbols and numbers",
+          minlength: `<i class="fas fa-exclamation-circle"></i>`+" Atleast 2 characters"
         },
         'user-email' : {
           required: `<i class="fas fa-exclamation-circle"></i>`+" Fill in the blank",
           email: `<i class="fas fa-exclamation-circle"></i>`+" Email address is invalid",
           minlength: `<i class="fas fa-exclamation-circle"></i>`+" Atleast 5 characters",
-          remote: `<i class="fas fa-exclamation-circle"></i>`+" This email is already registered"
         },
         'user-pass' : {
           required: `<i class="fas fa-exclamation-circle"></i>`+" Fill in the blank",
           minlength: `<i class="fas fa-exclamation-circle"></i>`+" Atleast 5 characters",
         },
         agreeTerms: {
-          required: `<i class="fas fa-exclamation-circle"></i>`
+          required: `<i class="fas fa-exclamation-circle"></i>+ " "`
         }
       },
 

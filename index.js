@@ -9,6 +9,7 @@ const readXlsxFile = require('read-excel-file/node');
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
 const {People} = require('./models/people');
+const {Users} = require('./models/users');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -36,6 +37,19 @@ hbs.registerHelper("inc", function(value, options)
 //   console.log(e);
 // });
 
+let authenticate = (req,res,next) => {
+  let token = req.params.token || req.body.token;
+  Users.findByToken(token).then((user) => {
+    if (!user) return Promise.reject('No user found');
+    req.params.user = user;
+    next();
+  }).catch((e) => {
+    console.log(e);
+    return res.status(404).render('home.hbs');
+  });
+};
+
+
 app.get('/hacks',(req,res) => {
   res.render('hacks.hbs');
 })
@@ -57,6 +71,7 @@ app.get('/',(req,res) => {
   });
 });
 
+
 app.get('/signup',(req,res) => {
   res.render('signup.hbs');
 })
@@ -74,10 +89,10 @@ app.post('/data',(req,res) => {
 
 });
 
-app.post('/excelData',(req,res) => {
+app.post('/excelData',authenticate,(req,res) => {
   var body = [];
   _.each(req.body,(val,key)=> {
-    val.addedBy = 'Qaism Ali ki id here';
+    val.addedBy = req.params.user._id.toString();
     body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
   });
 
@@ -103,7 +118,45 @@ app.post('/excelData',(req,res) => {
 
 });
 
-app.post('/data',(req,res) => {
+app.get('/home/:token', authenticate, (req,res) => {
+
+  console.log(req.params.user.name,'entered home');
+
+  People.find().then((msg) => {
+    res.data = msg;
+    return readXlsxFile(__dirname+'/static/sample.xlsx')
+  }).then((rows) => {
+    console.log(res.data);
+    res.render('home.hbs',{
+      data: res.data,
+      sampleRows: rows[0],
+      token: req.params.token,
+      name: req.params.user.name,
+    });
+  }).catch((e) => {
+    console.log(e);
+    res.status(404).send(e);
+  });
+
+});
+
+app.get('/logout/:token', authenticate, (req,res) => {
+  console.log(req.params.user.name,'logged out');
+  let user = req.params.user;
+  user.removeToken(req.params.token).then((user) => {
+    return People.find();
+  }).then((msg) => {
+    console.log(res.data);
+    res.render('home.hbs',{
+      data: msg,
+    });
+  }).catch((e) => {
+    console.log(e);
+    res.status(404).send(e);
+  });
+})
+
+app.post('/signing',(req,res) => {
 
   if (req.body.query === 'Register') {
     var user = new Users(
@@ -114,7 +167,7 @@ app.post('/data',(req,res) => {
       return console.log('saved', returned.name);
     }).catch((e) => {
       console.log(e);
-      if (e.code === 11000) return res.status(400).send('You are already registered with this email');
+      if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
       console.log('Error here', e);
       return res.status(400).send('Server - Bad Request');
     });
