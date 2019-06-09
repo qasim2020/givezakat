@@ -1,73 +1,190 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
   <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <style type="text/css">
-
-      body : {
-        padding: 2rem;
+    <link href="https://fonts.googleapis.com/css?family=Rum+Raisin&display=swap" rel="stylesheet">
+    <style media="" type="text/css">
+    body {
+      font-family: 'Rum Raisin', sans-serif;
+      background-color: #F8F9FA;
+      overflow: hidden;
+    }
+      .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
       }
 
-      #content {
-        overflow: hidden;
-        border: 1px solid green;
-        transition: height 0.5s ease;
+      .logo-caption {
+        margin-top: -50px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 32px;
+        line-height: 41px;
+
+        color: #332D67;
       }
 
-      #content > ul {
-        padding: 1rem 2rem;
+      .launching {
+        font-family: Rum Raisin;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 115px;
+
+        color: #332D67;
       }
 
-      .collapse {
-        /* height: 15rem; */
+      .sub-input {
+        /* Rectangle */
+        font-family: 'Rum Raisin', sans-serif;
+        background: #FFFFFF;
+        border: 1px solid #000000;
+        box-sizing: border-box;
+        width: 80vw;
+        height: 68px;
+        font-size: 32px;
+        text-align: center;
+        margin-bottom: 20px;
       }
 
-      .collapsing {
-        height: 0;
+      .sub-request {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 32px;
+        line-height: 41px;
+
+        color: #332D67;
       }
 
+      button {
 
+        height: 68px;
+
+        background: #332D67;
+        border: 1px solid #332D67;
+        box-sizing: border-box;
+        font-size: 32px;
+        font-family: 'Rum Raisin', sans-serif;
+        color: #F8F9FA;
+
+      }
+
+      svg {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%);
+      }
+
+      .footer-text {
+        /* you can follow my progress on @getmakerlog */
+
+        position: absolute;
+        z-index: 2;
+        bottom: 23px;
+        left: 50%;
+        transform: translate(-50%,-50%);
+
+        font-family: 'Rum Raisin', sans-serif;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 23px;
+
+        color: #F8F9FA;
+
+
+      }
+
+      @media only screen and (max-width: 768px) {
+        /* For mobile phones: */
+        .logo {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          width: 60vw;
+        }
+
+        .logo-caption {
+          margin-top: -50px;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 32px;
+          line-height: 41px;
+
+          color: #332D67;
+        }
+
+        .launching {
+          font-family: Rum Raisin;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 115px;
+
+          color: #332D67;
+        }
+
+        .sub-input {
+          /* Rectangle */
+          font-family: 'Rum Raisin', sans-serif;
+          background: #FFFFFF;
+          border: 1px solid #000000;
+          box-sizing: border-box;
+          width: 80vw;
+          height: 68px;
+          font-size: 32px;
+          text-align: center;
+          margin-bottom: 20px;
+        }
+
+        .sub-request {
+          font-style: normal;
+          font-weight: normal;
+          font-size: 32px;
+          line-height: 41px;
+
+          color: #332D67;
+        }
+
+        button {
+
+          height: 68px;
+
+          background: #332D67;
+          border: 1px solid #332D67;
+          box-sizing: border-box;
+          font-size: 32px;
+          font-family: 'Rum Raisin', sans-serif;
+          color: #F8F9FA;
+
+        }
+
+        svg {
+          position: absolute;
+          bottom: 0;
+        }
+      }
 
     </style>
-
-    <title>hacks</title>
+    <title></title>
   </head>
-  <body class="bg-light">
-
-    <button type="button" name="button" id="collapse">Collapse</button>
-    <div id="content" class="collapse">
-      <ul>
-        <li>Qasim</li>
-        <li>hacks</li>
-        <li>other hacks</li>
-      </ul>
+  <body>
+    <div class="logo">
+      <img src="/sublogo.png">
+      <p class="logo-caption">Calculate Give Monitor and Sponsor Zakats</p>
+      <p class="launching">Launching Soon</p>
+      <p class="sub-request">Subscribe to receive an alert on launch</p>
+      <input class="sub-input" type="text" name="" value="" placeholder="your-email-address@something.com">
+      <button type="button" name="button">Subscribe</button>
     </div>
 
+    <svg width="100%" viewBox="0 0 1440 161" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0 31L271.5 0L717 49L1099 20L1440 31V161H0V31Z" fill="#332D67"/>
+    </svg>
+    <p class="footer-text">you can follow my progress on @getmakerlog</p>
 
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
-
-
-    <script type="text/javascript">
-
-      $('#collapse').on('click',() => {
-        $('#content').toggleClass('collapse collapsing');
-      })
-
-      let listHeight = $('#content').outerHeight();
-      $('.collapse').css({height: listHeight});
-      console.log(listHeight);
-
-    </script>
   </body>
 </html>
