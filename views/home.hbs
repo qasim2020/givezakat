@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-signin-client_id" content="133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -215,7 +216,7 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             {{#if token}}
-            <a class="nav-link active" href="/logout/{{token}}" data-toggle="" data-target="#">Sign out of {{name}}</a>
+            <a class="nav-link active" href="#" onclick="signOut()" data-toggle="" data-target="#">Sign out of {{name}}</a>
             {{else}}
             <a class="nav-link active sign-in-modalOpener" href="#" data-toggle="modal" data-target="#exampleModal2" modal-header="Sign In">Sign In</a>
             {{/if}}
@@ -224,7 +225,7 @@
             {{#if token}}
             <a class="nav-link" href="#" data-toggle="modal" data-target="#exampleModal3">Add People</a>
             {{else}}
-            <a class="nav-link sign-in-modalOpener" href="#" data-toggle="modal" data-target="#exampleModal2" modal-header="Sign in to Add People">Sign in to Add People</a>
+            <a class="nav-link sign-in-modalOpener" href="#" data-toggle="modal" data-target="#exampleModal2" modal-header="Sign in to Add People">Add People</a>
             {{/if}}
           </li>
           <li class="nav-item">
@@ -496,9 +497,10 @@
             </button>
           </div>
           <div class="modal-body">
-            <div class="px-4 py-3">
-              <a class="btn bg-primary text-light rounded d-block" href="/home" name="button"><i class="fab fa-google"></i> | Sign in with Google</a>
+            <div class="wrapper px-4 mb-3">
+              <div id="my-signin2"></div>
             </div>
+
             <div class="dropdown-divider"></div>
             <form class="px-4 py-3" role="form" id="sign-in" novalidate action="/home" method="get">
               <div class="form-group">
@@ -692,14 +694,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
 		<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 
 
     <script type="text/javascript">
 
-    $(document).ready(() => {
-      if (`{{error}}`.length) return window.location.assign(`/`);
-      console.log('window loaded fine');
-    })
+      $(document).ready(() => {
+        if (`{{error}}`.length) return window.location.assign(`/`);
+        console.log('window loaded fine');
+      });
 
       $('.edit-toggle').toggleClass('d-none');
       let editStatus = false;
@@ -938,6 +941,79 @@
 					});
 
 			});
+
+      // GOOGLE O-AUTH
+
+      function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+      };
+
+      function onSuccess(googleUser) {
+
+        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+        console.log('email: ' + googleUser.getBasicProfile().getEmail());
+
+        {{#unless token}}
+
+        let data = {
+          'query': 'GoogleIn',
+          "name": googleUser.getBasicProfile().getName(),
+          "email": googleUser.getBasicProfile().getEmail(),
+        };
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((token) => {
+          console.log('successful: ', token);
+          window.location.assign(`/home/${token}`);
+        }).fail((e) => {
+          // signOut();
+          return console.log('error here', e.responseText);
+        });
+
+        {{/unless}}
+
+      }
+
+      function onFailure(error) {
+        console.log(error);
+      }
+
+      function renderButton() {
+        gapi.signin2.render('my-signin2', {
+          'scope': 'profile email',
+          'width': 'auto',
+          'longtitle': true,
+          'theme': 'dark',
+          'onsuccess': onSuccess,
+          'onfailure': onFailure
+        });
+      }
+
+      window.onLoadCallback = function(){
+        gapi.auth2.init();
+      };
+
+      function signOut() {
+        var auth2 = gapi.auth2.getAuthInstance();
+        auth2.signOut().then(function () {
+          console.log('User signed out.');
+        });
+        window.location.assign(`/logout/{{token}}`);
+      };
+
+
 
 
     </script>

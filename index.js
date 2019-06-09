@@ -177,6 +177,25 @@ app.post('/signing',(req,res) => {
     });
   };
 
+  if (req.body.query === 'GoogleIn') {
+    // var user = new Users(
+    //   _.pick(req.body,['name','email']),
+    // );
+    req.body.SigninType = 'Google';
+    Users.findOneAndUpdate({"email": req.body.email}, {$set : {"SigninType":req.body.SigninType}}, {new: true}).then((returned) => {
+      if (!returned) return Promise.reject('Invalid Request');
+      return returned.generateAuthToken();
+    }).then((returned) => {
+      res.status(200).send(returned.tokens[0].token);
+      return console.log('saved', returned.name);
+    }).catch((e) => {
+      console.log(e);
+      if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
+      console.log('Error here', e);
+      return res.status(400).send('Server - Bad Request' + e);
+    });
+  }
+
   if (req.body.query === 'Login') {
     var user = _.pick(req.body,['email','password']);
     Users.findByCredentials(user.email, user.password).then((returned) => {

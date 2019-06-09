@@ -15,7 +15,9 @@ var UsersSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+  },
+  SigninType: {
+    type: String,
   },
   tokens: [{
     access: {
