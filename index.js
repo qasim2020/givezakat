@@ -12,6 +12,7 @@ const {People} = require('./models/people');
 const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
 const {serverRunning} = require('./js/serverRunning');
+const {Subscription} = require('./models/subscription');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -260,8 +261,19 @@ app.post('/signing',(req,res) => {
       console.log(e);
       res.status(404).send(e);
     });
-
   };
+
+  if (req.body.query === 'subscription') {
+    var subscription = new Subscription(
+      _.pick(req.body,['email'])
+    );
+    subscription.save().then((result) => {
+      return res.status(200).send(result);
+    }).catch((e) => {
+      if (e.code === 11000) return res.status(400).send('You are already subscribed with this email.');
+      res.status(400).send(e);
+    });
+  }
 
 });
 

@@ -9,6 +9,7 @@
         font-family: 'Rum Raisin', sans-serif;
         background-color: #F8F9FA;
         overflow: hidden;
+        letter-spacing: 0.04em;
       }
 
       .sublogo {
@@ -59,6 +60,7 @@
         font-size: 18px;
         text-align: center;
         margin-bottom: 10px;
+        letter-spacing: 0.04em;
       }
 
       ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -157,17 +159,75 @@
     <div class="logo">
       <img class="sublogo" src="/logo5.png">
       <p class="logo-text">Zakat Lists</p>
-      <p class="logo-caption">Calculate Give Monitor and Sponsor <b>Zakats</b></p>
+      <p class="logo-caption">Calculate, Give, Monitor and Sponsor <b>Zakats</b></p>
       <p class="launching">Launching Soon</p>
       <p class="sub-request">Subscribe to receive an alert on launch</p>
-      <input class="sub-input" type="text" name="" value="" placeholder="your-email-address@something.com">
+      <form role="form" id="input" novalidate action="" method="">
+        <input id="email" class="sub-input" type="text" name="email" value="qasimali24@gmail.com" placeholder="your-email-address@something.com">
+        <div style="margin:5px 0 10px 0; text-align: center">
+          <label for="email" generated="true" class="error" style="color: red; "></label>
+          <label for="email" generated="true" class="success" style="color: green; "></label>
+        </div>
+      </form>
       <button type="button" name="button">Subscribe</button>
-      <p class="footer-text">check progress on project at <a href="#">@punch__lines</a> </p>
+      <p class="footer-text">See progress at <a href="https://getmakerlog.com/products/givezakat" target="_blank">@punch__lines</a> </p>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+		<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
 
     <script type="text/javascript">
-      
+
+    $(document).on('click','button',function(){
+      console.log('btn clicked');
+      $('.success').hide();
+      $('.error').hide();
+      if (!($("#input").valid())) {
+
+        return;
+
+      }
+
+      let data = {
+        "query": 'subscription',
+        "email": $('#email').val(),
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+        url: '/signing',
+        type: 'post',
+        data,
+        headers: {
+            'content-type': 'application/json',
+        }
+      }).done((msg) => {
+        console.log(msg);
+        $('.success').show().html('Thank you, I will keep you updated.');
+        $('button').attr('disabled',true);
+      }).fail((e) => {
+        $('.error').show().html(e.responseText);
+        console.log(e.responseText);
+      });
+    });
+
+    $("#input").validate({
+
+      rules: {
+        'email' : {
+          required: true,
+          email: true
+        }
+      },
+      messages: {
+        'email' : {
+          required: `Please write your email in above field.`,
+          email: `Email is invalid.`,
+        },
+      }
+    });
     </script>
   </body>
 </html>
