@@ -61,6 +61,9 @@ app.get('/hacks',(req,res) => {
 
 app.get('/',(req,res) => {
   console.log('home page opened.');
+
+  return res.render('hacks.hbs');
+  
   People.find().then((msg) => {
     res.data = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
