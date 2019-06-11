@@ -185,6 +185,16 @@
         word-break: break-all;
       }
 
+      .card-active {
+        opacity: 1 !important;
+        transition: opacity 0.35s ease;
+      }
+
+      .card-inactive {
+        opacity: 0.7 !important;
+        transition: opacity 0.35s ease;
+      }
+
       @media(max-width:767px){
         .btn-container {
           min-width: 800px;
@@ -273,12 +283,10 @@
       </div>
     </div>
 
-    <div class="mt-3 d-flex justify-content-start flex-wrap">
+    <div class="mt-3 d-flex justify-content-start flex-wrap cards-container">
       {{#each data}}
       <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="person-card card bg-{{this.cardClass}} text-light rounded" data-toggle="" data-target="" data="
-        {{this}}
-        ">
+        <div class="person-card card bg-{{this.cardClass}} text-light rounded" data-toggle="collapse" data-target="#details-div-{{@index}}" role="button" aria-expanded="false" aria-controls="details-div-{{@index}}">
           <div class="p-2">
             <b class="">{{inc @index}}.</b> <br>
             {{this.name}}<br>
@@ -300,8 +308,37 @@
           <hr class="my-1">
           <small class="p-2 text-dark">Click to view details.</small>
         </div>
-        <div class="bg-dark d-none details-div rounded" style="height: 100px; width: 100vw;">
+        <div id="details-div-{{@index}}" class="details-div collapse p-2" style="width: 100vw;" >
+          <div class="card-body rounded bg-{{this.cardClass}} text-light d-flex flex-wrap w-100">
+            <div class="col-md-6 col-12 border-right border-warning">
+              <h4>{{this.name}}</h4>
+              <small><span class="badge badge-warning mr-3">Mobile: </span> {{this.mob}}</small><br>
+              <small><span class="badge badge-warning mr-3">Family Members: </span> {{this.fMembers}}</small><br>
+              <small><span class="badge badge-warning mr-3">Story: </span> {{this.story}}</small><br>
+              <small><span class="badge badge-warning mr-3">Address: </span> {{this.address}}</small><br>
+              <small><span class="badge badge-warning mr-3">Package: </span> {{this.package}}</small><br>
+              <small><span class="badge badge-warning mr-3">Package Cost: </span> {{this.packageCost}}</small><br>
+              <small><span class="badge badge-warning mr-3">Package Quantity: </span> {{this.packageQty}}</small><br>
+              <small><span class="badge badge-warning mr-3">Sponsor Name: </span> {{this.sponsorName}}</small><br>
+              <small><span class="badge badge-warning mr-3">Sponsor Mobile: </span> {{this.sponsorMob}}</small><br>
+              <small><span class="badge badge-warning mr-3">Package Status: </span> {{this.cardClass}}</small><br>
+              <small><span class="badge badge-warning mr-3">Package Delivery: </span> Due on {{this.deliveryDate}}</small><br>
+            </div>
+            <div class="col-md-6 col-12 pt-md-4">
+              <hr align="left" class="d-md-none w-25 bg-warning">
+              <h4>Payment Details</h4>
+              <small><span class="badge badge-light mr-3">Online Bank Transfer </span></small><br>
+              <small><span class="badge badge-warning mr-3">Account Title: </span> {{this.sponsorAccountTitle}}</small><br>
+              <small><span class="badge badge-warning mr-3">Account No: </span> {{this.sponsorAccountNo}}</small><br>
+              <small><span class="badge badge-warning mr-3">Account IBAN: </span> {{this.sponsorAccountIBAN}}</small><br>
+              <small><span class="badge badge-light mr-3">Pay using Credit Card </span></small><br>
+              <small class="my-1 d-flex align-items-center"><span class="badge badge-warning mr-3">Card No: </span><input style="height: 20px" type="Number" name="" value="" class="d-inline form-control" placeholder="xxxx-xxxx-xxxx-xxxx"> </small>
+              <small class="my-1 d-flex align-items-center"><span class="badge badge-warning mr-3">Card Expiry Date: </span><input style="height: 20px" type="Number" name="" value="" class="d-inline form-control" placeholder="01/21"> </small>
+              <small class="my-1 d-flex align-items-center"><span class="badge badge-warning mr-3">Card Security No: </span><input style="height: 20px" type="Number" name="" value="" class="d-inline form-control" placeholder="142"> </small>
+              <small><span class="badge badge-light mr-3">Pay Now </span></small>
 
+            </div>
+          </div>
         </div>
       </div>
 
@@ -741,24 +778,24 @@
       })
 
       $(document).on('click','.card',function(){
-        $(this).siblings('.details-div').removeClass('d-none');
-        return;
-        let myData = $(this).attr('data').split(',');
-        console.log(myData);
-        $('.modal-name').html(myData[0].trim()).attr({value:myData[0].trim()});
-        $('.modal-mob').html(myData[1].trim()).attr({value:myData[1].trim()});
-        $('.modal-salary').html(myData[2].trim()).attr({value:myData[2].trim()});
-        $('.modal-familyMembers').html(myData[3].trim()).attr({value:myData[3].trim()});
-        $('.modal-helpType').html(myData[4].trim()).attr({value:myData[4].trim()});
-        $('.modal-address').html(myData[5].trim()).attr({value:myData[5].trim()});
-        $('.modal-sponserName').html(myData[6].trim()).attr({value:myData[6].trim()});
-        $('.modal-sponserMob').html(myData[7].trim()).attr({value:myData[7].trim()});
-        $('.modal-status').html(myData[8].trim()).attr({value:myData[8].trim()});
-        $('.modal-accountTitle').html(myData[9].trim()).attr({value:myData[9].trim()});
-        $('.modal-accountBank').html(myData[10].trim()).attr({value:myData[10].trim()});
-        $('.modal-accountNumber').html(myData[11].trim()).attr({value:myData[11].trim()});
-        $('.modal-accountIBAN').html(myData[12].trim()).attr({value:myData[12].trim()});
+        $('.card').css({opacity: 0.2})
+        $('.details-div').removeClass('show');
+        let ml = this.getBoundingClientRect().left;
+        $(this).css({
+          opacity: 1,
+        }).siblings('.details-div').removeClass('show').css({
+          'margin-left': `-${ml}px`,
+        });
       });
+
+      $(document).on('mouseleave','.cards-container',function() {
+        $('.card').removeClass('inactive');
+      })
+
+      $(document).on('mouseenter mouseleave','.card',function(){
+        $('.card').addClass('card-inactive');
+        $(this).toggleClass('card-active').removeClass('card-inactive');
+      })
 
 
       $(document).on('click','.save-btn',function(){
