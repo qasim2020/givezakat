@@ -285,8 +285,8 @@
 
     <div class="mt-3 d-flex justify-content-start flex-wrap cards-container">
       {{#each data}}
-      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-2 pb-2">
-        <div class="person-card card bg-{{this.cardClass}} text-light rounded" data-toggle="collapse" data-target="#details-div-{{@index}}" role="button" aria-expanded="false" aria-controls="details-div-{{@index}}">
+      <div class="col-xl-2 col-lg-3 col-md-4 col-6 rounded px-md-2 px-1 pb-2">
+        <div class="person-card card bg-{{this.cardClass}} text-light rounded card-active" data-toggle="collapse" data-target="#details-div-{{@index}}" role="button" aria-expanded="false" aria-controls="details-div-{{@index}}">
           <div class="p-2">
             <b class="">{{inc @index}}.</b> <br>
             {{this.name}}<br>
@@ -308,10 +308,10 @@
           <hr class="my-1">
           <small class="p-2 text-dark">Click to view details.</small>
         </div>
-        <div id="details-div-{{@index}}" class="details-div collapse p-2" style="width: 100vw;" >
+        <div id="details-div-{{@index}}" class="details-div collapse p-md-2 p-1" style="width: 100vw;" >
           <div class="card-body rounded bg-{{this.cardClass}} text-light d-flex flex-wrap w-100">
-            <div class="col-md-6 col-12 border-right border-warning">
-              <h4>{{this.name}}</h4>
+            <h4 class="col-12">{{this.name}}</h4>
+            <div class="col-md-6 col-12">
               <small><span class="badge badge-warning mr-3">Mobile: </span> {{this.mob}}</small><br>
               <small><span class="badge badge-warning mr-3">Family Members: </span> {{this.fMembers}}</small><br>
               <small><span class="badge badge-warning mr-3">Story: </span> {{this.story}}</small><br>
@@ -324,9 +324,9 @@
               <small><span class="badge badge-warning mr-3">Package Status: </span> {{this.cardClass}}</small><br>
               <small><span class="badge badge-warning mr-3">Package Delivery: </span> Due on {{this.deliveryDate}}</small><br>
             </div>
-            <div class="col-md-6 col-12 pt-md-4">
+            <div class="col-md-6 col-12">
               <hr align="left" class="d-md-none w-25 bg-warning">
-              <h4>Payment Details</h4>
+              <h5>Payment Details</h5>
               <small><span class="badge badge-light mr-3">Online Bank Transfer </span></small><br>
               <small><span class="badge badge-warning mr-3">Account Title: </span> {{this.sponsorAccountTitle}}</small><br>
               <small><span class="badge badge-warning mr-3">Account No: </span> {{this.sponsorAccountNo}}</small><br>
@@ -778,7 +778,6 @@
       })
 
       $(document).on('click','.card',function(){
-        $('.card').css({opacity: 0.2})
         $('.details-div').removeClass('show');
         let ml = this.getBoundingClientRect().left;
         $(this).css({
@@ -788,13 +787,12 @@
         });
       });
 
-      $(document).on('mouseleave','.cards-container',function() {
-        $('.card').removeClass('inactive');
-      })
+      // $(document).on('mouseleave','.cards-container',function() {
+      //   $('.card').removeClass('card-inactive');
+      // })
 
       $(document).on('mouseenter mouseleave','.card',function(){
-        $('.card').addClass('card-inactive');
-        $(this).toggleClass('card-active').removeClass('card-inactive');
+        $('.card').not(this).toggleClass('card-active card-inactive');
       })
 
 
