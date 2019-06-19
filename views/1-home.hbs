@@ -27,7 +27,6 @@
       .item-1 {
         grid-column: 1/2;
         grid-row: 1/2;
-        /* border: 1px solid blue; */
         padding: 2rem 0px 0px 2rem;
       }
 
@@ -38,7 +37,7 @@
         padding: 0 1rem 0 1rem;
       }
 
-      .item-2 > .quotes {
+      .item-2 > img {
         margin-bottom: -51px;
       }
 
@@ -96,11 +95,11 @@
       .text-brand {
         font-style: normal;
         font-weight: bold;
-        font-size: 46px;
+        font-size: 36px;
         line-height: 56px;
       }
 
-      .text-quote {
+      .item-2 > p {
         font-style: normal;
         font-weight: 600;
         font-size: 21px;
@@ -108,7 +107,7 @@
         padding-left: 2rem;
       }
 
-      .text-menu {
+      .item-3 > .my-2 {
         font-style: normal;
         font-weight: normal !important;
         font-size: 23px;
@@ -153,7 +152,7 @@
         display: none;
       }
 
-      .brand-logo {
+      .item-1 > img {
         width: 72px;
       }
 
@@ -165,7 +164,7 @@
           line-height: 93px;
         }
 
-        .text-quote {
+        .item-2 > p {
           font-style: normal;
           font-weight: 900;
           font-size: 28px;
@@ -173,7 +172,7 @@
           padding-left: 0rem;
         }
 
-        .text-menu {
+        .item-3 > .my-2 {
           font-style: normal;
           font-weight: normal;
           font-size: 23px;
@@ -217,14 +216,25 @@
           margin-right: -7rem;
         }
 
-        .quotes {
+        .item-2 > img {
           margin-left: -65px;
         }
 
-        .brand-logo {
+        .item-1 > img {
           width: 115px;
         }
 
+      }
+
+      .item-4 {
+        grid-column: 3/4;
+        grid-row: 1/2;
+        padding: 60px 2rem 0px 0px;
+        text-align: right;
+      }
+
+      .item-4 > img {
+        width: 24.2px;
       }
 
 
@@ -233,22 +243,27 @@
     <title>zakat lists</title>
   </head>
   <body>
-    <div class="grid theme-gradient">
-      <div class="item item-1">
-        <img class="brand-logo" src="/logo5.png" alt="">
+    <section id="hero">
+      <div class="grid theme-gradient">
+        <div class="item-1">
+          <img src="/logo5.png" alt="">
+        </div>
+        <div class="item-2">
+          <img src="/quotes.svg" width="116.67px" alt="">
+          <p class="text-light">Eat from their fruits, and give the due alms on the day of harvest .
+            <br><br>- Al Quran 6:141</p>
+        </div>
+        <div class="item-3 text-white">
+          <p class="text-light d-none d-md-block my-2">Sign in</p>
+          <p class="text-light d-none d-md-block my-2">Explore</p>
+          <p class="text-light d-none d-md-block my-2">Calculate Zakat</p>
+          <p class="text-light d-none d-md-block my-2">Add People</p>
+          <p class="text-brand text-light">Zakat Lists</p>
+        </div>
+        <div class="item-4 d-md-none">
+          <img src="/nav-icon.svg" alt="">
+        </div>
       </div>
-      <div class="item item-2">
-        <img class="quotes" src="/quotes.svg" width="116.67px" alt="">
-        <p class="text-light text-quote">Eat from their fruits, and give the due alms on the day of harvest .
-          <br><br>- Al Quran 6:141</p>
-      </div>
-      <div class="item item-3 text-white">
-        <p class="text-menu text-light d-none d-md-block my-2">Sign in</p>
-        <p class="text-menu text-light d-none d-md-block my-2">Explore</p>
-        <p class="text-menu text-light d-none d-md-block my-2">Calculate Zakat</p>
-        <p class="text-menu text-light d-none d-md-block my-2">Add People</p>
-        <p class="text-brand text-light">Zakat Lists</p>
-      </div>
-    </div>
+    </section>
   </body>
 </html>
