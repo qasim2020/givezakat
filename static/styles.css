@@ -1,0 +1,125 @@
+.theme-gradient {
+  background: linear-gradient(57.73deg, #173627 40.85%, #AF8150 115.83%);
+}
+
+.bg-delivered {
+  background: #4E7BEF;
+}
+
+.bg-progress {
+  background: #EF4EA9;
+}
+
+.bg-issues {
+  background: #ED5349;
+}
+
+.bg-pending {
+  background: #05386B;
+}
+
+.shadow {
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+}
+
+.text-light {
+  color: #C0C1C5;
+}
+
+.text-white {
+  color: #FFFFFF;
+}
+
+.text-blue {
+  color: #05386B;
+}
+
+.text-green {
+  color: #173627;
+}
+
+.text-brand {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 46px;
+  line-height: 56px;
+}
+
+.text-quote {
+  font-style: normal;
+  font-weight: 900;
+  font-size: 21px;
+  line-height: 26px;
+}
+
+.text-menu {
+  font-style: normal;
+  font-weight: normal;
+  font-size: 23px;
+  line-height: 28px;
+}
+
+p {
+  font-style: normal;
+  font-weight: medium;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.footer-headings {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 132.9%;
+}
+
+.nav-items {
+  font-style: normal;
+  font-weight: bold;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+@media (min-width: 600px) {
+  .text-brand {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 76px;
+    line-height: 93px;
+  }
+
+  .text-quote {
+    font-style: normal;
+    font-weight: 900;
+    font-size: 28px;
+    line-height: 34px;
+  }
+
+  .text-menu {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 23px;
+    line-height: 28px;
+  }
+
+  p {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+  }
+
+  .footer-headings {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 23px;
+    line-height: 28px;
+  }
+
+  .nav-items {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 22px;
+  }
+}

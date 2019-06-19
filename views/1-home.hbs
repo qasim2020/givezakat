@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <style media="screen">
+
+      body {
+        font-family: Montserrat;
+        margin: 0px;
+      }
+
+      .grid {
+        display: grid;
+        height: 100vh;
+        grid-gap: 10px;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: repeat(3, 1fr);
+
+      }
+
+      .test {
+        /* border: 2px solid yellow; */
+      }
+
+      .item-1 {
+        grid-column: 1/2;
+        grid-row: 1/2;
+        /* border: 1px solid blue; */
+        padding: 2rem 0px 0px 2rem;
+      }
+
+      .item-2 {
+        grid-column: 2/3;
+        grid-row: 2/2;
+        align-self: center;
+        margin-left: -5rem;
+        margin-right: -7rem;
+      }
+
+      .quotes {
+        margin-left: -65px;
+        margin-bottom: -81px;
+      }
+
+      .item-3 {
+        grid-column: 1/2;
+        grid-row: 3/4;
+        padding: 0 0 2rem 2rem;
+      }
+
+      .item-3 > .text-brand {
+        margin-bottom: -1rem;
+        margin-top: -1rem;
+      }
+
+    </style>
+
+    <title>zakat lists</title>
+  </head>
+  <body>
+    <div class="grid theme-gradient">
+      <div class="item item-1">
+        <img src="/logo5.png" width="115px" alt="">
+      </div>
+      <div class="item item-2">
+        <img class="quotes" src="/quotes.svg" width="116.67px" alt="">
+        <p class="text-light text-quote">Eat from their fruits, and give the due alms on the day of harvest .
+          <br><br>- Al Quran 6:141</p>
+      </div>
+      <div class="item item-3 text-white">
+        <p class="text-menu text-light">Sign in</p>
+        <p class="text-menu text-light">Explore</p>
+        <p class="text-menu text-light">Calculate Zakat</p>
+        <p class="text-menu text-light">Add People</p>
+        <p class="text-brand text-light">Zakat Lists</p>
+      </div>
+    </div>
+  </body>
+</html>
