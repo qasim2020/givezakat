@@ -11,9 +11,13 @@
         margin: 0px;
       }
 
+      #hero {
+        height: 100vh;
+      }
+
       .grid {
         display: grid;
-        height: 100vh;
+        height: 100%;
         grid-gap: 10px;
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: repeat(3, 1fr);
@@ -237,6 +241,31 @@
         width: 24.2px;
       }
 
+      .nav-menu {
+        position: absolute;
+        z-index: 2;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .nav-menu > .my-2 {
+        font-size: 18px;
+        font-weight: normal;
+      }
+
+      .nav-menu > img {
+        position: absolute;
+        top: 60px;
+        right: 32px;
+        width: 19.23px;
+      }
+
 
     </style>
 
@@ -264,6 +293,17 @@
           <img src="/nav-icon.svg" alt="">
         </div>
       </div>
+
+      <div class="nav-menu theme-gradient d-md-none">
+        <img id="nav-close-icon" src="/nav-close-icon.svg" alt="">
+        <p class="text-light my-2">Sign in</p>
+        <p class="text-light my-2">Explore</p>
+        <p class="text-light my-2">Calculate Zakat</p>
+        <p class="text-light my-2">Add People</p>
+        <p class="text-light my-2">Search</p>
+      </div>
     </section>
+
+    
   </body>
 </html>
