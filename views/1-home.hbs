@@ -32,27 +32,25 @@
       }
 
       .item-2 {
-        grid-column: 2/3;
+        grid-column: 1/4;
         grid-row: 2/2;
         align-self: center;
-        margin-left: -5rem;
-        margin-right: -7rem;
+        padding: 0 1rem 0 1rem;
       }
 
-      .quotes {
-        margin-left: -65px;
-        margin-bottom: -81px;
+      .item-2 > .quotes {
+        margin-bottom: -51px;
       }
 
       .item-3 {
-        grid-column: 1/2;
+        grid-column: 1/4;
         grid-row: 3/4;
         padding: 0 0 2rem 2rem;
+        align-self: end;
       }
 
       .item-3 > .text-brand {
         margin-bottom: -1rem;
-        margin-top: -1rem;
       }
 
       .theme-gradient {
@@ -104,14 +102,15 @@
 
       .text-quote {
         font-style: normal;
-        font-weight: 900;
+        font-weight: 600;
         font-size: 21px;
         line-height: 26px;
+        padding-left: 2rem;
       }
 
       .text-menu {
         font-style: normal;
-        font-weight: normal;
+        font-weight: normal !important;
         font-size: 23px;
         line-height: 28px;
       }
@@ -121,6 +120,11 @@
         font-weight: medium;
         font-size: 15px;
         line-height: 18px;
+        margin: 0.4rem 0;
+      }
+
+      .my-2 {
+        margin: 1rem 0;
       }
 
       .footer-headings {
@@ -137,6 +141,22 @@
         line-height: 18px;
       }
 
+      .d-none {
+        display: none;
+      }
+
+      .d-block {
+        display: block;
+      }
+
+      .d-md-block {
+        display: none;
+      }
+
+      .brand-logo {
+        width: 72px;
+      }
+
       @media (min-width: 600px) {
         .text-brand {
           font-style: normal;
@@ -150,6 +170,7 @@
           font-weight: 900;
           font-size: 28px;
           line-height: 34px;
+          padding-left: 0rem;
         }
 
         .text-menu {
@@ -179,6 +200,31 @@
           font-size: 18px;
           line-height: 22px;
         }
+
+        .d-md-none {
+          display: none;
+        }
+
+        .d-md-block {
+          display: block !important;
+        }
+
+        .item-2 {
+          grid-column: 2/3;
+          grid-row: 2/3;
+          align-self: center;
+          margin-left: -5rem;
+          margin-right: -7rem;
+        }
+
+        .quotes {
+          margin-left: -65px;
+        }
+
+        .brand-logo {
+          width: 115px;
+        }
+
       }
 
 
@@ -189,7 +235,7 @@
   <body>
     <div class="grid theme-gradient">
       <div class="item item-1">
-        <img src="/logo5.png" width="115px" alt="">
+        <img class="brand-logo" src="/logo5.png" alt="">
       </div>
       <div class="item item-2">
         <img class="quotes" src="/quotes.svg" width="116.67px" alt="">
@@ -197,10 +243,10 @@
           <br><br>- Al Quran 6:141</p>
       </div>
       <div class="item item-3 text-white">
-        <p class="text-menu text-light">Sign in</p>
-        <p class="text-menu text-light">Explore</p>
-        <p class="text-menu text-light">Calculate Zakat</p>
-        <p class="text-menu text-light">Add People</p>
+        <p class="text-menu text-light d-none d-md-block my-2">Sign in</p>
+        <p class="text-menu text-light d-none d-md-block my-2">Explore</p>
+        <p class="text-menu text-light d-none d-md-block my-2">Calculate Zakat</p>
+        <p class="text-menu text-light d-none d-md-block my-2">Add People</p>
         <p class="text-brand text-light">Zakat Lists</p>
       </div>
     </div>
