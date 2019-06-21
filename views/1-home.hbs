@@ -117,11 +117,12 @@
         padding-left: 2rem;
       }
 
-      .item-3 > .my-2 {
+      .nav-item {
         font-style: normal;
         font-weight: normal !important;
         font-size: 23px;
         line-height: 28px;
+        cursor: pointer;
       }
 
       p {
@@ -166,6 +167,14 @@
         width: 72px;
       }
 
+      .border-offwhite {
+        border-color: #C0C1C5;
+      }
+
+      .border-bottom {
+        border-bottom: 2px solid;
+      }
+
       @media (min-width: 600px) {
         .text-brand {
           font-style: normal;
@@ -182,7 +191,7 @@
           padding-left: 0rem;
         }
 
-        .item-3 > .my-2 {
+        .nav-item {
           font-style: normal;
           font-weight: normal;
           font-size: 23px;
@@ -249,16 +258,42 @@
 
       .nav-menu {
         position: absolute;
-        z-index: 2;
+        z-index: -2;
         top: 0;
         left: 0;
         height: 100vh;
-        width: 0;
+        width: 100vw;
+        opacity: 0;
         overflow: hidden;
+      }
+
+      .d-flex {
         display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
+      }
+
+      .align-items-center {
+        align-items: center;
+      }
+
+      .align-items-start {
+        align-items: start;
+      }
+
+      .justify-content-start {
+        justify-content: flex-start;
+      }
+
+      .justify-content-center {
+        justify-content: center;
+      }
+
+      .flex-col {
+        flex-direction: column;
+      }
+
+      .flex-row {
+        flex-direction: row;
       }
 
       .nav-menu > .my-2 {
@@ -291,10 +326,12 @@
             <br><br>- Al Quran 6:141</p>
         </div>
         <div class="item-3 text-white">
-          <p class="text-light d-none d-md-block my-2">Sign in</p>
-          <p class="text-light d-none d-md-block my-2">Explore</p>
-          <p class="text-light d-none d-md-block my-2">Calculate Zakat</p>
-          <p class="text-light d-none d-md-block my-2">Add People</p>
+          <div class="d-flex flex-col justify-content-start">
+            <p class="nav-item text-light d-none d-md-block my-1">Sign in</p>
+            <p class="nav-item text-light d-none d-md-block my-1">Explore</p>
+            <p class="nav-item text-light d-none d-md-block my-1">Calculate Zakat</p>
+            <p class="nav-item text-light d-none d-md-block my-1">Add People</p>
+          </div>
           <p class="text-brand text-light">Zakat Lists</p>
         </div>
         <div class="item-4 d-md-none">
@@ -302,13 +339,13 @@
         </div>
       </div>
 
-      <div class="nav-menu theme-gradient" onclick="closenav()">
-        <img id="nav-close-icon" src="/nav-close-icon.svg" alt="">
-        <p class="text-light my-2">Sign in</p>
-        <p class="text-light my-2">Explore</p>
-        <p class="text-light my-2">Calculate Zakat</p>
-        <p class="text-light my-2">Add People</p>
-        <p class="text-light my-2">Search</p>
+      <div class="nav-menu d-flex flex-col align-items-center justify-content-center theme-gradient">
+        <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
+        <p class="nav-item text-light my-2">Sign in</p>
+        <p class="nav-item text-light my-2">Explore</p>
+        <p class="nav-item text-light my-2">Calculate Zakat</p>
+        <p class="nav-item text-light my-2">Add People</p>
+        <p class="nav-item text-light my-2">Search</p>
       </div>
     </section>
 
@@ -316,12 +353,17 @@
     <script type="text/javascript">
 
       function opennav() {
-        $('.nav-menu').css({width: '100vw'});
+        $('.nav-menu').css({'z-index': '2',opacity: 1})
       }
 
       function closenav() {
-        $('.nav-menu').css({width: '0px'});
-      }
+        $('.nav-menu').css({'z-index': '-2', opacity: 0});
+      };
+
+      $('.nav-item').on('mouseenter mouseleave',function(){
+        $(this).toggleClass('text-offwhite text-white');
+      })
+
 
     </script>
 
