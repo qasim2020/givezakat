@@ -929,8 +929,9 @@
       $('#uploadData').on('click',function() {
         if (uploadedData.length < 1) return console.log('no file added');
         $('.upload-msgs').children().addClass('d-none');
+        // return console.log(uploadedData);
         data = JSON.stringify(uploadedData);
-        // console.log(data);
+        console.log(data);
         $.ajax({
             url: '/excelData',
             type: 'post',

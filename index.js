@@ -42,6 +42,7 @@ hbs.registerHelper("inc", function(value, options)
 
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token;
+  console.log('token receiveed',token);
   Users.findByToken(token).then((user) => {
     if (!user) return Promise.reject('No user found');
     req.params.user = user;
@@ -81,7 +82,8 @@ app.get('/',(req,res) => {
 
 
 app.get('/signup',(req,res) => {
-  res.render('signup.hbs');
+  res.render('home.hbs');
+  // res.render('signup.hbs');
 })
 
 app.get('/forgotpw',(req,res) => {
@@ -97,13 +99,13 @@ app.post('/data',(req,res) => {
 
 });
 
-app.post('/excelData',authenticate,(req,res) => {
+app.post('/excelData',(req,res) => {
   var body = [];
   _.each(req.body,(val,key)=> {
-    val.addedBy = req.params.user._id.toString();
+    // val.addedBy = req.params.user._id.toString();
     body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
   });
-
+  console.log(body);
   People.insertMany(body,{ordered:false}).then((msg) => {
     console.log(msg.length);
     res.status(200).send(`Successfully added <b>${msg.length} rows</b>.`);

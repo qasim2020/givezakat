@@ -74,7 +74,7 @@ var People = mongoose.model('people', {
   },
   addedBy: {
     type: String,
-    required: true,
+    // required: true,
   }
 });
 

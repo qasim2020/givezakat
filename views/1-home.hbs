@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
     <link rel="stylesheet" href="/styles.css">
     <style media="screen">
 
@@ -19,7 +21,7 @@
       }
 
       body {
-        font-family: Montserrat;
+        font-family: 'Montserrat', sans-serif;
         margin: 0px;
       }
 
@@ -39,10 +41,6 @@
         grid-template-columns: 1fr 1fr 1fr;
         grid-template-rows: repeat(3, 1fr);
 
-      }
-
-      .test {
-        /* border: 2px solid yellow; */
       }
 
       .item-1 {
@@ -85,11 +83,11 @@
         background: #4E7BEF;
       }
 
-      .bg-progress {
+      .bg-inprogress {
         background: #EF4EA9;
       }
 
-      .bg-issues {
+      .bg-issue {
         background: #ED5349;
       }
 
@@ -334,7 +332,7 @@
 
       .badge {
         font-size: 8px;
-        padding: 0.2rem;
+        padding: 0.2rem 0.4rem;
       }
 
       .overflow-hidden {
@@ -345,7 +343,57 @@
         overflow: scroll;
       }
 
+      .flex-wrap {
+        flex-wrap: wrap;
+      }
+
+      .flex-grow-1 {
+        flex-grow: 1;
+      }
+
+      #content .overflow-scroll::-webkit-scrollbar {
+          display: none;
+      }
+
+      .border {
+        border: 1px solid #173627;
+      }
+
+      .w-100 {
+        width: 100%;
+      }
+
+      .form-control {
+        padding: 0.5rem 1rem;
+        font-size: 15px;
+        white-space: nowrap;
+        border: none;
+      }
+
+      .search-bar > input::placeholder {
+        color: #173627;
+        font-size: 15px;
+        font-weight: bold;
+      }
+
+      .search-bar > input {
+        margin-right: -41px;
+      }
+
       @media (min-width: 600px) {
+
+        .ml-md-point5 {
+          margin-left: 0.5rem;
+        }
+
+        .search-bar > input::placeholder {
+          font-size: 18px;
+        }
+
+        .form-control {
+          padding: 0.6rem 1rem;
+        }
+
         .text-brand {
           font-style: normal;
           font-weight: bold;
@@ -485,59 +533,135 @@
       </div>
     </div>
 
-    <section id="content" class="container h-100vh pt-2 px-2">
+    <section id="content" class="container pt-md-2 pt-1 px-1 px-md-2">
       <p class="text-brand text-green">Filter Lists</p>
-      <div class="d-flex justify-content-start overflow-scroll">
-        <button class="btn btn-primary d-flex align-items-center" type="button" name="button">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
-        <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
-        <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
-        <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
-        <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">In progress <span class="ml-point5 badge bg-progress text-white">81</span> </button>
-        <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Issues <span class="ml-point5 badge bg-issues text-white">8</span> </button>
-      </div>
+      <div class="d-flex flex-wrap justify-content-start align-items-center">
+        <div class="d-flex justify-content-start overflow-scroll">
+          <button class="btn btn-primary d-flex align-items-center" type="button" name="button">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
+          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
+          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
+          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
+          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">In progress <span class="ml-point5 badge bg-inprogress text-white">81</span> </button>
+          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Issues <span class="ml-point5 badge bg-issue text-white">8</span> </button>
+        </div>
 
-      <div class="d-flex justify-content-start w-100 border my-point5 search-bar" style="max-width: 400px">
-        <input class="form-control w-100" type="text" name="" value="" placeholder="Search">
-        <img class="px-point5" src="/search-icon.svg" width="25px" alt="">
+        <div class="ml-md-point5 d-flex justify-content-start border my-point5 search-bar flex-grow-1">
+          <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Search">
+          <img class="px-point5" src="/search-icon.svg" width="25px" alt="">
+        </div>
       </div>
 
       <style media="screen">
 
-        .border {
-          border: 1px solid #173627;
+      .mt-2 {
+        margin-top: 2rem;
+      }
+
+        .content-grid {
+          display: grid;
+          grid-auto-rows: 199px;
+          grid-auto-columns: minmax(165px,332px);
+          grid-gap: 0.5rem;
+          grid-template-columns: repeat(2,1fr);
         }
 
-        .w-100 {
-          width: 100%;
+        .content-grid > .card {
+          box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+          padding: 1rem;
+          display: grid;
+          grid-template-columns: 1fr, 1fr;
+          grid-template-rows: 17px auto 50px;
+          grid-gap: 0px;
         }
 
-        .form-control {
-          padding: 0.5rem 1rem;
-          font-size: 15px;
-          white-space: nowrap;
-          border: none;
+        .place-1 {
+          grid-column: 1 / 2;
+          grid-row: 1 / 2;
         }
 
-        .search-bar > input::placeholder {
-          color: #173627;
-          font-size: 15px;
+        .place-2 {
+          grid-column: 2 / 3;
+          grid-row: 1 / 2;
+        }
+
+        .place-3 {
+          grid-column: 1 / 3;
+          grid-row: 2 / 3;
+        }
+
+        .place-4 {
+          grid-column: 1 / 2;
+          grid-row: 3 / 4;
+          align-self: end;
+        }
+
+        .place-5 {
+          grid-column: 2 / 3;
+          grid-row: 3 / 4;
+          align-self: end;
+        }
+
+        .report-badge {
+          padding: 2px 8px;
           font-weight: bold;
+          font-size: 11px;
         }
 
-        .search-bar > input {
-          margin-right: -41px;
+        .text-right {
+          text-align: right;
         }
 
-        @media (min-width:600px) {
-          .search-bar > input::placeholder {
-            font-size: 18px;
+        .px-1 {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+
+        .pt-1 {
+          padding-top: 1rem;
+        }
+        @media (min-width:800px) {
+          .content-grid {
+            grid-template-columns: repeat(4,1fr);
+            grid-gap: 1rem;
+          }
+          .content-grid > .card {
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+            padding: 2rem;
+          }
+
+          .px-md-2 {
+            padding-left: 2rem;
+            padding-right: 2rem;
+          }
+
+          .pt-md-2 {
+            padding-top: 2rem;
           }
         }
-
       </style>
+
+      <div class="content-grid pt-md-2 pt-1">
+
+        {{#each data}}
+
+          <div class="card">
+            <div class="place-1"> <span class="report-badge text-white">{{this.cardClass}}</span> </div>
+            <div class="place-2 text-right"><img src="/browse-icon.svg" alt=""> </div>
+            <div class="place-3">..</div>
+            <div class="place-4">..</div>
+            <div class="place-5 text-right">..</div>
+          </div>
+
+          <script type="text/javascript">
+            $('.report-badge:eq(-1)').addClass(`bg-`+$('.report-badge:eq(-1)').html().replace(/ /g,'').toLowerCase());
+          </script>
+
+        {{/each}}
+
+      </div>
     </section>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
     <script type="text/javascript">
 
       function opennav() {
