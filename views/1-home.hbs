@@ -494,10 +494,6 @@
         margin-top: 1rem;
       }
 
-      .align-items-end {
-        align-items: bottom;
-      }
-
       .rounded-circle {
         border-radius: 50%;
       }
@@ -753,12 +749,13 @@
           }
           .place-2 > img {
             padding: 8px 8px;
-            border: 1px solid #EAEAEA;
+            /* border: 1px solid #EAEAEA; */
             cursor: pointer;
             position: absolute;
             right: 0;
             top: 0;
             z-index: 5;
+            margin-top: -3px;
           }
 
           .place-2 > img:hover {
@@ -792,25 +789,57 @@
               -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
           }
 
-          .place-2 button {
-            padding: 5px 8px;
-            background-color: #EAEAEA:
+          .card-browser button {
+            border: 0px;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 5px 10px;
+            background-color: white;
+            margin: 0.3rem 0;
+            cursor: pointer;
           }
+
+          .card-browser button:hover {
+            background-color: #bfbfbf;
+          }
+
+          .card-browser > div {
+            padding: 1rem;
+            margin-top: 1.5rem;
+          }
+
+          .card-select {
+            width: 16px;
+            height: 16px;
+            border: 1px solid #05386B;
+            padding: 0 0 0 2px;
+            cursor: pointer;
+          }
+
+          .active {
+            background-color: #bfbfbf;
+          }
+
 
         </style>
 
         {{#each data}}
 
           <div class="card">
-            <div class="place-1"> <span class="report-badge text-white">{{this.cardClass}}</span> </div>
+
+            <div class="place-1 d-flex justify-content-start align-items-center">
+
+              <span class="report-badge text-white">{{this.cardClass}}</span>
+              <span class="ml-point5 card-select">
+                <svg class="check-box" width="13" height="13" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5.12512 8.04543L1.82387 5.5L0.699707 6.61625L5.12512 11.0417L14.6251 1.54166L13.5089 0.425415L5.12512 8.04543Z" fill="#FFFFFF"></path>
+                </svg>
+              </span>
+
+            </div>
+
             <div class="place-2 text-right">
               <img class="" src="/browse-icon.svg" alt="">
-              <div class="browse-btns d-flex flex-col align-items-end">
-                <button class="" type="button" name="button">Edit</button>
-                <button class="" type="button" name="button">Delete</button>
-                <button class="" type="button" name="button">Select to Pay Zakat</button>
-                <button class="" type="button" name="button">Report an issue</button>
-              </div>
             </div>
             <div class="place-3">
               <div class="d-flex justify-content-start mt-1">
@@ -824,7 +853,7 @@
                 <span class="report-badge text-white bg-pending">9 Family Members.</span>
               </p>
             </div>
-            <div class="place-4 d-flex align-items-end justify-content-start">
+            <div class="place-4 d-flex justify-content-start">
               <img src="locked-icon.svg" width="14px" alt="">
               <span class="font-name">Name</span>
             </div>
@@ -839,14 +868,19 @@
               <p class="text-white">Contact details and Name will be visible after paying zakat.</p>
             </div>
 
-            <div class="card-browser alpha60">
-
+            <div class="card-browser alpha60 d-none">
+              <div class="d-flex align-items-end flex-col">
+                <button class="text-blue" type="button" name="button">Edit</button>
+                <button class="text-blue" type="button" name="button">Delete</button>
+                <button class="text-blue" type="button" name="button">Select to Pay Zakat</button>
+                <button class="text-blue" type="button" name="button">Report an issue</button>
+              </div>
             </div>
 
           </div>
 
           <script type="text/javascript">
-            $('.place-1:eq(-1)').children('span').addClass('bg-'+`{{this.cardClass}}`.replace(/ /g,'').toLowerCase());
+            $('.place-1:eq(-1)').children('span:eq(0)').addClass('bg-'+`{{this.cardClass}}`.replace(/ /g,'').toLowerCase());
           </script>
 
         {{/each}}
@@ -857,13 +891,30 @@
 
     <script type="text/javascript">
 
+      $('.card-select').on('mouseenter mouseleave',function() {
+        $(this).closest('.card').toggleClass('active');
+      })
+
+      $('.card-select').on('click',function(){
+        // TODO: add function here
+      })
+
       $('.place-2 > img').on('click',function() {
-        $('.place-2 > img').not(this).removeClass('active');
+        $('.place-2 > img').not(this).removeClass('active').parent().siblings('.card-browser').addClass('d-none');
         $(this).toggleClass('active');
+        $(this).parent().siblings('.card-browser').toggleClass('d-none');
+      })
+
+      $('.card-browser').on('click',function(e){
+        if (e.target.nodeName == 'BUTTON') return 'not this';
+        $(this).addClass('d-none');
       })
 
       $('.card').on('click',function(e) {
-        if (e.target.nodeName == 'IMG') return console.log('open browser');
+        console.log(e.target);
+        console.log($(e.target).hasClass('card-browser'));
+        // TODO: return if this is checkbox svg and write something shorter
+        if (e.target.nodeName == 'IMG' || e.target.nodeName == 'BUTTON' || $(e.target).hasClass('check-box')) return console.log('open browser');
         $('.place-2 > img').removeClass('active');
         $('.card').not(this).find('.card-hover').removeClass('card-active');
         $(this).find('.card-hover').addClass('card-active');
