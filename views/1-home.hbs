@@ -747,18 +747,71 @@
       <div class="content-grid pt-md-2 pt-1">
 
         <style media="screen">
+
+          .place-2 {
+            position: relative;
+          }
           .place-2 > img {
             padding: 8px 8px;
-            border: 1px dotted black;
+            border: 1px solid #EAEAEA;
             cursor: pointer;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 5;
           }
+
+          .place-2 > img:hover {
+            background-color: #bfbfbf;
+          }
+
+          .place-2 > .active {
+            background: #EAEAEA;
+          }
+
+          .card-browser {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+          }
+
+          .align-items-end {
+            align-items: flex-end;
+          }
+
+
+
+          .alpha60 {
+              /* Fallback for web browsers that don't support RGBa */
+              background-color: rgb(0, 0, 0);
+              /* RGBa with 0.6 opacity */
+              background-color: rgba(0, 0, 0, 0.6);
+              /* For IE 5.5 - 7*/
+              filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+              /* For IE 8*/
+              -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+          }
+
+          .place-2 button {
+            padding: 5px 8px;
+            background-color: #EAEAEA:
+          }
+
         </style>
 
         {{#each data}}
 
           <div class="card">
             <div class="place-1"> <span class="report-badge text-white">{{this.cardClass}}</span> </div>
-            <div class="place-2 text-right"><img class="" src="/browse-icon.svg" alt=""> </div>
+            <div class="place-2 text-right">
+              <img class="" src="/browse-icon.svg" alt="">
+              <div class="browse-btns d-flex flex-col align-items-end">
+                <button class="" type="button" name="button">Edit</button>
+                <button class="" type="button" name="button">Delete</button>
+                <button class="" type="button" name="button">Select to Pay Zakat</button>
+                <button class="" type="button" name="button">Report an issue</button>
+              </div>
+            </div>
             <div class="place-3">
               <div class="d-flex justify-content-start mt-1">
                 <img src="home-icon.svg" width="16px" alt="">
@@ -786,6 +839,10 @@
               <p class="text-white">Contact details and Name will be visible after paying zakat.</p>
             </div>
 
+            <div class="card-browser alpha60">
+
+            </div>
+
           </div>
 
           <script type="text/javascript">
@@ -800,7 +857,14 @@
 
     <script type="text/javascript">
 
-      $('.card').on('click',function() {
+      $('.place-2 > img').on('click',function() {
+        $('.place-2 > img').not(this).removeClass('active');
+        $(this).toggleClass('active');
+      })
+
+      $('.card').on('click',function(e) {
+        if (e.target.nodeName == 'IMG') return console.log('open browser');
+        $('.place-2 > img').removeClass('active');
         $('.card').not(this).find('.card-hover').removeClass('card-active');
         $(this).find('.card-hover').addClass('card-active');
       })
