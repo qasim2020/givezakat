@@ -397,7 +397,7 @@
         border: none;
       }
 
-      .search-bar > input::placeholder {
+      input::placeholder {
         color: #173627;
         font-size: 15px;
         font-weight: bold;
@@ -442,6 +442,11 @@
       .place-3 {
         grid-column: 1 / 3;
         grid-row: 2 / 3;
+        align-self: center;
+      }
+
+      .place-3 svg {
+        display: none;
       }
 
       .place-3 svg:nth-child(2) {
@@ -455,10 +460,12 @@
       }
 
       .place-4 svg {
+        width: 30px;
         padding-top:2px;
       }
 
       .place-4 .font-name {
+        display: none;
         margin-left: 0.3rem;
         font-size: 20px;
       }
@@ -467,7 +474,6 @@
         grid-column: 2 / 3;
         grid-row: 3 / 4;
         align-self: center;
-        padding-bottom: 5px;
       }
 
       .report-badge {
@@ -507,6 +513,7 @@
       }
 
       .card-hover {
+        pointer-events: none;
         position: absolute;
         padding: 1rem;
         align-self: end;
@@ -560,7 +567,132 @@
         display: inline-block !important;
       }
 
+
+      .place-2 {
+        position: relative;
+      }
+      .place-2 > svg {
+        padding: 8px 8px;
+        /* border: 1px solid #EAEAEA; */
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 5;
+        margin-top: -3px;
+      }
+
+      .place-2 > svg:hover {
+        background-color: #bfbfbf;
+      }
+
+      .place-2 > .active {
+        background: #EAEAEA;
+      }
+
+      .card-browser {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .align-items-end {
+        align-items: flex-end;
+      }
+
+      .alpha60 {
+          background-color: rgb(0, 0, 0);
+          background-color: rgba(0, 0, 0, 0.6);
+          filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+          -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+      }
+
+      .card-browser button {
+        border: 0px;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 5px 10px;
+        background-color: white;
+        margin: 0.3rem 0;
+        cursor: pointer;
+      }
+
+      .card-browser button:hover {
+        background-color: #bfbfbf;
+      }
+
+      .card-browser > div {
+        padding: 1rem;
+        margin-top: 1.5rem;
+      }
+
+      .card-select {
+        z-index: 5;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #05386B;
+        padding: 0 0 0 2px;
+        cursor: pointer;
+      }
+
+      .active {
+        background-color: #bfbfbf;
+      }
+
+      .card-selected {
+        background-color: #173627;
+      }
+
+      .mr-point5 {
+        margin-right: 0.5rem;
+      }
+
+      .card-selected > .place-1 > span:nth-child(1) {
+        display: none;
+      }
+
+      .card-selected > .place-1 > span:nth-child(2) {
+        background-color: #C0C1C5;
+        border: 1px solid #C0C1C5;
+      }
+
+      .card-selected .font-card , .card-selected .font-name , .card-selected .badge , .card-selected .card-hover p{
+        color: #C0C1C5;
+      }
+
+      .card-selected .card-hover {
+        background-color: #173627;
+      }
+      .card-selected .font-card .report-badge {
+        color: #173627 !important;
+        background-color: #C0C1C5 !important;
+      }
+
+      .card-selected .badge-secondary {
+        border-color: #C0C1C5;
+      }
+
       @media (min-width: 600px) {
+
+        .place-4 .font-name {
+          display: inline;
+        }
+
+        .place-4 svg {
+          width: 14px;
+        }
+
+        .place-5 {
+          padding-bottom: 5px;
+        }
+
+        .place-3 {
+          align-self: auto;
+        }
+
+        .place-3 svg {
+          display: inline-block;
+        }
 
         .content-grid {
           grid-template-columns: repeat(4,1fr);
@@ -594,7 +726,7 @@
           margin-left: 0.5rem;
         }
 
-        .search-bar > input::placeholder {
+        input::placeholder {
           font-size: 18px;
         }
 
@@ -742,6 +874,7 @@
     </div>
 
     <section id="content" class="container pt-md-2 pt-1 px-1 px-md-2">
+
       <p class="text-brand text-green">Filter Lists</p>
       <div class="d-flex flex-wrap justify-content-start align-items-center">
         <div class="d-flex justify-content-start overflow-scroll">
@@ -757,124 +890,10 @@
           <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Search">
           <img class="px-point5" src="/search-icon.svg" width="25px" alt="">
         </div>
+
       </div>
 
-      <style media="screen">
-
-
-      </style>
-
       <div class="content-grid pt-md-2 pt-1">
-
-        <style media="screen">
-
-          .place-2 {
-            position: relative;
-          }
-          .place-2 > svg {
-            padding: 8px 8px;
-            /* border: 1px solid #EAEAEA; */
-            cursor: pointer;
-            position: absolute;
-            right: 0;
-            top: 0;
-            z-index: 5;
-            margin-top: -3px;
-          }
-
-          .place-2 > svg:hover {
-            background-color: #bfbfbf;
-          }
-
-          .place-2 > .active {
-            background: #EAEAEA;
-          }
-
-          .card-browser {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-          }
-
-          .align-items-end {
-            align-items: flex-end;
-          }
-
-          .alpha60 {
-              background-color: rgb(0, 0, 0);
-              background-color: rgba(0, 0, 0, 0.6);
-              filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
-              -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
-          }
-
-          .card-browser button {
-            border: 0px;
-            font-size: 11px;
-            font-weight: bold;
-            padding: 5px 10px;
-            background-color: white;
-            margin: 0.3rem 0;
-            cursor: pointer;
-          }
-
-          .card-browser button:hover {
-            background-color: #bfbfbf;
-          }
-
-          .card-browser > div {
-            padding: 1rem;
-            margin-top: 1.5rem;
-          }
-
-          .card-select {
-            z-index: 5;
-            width: 16px;
-            height: 16px;
-            border: 1px solid #05386B;
-            padding: 0 0 0 2px;
-            cursor: pointer;
-          }
-
-          .active {
-            background-color: #bfbfbf;
-          }
-
-          .card-selected {
-            background-color: #173627;
-          }
-
-          .mr-point5 {
-            margin-right: 0.5rem;
-          }
-
-          .card-selected > .place-1 > span:nth-child(1) {
-            display: none;
-          }
-
-          .card-selected > .place-1 > span:nth-child(2) {
-            background-color: #C0C1C5;
-            border: 1px solid #C0C1C5;
-          }
-
-          .card-selected .font-card , .card-selected .font-name , .card-selected .badge , .card-selected .card-hover p{
-            color: #C0C1C5;
-          }
-
-          .card-selected .card-hover {
-            background-color: #173627;
-          }
-          .card-selected .font-card .report-badge {
-            color: #173627 !important;
-            background-color: #C0C1C5 !important;
-          }
-
-          .card-selected .badge-secondary {
-            border-color: #C0C1C5;
-          }
-
-
-
-        </style>
 
         {{#each data}}
 
@@ -928,7 +947,7 @@
               <!-- change texg to white and bg-pending to bg-white with text-green here DONE-->
             </div>
             <div class="place-4 d-flex justify-content-start">
-              <svg width="14" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12.0001 5.33335H11.3334V4.00002C11.3334 2.16002 9.84008 0.666687 8.00008 0.666687C6.16008 0.666687 4.66675 2.16002 4.66675 4.00002V5.33335H4.00008C3.26675 5.33335 2.66675 5.93335 2.66675 6.66669V13.3334C2.66675 14.0667 3.26675 14.6667 4.00008 14.6667H12.0001C12.7334 14.6667 13.3334 14.0667 13.3334 13.3334V6.66669C13.3334 5.93335 12.7334 5.33335 12.0001 5.33335ZM8.00008 11.3334C7.26675 11.3334 6.66675 10.7334 6.66675 10C6.66675 9.26669 7.26675 8.66669 8.00008 8.66669C8.73341 8.66669 9.33341 9.26669 9.33341 10C9.33341 10.7334 8.73341 11.3334 8.00008 11.3334ZM10.0667 5.33335H5.93341V4.00002C5.93341 2.86002 6.86008 1.93335 8.00008 1.93335C9.14008 1.93335 10.0667 2.86002 10.0667 4.00002V5.33335Z" fill="#05386B"/>
               </svg>
               <span class="font-name">Name</span>
@@ -967,6 +986,154 @@
         {{/each}}
 
       </div>
+
+      <style media="screen">
+        .btn-secondary {
+          font-weight: bold;
+          border: 1px solid #173627;
+          color: white;
+          background: #173627;
+        }
+
+        .btn-secondary:hover {
+          background: #d4fce8;
+          border: 1px solid #d4fce8;
+          color: #173627;
+        }
+
+        .subscription  input {
+          width: 100%;
+        }
+
+        .text-center {
+          text-align: center;
+        }
+
+        .my-2 {
+          margin: 2rem 0;
+        }
+
+        @media (min-width: 600px) {
+          .subscription  input {
+            min-width: 600px;
+          }
+        }
+
+      </style>
+
+      <div class="subscription my-2 d-flex align-items-center flex-col">
+        <button class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More</button>
+        <p class="text-green">Subscribe to our newsletters and updates</p>
+        <div class="d-flex justify-content-start border">
+          <input class="form-control flex-grow-1 text-center" type="text" name="" value="" placeholder="your-email@some-thing.com">
+          <button class="btn btn-secondary d-flex align-items-center" type="button" name="button">Subscribe</button>
+        </div>
+      </div>
+
+
+    </section>
+
+    <style media="screen">
+
+      /* .h3 {
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      #footer {
+        padding: 55px 1rem;
+      }
+
+      #footer > div:nth-child(1) {
+        max-width: 225px;
+      }
+
+      #footer p, #footer span {
+        font-weight: bold;
+      }
+
+      #footer > div {
+        margin: 0 1rem 1rem 1rem
+      } */
+
+      #footer {
+        display: grid;
+        grid-gap: 1rem;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto;
+      }
+
+      #footer > div:nth-child(1) {
+        grid-column: 1/3;
+        grid-row: 1/2;
+      }
+
+      #footer > div:nth-child(2) {
+        grid-column: 1/3;
+        grid-row: 2/3;
+      }
+
+      #footer > div:nth-child(3) {
+        grid-column: 1/3;
+        grid-row: 3/4;
+      }
+
+      #footer > div:nth-child(4) {
+        grid-column: 1/3;
+        grid-row: 4/5;
+      }
+    </style>
+
+    <section id="footer" class="mt-2 theme-gradient text-light">
+      <div class="">
+        <h3 class="">Foreword</h3>
+        <p>Striving to bring people out of hopelessness and misery. Really appreciate  your contributions. And a retweet <a href="#">here</a> will help other people find us. </p>
+      </div>
+
+      <div class="">
+        <h3>Contact Us</h3>
+        <p>zakatlists@gmail.com</p>
+        <p>+92 323 5168638</p>
+        <div class="d-flex justify-content-start">
+
+          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
+          <path d="M22.3447 19.125L22.8632 15.8674H19.621V13.7535C19.621 12.8623 20.0739 11.9936 21.526 11.9936H23V9.22008C23 9.22008 21.6624 9 20.3835 9C17.7134 9 15.9681 10.5602 15.9681 13.3847V15.8674H13V19.125H15.9681V27H19.621V19.125H22.3447Z" fill="#C0C1C5"/>
+          </svg>
+
+          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
+          <path d="M25.1498 13.7383C25.1612 13.9023 25.1612 14.0664 25.1612 14.2305C25.1612 19.2344 21.4493 25 14.665 25C12.5749 25 10.6333 24.3789 9 23.3008C9.29697 23.3359 9.58247 23.3477 9.89086 23.3477C11.6155 23.3477 13.2031 22.75 14.4708 21.7305C12.849 21.6953 11.4898 20.6055 11.0216 19.1055C11.25 19.1406 11.4784 19.164 11.7183 19.164C12.0495 19.164 12.3807 19.1172 12.6891 19.0352C10.9987 18.6836 9.73094 17.1601 9.73094 15.3203V15.2734C10.222 15.5547 10.7932 15.7305 11.3984 15.7539C10.4048 15.0742 9.75379 13.914 9.75379 12.6015C9.75379 11.8984 9.9365 11.2539 10.2563 10.6914C12.0723 12.9883 14.802 14.4882 17.8629 14.6523C17.8058 14.3711 17.7716 14.0781 17.7716 13.7852C17.7716 11.6992 19.4162 10 21.4607 10C22.5228 10 23.4822 10.457 24.1561 11.1953C24.9898 11.0313 25.7893 10.7148 26.4975 10.2813C26.2233 11.1602 25.6409 11.8985 24.8756 12.3672C25.618 12.2852 26.3376 12.0742 27 11.7813C26.4975 12.5312 25.8693 13.1992 25.1498 13.7383Z" fill="#C0C1C5"/>
+          </svg>
+
+          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
+          <path d="M14.4532 24.725L8.27824 18.6235C7.90725 18.2569 7.90725 17.6626 8.27824 17.296L9.62171 15.9684C9.99269 15.6018 10.5942 15.6018 10.9652 15.9684L15.125 20.0787L24.0348 11.2749C24.4058 10.9084 25.0073 10.9084 25.3783 11.2749L26.7218 12.6025C27.0927 12.969 27.0927 13.5634 26.7218 13.93L15.7968 24.7251C15.4257 25.0916 14.8242 25.0916 14.4532 24.725Z" fill="#C0C1C5"/>
+          </svg>
+
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between">
+        <p>Sign in</p>
+        <p>Calculate Zakat</p>
+        <p>Blog</p>
+        <p>Contact</p>
+      </div>
+
+      <div class="d-flex">
+        <p class="text-center">
+          Made with
+          <span class="px-1">
+            <svg width="25" height="22" viewBox="0 0 25 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.5734 1.50428C19.8977 -0.78898 15.9183 -0.376488 13.4623 2.17213L12.5004 3.16898L11.5385 2.17213C9.08734 -0.376488 5.10304 -0.78898 2.42731 1.50428C-0.639037 4.13638 -0.800167 8.8604 1.94392 11.7135L11.392 21.5249C12.0023 22.1584 12.9935 22.1584 13.6039 21.5249L23.0519 11.7135C25.8009 8.8604 25.6398 4.13638 22.5734 1.50428Z" fill="#FF2F00"/>
+          </svg>
+          </span>
+          by
+          <a href="#">@punch__lines</a>
+        </p>
+      </div>
+
     </section>
 
 
