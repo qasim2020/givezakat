@@ -392,6 +392,7 @@
         color: #173627;
         font-size: 15px;
         font-weight: bold;
+        opacity: 1;
       }
 
       .search-bar > input {
@@ -671,9 +672,9 @@
       }
 
       .btn-secondary:hover {
-        background: #d4fce8;
-        border: 1px solid #d4fce8;
-        color: #173627;
+        background: black;
+        border: 1px solid black;
+        color: white;
       }
 
       .subscription  input {
