@@ -9,19 +9,31 @@
     <link rel="stylesheet" href="/styles.css">
 
     <title>Zakat Lists</title>
+    <style media="screen">
+      .cover-hero .container{
+        padding: 1rem 0;
+        width: 100vw;
+      }
+      .cover-hero a, .cover-hero p {
+        font-size: 15px;
+        font-weight: bold;
+        color: white;
+      }
+
+    </style>
   </head>
   <body>
-    <div class="nav-bar position-absolute w-100">
+    <div class="cover-hero nav-bar position-absolute">
       <div class="container d-flex justify-content-between align-items-center">
         <div class="logo-area d-flex flex-row">
           <img class="ml-2 my-point5 nav-bar-logo" src="/logo5.png" width="42px" height="42px" alt="">
-          <p class="ml-point5 align-self-center text-light">Zakat Lists</p>
+          <p class="ml-1 align-self-center text-light">Zakat Lists</p>
         </div>
         <div class="d-md-flex justify-content-around mr-2 d-none">
-          <p class="text-light px-point5 align-self-center">Sign in</p>
-          <p class="text-light px-point5 align-self-center">Explore</p>
-          <p class="text-light px-point5 align-self-center">Calculate Zakat</p>
-          <p class="text-light px-point5 align-self-center">Add People</p>
+          <a href="#" class="text-light px-point5 align-self-center">Sign in</a>
+          <a href="#" class="text-light px-point5 align-self-center">Explore</a>
+          <a href="#" class="text-light px-point5 align-self-center">Calculate Zakat</a>
+          <a href="#" class="text-light px-point5 align-self-center">Add People</a>
         </div>
         <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">
           <img onclick="opennav()" id="nav-open-icon" src="/nav-icon.svg" alt="">
@@ -38,7 +50,21 @@
       <p class="nav-item text-light my-2">Search</p>
     </div>
 
-    <div id="hero-bg" class="h-40vh theme-gradient"></div>
+    <style media="screen">
+      .lamps-img {
+        position: absolute;
+        left: 75%;
+        top: -3rem;
+        width: 110px;
+        z-index: -10;
+      }
+    </style>
+    <div id="hero-bg" class="h-40vh bg-green"></div>
+
+    <div class="container">
+      <img class="lamps-img" src="/lamps.png" alt="">
+    </div>
+
 
     <div class="container form-placement">
       <h4>Zakat Calculator</h4>
@@ -73,13 +99,13 @@
       <hr class="">
       <div class="d-flex justify-content-between">
         <p class="input-heading">Nisab</p>
-        <p class="nisab-text bg-issue text-white">236.00 USD</p>
+        <p class="nisab-text bg-green text-white">236.00 USD</p>
       </div>
       <div class="d-flex justify-content-between">
         <p class="input-heading">Total Obligatory</p>
         <p class="total-zakat">456.00 USD</p>
       </div>
-      <button class="ml-auto btn btn-secondary d-flex align-items-center" type="button" name="button">Give Zakat</button>
+      <button class="mt-2 ml-auto btn btn-secondary d-flex align-items-center" type="button" name="button">Give Zakat</button>
 
     </div>
 

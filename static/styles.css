@@ -17,6 +17,7 @@
       }
 
       .container {
+        position: relative;
         max-width: 1400px;
         margin: auto;
       }
@@ -400,7 +401,7 @@
       }
 
       .mt-2 {
-        margin-top: 2rem;
+        margin-top: 2rem !important;
       }
 
       .content-grid {
@@ -737,7 +738,6 @@
       a {
         color: inherit;
         text-decoration: none;
-        font-weight: bold;
         cursor: pointer;
       }
 
@@ -807,6 +807,10 @@
         font-size: 18px;
       }
 
+      .bg-green {
+        background: #173627;
+      }
+
       .form-placement input{
         color: #173627;
         font-weight: bold;
@@ -814,7 +818,7 @@
       }
 
       .form-placement hr {
-        border: 0.4px solid #C0C1C5;
+        border: 0px solid #C0C1C5;
         margin-bottom: 1rem;
       }
 
@@ -838,7 +842,7 @@
         margin-left: auto !important;
       }
       .total-zakat {
-        color: #005D1C;
+        color: #173627;
         font-size: 23px;
         font-weight: bold;
       }
@@ -847,13 +851,13 @@
         height: 40vh;
       }
 
-      .nav-bar p {
+      .nav-bar a {
         cursor: pointer;
         border: 1px solid transparent;
         margin: 0 0.1rem;
       }
 
-      .nav-bar p:hover {
+      .nav-bar a:hover {
         border: 1px solid #C0C1C5;
       }
 
