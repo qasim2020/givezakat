@@ -57,7 +57,7 @@ let authenticate = (req,res,next) => {
 
 
 app.get('/hacks',(req,res) => {
-  res.render('hacks.hbs');
+  res.render('1-signin.hbs');
 })
 
 app.get('/',(req,res) => {
@@ -82,7 +82,7 @@ app.get('/',(req,res) => {
 
 
 app.get('/signup',(req,res) => {
-  res.render('home.hbs');
+  res.render('1-home.hbs');
   // res.render('signup.hbs');
 })
 

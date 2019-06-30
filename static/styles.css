@@ -1,4 +1,25 @@
 
+
+      .cover-hero {
+        position: absolute;
+        top: 0px;
+        width: 100vw;
+      }
+      .cover-hero .container{
+        padding: 1rem 0;
+      }
+
+      .nav-bar a, .nav-bar p {
+        font-size: 15px;
+        font-weight: bold;
+        color: white;
+      }
+
+      .hero-bg {
+        z-index: -10;
+        width: 100vw;
+      }
+
       * {
         margin: 0px;
         padding: 0px;
@@ -393,7 +414,7 @@
         color: #173627;
         font-size: 15px;
         font-weight: bold;
-        opacity: 1;
+        opacity: 0.8;
       }
 
       .search-bar > input {
@@ -792,11 +813,13 @@
 
       .form-placement > p {
         font-weight: bold;
+        font-size: 18px;
         color: #173627;
       }
 
       .input-heading {
         color: #173627;
+        font-size: 18px;
         font-weight: bold;
       }
 
@@ -1047,5 +1070,12 @@
         .badge {
           font-size: 11px;
         }
+
+        .form-placement > p {
+          font-weight: bold;
+          font-size: 18px;
+          color: #173627;
+        }
+
 
       }
