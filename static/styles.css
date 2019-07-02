@@ -341,8 +341,8 @@
         white-space: nowrap;
       }
 
-      .btn:hover {
-        background: #d4fce8;
+      .btn-primary:hover {
+        background: #d7d7d7;
         cursor: pointer;
       }
 
@@ -587,7 +587,6 @@
       }
       .place-2 > svg {
         padding: 8px 8px;
-        /* border: 1px solid #EAEAEA; */
         cursor: pointer;
         position: absolute;
         right: 0;
@@ -807,7 +806,7 @@
         padding: 2rem 0;
       }
 
-      .form-placement > *:not(hr) {
+      .form-placement > *:not(hr)  {
         margin: 15px 25px;
       }
 
@@ -859,15 +858,17 @@
 
       .nisab-text {
         padding: 2px 8px;
+        font-weight: bold;
+        border-bottom: 2px solid green;
       }
 
       .ml-auto {
         margin-left: auto !important;
       }
       .total-zakat {
-        color: #173627;
-        font-size: 23px;
+        padding: 2px 8px;
         font-weight: bold;
+        border-bottom: 2px solid white;
       }
 
       .h-40vh {
@@ -886,6 +887,40 @@
 
       .position-absolute {
         position: absolute;
+      }
+
+      .nav-bar .active {
+        background: white;
+        color: darkgreen;
+      }
+
+      .form-placement a {
+        font-weight: bold;
+        padding: 0 12px;
+        margin-left: -12px;
+        /* background: #d7d9d8; */
+        /* border: 1px solid #d7d9d8; */
+      }
+
+      .form-placement a:hover {
+        /* border: 1px solid #173627; */
+        background: #eff1f0;
+      }
+
+      #footer svg {
+        cursor: pointer;
+      }
+
+      .heart-icon {
+        margin-bottom: -3px;
+      }
+
+      #footer a {
+        font-weight: bold;
+      }
+
+      #footer a:hover {
+        color: white;
       }
 
       @media (min-width: 600px) {
@@ -1076,6 +1111,5 @@
           font-size: 18px;
           color: #173627;
         }
-
 
       }

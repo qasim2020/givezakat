@@ -1,0 +1,28 @@
+<div class="cover-hero nav-bar">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="logo-area d-flex flex-row">
+      <img class="ml-2 my-point5 nav-bar-logo" src="/logo5.png" width="42px" height="42px" alt="">
+      <p class="ml-1 align-self-center text-light">Zakat Lists</p>
+    </div>
+    <div class="d-md-flex justify-content-around mr-2 d-none">
+      <a href="/" class="text-light px-point5 align-self-center">Home</a>
+      <a href="/signin" class="text-light px-point5 align-self-center {{signin}}">Sign in</a>
+      <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
+      <a href="/addpeople" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
+      <a href="mailto:qasimali24@gmail.com" class="text-light px-point5 align-self-center">Contact</a>
+    </div>
+    <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">
+      <img onclick="opennav()" id="nav-open-icon" src="/nav-icon.svg" alt="">
+    </div>
+  </div>
+</div>
+
+<div class="nav-menu d-flex flex-col align-items-center justify-content-center theme-gradient">
+  <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
+  <a class="nav-item my-point5 text-light" href="/signin">Sign in</a>
+  <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
+  <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
+  <a class="nav-item my-point5 text-light" href="/addpeople">Add people</a>
+</div>
+
+<div class="hero-bg h-40vh bg-green"></div>

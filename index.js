@@ -57,7 +57,7 @@ let authenticate = (req,res,next) => {
 
 
 app.get('/hacks',(req,res) => {
-  res.render('1-signin.hbs');
+  res.render('1-fp.hbs');
 })
 
 app.get('/',(req,res) => {
@@ -70,7 +70,7 @@ app.get('/',(req,res) => {
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
     console.log(res.data);
-    res.render('hacks.hbs',{
+    res.render('1-home.hbs',{
       data: res.data,
       sampleRows: rows[0]
     });
@@ -81,14 +81,38 @@ app.get('/',(req,res) => {
 });
 
 
+app.get('/zakatcalc',(req,res) => {
+  res.render('1-zakatcalc.hbs',{
+    zakatcalc: 'active',
+  });
+  // res.render('signup.hbs');
+})
+
+app.get('/signin',(req,res) => {
+  res.render('1-signin.hbs',{
+    signin: 'active',
+  });
+  // res.render('signup.hbs');
+})
+
 app.get('/signup',(req,res) => {
-  res.render('1-home.hbs');
+  res.render('1-signup.hbs',{
+    signin: 'active'
+  });
   // res.render('signup.hbs');
 })
 
 app.get('/forgotpw',(req,res) => {
-  res.render('forgotpw.hbs');
-})
+  res.render('1-fp.hbs',{
+    signin: 'active'
+  });
+});
+
+app.get('/addpeople',(req,res) => {
+  res.render('1-addpeople.hbs',{
+    addpeople: 'active'
+  });
+});
 
 app.post('/data',(req,res) => {
 

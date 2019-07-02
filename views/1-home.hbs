@@ -23,10 +23,10 @@
         </div>
         <div class="item-3 text-white">
           <div class="d-md-flex d-none flex-col justify-content-start">
-            <p class="nav-item text-light my-1">Sign in</p>
-            <p class="nav-item text-light my-1">Explore</p>
-            <p class="nav-item text-light my-1">Calculate Zakat</p>
-            <p class="nav-item text-light my-1">Add People</p>
+            <a class="nav-item my-1 text-light" href="/signin">Sign in</a>
+            <a class="nav-item my-1 text-light" href="#explore">Explore</a>
+            <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
+            <a class="nav-item my-1 text-light" href="/addpeople">Add people</a>
           </div>
           <p class="text-brand text-light">Zakat Lists</p>
         </div>
@@ -37,11 +37,10 @@
 
       <div class="nav-menu d-flex flex-col align-items-center justify-content-center theme-gradient">
         <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
-        <p class="nav-item text-light my-2">Sign in</p>
-        <p class="nav-item text-light my-2">Explore</p>
-        <p class="nav-item text-light my-2">Calculate Zakat</p>
-        <p class="nav-item text-light my-2">Add People</p>
-        <p class="nav-item text-light my-2">Search</p>
+        <a class="nav-item my-point5 text-light" href="/signin">Sign in</a>
+        <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
+        <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
+        <a class="nav-item my-point5 text-light" href="/addpeople">Add people</a>
       </div>
     </section>
 
@@ -52,10 +51,11 @@
           <p class="ml-point5 align-self-center text-light">Zakat Lists</p>
         </div>
         <div class="d-md-flex justify-content-around mr-2 d-none">
-          <a href="#" class="text-light px-point5 align-self-center">Sign in</a>
-          <a href="#" class="text-light px-point5 align-self-center">Explore</a>
-          <a href="#" class="text-light px-point5 align-self-center">Calculate Zakat</a>
-          <a href="#" class="text-light px-point5 align-self-center">Add People</a>
+          <a href="/signin" class="text-light px-point5 align-self-center">Sign in</a>
+          <a href="/zakatcalc" class="text-light px-point5 align-self-center">Calculate Zakat</a>
+          <a href="/addpeople" class="text-light px-point5 align-self-center">Add People</a>
+          <a href="mailto:qasimali24@gmail.com" class="text-light px-point5 align-self-center">Contact</a>
+        </div>
         </div>
         <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">
           <img onclick="opennav()" id="nav-open-icon" src="/nav-icon.svg" alt="">
@@ -65,7 +65,7 @@
 
     <section id="content" class="container pt-md-2 pt-1 px-1 px-md-2">
 
-      <p class="text-brand text-green">Filter Lists</p>
+      <p id="explore" class="text-brand text-green">Filter Lists</p>
       <div class="d-flex flex-wrap justify-content-start align-items-center">
         <div class="d-flex justify-content-start overflow-scroll">
           <button class="btn btn-primary d-flex align-items-center" type="button" name="button">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
@@ -200,42 +200,50 @@
         </div>
         <div class="">
           <h3 class="">Foreword</h3>
-          <p class="">I started this project to make zakat giving system easier. Organizations are not transparent. They don't tell us what they are doing with our money. Giving zakat to people directly and then recieving zakat delivery report on our cell phones is 'transparent'. Please retweet <a href="#">here</a> to make more people find it. in'sha'Allah. </p>
+          <p class="">I started this project to make zakat giving system easier. Organizations are not transparent. They don't tell us what they are doing with our money. Giving zakat to people directly and then recieving zakat delivery report on our cell phones is 'transparent'. Please retweet <a href="#" style="border-bottom:1px solid white">here</a> to make more people find it. </p>
         </div>
       </div>
 
       <div class="">
-        <h3>Contact Us</h3>
+        <h3>Contact Me</h3>
         <p>zakatlists@gmail.com</p>
         <p>+92 323 5168638</p>
         <div class="d-block d-md-flex">
 
-          <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
-          <path d="M22.3447 19.125L22.8632 15.8674H19.621V13.7535C19.621 12.8623 20.0739 11.9936 21.526 11.9936H23V9.22008C23 9.22008 21.6624 9 20.3835 9C17.7134 9 15.9681 10.5602 15.9681 13.3847V15.8674H13V19.125H15.9681V27H19.621V19.125H22.3447Z" fill="#C0C1C5"/>
-          </svg>
+          <a href="https://facebook.com/qasimali22">
+            <svg iam="facebook" active-color="#3B5998" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
+            <path d="M22.3447 19.125L22.8632 15.8674H19.621V13.7535C19.621 12.8623 20.0739 11.9936 21.526 11.9936H23V9.22008C23 9.22008 21.6624 9 20.3835 9C17.7134 9 15.9681 10.5602 15.9681 13.3847V15.8674H13V19.125H15.9681V27H19.621V19.125H22.3447Z" fill="#C0C1C5"/>
+            </svg>
+          </a>
 
-          <svg class="mx-point5" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
-          <path d="M25.1498 13.7383C25.1612 13.9023 25.1612 14.0664 25.1612 14.2305C25.1612 19.2344 21.4493 25 14.665 25C12.5749 25 10.6333 24.3789 9 23.3008C9.29697 23.3359 9.58247 23.3477 9.89086 23.3477C11.6155 23.3477 13.2031 22.75 14.4708 21.7305C12.849 21.6953 11.4898 20.6055 11.0216 19.1055C11.25 19.1406 11.4784 19.164 11.7183 19.164C12.0495 19.164 12.3807 19.1172 12.6891 19.0352C10.9987 18.6836 9.73094 17.1601 9.73094 15.3203V15.2734C10.222 15.5547 10.7932 15.7305 11.3984 15.7539C10.4048 15.0742 9.75379 13.914 9.75379 12.6015C9.75379 11.8984 9.9365 11.2539 10.2563 10.6914C12.0723 12.9883 14.802 14.4882 17.8629 14.6523C17.8058 14.3711 17.7716 14.0781 17.7716 13.7852C17.7716 11.6992 19.4162 10 21.4607 10C22.5228 10 23.4822 10.457 24.1561 11.1953C24.9898 11.0313 25.7893 10.7148 26.4975 10.2813C26.2233 11.1602 25.6409 11.8985 24.8756 12.3672C25.618 12.2852 26.3376 12.0742 27 11.7813C26.4975 12.5312 25.8693 13.1992 25.1498 13.7383Z" fill="#C0C1C5"/>
-          </svg>
+          <a href="https://twitter.com/punch__lines">
+            <svg iam="twitter" active-color="#1DA0F2" class="mx-point5" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
+            <path d="M25.1498 13.7383C25.1612 13.9023 25.1612 14.0664 25.1612 14.2305C25.1612 19.2344 21.4493 25 14.665 25C12.5749 25 10.6333 24.3789 9 23.3008C9.29697 23.3359 9.58247 23.3477 9.89086 23.3477C11.6155 23.3477 13.2031 22.75 14.4708 21.7305C12.849 21.6953 11.4898 20.6055 11.0216 19.1055C11.25 19.1406 11.4784 19.164 11.7183 19.164C12.0495 19.164 12.3807 19.1172 12.6891 19.0352C10.9987 18.6836 9.73094 17.1601 9.73094 15.3203V15.2734C10.222 15.5547 10.7932 15.7305 11.3984 15.7539C10.4048 15.0742 9.75379 13.914 9.75379 12.6015C9.75379 11.8984 9.9365 11.2539 10.2563 10.6914C12.0723 12.9883 14.802 14.4882 17.8629 14.6523C17.8058 14.3711 17.7716 14.0781 17.7716 13.7852C17.7716 11.6992 19.4162 10 21.4607 10C22.5228 10 23.4822 10.457 24.1561 11.1953C24.9898 11.0313 25.7893 10.7148 26.4975 10.2813C26.2233 11.1602 25.6409 11.8985 24.8756 12.3672C25.618 12.2852 26.3376 12.0742 27 11.7813C26.4975 12.5312 25.8693 13.1992 25.1498 13.7383Z" fill="#C0C1C5"/>
+            </svg>
+          </a>
 
-          <svg class="" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
-          <path d="M14.4532 24.725L8.27824 18.6235C7.90725 18.2569 7.90725 17.6626 8.27824 17.296L9.62171 15.9684C9.99269 15.6018 10.5942 15.6018 10.9652 15.9684L15.125 20.0787L24.0348 11.2749C24.4058 10.9084 25.0073 10.9084 25.3783 11.2749L26.7218 12.6025C27.0927 12.969 27.0927 13.5634 26.7218 13.93L15.7968 24.7251C15.4257 25.0916 14.8242 25.0916 14.4532 24.725Z" fill="#C0C1C5"/>
-          </svg>
+          <a href="https://getmakerlog.com/@punch__lines">
+            <svg iam="makerlog" active-color="#01B77A" class="" width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="17.5" cy="17.5" r="17" stroke="#C0C1C5"/>
+            <path d="M14.4532 24.725L8.27824 18.6235C7.90725 18.2569 7.90725 17.6626 8.27824 17.296L9.62171 15.9684C9.99269 15.6018 10.5942 15.6018 10.9652 15.9684L15.125 20.0787L24.0348 11.2749C24.4058 10.9084 25.0073 10.9084 25.3783 11.2749L26.7218 12.6025C27.0927 12.969 27.0927 13.5634 26.7218 13.93L15.7968 24.7251C15.4257 25.0916 14.8242 25.0916 14.4532 24.725Z" fill="#C0C1C5"/>
+            </svg>
+          </a>
 
         </div>
       </div>
+
+
 
       <div class="copy-right d-flex align-items-center justify-content-between">
           <a class="d-none d-md-block" href="#">&copy; Zakat Lists</a>
 
           <div class="footer-btns d-flex flex-grow-1 flex-grow-md-0">
-            <a href="#">Sign in</a>
-            <a href="#">Calculate</a>
-            <a href="#">Add People</a>
-            <a class="d-md-block d-none" href="#">Contact</a>
+            <a href="/signin">Sign in</a>
+            <a href="/zakatcalc">Calculate</a>
+            <a href="/addpeople">Add People</a>
+            <a class="d-md-block d-none" href="mailto:qasimali24@gmail.com">Contact</a>
           </div>
       </div>
 
@@ -243,12 +251,12 @@
         <small>
           <span>Made with</span>
           <span class="px-point5">
-            <svg width="18" viewBox="0 0 25 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M22.5734 1.50428C19.8977 -0.78898 15.9183 -0.376488 13.4623 2.17213L12.5004 3.16898L11.5385 2.17213C9.08734 -0.376488 5.10304 -0.78898 2.42731 1.50428C-0.639037 4.13638 -0.800167 8.8604 1.94392 11.7135L11.392 21.5249C12.0023 22.1584 12.9935 22.1584 13.6039 21.5249L23.0519 11.7135C25.8009 8.8604 25.6398 4.13638 22.5734 1.50428Z" fill="#afafaf"/>
-          </svg>
+            <svg active-color="#f90115" class="heart-icon" width="18" viewBox="0 0 25 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.5734 1.50428C19.8977 -0.78898 15.9183 -0.376488 13.4623 2.17213L12.5004 3.16898L11.5385 2.17213C9.08734 -0.376488 5.10304 -0.78898 2.42731 1.50428C-0.639037 4.13638 -0.800167 8.8604 1.94392 11.7135L11.392 21.5249C12.0023 22.1584 12.9935 22.1584 13.6039 21.5249L23.0519 11.7135C25.8009 8.8604 25.6398 4.13638 22.5734 1.50428Z" fill="#afafaf"/>
+            </svg>
           </span>
           <span>by &nbsp</span>
-          <a href="#">@punch__lines</a>
+          <a href="https://twitter.com/punch__lines">@punch__lines</a>
         </small>
       </div>
 
@@ -256,6 +264,34 @@
 
 
     <script type="text/javascript" src="/javascript.js"></script>
+
+    <script type="text/javascript">
+
+      $('#footer').find('svg').on('mouseenter mouseleave',function() {
+        if (this.classList[0] == 'heart-icon') return;
+        let activeColor = $(this).attr('active-color');
+        let prvsColor = $(this).attr('fill');
+        console.log(prvsColor);
+        if (prvsColor != activeColor) {
+          $(this).attr({fill: activeColor});
+          return;
+        }
+        $(this).attr({fill: 'none'});
+
+      })
+
+      $('.heart-icon').on('mouseenter mouseleave',function(){
+        let activeColor = $(this).attr('active-color');
+        let prvsColor = $(this).find('path').attr('fill');
+        console.log(prvsColor,activeColor);
+        if (prvsColor != activeColor) {
+          $(this).find('path').attr({fill: activeColor});
+          return;
+        }
+        $(this).find('path').attr({fill: '#afafaf'});
+      })
+
+    </script>
 
   </body>
 </html>
