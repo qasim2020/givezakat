@@ -907,6 +907,16 @@
         background: #eff1f0;
       }
 
+      .form-placement .input-heading {
+        font-weight: normal;
+      }
+
+      .form-placement .divider-text {
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
       #footer svg {
         cursor: pointer;
       }

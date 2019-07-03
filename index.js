@@ -114,6 +114,12 @@ app.get('/addpeople',(req,res) => {
   });
 });
 
+app.get('/cart',(req,res) => {
+  res.render('1-cart.hbs',{
+    cart: 'active'
+  });
+});
+
 app.post('/data',(req,res) => {
 
   if (req.body) {
