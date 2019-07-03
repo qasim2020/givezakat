@@ -9,6 +9,106 @@
     <link rel="stylesheet" href="/styles.css">
 
     <title>Zakat Lists</title>
+    <style media="screen">
+      .form-grid {
+        display:grid;
+        grid-template-columns: 1fr auto 116px;
+        grid-template-rows: auto;
+        grid-gap: 1rem;
+        padding: 0;
+      }
+
+      .form-grid .heading:nth-child(1){
+        align-self: center;
+        grid-row: 1/2;
+        grid-column: 1/3;
+        text-align: center;
+      }
+
+      .form-grid p {
+        font-size: 15px;
+      }
+
+      .form-grid .heading p{
+        font-size: 15px;
+        font-weight: bold !important;
+      }
+
+      .form-grid .delete-btn {
+        grid-column: 1/2;
+        padding-top: 10px;
+      }
+
+      .form-grid .delete-btn svg {
+        cursor: pointer;
+      }
+
+      .form-grid .person {
+        grid-column: 2/3;
+        padding: 0;
+        font-weight: normal !important;
+      }
+
+      .form-grid .label:nth-child(1) p{
+        font-weight: normal !important;
+      }
+
+      .form-grid input {
+        grid-column: 3/4;
+        text-align: center;
+        border: 1px solid #173627;
+      }
+
+      .form-grid input::placeholder {
+        color: #173627;
+      }
+
+      .form-grid .person-amount {
+        grid-column: 3/4;
+        text-align: center;
+      }
+
+      .form-grid .person-amount input {
+        width: 86px;
+      }
+
+      .form-grid .label {
+        grid-column: 1/3;
+        text-align: right;
+      }
+
+      .total p {
+        font-weight: bold;
+      }
+
+      .person-amount p {
+        font-weight: bold;
+      }
+
+      .person-amount:nth-last-child(2) {
+        border-top: 1px solid #173627;
+      }
+
+      @media (min-width:600px) {
+
+        .form-grid .person {
+          padding: 0 1rem;
+        }
+
+        .form-grid {
+          padding: 0;
+        }
+
+        .form-grid p {
+          font-size: 18px;
+        }
+
+        .form-grid .heading p{
+          font-size: 18px;
+        }
+      }
+
+    </style>
 
   </head>
   <body>
@@ -17,21 +117,66 @@
 
     <div class="container form-placement">
       <h4>Check out</h4>
-      <p class="input-heading"></p>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Add 1 Person</button>
-      <hr>
-      <span class="d-block divider-text">OR</span>
-      <p class="input-heading mt-2">Add multiple people by uploading excel file.</p>
-      <button class="mt-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Download sample file here</button>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Upload excel file</button>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Validate</button>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Uplaod</button>
+      <div class="form-grid">
+        <div class="heading">
+          <p>Person(s)</p>
+        </div>
+        <div class="heading text-center">
+          <p>Amount</p>
+        </div>
+
+        <div class="delete-btn">
+          <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#173627"/>
+          </svg>
+        </div>
+        <div class="person">
+          <p>Earning 18 USD per month to support 18 family members</p>
+        </div>
+        <input class="form-control text-center" type="text" name="" value="" placeholder="50 USD">
+
+
+
+        <div class="delete-btn">
+          <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#173627"/>
+          </svg>
+        </div>
+        <div class="person">
+          <p>Earning 18 USD per month to support 18 family members</p>
+        </div>
+        <input class="form-control text-center" type="text" name="" value="" placeholder="50 USD">
+
+        <div class="label">
+          <p style="font-weight: normal">Processing fee</p>
+        </div>
+
+        <div class="person-amount">
+          <p>5.00 USD</p>
+        </div>
+        <div class="label total">
+          <p>Total</p>
+        </div>
+        <div class="person-amount">
+          <p>105 USD</p>
+        </div>
+        <div class="person-amount">
+          <button id="buy" class="btn btn-secondary" type="button" name="button">Pay Out</button>
+        </div>
+      </div>
 
     </div>
 
 
 
     <script type="text/javascript" src="/javascript.js"></script>
-
+    <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+    <script type="text/javascript">
+    	Paddle.Setup({ vendor: 52029 });
+      function openCheckout() {
+    		Paddle.Checkout.open({ product: 12345 });
+    	}
+      $('#buy').click(openCheckout);
+    </script>
   </body>
 </html>

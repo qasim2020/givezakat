@@ -690,6 +690,7 @@
         border: 1px solid #173627;
         color: white;
         background: #173627;
+        cursor: pointer;
       }
 
       .btn-secondary:hover {
