@@ -70,7 +70,7 @@ app.get('/',(req,res) => {
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
     console.log(res.data);
-    res.render('hacks.hbs',{
+    res.render('1-home.hbs',{
       data: res.data,
       sampleRows: rows[0]
     });

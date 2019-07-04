@@ -108,6 +108,10 @@
         }
       }
 
+      .checkout-container {
+        grid-column: 1/4;
+      }
+
     </style>
 
   </head>
@@ -163,6 +167,7 @@
         <div class="person-amount">
           <button id="buy" class="btn btn-secondary" type="button" name="button">Pay Out</button>
         </div>
+        <div class="checkout-container"></div>
       </div>
 
     </div>
@@ -174,9 +179,18 @@
     <script type="text/javascript">
     	Paddle.Setup({ vendor: 52029 });
       function openCheckout() {
-    		Paddle.Checkout.open({ product: 564500 });
+        Paddle.Checkout.open({
+  				method: 'inline',
+  				product: 564500,       // Replace with your Product or Plan ID
+  				allowQuantity: false,
+  				disableLogout: true,
+  				frameTarget: 'checkout-container', // The className of your checkout <div>
+  				frameInitialHeight: 366,
+  				frameStyle: 'width:360px; background-color: transparent; border: none;'
+  			});
     	}
       $('#buy').click(openCheckout);
+
     </script>
   </body>
 </html>
