@@ -109,10 +109,7 @@
       }
 
       .checkout-container {
-        position: absolute;
-        left: 50%;
-        transform: translate(-50%);
-        background: white;
+        text-align: center;
       }
 
     </style>
@@ -124,6 +121,8 @@
 
     <div class="container form-placement">
       <h4>Check out</h4>
+      <p class="amount-total d-none text-center">Pay 105.00 USD</p>
+      <div class="checkout-container"></div>
       <div class="form-grid">
         <div class="heading">
           <p>Person(s)</p>
@@ -170,7 +169,6 @@
         <div class="person-amount">
           <button id="buy" class="btn btn-secondary" type="button" name="button">Pay Out</button>
         </div>
-        <div class="checkout-container"></div>
       </div>
 
     </div>
@@ -181,18 +179,26 @@
     <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
     <script type="text/javascript">
     	Paddle.Setup({ vendor: 52029 });
-      function openCheckout() {
+      function openCheckout(w) {
+        console.log(w-10);
         Paddle.Checkout.open({
+          email: 'qasimali24@gmail.com',
   				method: 'inline',
   				product: 564500,       // Replace with your Product or Plan ID
   				allowQuantity: false,
   				disableLogout: true,
   				frameTarget: 'checkout-container', // The className of your checkout <div>
   				frameInitialHeight: 366,
-  				frameStyle: 'width:360px; background-color: transparent; border: none;'
+  				frameStyle: `width:${w}px; background-color: transparent; border: none;`
   			});
     	}
-      $('#buy').click(openCheckout);
+      $('#buy').on('click',function() {
+        $(this).closest('.form-grid').hide();
+        let myWidth = $('.form-grid').width();
+        console.log(myWidth);
+        $('.amount-total').removeClass('d-none');
+        openCheckout(myWidth);
+      });
 
     </script>
   </body>

@@ -934,6 +934,18 @@
         color: white;
       }
 
+      .cart-circle {
+        background: #fff036;
+        border-radius: 50%;
+        padding: 0.2rem 0.4rem;
+        font-size: 10px;
+        font-weight: bold;
+        margin-left: -10px;
+        margin-bottom: 15px;
+        color: #183627;
+      }
+
+/* red red red red red red red red red */
       @media (min-width: 600px) {
 
         .form-placement {
