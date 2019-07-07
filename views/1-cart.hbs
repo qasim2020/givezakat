@@ -184,6 +184,8 @@
         Paddle.Checkout.open({
           email: 'qasimali24@gmail.com',
   				method: 'inline',
+          country: 'Pakistan',
+          override: '{{url}}',
   				product: 564500,       // Replace with your Product or Plan ID
   				allowQuantity: false,
   				disableLogout: true,
@@ -195,7 +197,6 @@
       $('#buy').on('click',function() {
         $(this).closest('.form-grid').hide();
         let myWidth = $('.form-grid').width();
-        console.log(myWidth);
         $('.amount-total').removeClass('d-none');
         openCheckout(myWidth);
       });

@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const _ = require('lodash');
 const readXlsxFile = require('read-excel-file/node');
+const axios = require('axios');
 
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
@@ -116,9 +117,27 @@ app.get('/addpeople',(req,res) => {
 
 app.get('/cart',(req,res) => {
   res.render('1-cart.hbs',{
-    cart: 'active'
+    cart: 'active',
+    // url: result.data.response.url,
   });
 });
+
+app.get('/checkoutURL',(req,res) => {
+  axios.post('https://vendors.paddle.com/api/2.0/product/generate_pay_link', {
+    vendor_id: '52029',
+    vendor_auth_code: '897b6543544f54c8e0c6d120796b0e8233c055a8fb1a8c70c9',
+    product_id: '564500',
+    prices: ['USD:105'],
+  })
+  .then((result) => {
+    console.log(`statusCode: ${result.statusCode}`)
+    console.log(result.data.response.url);
+    console.log(result);
+  })
+  .catch((error) => {
+    console.error(error)
+  })
+})
 
 app.post('/data',(req,res) => {
 
