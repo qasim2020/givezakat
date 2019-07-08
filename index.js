@@ -122,6 +122,15 @@ app.get('/cart',(req,res) => {
   });
 });
 
+app.get('/updateperson',(req,res) => {
+  res.render('1-updateperson.hbs',{
+    // cart: 'active',
+    // url: result.data.response.url,
+    addpeople: 'active',
+    name: 'Qasim',
+  });
+});
+
 app.get('/checkoutURL',(req,res) => {
   axios.post('https://vendors.paddle.com/api/2.0/product/generate_pay_link', {
     vendor_id: '52029',

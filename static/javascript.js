@@ -3,6 +3,7 @@ $('.card-select').on('hover',function(e) {
 })
 
 $('.card-select').on('click',function(e){
+
   $(this).closest('.card').toggleClass('card-selected');
 
   $.each($(this).closest('.card').find('path'),function() {
@@ -16,6 +17,8 @@ $('.card-select').on('click',function(e){
   })
 
   $('.card-hover').find('path').attr('fill', '#C0C1C5');
+
+  updatecart();
 
 })
 

@@ -11,6 +11,48 @@
     <title>Zakat Lists</title>
   </head>
   <body>
+
+    <style media="screen">
+      .modal {
+        position: fixed;
+        height: 100vh;
+        width: 100vw;
+        background: rgba(0,0,0,0.9);
+        z-index: 20;
+      }
+
+      .modal p {
+        font-weight: bold;
+      }
+
+      .modal textarea {
+        padding: 0.3rem;
+        width: 100%;
+        max-width: 90vw;
+        height: 300px;
+        font-size: 15px;
+      }
+
+      @media (min-width: 600px) {
+        .modal textarea {
+          padding: 1rem;
+          width: 100%;
+          max-width: 60vw;
+          height: 300px;
+          font-size: 18px;
+        }
+      }
+    </style>
+
+    <div class="modal d-none d-flex flex-col align-items-center">
+      <p class="text-white">Report an issue</p>
+      <textarea class="my-2" type="text" name="" value="" placeholder="Submit an issue, I will get back to you soon. Thanks."></textarea>
+      <div class="d-flex flex-row">
+        <button class="btn btn-secondary" type="button" name="button">Submit</button>
+        <button class="close-modal btn btn-primary ml-point5" type="button" name="button">Close</button>
+      </div>
+
+    </div>
     <section id="hero">
       <div class="grid theme-gradient">
         <div class="item-1">
@@ -162,10 +204,10 @@
 
             <div class="card-browser alpha60 d-none">
               <div class="d-flex align-items-end flex-col">
-                <button class="text-blue" type="button" name="button">Edit</button>
-                <button class="text-blue" type="button" name="button">Delete</button>
-                <button class="text-blue" type="button" name="button">Select to Pay Zakat</button>
-                <button class="text-blue" type="button" name="button">Report an issue</button>
+                <a  href="/updateperson" class="text-blue" type="button" name="button">Edit</a>
+                <a class="text-blue" type="button" name="button">Delete</a>
+                <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
+                <a class="text-blue report-an-issue" type="button" name="button">Report an issue</a>
               </div>
             </div>
 
@@ -267,6 +309,7 @@
     <script type="text/javascript">
 
       $('.filter-btns .btn:eq(0)').addClass('active');
+      updatecart();
 
       $('.filter-btns .btn').on('click',function() {
         let filter = $(this).attr('data-target');
@@ -289,6 +332,25 @@
         });
         if (order.length == 1) $(`.card`).show();
       }
+
+      function updatecart() {
+        console.log();
+        if ($('.card-selected').length ) return $('.cart-circle').show().html($('.card-selected').length);
+        $('.cart-circle').hide();
+      }
+
+      $(document).on('click','.select-to-pay',function() {
+        // $(this).closest('.card').find('.card-select').trigger('click');
+        $(this).closest('.card').find('.card-select').trigger('click');
+      })
+
+      $(document).on('click','.report-an-issue',function() {
+        $('.modal').removeClass('d-none');
+      })
+
+      $(document).on('click','.close-modal',function() {
+        $('.modal').addClass('d-none');
+      })
 
     </script>
     <script type="text/javascript" src="/javascript.js"></script>
