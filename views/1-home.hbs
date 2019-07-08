@@ -57,19 +57,6 @@
           <a href="mailto:qasimali24@gmail.com" class="text-light px-point5 align-self-center">Contact</a>
           <a href="/cart" class="text-light px-point5 align-self-center">Cart</a>
           <span class="cart-circle">1</span>
-
-          <style media="screen">
-            .cart-circle {
-              background: #fff036;
-              border-radius: 50%;
-              padding: 0.2rem 0.4rem;
-              font-size: 10px;
-              font-weight: bold;
-              margin-left: -10px;
-              margin-bottom: 15px;
-              color: #183627;
-            }
-          </style>
         </div>
         </div>
         <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">
@@ -81,17 +68,17 @@
     <section id="content" class="container pt-md-2 pt-1 px-1 px-md-2">
 
       <p id="explore" class="text-brand text-green">Filter Lists</p>
-      <div class="d-flex flex-wrap justify-content-start align-items-center">
+      <div class="filter-btns d-flex flex-wrap justify-content-start align-items-center">
         <div class="d-flex justify-content-start overflow-scroll">
-          <button class="btn btn-primary d-flex align-items-center" type="button" name="button">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
-          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
-          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
-          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
-          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">In progress <span class="ml-point5 badge bg-inprogress text-white">81</span> </button>
-          <button class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Issues <span class="ml-point5 badge bg-issue text-white">8</span> </button>
+          <button data-target="all" class="btn btn-primary d-flex align-items-center" type="button" name="button">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
+          <button data-target="my" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
+          <button data-target="done" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
+          <button data-target="pending" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
+          <button data-target="inprogress" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">In progress <span class="ml-point5 badge bg-inprogress text-white">81</span> </button>
+          <button data-target="issue" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button">Issues <span class="ml-point5 badge bg-issue text-white">8</span> </button>
         </div>
 
-        <div class="ml-md-point5 d-flex justify-content-start border my-point5 search-bar flex-grow-1">
+        <div class="d-flex justify-content-start border my-point5 search-bar flex-grow-1">
           <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Search">
           <img class="px-point5" src="/search-icon.svg" width="25px" alt="">
         </div>
@@ -102,7 +89,7 @@
 
         {{#each data}}
 
-          <div class="card">
+          <div class="card card-{{this.cardClass}}">
 
             <div class="place-1 d-flex justify-content-start align-items-center">
 
@@ -277,36 +264,34 @@
 
     </section>
 
-
-    <script type="text/javascript" src="/javascript.js"></script>
-
     <script type="text/javascript">
 
-      $('#footer').find('svg').on('mouseenter mouseleave',function() {
-        if (this.classList[0] == 'heart-icon') return;
-        let activeColor = $(this).attr('active-color');
-        let prvsColor = $(this).attr('fill');
-        console.log(prvsColor);
-        if (prvsColor != activeColor) {
-          $(this).attr({fill: activeColor});
-          return;
-        }
-        $(this).attr({fill: 'none'});
+      $('.filter-btns .btn:eq(0)').addClass('active');
 
+      $('.filter-btns .btn').on('click',function() {
+        let filter = $(this).attr('data-target');
+        if (filter == 'my') {$(this).addClass('active'); $('[data-target=all]').removeClass('active');}
+        if (filter == 'all') {$(this).addClass('active'); $('[data-target=my]').removeClass('active');}
+        $(this).not('[data-target=all],[data-target=my]').toggleClass('active');
+        let allFilters = '';
+        $.each($('.filter-btns .active'),(key,val) => {
+          allFilters += $(val).attr('data-target') + ' ';
+        })
+        filterfn(allFilters);
       })
 
-      $('.heart-icon').on('mouseenter mouseleave',function(){
-        let activeColor = $(this).attr('active-color');
-        let prvsColor = $(this).find('path').attr('fill');
-        console.log(prvsColor,activeColor);
-        if (prvsColor != activeColor) {
-          $(this).find('path').attr({fill: activeColor});
-          return;
-        }
-        $(this).find('path').attr({fill: '#afafaf'});
-      })
+      function filterfn(order) {
+        order = order.trim().split(' ');
+        console.log(order);
+        $(`.card`).hide();
+        $.each(order,(key,val) => {
+          $(`.card-${val}`).show();
+        });
+        if (order.length == 1) $(`.card`).show();
+      }
 
     </script>
+    <script type="text/javascript" src="/javascript.js"></script>
 
   </body>
 </html>

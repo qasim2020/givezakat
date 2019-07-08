@@ -346,7 +346,11 @@
         cursor: pointer;
       }
 
-      .btn:active, .btn:focus {
+      .btn:focus, .btn:active {
+        outline: none;
+      }
+
+      .filter-btns .active {
         outline: none;
         background: #173627;
         color: #FFFFFF;
@@ -932,6 +936,17 @@
 
       #footer a:hover {
         color: white;
+      }
+
+      .cart-circle {
+        background: #fff036;
+        border-radius: 50%;
+        padding: 0.2rem 0.4rem;
+        font-size: 10px;
+        font-weight: bold;
+        margin-left: -10px;
+        margin-bottom: 15px;
+        color: #183627;
       }
 
       .cart-circle {

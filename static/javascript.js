@@ -64,3 +64,27 @@ function myFunction() {
     $('.nav-bar-home').removeClass('sticky');
   }
 }
+
+$('#footer').find('svg').on('mouseenter mouseleave',function() {
+  if (this.classList[0] == 'heart-icon') return;
+  let activeColor = $(this).attr('active-color');
+  let prvsColor = $(this).attr('fill');
+  console.log(prvsColor);
+  if (prvsColor != activeColor) {
+    $(this).attr({fill: activeColor});
+    return;
+  }
+  $(this).attr({fill: 'none'});
+
+})
+
+$('.heart-icon').on('mouseenter mouseleave',function(){
+  let activeColor = $(this).attr('active-color');
+  let prvsColor = $(this).find('path').attr('fill');
+  console.log(prvsColor,activeColor);
+  if (prvsColor != activeColor) {
+    $(this).find('path').attr({fill: activeColor});
+    return;
+  }
+  $(this).find('path').attr({fill: '#afafaf'});
+})
