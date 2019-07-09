@@ -66,7 +66,7 @@ app.get('/',(req,res) => {
 
   // return res.render('hacks.hbs');
 
-  People.find().then((msg) => {
+  People.find().limit(12).then((msg) => {
     res.data = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
@@ -80,6 +80,16 @@ app.get('/',(req,res) => {
     res.status(404).send(e);
   });
 });
+
+app.get('/loadmore',(req,res) => {
+  console.log('load more people');
+  People.find().skip(Number(req.query.skip)).limit(12).then((result) => {
+    res.status(200).send(result);
+  }).catch((e) => {
+    console.log(e);
+    res.status(400).send(e);
+  })
+})
 
 
 app.get('/zakatcalc',(req,res) => {

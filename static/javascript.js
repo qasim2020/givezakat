@@ -1,8 +1,8 @@
-$('.card-select').on('hover',function(e) {
+$(document).on('hover','.card-select',function(e) {
   $(this).closest('.card').toggleClass('active');
 })
 
-$('.card-select').on('click',function(e){
+$(document).on('click','.card-select',function(e){
 
   $(this).closest('.card').toggleClass('card-selected');
 
@@ -22,18 +22,18 @@ $('.card-select').on('click',function(e){
 
 })
 
-$('.place-2 > svg').on('click',function() {
+$(document).on('click','.place-2 > svg',function() {
   $('.place-2 > svg').not(this).removeClass('active').parent().siblings('.card-browser').addClass('d-none');
   $(this).toggleClass('active');
   $(this).parent().siblings('.card-browser').toggleClass('d-none');
 })
 
-$('.card-browser').on('click',function(e){
+$(document).on('click','.card-browser',function(e){
   if (e.target.nodeName == 'BUTTON') return 'not this';
   $(this).addClass('d-none');
 })
 
-$('.card').on('click',function(e) {
+$(document).on('click','.card',function(e) {
   if (e.target.nodeName == 'IMG' || e.target.nodeName == 'BUTTON' || $(e.target).closest('.check-box').hasClass('check-box')) return console.log('open browser');
   $('.place-2 > svg').removeClass('active');
   $('.card').not(this).find('.card-hover').removeClass('card-active').addClass('card-inactive');

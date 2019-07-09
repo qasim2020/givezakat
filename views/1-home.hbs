@@ -222,12 +222,17 @@
       </div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
-        <button class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More</button>
+        <button id="load-more" class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More</button>
         <p class="text-green" style="margin-top:1rem">Subscribe to our newsletters and updates</p>
-        <div class="d-flex justify-content-start border">
-          <input class="form-control flex-grow-1 text-center" type="text" name="" value="" placeholder="your-email@some-thing.com">
-          <button class="btn btn-secondary d-flex align-items-center" type="button" name="button">Subscribe</button>
-        </div>
+
+          <form id="subscribe-input" class="d-flex justify-content-start border" action="" method="">
+
+
+          <input class="form-control flex-grow-1 text-center" type="text" name="email" value="" placeholder="your-email@some-thing.com">
+          <button id="subscribe" class="btn btn-secondary d-flex align-items-center" type="button" name="button">Subscribe</button>
+
+          </form>
+
       </div>
 
 
@@ -306,6 +311,9 @@
 
     </section>
 
+    <script type="text/javascript" src="/javascript.js"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+
     <script type="text/javascript">
 
       $('.filter-btns .btn:eq(0)').addClass('active');
@@ -352,8 +360,110 @@
         $('.modal').addClass('d-none');
       })
 
+      $('#load-more').on('click',function() {
+        console.log('hello');
+        let skip = $('.card').length;
+
+        let data = {
+          skip: skip,
+        }
+
+        console.log(data);
+
+        $.ajax({
+            url: '/loadmore',
+            type: 'get',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+            createcards(res);
+            if (res.length < 12) $(this).attr('disabled',true).html('No more data found').css({border: 'none'});
+          }).fail((e) => {
+            console.log(e.responseText);
+          });
+
+      });
+
+      function createcards(data) {
+        $.each(data,(key,val) => {
+          $('.card:eq(0)').clone().appendTo('.content-grid').removeClass('card-done card-pending card-issue card-inprogress').addClass(`card-${val.cardClass}`).find('span:eq(0)').removeClass('bg-done bg-pending bg-issue bg-inprogress').addClass(`bg-${val.cardClass}`);
+        })
+      };
+
+      $(document).on('click','#subscribe',function(){
+
+        if (!($("#subscribe-input").valid())) {
+
+          // $("#subscribe-input").find('label').css({'z-index':10});
+
+          return;
+
+        }
+
+        // $("#subscribe-input").find('label').css({'z-index':-10});
+
+        let data = {
+          "query": 'subscription',
+          "email": $('#subscribe-input input').val(),
+        };
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log(msg);
+          $('.success').show().html('Thank you, I will keep you updated.');
+          $('button').attr('disabled',true);
+        }).fail((e) => {
+          $('.error').show().html(e.responseText);
+          console.log(e.responseText);
+        });
+      });
+
+      $("#subscribe-input").validate({
+
+        rules: {
+          'email' : {
+            required: true,
+            email: true
+          }
+        },
+        messages: {
+          'email' : {
+            required: `Field is required`,
+            email: `Email is invalid`,
+          },
+        }
+      });
+
     </script>
-    <script type="text/javascript" src="/javascript.js"></script>
+
+    <style media="screen">
+
+      input:not([type="radio"]):not([type="checkbox"]) + label {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: palevioletred;
+        width: 632px;
+        height: 39px;
+        color: white;
+        font-weight: bold;
+        pointer-events: none;
+        /* z-index: -10; */
+      }
+
+    </style>
 
   </body>
 </html>
