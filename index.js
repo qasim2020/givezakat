@@ -81,7 +81,9 @@ app.get('/',(req,res) => {
   }).then((rows) => {
     res.render('1-home.hbs',{
       data: res.data,
-      sampleRows: rows[0]
+      sampleRows: rows[0],
+      token: req.session.token,
+      name: req.session.name
     });
   }).catch((e) => {
     console.log(e);
@@ -102,7 +104,6 @@ app.get('/loadmore',(req,res) => {
 
 app.get('/zakatcalc',(req,res) => {
 
-  console.log(req.session);
   res.render('1-zakatcalc.hbs',{
     zakatcalc: 'active',
     token: req.session.token,
@@ -134,13 +135,17 @@ app.get('/forgotpw',(req,res) => {
 
 app.get('/addpeople',(req,res) => {
   res.render('1-addpeople.hbs',{
-    addpeople: 'active'
+    addpeople: 'active',
+    token: req.session.token,
+    name: req.session.name
   });
 });
 
 app.get('/cart',(req,res) => {
   res.render('1-cart.hbs',{
     cart: 'active',
+    token: req.session.token,
+    name: req.session.name
     // url: result.data.response.url,
   });
 });
@@ -150,7 +155,8 @@ app.get('/updateperson',(req,res) => {
     // cart: 'active',
     // url: result.data.response.url,
     addpeople: 'active',
-    name: 'Qasim',
+    token: req.session.token,
+    name: req.session.name
   });
 });
 
