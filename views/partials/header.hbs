@@ -6,10 +6,13 @@
     </div>
     <div class="d-md-flex justify-content-around mr-2 d-none">
       <a href="/" class="text-light px-point5 align-self-center">Home</a>
+      {{#if token}}
+      <a class="text-light px-point5 align-self-center {{signin}}" href="/logout/{{token}}">Sign out - {{name}}</a>
+      {{else}}
       <a href="/signin" class="text-light px-point5 align-self-center {{signin}}">Sign in</a>
+      {{/if}}
       <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
       <a href="/addpeople" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
-      <a href="mailto:qasimali24@gmail.com" class="text-light px-point5 align-self-center">Contact</a>
       <a href="/cart" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
       <span class="cart-circle">1</span>
     </div>

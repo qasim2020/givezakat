@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const session = require('express-session');
 
 var UsersSchema = new mongoose.Schema({
   name: {
@@ -67,13 +68,14 @@ UsersSchema.methods.removeToken = function (token) {
   });
 };
 
-UsersSchema.methods.generateAuthToken = function () {
+UsersSchema.methods.generateAuthToken = function (req) {
   var user = this;
   var access = 'auth';
   var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
 
   user.tokens = {access, token};
-
+  req.session.token = token;
+  req.session.name = user.name;
   return user.save().then(() => {
     return user;
   });

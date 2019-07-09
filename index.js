@@ -6,6 +6,8 @@ const hbs = require('hbs');
 const _ = require('lodash');
 const readXlsxFile = require('read-excel-file/node');
 const axios = require('axios');
+const {OAuth2Client} = require('google-auth-library');
+const session = require('express-session');
 
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
@@ -20,6 +22,11 @@ var port = process.env.PORT || 3000;
 app.use(express.static(__dirname+'/static'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(session({
+  secret: 'oasdfkljh2j3lgh123ljkhl12kjh3',
+  resave: false,
+  saveUninitialized: true
+}))
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine','hbs');
 
@@ -41,6 +48,8 @@ hbs.registerHelper("inc", function(value, options)
 //   console.log(e);
 // });
 
+
+
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token;
   console.log('token receiveed',token);
@@ -50,7 +59,7 @@ let authenticate = (req,res,next) => {
     next();
   }).catch((e) => {
     console.log(e);
-    return res.status(404).render('home.hbs', {
+    return res.status(404).render('1-home.hbs', {
       error: 'Bad Request! Please use proper URL to open app.'
     });
   });
@@ -88,13 +97,18 @@ app.get('/loadmore',(req,res) => {
     console.log(e);
     res.status(400).send(e);
   })
-})
+});
 
 
 app.get('/zakatcalc',(req,res) => {
+
+  console.log(req.session);
   res.render('1-zakatcalc.hbs',{
     zakatcalc: 'active',
+    token: req.session.token,
+    name: req.session.name
   });
+
   // res.render('signup.hbs');
 })
 
@@ -199,7 +213,7 @@ app.get('/home/:token', authenticate, (req,res) => {
 
   console.log(req.params.user.name,'entered home');
 
-  People.find().then((msg) => {
+  People.find().limit(12).then((msg) => {
     res.data = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
@@ -220,11 +234,14 @@ app.get('/logout/:token', authenticate, (req,res) => {
   console.log(req.params.user.name,'logged out');
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
-    return People.find();
+    return People.find().limit(12)
   }).then((msg) => {
-    console.log(res.data);
-    res.render('home.hbs',{
-      data: msg,
+    res.data = msg;
+    return readXlsxFile(__dirname+'/static/sample.xlsx')
+  }).then((rows) => {
+    res.render('1-home.hbs',{
+      data: res.data,
+      sampleRows: rows[0]
     });
   }).catch((e) => {
     console.log(e);
@@ -238,7 +255,7 @@ app.post('/signing',(req,res) => {
     var user = new Users(
       _.pick(req.body,['name','email','password']),
     );
-    user.generateAuthToken().then((returned) => {
+    user.generateAuthToken(req).then((returned) => {
       res.status(200).send(returned.tokens[0].token);
       return console.log('saved', returned.name);
     }).catch((e) => {
@@ -249,10 +266,33 @@ app.post('/signing',(req,res) => {
     });
   };
 
+  if (req.body.query === 'Google_ID') {
+
+    req.body.SigninType = 'Google';
+    const client = new OAuth2Client('133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com');
+    client.verifyIdToken({
+        idToken: req.body.id_token,
+        audience: '133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com',
+    }).then((ticket) => {
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"SigninType":req.body.SigninType}}, {new: true});
+    }).then((returned) => {
+        if (!returned) return Promise.reject('Invalid Request');
+        return returned.generateAuthToken(req);
+    }).then((returned) => {
+        res.status(200).send(returned.tokens[0].token);
+        return console.log('saved', returned.name);
+    }).catch((e) => {
+        console.log(e);
+        if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
+        console.log('Error here', e);
+        return res.status(400).send('Server - Bad Request' + e);
+    });
+
+  };
+
   if (req.body.query === 'GoogleIn') {
-    // var user = new Users(
-    //   _.pick(req.body,['name','email']),
-    // );
     req.body.SigninType = 'Google';
     Users.findOneAndUpdate({"email": req.body.email}, {$set : {"SigninType":req.body.SigninType}}, {new: true}).then((returned) => {
       if (!returned) return Promise.reject('Invalid Request');
@@ -336,7 +376,7 @@ app.post('/signing',(req,res) => {
 
   if (req.body.query === 'subscription') {
     var subscription = new Subscription(
-      _.pick(req.body,['email'])
+      _.pick(req.body,['email']),
     );
     subscription.save().then((result) => {
       return res.status(200).send(result);

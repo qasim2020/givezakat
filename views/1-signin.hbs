@@ -49,10 +49,13 @@
 
     function onSignIn(googleUser) {
       var profile = googleUser.getBasicProfile();
+
+
       console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
       console.log('Name: ' + profile.getName());
       console.log('Image URL: ' + profile.getImageUrl());
       console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
     };
 
     function onFailure(error) {
@@ -60,13 +63,16 @@
     }
 
     function onSuccess(googleUser) {
+
       console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
       console.log('email: ' + googleUser.getBasicProfile().getEmail());
-
-      {{#unless token}}
+      var id_token = googleUser.getAuthResponse().id_token;
+      var profile = googleUser.getBasicProfile();
 
       let data = {
-        'query': 'GoogleIn',
+        'query': 'Google_ID',
+        "id_token": googleUser.getAuthResponse().id_token,
+        "client_id": profile.getId(),
         "name": googleUser.getBasicProfile().getName(),
         "email": googleUser.getBasicProfile().getEmail(),
       };
@@ -84,25 +90,17 @@
         console.log('successful: ', token);
         window.location.assign(`/home/${token}`);
       }).fail((e) => {
-        return console.log('error here', e.responseText);
+        console.log('error here', e.responseText);
       });
-
-      {{/unless}}
 
     }
 
-    {{#unless signOut}}
-      $(document).ready(() => {
-        signout();
-      })
-    {{/unless}}
-
-    function signOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-        console.log('User signed out.');
-      });
-    };
+    // function signOut() {
+    //   var auth2 = gapi.auth2.getAuthInstance();
+    //   auth2.signOut().then(function () {
+    //     console.log('User signed out.');
+    //   });
+    // };
 
     </script>
   </body>
