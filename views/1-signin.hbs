@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-signin-client_id" content="133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="/styles.css">
 
@@ -27,7 +26,7 @@
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Password">
       </div>
-      <button class="mt-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign in</button>
+      <button class="mt-1 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign in</button>
       <hr>
       <div class="d-flex flex-col align-items-start">
         <a class="" href="/signup">New around here? Sign up</a>
@@ -37,48 +36,74 @@
 
     </div>
 
-
-    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
     <script type="text/javascript" src="/javascript.js"></script>
-    <script type="text/javascript">
-      function renderButton() {
-        gapi.signin2.render('my-signin2', {
-          'scope': 'profile email',
-          'width': 'auto',
-          'longtitle': true,
-          'theme': 'dark',
-          'onsuccess': onSuccess,
-          'onfailure': onFailure
-        });
-      }
-      window.onLoadCallback = function(){
-        gapi.auth2.init();
-      };
-      function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-      };
+    <script type="text/javascript" src="https://apis.google.com/js/platform.js?onload=renderButton" defer async>
 
-      function onSuccess(googleUser) {
-        console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
-        console.log('email: ' + googleUser.getBasicProfile().getEmail());
-      }
-
-      function onFailure(error) {
-        console.log(error);
-      }
-
-      function signOut() {
-        var auth2 = gapi.auth2.getAuthInstance();
-        auth2.signOut().then(function () {
-          console.log('User signed out.');
-        });
-        window.location.assign(`/logout/{{token}}`);
-      };
     </script>
 
+    <script type="text/javascript">
+    window.onLoadCallback = function(){
+        gapi.auth2.init();
+    };
+
+    function onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    };
+
+    function onFailure(error) {
+      console.log(error);
+    }
+
+    function onSuccess(googleUser) {
+      console.log('Logged in as: ' + googleUser.getBasicProfile().getName());
+      console.log('email: ' + googleUser.getBasicProfile().getEmail());
+
+      {{#unless token}}
+
+      let data = {
+        'query': 'GoogleIn',
+        "name": googleUser.getBasicProfile().getName(),
+        "email": googleUser.getBasicProfile().getEmail(),
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+        url: '/signing',
+        type: 'post',
+        data,
+        headers: {
+            'content-type': 'application/json',
+        }
+      }).done((token) => {
+        console.log('successful: ', token);
+        window.location.assign(`/home/${token}`);
+      }).fail((e) => {
+        return console.log('error here', e.responseText);
+      });
+
+      {{/unless}}
+
+    }
+
+    {{#unless signOut}}
+      $(document).ready(() => {
+        signout();
+      })
+    {{/unless}}
+
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    };
+
+    </script>
   </body>
 </html>

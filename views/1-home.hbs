@@ -13,6 +13,13 @@
   <body>
 
     <style media="screen">
+      .error:not(input) {
+        font-weight: bold;
+        font-size: 15px;
+        color: red;
+        margin-top: 0.6rem;
+      }
+
       .modal {
         position: fixed;
         height: 100vh;
@@ -65,7 +72,11 @@
         </div>
         <div class="item-3 text-white">
           <div class="d-md-flex d-none flex-col justify-content-start">
+            {{#if token}}
+            <a class="nav-item my-1 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
+            {{else}}
             <a class="nav-item my-1 text-light" href="/signin">Sign in</a>
+            {{/if}}
             <a class="nav-item my-1 text-light" href="#explore">Explore</a>
             <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
             <a class="nav-item my-1 text-light" href="/addpeople">Add people</a>
@@ -79,7 +90,11 @@
 
       <div class="nav-menu d-flex flex-col align-items-center justify-content-center theme-gradient">
         <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
+        {{#if token}}
+        <a class="nav-item my-point5 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
+        {{else}}
         <a class="nav-item my-point5 text-light" href="/signin">Sign in</a>
+        {{/if}}
         <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
         <a class="nav-item my-point5 text-light" href="/addpeople">Add people</a>
@@ -93,7 +108,11 @@
           <p class="ml-point5 align-self-center text-light">Zakat Lists</p>
         </div>
         <div class="d-md-flex justify-content-around mr-2 d-none">
+          {{#if token}}
+          <a class="text-light px-point5 align-self-center" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
+          {{else}}
           <a href="/signin" class="text-light px-point5 align-self-center">Sign in</a>
+          {{/if}}
           <a href="/zakatcalc" class="text-light px-point5 align-self-center">Calculate Zakat</a>
           <a href="/addpeople" class="text-light px-point5 align-self-center">Add People</a>
           <a href="mailto:qasimali24@gmail.com" class="text-light px-point5 align-self-center">Contact</a>
@@ -225,27 +244,23 @@
         <button id="load-more" class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More</button>
         <p class="text-green" style="margin-top:1rem">Subscribe to our newsletters and updates</p>
 
-          <form id="subscribe-input" class="d-flex justify-content-start border" action="" method="">
+        <form id="subscribe-input" class="d-flex justify-content-start border" action="" method="">
 
 
-          <input class="form-control flex-grow-1 text-center" type="text" name="email" value="" placeholder="your-email@some-thing.com">
+          <input id="email" class="form-control flex-grow-1 text-center" type="text" name="email" value="" placeholder="your-email@some-thing.com">
           <button id="subscribe" class="btn btn-secondary d-flex align-items-center" type="button" name="button">Subscribe</button>
 
-          </form>
+        </form>
 
       </div>
 
 
     </section>
 
-    <style media="screen">
-
-    </style>
-
     <section id="footer" class="mt-2 theme-gradient text-light">
       <div class="d-flex">
         <div class="d-md-block d-none mr-2">
-          <img class="logo" src="logo5.png" width="75px" alt="">
+          <img class="logo" src="/logo5.png" width="75px" alt="">
         </div>
         <div class="">
           <h3 class="">Foreword</h3>
@@ -439,31 +454,19 @@
         },
         messages: {
           'email' : {
-            required: `Field is required`,
+            required: `Please enter your email address above`,
             email: `Email is invalid`,
           },
-        }
+        },
+        errorPlacement: function(error, element) {
+          $('.error:not(input)').remove();
+          error.appendTo('.subscription');
+        },
+
       });
 
+
     </script>
-
-    <style media="screen">
-
-      input:not([type="radio"]):not([type="checkbox"]) + label {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: palevioletred;
-        width: 632px;
-        height: 39px;
-        color: white;
-        font-weight: bold;
-        pointer-events: none;
-        /* z-index: -10; */
-      }
-
-    </style>
 
   </body>
 </html>

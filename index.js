@@ -70,7 +70,6 @@ app.get('/',(req,res) => {
     res.data = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
-    console.log(res.data);
     res.render('1-home.hbs',{
       data: res.data,
       sampleRows: rows[0]
@@ -204,8 +203,7 @@ app.get('/home/:token', authenticate, (req,res) => {
     res.data = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
-    console.log(res.data);
-    res.render('home.hbs',{
+    res.render('1-home.hbs',{
       data: res.data,
       sampleRows: rows[0],
       token: req.params.token,
