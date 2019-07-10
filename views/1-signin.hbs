@@ -20,13 +20,15 @@
       <hr>
       <div id="my-signin2"></div>
       <span class="d-block divider-text">OR</span>
-      <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Email">
-      </div>
-      <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Password">
-      </div>
-      <button class="mt-1 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign in</button>
+      <form id="sign-in" class="" action="" method="">
+        <div class="d-flex justify-content-start border my-point5 flex-grow-1">
+          <input id="in-email" class="form-control flex-grow-1" type="text" name="email" value="" placeholder="Email">
+        </div>
+        <div class="d-flex justify-content-start border my-point5 flex-grow-1">
+          <input id="in-pass" class="form-control flex-grow-1" type="text" name="password" value="" placeholder="Password">
+        </div>
+        <button id="click-login" class="mt-1 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign in</button>
+      </form>
       <hr>
       <div class="d-flex flex-col align-items-start">
         <a class="" href="/signup">New around here? Sign up</a>
@@ -36,13 +38,59 @@
 
     </div>
 
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/javascript.js"></script>
     <script type="text/javascript" src="https://apis.google.com/js/platform.js?onload=renderButton" defer async>
 
     </script>
 
     <script type="text/javascript">
+
+    $('#click-login').click(function(e) {
+
+      console.log('log in clicked');
+
+      if (!($("#sign-in").valid()))	return;
+
+      let data = {
+        "query": 'Login',
+        "email": $('#in-email').val(),
+        "password": $('#in-pass').val()
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((token) => {
+          console.log('successful login: ', token);
+          window.location.replace(`/home/${token}`);
+        }).fail((e) => {
+          console.log('error here', e);
+          return $('.signup-error').html(`<i class="fas fa-exclamation-circle"></i> ` + e.responseText).closest('p').removeClass('d-none');
+        });
+
+    });
+
+    function renderButton() {
+      gapi.signin2.render('my-signin2', {
+        'scope': 'profile email',
+        'width': 'auto',
+        'height': '42px',
+        'longtitle': true,
+        'theme': 'light',
+        'onsuccess': onSuccess,
+        'onfailure': onFailure
+      });
+    }
+
     window.onLoadCallback = function(){
         gapi.auth2.init();
     };
@@ -88,7 +136,7 @@
         }
       }).done((token) => {
         console.log('successful: ', token);
-        window.location.assign(`/home/${token}`);
+        // window.location.assign(`/home/${token}`);
       }).fail((e) => {
         console.log('error here', e.responseText);
       });

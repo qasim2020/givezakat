@@ -91,14 +91,3 @@ $('.heart-icon').on('mouseenter mouseleave',function(){
   }
   $(this).find('path').attr({fill: '#afafaf'});
 });
-
-function renderButton() {
-  gapi.signin2.render('my-signin2', {
-    'scope': 'profile email',
-    'width': 'auto',
-    'longtitle': true,
-    'theme': 'dark',
-    'onsuccess': onSuccess,
-    'onfailure': onFailure
-  });
-}
