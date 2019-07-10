@@ -17,6 +17,9 @@
 
     <div class="container form-placement">
       <h4>Sign in</h4>
+      {{#if message}}
+      <p class="input-heading text-center" style="color:red;">{{message}}</p>
+      {{/if}}
       <hr>
       <div id="my-signin2"></div>
       <!-- <button class="mt-1 btn btn-secondary d-flex align-items-center" type="button" name="button" onclick="signOut()">Sign out</button> -->

@@ -150,13 +150,20 @@ app.get('/cart',(req,res) => {
   });
 });
 
-app.get('/updateperson',(req,res) => {
+app.get('/updateperson/:call',(req,res) => {
+
+  if (!(req.session.token)) return res.render('1-signin.hbs',{
+    signin: 'active',
+    message: 'You need to sign in to add people.',
+  });
+
   res.render('1-updateperson.hbs',{
     // cart: 'active',
     // url: result.data.response.url,
     addpeople: 'active',
     token: req.session.token,
-    name: req.session.name
+    name: req.session.name,
+    call: req.params.call.split('+').join(' '),
   });
 });
 
@@ -240,6 +247,7 @@ app.get('/logout/:token', authenticate, (req,res) => {
   console.log(req.params.user.name,'logged out');
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
+    req.session.destroy();
     return People.find().limit(12)
   }).then((msg) => {
     res.data = msg;

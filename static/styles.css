@@ -336,7 +336,7 @@
       }
 
       .btn {
-        padding: 0.5rem 1rem;
+        padding: 0.5rem 1rem !important;
         font-size: 15px;
         white-space: nowrap;
       }
