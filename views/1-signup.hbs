@@ -19,16 +19,21 @@
     <div class="container form-placement">
       <h4>Sign up</h4>
       <hr>
-      <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Name">
-      </div>
-      <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Email">
-      </div>
-      <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Password">
-      </div>
-      <button class="mt-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign up</button>
+      <form class="" id="sign-up" action="" method="">
+
+
+        <div class="d-flex justify-content-start border my-point5 flex-grow-1">
+          <input id="user-name" class="form-control flex-grow-1" type="text" name="user-name" value="" placeholder="Name">
+        </div>
+        <div class="d-flex justify-content-start border my-point5 flex-grow-1">
+          <input id="user-email" class="form-control flex-grow-1" type="text" name="user-email" value="" placeholder="Email">
+        </div>
+        <div class="d-flex justify-content-start border my-point5 flex-grow-1">
+          <input id="user-pass" class="form-control flex-grow-1" type="password" name="user-pass" value="" placeholder="Password">
+        </div>
+        <button id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign up</button>
+
+      </form>
       <hr>
       <div class="d-flex flex-col align-items-start">
         <a class="" href="/signin">Sign in?</a>
@@ -38,8 +43,97 @@
 
     </div>
 
-
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
     <script type="text/javascript" src="/javascript.js"></script>
+
+    <script type="text/javascript">
+
+    $('#click-signup').click(function(e) {
+
+      console.log('ok clicked');
+
+      if (!($("#sign-up").valid())) {
+
+        return;
+
+      }
+
+      console.log('valid entries');
+
+      let data = {
+        'query': 'Register',
+        "name": $('#user-name').val(),
+        "email": $('#user-email').val(),
+        "password": $('#user-pass').val(),
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((token) => {
+          console.log('successful: ', token);
+          // $('#sign-up').attr('action',`/home/${token}`);
+          // $("#sign-up").submit();
+        }).fail((e) => {
+          console.log('error here', e);
+          let errors = { 'user-pass': e.responseText };
+          /* Show errors on the form */
+          $("#sign-up").validate().showErrors(errors);
+          // return $('.signup-error').html(`<i class="fas fa-exclamation-circle"></i> ` + e.responseText).closest('p').removeClass('d-none');
+        });
+
+    });
+
+    $("#sign-up").validate({
+
+      rules: {
+        'user-name' : {
+          required: true,
+          lettersonly: true,
+          minlength: 2
+        },
+        'user-email' : {
+          required: true,
+          minlength: 5,
+          email: true
+        },
+        'user-pass' : {
+          required: true,
+          minlength: 5
+        }
+
+      },
+      messages: {
+        'user-name': {
+          required: "Please write your name",
+          lettersonly: "A name can not have symbols and numbers",
+          minlength: "Atleast 3 characters"
+        },
+        'user-email' : {
+          required: "Please write your email above",
+          email: "Email address is invalid",
+          minlength: "Atleast 5 characters",
+        },
+        'user-pass' : {
+          required: "Please write a strong password",
+          minlength: "Atleast 5 characters",
+        },
+      },
+      errorPlacement: function(error, element) {
+        $(element).closest('div').after(error);
+      },
+
+    });
+
+    </script>
 
   </body>
 </html>
