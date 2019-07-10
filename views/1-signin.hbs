@@ -19,6 +19,7 @@
       <h4>Sign in</h4>
       <hr>
       <div id="my-signin2"></div>
+      <!-- <button class="mt-1 btn btn-secondary d-flex align-items-center" type="button" name="button" onclick="signOut()">Sign out</button> -->
       <span class="d-block divider-text">OR</span>
       <form id="sign-in" class="" action="" method="">
         <div class="d-flex justify-content-start border my-point5 flex-grow-1">
@@ -70,13 +71,11 @@
           }
         }).done((token) => {
           console.log('successful login: ', token);
-          // window.location.replace(`/home/${token}`);
+          window.location.replace(`/home/${token}`);
         }).fail((e) => {
           console.log('error here', e);
           let errors = { password: e.responseText };
-          /* Show errors on the form */
           $("#sign-in").validate().showErrors(errors);
-          // return $('.signup-error').html(`<i class="fas fa-exclamation-circle"></i> ` + e.responseText).closest('p').removeClass('d-none');
         });
 
     });
@@ -164,19 +163,19 @@
         }
       }).done((token) => {
         console.log('successful: ', token);
-        // window.location.assign(`/home/${token}`);
+        window.location.assign(`/home/${token}`);
       }).fail((e) => {
         console.log('error here', e.responseText);
       });
 
     }
 
-    // function signOut() {
-    //   var auth2 = gapi.auth2.getAuthInstance();
-    //   auth2.signOut().then(function () {
-    //     console.log('User signed out.');
-    //   });
-    // };
+    function signOut() {
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+        console.log('User signed out.');
+      });
+    };
 
     </script>
   </body>

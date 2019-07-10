@@ -202,7 +202,7 @@
       </div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
-        
+
         <button id="load-more" class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More</button>
         <p class="text-green" style="margin-top:1rem">Subscribe to our newsletters and updates</p>
 
@@ -292,6 +292,7 @@
 
       $('.filter-btns .btn:eq(0)').addClass('active');
       updatecart();
+      if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
 
       $('.filter-btns .btn').on('click',function() {
         let filter = $(this).attr('data-target');
@@ -322,7 +323,6 @@
       }
 
       $(document).on('click','.select-to-pay',function() {
-        // $(this).closest('.card').find('.card-select').trigger('click');
         $(this).closest('.card').find('.card-select').trigger('click');
       })
 
@@ -371,13 +371,9 @@
 
         if (!($("#subscribe-input").valid())) {
 
-          // $("#subscribe-input").find('label').css({'z-index':10});
-
           return;
 
         }
-
-        // $("#subscribe-input").find('label').css({'z-index':-10});
 
         let data = {
           "query": 'subscription',

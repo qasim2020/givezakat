@@ -255,7 +255,7 @@ app.get('/logout/:token', authenticate, (req,res) => {
   });
 })
 
-app.post('/signing',(req,res) => {
+  app.post('/signing',(req,res) => {
 
   if (req.body.query === 'Register') {
     var user = new Users(
@@ -302,7 +302,7 @@ app.post('/signing',(req,res) => {
     req.body.SigninType = 'Google';
     Users.findOneAndUpdate({"email": req.body.email}, {$set : {"SigninType":req.body.SigninType}}, {new: true}).then((returned) => {
       if (!returned) return Promise.reject('Invalid Request');
-      return returned.generateAuthToken();
+      return returned.generateAuthToken(req);
     }).then((returned) => {
       res.status(200).send(returned.tokens[0].token);
       return console.log('saved', returned.name);
@@ -318,7 +318,7 @@ app.post('/signing',(req,res) => {
     var user = _.pick(req.body,['email','password']);
     Users.findByCredentials(user.email, user.password).then((returned) => {
       if (!returned) return Promise.reject('Invalid credentials.')
-      return returned.generateAuthToken();
+      return returned.generateAuthToken(req);
     }).then((user) => {
       if (!user) return Promise.reject('Failed to Sign In.');
       return res.status(200).send(user.tokens[0].token);
@@ -331,7 +331,7 @@ app.post('/signing',(req,res) => {
   if (req.body.query === 'Email_Verify') {
     var phoneCode = Math.floor(100000 + Math.random() * 900000);
     Users.findOne({"email":req.body.email}).then((user) => {
-      if (!user) return res.status(404).send('Un authorized request');
+      if (!user) return res.status(404).send('Sorry, you never registered before with this email. Please sign up.');
       return sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Make a story - Forgot Password')
     }).then((msg) => {
       return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
@@ -370,7 +370,7 @@ app.post('/signing',(req,res) => {
     }).then((user) => {
       if (!user) return Promise.reject('Un authorized request.');
       user.password = req.body.password;
-      return user.generateAuthToken();
+      return user.generateAuthToken(req);
     }).then((response)=> {
       console.log(response);
       res.status(200).send('Password changed, please login with new password.');
