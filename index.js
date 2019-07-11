@@ -79,6 +79,7 @@ app.get('/',(req,res) => {
     res.data = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
+    req.session.sampleRows = rows[0];
     res.render('1-home.hbs',{
       data: res.data,
       sampleRows: rows[0],
@@ -136,6 +137,7 @@ app.get('/forgotpw',(req,res) => {
 app.get('/addpeople',(req,res) => {
   res.render('1-addpeople.hbs',{
     addpeople: 'active',
+    sampleRows: req.session.sampleRows,
     token: req.session.token,
     name: req.session.name
   });
@@ -144,6 +146,7 @@ app.get('/addpeople',(req,res) => {
 app.get('/cart',(req,res) => {
   res.render('1-cart.hbs',{
     cart: 'active',
+    sampleRows: req.session.sampleRows,
     token: req.session.token,
     name: req.session.name
     // url: result.data.response.url,

@@ -10,6 +10,39 @@
 
     <title>Zakat Lists</title>
 
+    <style media="screen">
+      .form-placement .active {
+        outline: none;
+        background: #173627;
+        color: #FFFFFF !important;
+      }
+
+      .form-placement .active::after {
+        color: white;
+        font-size: 11px;
+        padding: 4px 10px;
+        background: #2e5743;
+        margin-left: 8px;
+        border-radius: 2%;
+        content: 'Good!';
+      }
+
+      .custom-file-input {
+        position: absolute;
+        top: -1000px;
+        width: 10px;
+      }
+
+      .file-Inp {
+        display: block;
+        width: fit-content;
+        font-family: 'system-ui';
+        color: rgba(0,0,0,0.25);
+        pointer-events: none;
+      }
+
+    </style>
+
   </head>
   <body>
     {{>header}}
@@ -21,16 +54,122 @@
       <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/updateperson/Add+People'">Add 1 Person</button>
       <span class="d-block divider-text">OR</span>
       <p class="input-heading mt-2">Add multiple people by uploading excel file.</p>
-      <button class="mt-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Download sample file here</button>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Upload excel file</button>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Validate</button>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Uplaod</button>
+      <button onclick="window.location.href = '/sample.xlsx'" download class="mt-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Download sample file here</button>
+      <input type="file" class="custom-file-input" id="fileInp" aria-describedby="fileInp">
+      <label change-state="false" class="file-Inp btn btn-primary my-point5" for="fileInp" data="{{sampleRows}}">Upload excel file</label>
+      <div class="error d-none"></div>
+      <button id="uploadData" class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" disabled>Upload</button>
 
     </div>
 
 
 
     <script type="text/javascript" src="/javascript.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
+    <script type="text/javascript">
+      $('.btn').on('click',function() {
+        console.log($(this).attr('change-state'));
+        if ($(this).attr('change-state')) return console.log('action pending');
+        $(this).addClass('active').nextAll('.btn:first').attr({disabled: false}).css({color: 'rgba(0,0,0,0.85)', 'pointer-events': 'auto'});
+      })
+
+      function readURL(input) {
+
+        return new Promise(function(resolve, reject) {
+
+          if (input.files && input.files[0] && (/\.(xlsx)$/i.test(input.files[0].name))) {
+
+              var reader = new FileReader();
+
+              reader.addEventListener("load", function(e) {
+
+                var data = e.target.result;
+                var workbook = XLSX.read(data, {
+                  type: 'binary'
+                });
+
+                workbook.SheetNames.forEach(function(sheetName) {
+                  var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
+                  resolve(XL_row_object);
+                })
+
+              });
+
+              reader.onerror = function(ex) {
+                reject(ex);
+              };
+
+              reader.readAsBinaryString(input.files[0]);
+
+          } else {
+              reject('not proper format of file');
+          }
+
+        });
+
+      }
+
+      let uploadedData;
+
+      $("#fileInp").change(function() {
+        let dataLength = $(this).siblings('label').attr('data').split(',').length;
+        let incomplete = [];
+        readURL(this).then((msg) => {
+          console.log(msg);
+          if (msg.length < 1) incomplete.push(1);
+          $.each(msg, (key,val) => {
+            let count = 0;
+            for (i in val) {
+                if (val.hasOwnProperty(i)) {
+                    count++;
+                }
+            }
+            console.log(dataLength, count);
+            if (count < dataLength) return incomplete.push([key,val.Name]);
+          })
+          if (incomplete.length) {
+            uploadedData = '';
+            return $('.error').removeClass('d-none').html(`Incomplete data entry at row(s): ${JSON.stringify(incomplete).substr(1).slice(0, -1)}`);
+          }
+          uploadedData = msg;
+          $('#uploadData').attr({disabled:false});
+          $('.error').addClass('d-none');
+          $(this).siblings('label').html('Ok! All entries are valid.').attr({'change-state':true}).addClass('active').nextAll('.btn:first').attr({disabled: false});
+        }).catch((e) => {
+          return $('.error').removeClass('d-none').html(e);
+        });
+      });
+
+      $('#uploadData').on('click',function() {
+        if (uploadedData.length < 1) return console.log('no file added');
+        $('.upload-msgs').children().addClass('d-none');
+        data = JSON.stringify(uploadedData);
+        console.log(data);
+        $.ajax({
+            url: '/excelData',
+            type: 'post',
+            data: data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+            $('.upload-success').removeClass('d-none').html(res);
+            $(this).toggleClass('btn-outline-dark btn-outline-success');
+          }).fail((e) => {
+            $(this).toggleClass('btn-outline-dark btn-outline-danger');
+            let errorMsg = '';
+            $.each(JSON.parse(e.responseText),(key,val) => {
+              errorMsg += val + '<br>'
+            })
+            $('.upload-error').removeClass('d-none').html(errorMsg);
+          });
+
+      });
+
+    </script>
 
   </body>
 </html>
