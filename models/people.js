@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 var People = mongoose.model('people', {
+  // Ser":"1","Name":"Zubaida Shauket","Mobile No":"03433044044","Earning per month":"8000","Occupation":"maid","Currency":"PKR","Family Members":"8","Address":
   name: {
     type: String,
     required: true,
@@ -26,35 +27,35 @@ var People = mongoose.model('people', {
   },
   sponsorName: {
     type: String,
-    required: true,
+    // required: true,
   },
   sponsorMob: {
     type: String,
-    required: true,
+    // required: true,
   },
   sponsorAccountTitle: {
     type: String,
-    required: true,
+    // required: true,
   },
   sponsorAccountNo: {
     type: String,
-    required: true,
+    // required: true,
   },
   sponsorAccountIBAN: {
     type: String,
-    required: true,
+    // required: true,
   },
   package: {
     type: String,
-    required: true,
+    // required: true,
   },
   packageCost: {
     type: String,
-    required: true
+    // required: true
   },
   packageQty: {
     type: String,
-    required: true
+    // required: true
   },
   orderDate: {
     type: String,
@@ -74,7 +75,7 @@ var People = mongoose.model('people', {
   },
   addedBy: {
     type: String,
-    // required: true,
+    required: true,
   }
 });
 

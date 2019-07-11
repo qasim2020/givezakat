@@ -135,12 +135,18 @@ app.get('/forgotpw',(req,res) => {
 });
 
 app.get('/addpeople',(req,res) => {
-  res.render('1-addpeople.hbs',{
-    addpeople: 'active',
-    sampleRows: req.session.sampleRows,
-    token: req.session.token,
-    name: req.session.name
-  });
+
+  readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
+    res.render('1-addpeople.hbs',{
+      addpeople: 'active',
+      sampleRows: rows[0],
+      token: req.session.token,
+      name: req.session.name
+    });
+  }).catch((e) => {
+    res.render('1-404');
+  })
+
 });
 
 app.get('/cart',(req,res) => {
@@ -199,21 +205,23 @@ app.post('/data',(req,res) => {
 app.post('/excelData',(req,res) => {
   var body = [];
   _.each(req.body,(val,key)=> {
-    // val.addedBy = req.params.user._id.toString();
+    val.addedBy = req.session.myid;
     body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
   });
-  console.log(body);
-  People.insertMany(body,{ordered:false}).then((msg) => {
-    console.log(msg.length);
-    res.status(200).send(`Successfully added <b>${msg.length} rows</b>.`);
+
+  var bulk = People.collection.initializeUnorderedBulkOp();
+  _.each(req.body, (val,key) => {
+    bulk.find( { mob: val.mob } ).upsert().update( { $set: val } )
+  })
+
+  bulk.execute().then((msg) => {
+    res.status(200).send(msg.result);
   }).catch((e) => {
     let errors = [];
-    // console.log(e.result.result);
     if (e.result.result) {
       errors.push(`Updated <b>${e.result.result.nInserted}</b> rows!`);
       errors.push(`Failed to update <b>${e.result.result.writeErrors.length}</b> rows due to duplicates:-`)
       _.each(e.result.result.writeErrors,(val,key) => {
-        // console.log(val.err.op);
         errors.push(key + '. ' + val.err.op.name + ', ' + val.err.op.mob);
       })
       console.log(errors);

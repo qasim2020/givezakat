@@ -38,7 +38,14 @@
         width: fit-content;
         font-family: 'system-ui';
         color: rgba(0,0,0,0.25);
-        pointer-events: none;
+        /* pointer-events: none; */
+      }
+
+      .success {
+        font-weight: bold !important;
+        font-size: 15px !important;
+        color: green !important;
+        margin-top: 0.6rem !important;
       }
 
     </style>
@@ -59,6 +66,8 @@
       <label change-state="false" class="file-Inp btn btn-primary my-point5" for="fileInp" data="{{sampleRows}}">Upload excel file</label>
       <div class="error d-none"></div>
       <button id="uploadData" class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" disabled>Upload</button>
+      <div class="error d-none"></div>
+      <div class="success d-none"></div>
 
     </div>
 
@@ -111,34 +120,51 @@
 
       }
 
-      let uploadedData;
+      let uploadedData = [];
 
       $("#fileInp").change(function() {
         let dataLength = $(this).siblings('label').attr('data').split(',').length;
+        let sampleFormat = $(this).siblings('label').attr('data').split(',');
+        let inputFormat = [];
         let incomplete = [];
         readURL(this).then((msg) => {
-          console.log(msg);
-          if (msg.length < 1) incomplete.push(1);
+          if (msg.length < 1) incomplete.push(`No data added <br>`);
           $.each(msg, (key,val) => {
+            inputFormat = Object.getOwnPropertyNames(val);
             let count = 0;
             for (i in val) {
                 if (val.hasOwnProperty(i)) {
-                    count++;
+                    count++; // TEST 2: NO ENTRY IS MISSING
                 }
             }
-            console.log(dataLength, count);
-            if (count < dataLength) return incomplete.push([key,val.Name]);
+            if (count < dataLength) return incomplete.push(`Missing Entries: Entry ${key} - ${val.Name || val.name} <br>`);
+            if (count > dataLength) return incomplete.push(`Additional Entries: Entry ${key} - ${val.Name || val.name} <br>`);
+            if ($(sampleFormat).not(inputFormat).length != 0 && $(inputFormat).not(sampleFormat).length != 0) return incomplete.push(`Wrong Format: Entry ${key} - ${val.Name || val.name} <br>`) // TEST 1: KEYS ARE OF SAMPLE FORMAT
           })
           if (incomplete.length) {
             uploadedData = '';
-            return $('.error').removeClass('d-none').html(`Incomplete data entry at row(s): ${JSON.stringify(incomplete).substr(1).slice(0, -1)}`);
+            return $(this).nextAll('.error:first').removeClass('d-none').html(`Error at following entries:- <br> ${JSON.stringify(incomplete).substr(1).slice(0, -1).replace(/,|"/g,'')}`);
           }
-          uploadedData = msg;
+          // DATA IS OK MAPPING ONTO FORMAT FOR PROPER ENTRY IN DATABASE
+          $.each(msg, (key,val) => {
+            uploadedData[key] = {
+              name: val["Name"],
+              mob: `+92`+val["Mobile No"].replace(/^0|-| /g,''),
+              occupation: val["Occupation"],
+              salary: val["Earning per month"],
+              currency: val["Currency"],
+              fMembers: val["Family Members"],
+              address: val["Address"],
+              story: val["Story"]
+            }
+          })
+          console.log(uploadedData);
           $('#uploadData').attr({disabled:false});
-          $('.error').addClass('d-none');
-          $(this).siblings('label').html('Ok! All entries are valid.').attr({'change-state':true}).addClass('active').nextAll('.btn:first').attr({disabled: false});
+          $(this).nextAll('.error:first').addClass('d-none');
+          $(this).siblings('label').html('All entries are valid.').attr({'change-state':true}).addClass('active').nextAll('.btn:first').attr({disabled: false});
         }).catch((e) => {
-          return $('.error').removeClass('d-none').html(e);
+          console.log(e);
+          return $(this).nextAll('.error:first').removeClass('d-none').html(e);
         });
       });
 
@@ -156,15 +182,17 @@
             }
           }).done((res) => {
             console.log(res);
-            $('.upload-success').removeClass('d-none').html(res);
-            $(this).toggleClass('btn-outline-dark btn-outline-success');
+            $(this).nextAll('.success:first').removeClass('d-none').html(`
+              New added: ${res.nUpserted + res.nInserted} <br>
+              Old matched : ${res.nMatched} <br>
+              Old modified: ${res.nModified}
+              `);
           }).fail((e) => {
-            $(this).toggleClass('btn-outline-dark btn-outline-danger');
             let errorMsg = '';
             $.each(JSON.parse(e.responseText),(key,val) => {
               errorMsg += val + '<br>'
             })
-            $('.upload-error').removeClass('d-none').html(errorMsg);
+            $(this).nextAll('.error:first').removeClass('d-none').html(errorMsg);
           });
 
       });

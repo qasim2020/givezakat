@@ -76,6 +76,7 @@ UsersSchema.methods.generateAuthToken = function (req) {
   user.tokens = {access, token};
   req.session.token = token;
   req.session.name = user.name;
+  req.session.myid = user._id;
   return user.save().then(() => {
     return user;
   });
