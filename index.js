@@ -114,18 +114,26 @@ app.get('/zakatcalc',(req,res) => {
   // res.render('signup.hbs');
 })
 
-app.get('/signin',(req,res) => {
-  res.render('1-signin.hbs',{
-    signin: 'active',
-  });
-  // res.render('signup.hbs');
+app.get('/signin/:call',(req,res) => {
+  console.log(req.params.call);
+  let options = {};
+  if (req.params.call != 'home') {
+    console.log('here i am');
+    options = {
+      signin: 'active',
+      call: `${req.params.call}`
+    };
+  } else {
+    options = {signin: 'active'};
+  };
+  console.log(options);
+  res.render('1-signin.hbs', options);
 })
 
 app.get('/signup',(req,res) => {
   res.render('1-signup.hbs',{
     signin: 'active'
   });
-  // res.render('signup.hbs');
 })
 
 app.get('/forgotpw',(req,res) => {
@@ -134,7 +142,7 @@ app.get('/forgotpw',(req,res) => {
   });
 });
 
-app.get('/addpeople',(req,res) => {
+app.get('/addpeople/:token',authenticate,(req,res) => {
 
   readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
     res.render('1-addpeople.hbs',{
@@ -149,10 +157,9 @@ app.get('/addpeople',(req,res) => {
 
 });
 
-app.get('/cart',(req,res) => {
+app.get('/cart/:token',authenticate,(req,res) => {
   res.render('1-cart.hbs',{
     cart: 'active',
-    sampleRows: req.session.sampleRows,
     token: req.session.token,
     name: req.session.name
     // url: result.data.response.url,
@@ -164,6 +171,7 @@ app.get('/updateperson/:call',(req,res) => {
   if (!(req.session.token)) return res.render('1-signin.hbs',{
     signin: 'active',
     message: 'You need to sign in to add people.',
+    call: 'addpeople',
   });
 
   res.render('1-updateperson.hbs',{

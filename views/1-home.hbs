@@ -35,12 +35,15 @@
           <div class="d-md-flex d-none flex-col justify-content-start">
             {{#if token}}
             <a class="nav-item my-1 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
-            {{else}}
-            <a class="nav-item my-1 text-light" href="/signin">Sign in</a>
-            {{/if}}
             <a class="nav-item my-1 text-light" href="#explore">Explore</a>
             <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
-            <a class="nav-item my-1 text-light" href="/addpeople">Add people</a>
+            <a class="nav-item my-1 text-light" href="/addpeople/{{token}}">Add people</a>
+            {{else}}
+            <a class="nav-item my-1 text-light" href="/signin/home">Sign in</a>
+            <a class="nav-item my-1 text-light" href="#explore">Explore</a>
+            <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
+            <a class="nav-item my-1 text-light" href="/signin/addpeople">Add people</a>
+            {{/if}}
           </div>
           <p class="text-brand text-light">Zakat Lists</p>
         </div>
@@ -53,12 +56,15 @@
         <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
         {{#if token}}
         <a class="nav-item my-point5 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
-        {{else}}
-        <a class="nav-item my-point5 text-light" href="/signin">Sign in</a>
-        {{/if}}
         <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
-        <a class="nav-item my-point5 text-light" href="/addpeople">Add people</a>
+        <a class="nav-item my-point5 text-light" href="/addpeople/{{token}}">Add people</a>
+        {{else}}
+        <a class="nav-item my-point5 text-light" href="/signin/home">Sign in</a>
+        <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
+        <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
+        <a class="nav-item my-point5 text-light" href="/signin/addpeople">Add people</a>
+        {{/if}}
       </div>
     </section>
 
@@ -71,13 +77,17 @@
         <div class="d-md-flex justify-content-around mr-2 d-none">
           {{#if token}}
           <a class="text-light px-point5 align-self-center" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
+          <a class="text-light px-point5 align-self-center" href="#explore">Explore</a>
+          <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
+          <a class="text-light px-point5 align-self-center" href="/addpeople/{{token}}">Add people</a>
+          <a href="/cart/{{token}}" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
           {{else}}
-          <a href="/signin" class="text-light px-point5 align-self-center">Sign in</a>
+          <a class="text-light px-point5 align-self-center" href="/signin/home">Sign in</a>
+          <a class="text-light px-point5 align-self-center" href="#explore">Explore</a>
+          <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
+          <a class="text-light px-point5 align-self-center" href="/signin/addpeople">Add people</a>
+          <a href="/signin/cart" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
           {{/if}}
-          <a href="/zakatcalc" class="text-light px-point5 align-self-center">Calculate Zakat</a>
-          <a href="/addpeople" class="text-light px-point5 align-self-center">Add People</a>
-          <a href="mailto:qasimali24@gmail.com" class="text-light px-point5 align-self-center">Contact</a>
-          <a href="/cart" class="text-light px-point5 align-self-center">Cart</a>
           <span class="cart-circle">1</span>
         </div>
         </div>

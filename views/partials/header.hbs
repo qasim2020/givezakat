@@ -7,13 +7,16 @@
     <div class="d-md-flex justify-content-around mr-2 d-none">
       <a href="/" class="text-light px-point5 align-self-center">Home</a>
       {{#if token}}
-      <a class="text-light px-point5 align-self-center {{signin}}" href="/logout/{{token}}">Sign out - {{name}}</a>
+        <a class="text-light px-point5 align-self-center {{signin}}" href="/logout/{{token}}">Sign out - {{name}}</a>
+        <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
+        <a href="/addpeople/{{token}}" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
+        <a href="/cart/{{token}}" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
       {{else}}
-      <a href="/signin" class="text-light px-point5 align-self-center {{signin}}">Sign in</a>
+        <a href="/signin/home" class="text-light px-point5 align-self-center {{signin}}">Sign in</a>
+        <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
+        <a href="/signin/addpeople" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
+        <a href="/signin/cart" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
       {{/if}}
-      <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
-      <a href="/addpeople" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
-      <a href="/cart" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
       <span class="cart-circle">1</span>
     </div>
     <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">

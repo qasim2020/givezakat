@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
@@ -58,7 +59,11 @@
     <div class="container form-placement">
       <h4>Add people</h4>
       <p class="input-heading">Add people in your neighbourhood who are rightfully Elegible for zakat. </p>
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/updateperson/Add+People'">Add 1 Person</button>
+      {{#if token}}
+      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/updateperson/Add+1+Person'">Add 1 Person</button>
+      {{else}}
+      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/signin/updateperson'">Add 1 Person</button>
+      {{/if}}
       <span class="d-block divider-text">OR</span>
       <p class="input-heading mt-2">Add multiple people by uploading excel file.</p>
       <button onclick="window.location.href = '/sample.xlsx'" download class="mt-point5 btn btn-primary d-flex align-items-center" type="button" name="button">Download sample file here</button>

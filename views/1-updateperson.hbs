@@ -10,51 +10,158 @@
 
     <title>Zakat Lists</title>
 
+    <style media="screen">
+    .update-person-form p{
+      margin-bottom:-6px;
+    }
+
+    .update-person-form .my-point5:not(1){
+      margin-top: 30px;
+    }
+
+    .update-person-form span{
+      font-weight: bolder;
+    }
+    </style>
+
   </head>
   <body>
     {{>header}}
 
 
-    <div class="container form-placement update-person-form">
+    <form id="person-form" class="container form-placement update-person-form">
       {{#if call}}
       <h4>{{call}}</h4>
       {{else}}
       <h4>Update <span>{{name}}</span></h4>
       {{/if}}
       <hr>
+
       <p>Full Name</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Minimum 5 letters">
+        <input class="form-control flex-grow-1" type="text" name="name" id="name" value="" placeholder="Minimum 5 letters">
       </div>
       <p>Mobile Number</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="+92 323 5168683">
+        <input class="form-control flex-grow-1" type="text" name="mob" id="mob" value="" placeholder="92 323 5168683">
       </div>
       <p>Earning per month</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="a number e.g 220">
+        <input class="form-control flex-grow-1" type="text" name="salary" id="salary" value="" placeholder="a number e.g 220">
       </div>
       <p>Family Members</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="a number e.g 9">
+        <input class="form-control flex-grow-1" type="text" name="fMembers" id="fMembers" value="" placeholder="a number e.g 9">
       </div>
       <p>Address</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Postal address to send a card to recepient">
+        <input class="form-control flex-grow-1" type="text" name="address" id="address" value="" placeholder="Postal address to send a card to recepient">
       </div>
       <p>Brief Overview</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <textarea rows="4" class="form-control flex-grow-1" type="text" name="" value="" placeholder="Any details to help paying person know this person more."></textarea>
+        <textarea rows="4" class="form-control flex-grow-1" type="text" id="story" name="story" value="" placeholder="Any details to help paying person know this person more."></textarea>
       </div>
       <div class="person-amount">
-        <button class="btn btn-primary" type="button" name="button">Update</button>
+        <button id="click-submit" class="btn btn-primary" type="button" name="button">Update</button>
         <button class="btn btn-secondary" type="button" name="button">Cancel</button>
       </div>
 
-    </div>
+
+    </form id="">
 
 
 
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/javascript.js"></script>
+
+    <script type="text/javascript">
+    $('#click-submit').click(function(e) {
+
+      console.log('log in clicked');
+      if (!($("#person-form").valid()))	return console.log('invalid email');;
+      return;
+      let data = {
+        "query": 'Login',
+        "email": $('#in-email').val(),
+        "password": $('#in-pass').val()
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((token) => {
+          console.log('successful login: ', token);
+          window.location.replace(`/home/${token}`);
+        }).fail((e) => {
+          console.log('error here', e);
+          let errors = { password: e.responseText };
+          $("#sign-in").validate().showErrors(errors);
+        });
+
+    });
+
+    $("#person-form").validate({
+
+      rules: {
+        name: {
+          required: true,
+          lettersonly: true,
+        },
+        mob : {
+          required: true,
+          number: true,
+        },
+        salary : {
+          required: true,
+          number: true,
+        },
+        fMembers : {
+          required: true,
+          number: true,
+        },
+        address : {
+          required: true,
+        },
+        story : {
+          required: true,
+        },
+      },
+      messages: {
+        name: {
+          required: 'This field is required.',
+          lettersonly: 'Please enter a valid name'
+        },
+        mob: {
+          required: 'This field is required.',
+          number: 'Please enter numbers only',
+        },
+        salary: {
+          required: 'This field is required.',
+          number : 'Please enter numbers only'
+        },
+        fMembers: {
+          required: 'This field is required.',
+          number : 'Please enter numbers only'
+        },
+        address: {
+          required: 'This field is required.',
+        },
+        story : {
+          required: 'This field is required.',
+        }
+      },
+      errorPlacement: function(error, element) {
+        $(element).closest('div').after(error);
+      },
+
+    });
+    </script>
   </body>
 </html>

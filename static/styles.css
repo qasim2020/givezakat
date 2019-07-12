@@ -964,18 +964,6 @@
         color: #183627;
       }
 
-      .update-person-form p{
-        margin-bottom:-6px;
-      }
-
-      .update-person-form .my-point5{
-        margin-bottom: 30px;
-      }
-
-      .update-person-form span{
-        font-weight: bolder;
-      }
-
       .form-grid {
         display:grid;
         grid-template-columns: 1fr auto 116px;
