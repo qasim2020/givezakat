@@ -15,12 +15,19 @@
       margin-bottom:-6px;
     }
 
-    .update-person-form .my-point5:not(1){
+    .update-person-form p:not(:first-child){
       margin-top: 30px;
     }
 
     .update-person-form span{
       font-weight: bolder;
+    }
+
+    .update-person-form textarea {
+      color: #173627;
+      font-weight: bold;
+      font-size: 18px;
+      white-space: pre-line;
     }
     </style>
 
@@ -39,35 +46,37 @@
 
       <p>Full Name</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="name" id="name" value="" placeholder="Minimum 5 letters">
+        <input class="form-control flex-grow-1" type="text" name="myname" id="myname" value="Qasim Ali" placeholder="Enter your full name here">
       </div>
       <p>Mobile Number</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="mob" id="mob" value="" placeholder="92 323 5168683">
+        <input class="form-control flex-grow-1" type="text" name="mob" id="mob" value="3235168638" placeholder="92 323 5168683">
       </div>
       <p>Earning per month</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="salary" id="salary" value="" placeholder="a number e.g 220">
+        <input class="form-control flex-grow-1" type="text" name="salary" id="salary" value="220" placeholder="a number in USD e.g 220">
       </div>
       <p>Family Members</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="fMembers" id="fMembers" value="" placeholder="a number e.g 9">
+        <input class="form-control flex-grow-1" type="text" name="fMembers" id="fMembers" value="12" placeholder="a number e.g 9">
       </div>
       <p>Address</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="address" id="address" value="" placeholder="Postal address to send a card to recepient">
+        <input class="form-control flex-grow-1" type="text" name="address" id="address" value="Vill Chammala Teh Dina Distt Jhelum" placeholder="Postal address to send a card to recepient">
       </div>
       <p>Brief Overview</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <textarea rows="4" class="form-control flex-grow-1" type="text" id="story" name="story" value="" placeholder="Any details to help paying person know this person more."></textarea>
+        <textarea wrap="" rows="4" class="form-control flex-grow-1" type="text" id="story" name="story" placeholder="Any details to help paying person know this person more.">Alone wolf wandering in the dark needs help.</textarea>
       </div>
-      <div class="person-amount">
+      <div class="">
         <button id="click-submit" class="btn btn-primary" type="button" name="button">Update</button>
         <button class="btn btn-secondary" type="button" name="button">Cancel</button>
       </div>
+      <div class="success d-none"></div>
+      <div class="error d-none"></div>
 
 
-    </form id="">
+    </form>
 
 
 
@@ -78,39 +87,49 @@
     <script type="text/javascript">
     $('#click-submit').click(function(e) {
 
-      console.log('log in clicked');
-      if (!($("#person-form").valid()))	return console.log('invalid email');;
-      return;
-      let data = {
-        "query": 'Login',
-        "email": $('#in-email').val(),
-        "password": $('#in-pass').val()
-      };
+      if (!($("#person-form").valid()))	return console.log('invalid email');
+
+      let data = [{
+        "name": $('#myname').val(),
+        "mob": $('#mob').val(),
+        "salary": $('#salary').val(),
+        "fMembers": $('#fMembers').val(),
+        "address": $('#address').val(),
+        "story": $('#story').val(),
+      }];
 
       data = JSON.stringify(data);
 
       $.ajax({
-          url: '/signing',
+          url: '/excelData',
           type: 'post',
           data,
           headers: {
               'content-type': 'application/json',
           }
-        }).done((token) => {
-          console.log('successful login: ', token);
-          window.location.replace(`/home/${token}`);
+        }).done((res) => {
+          console.log(res);
+          $(this).closest('div').nextAll('.success:first').removeClass('d-none').html(`
+            New added: ${res.nUpserted + res.nInserted} <br>
+            Old matched : ${res.nMatched} <br>
+            Old modified: ${res.nModified}
+            `);
         }).fail((e) => {
           console.log('error here', e);
-          let errors = { password: e.responseText };
-          $("#sign-in").validate().showErrors(errors);
+          let errors = { story: e.responseText };
+          $("#person-form").validate().showErrors(errors);
         });
 
     });
 
+    jQuery.validator.addMethod("lettersonly", function(value, element) {
+      return this.optional(element) || /^[a-z ,.'-]+$/i.test(value);
+    }, "Letters only please");
+
     $("#person-form").validate({
 
       rules: {
-        name: {
+        myname: {
           required: true,
           lettersonly: true,
         },
@@ -134,7 +153,7 @@
         },
       },
       messages: {
-        name: {
+        myname: {
           required: 'This field is required.',
           lettersonly: 'Please enter a valid name'
         },

@@ -414,7 +414,7 @@
         border: none;
       }
 
-      input::placeholder {
+      input::placeholder, textarea::placeholder {
         color: #173627;
         font-size: 15px;
         font-weight: bold;
@@ -1197,8 +1197,15 @@
           margin-left: 0.5rem;
         }
 
-        input::placeholder {
+        input::placeholder , textarea::placeholder {
           font-size: 18px;
+        }
+
+        .success {
+          font-weight: bold !important;
+          font-size: 15px !important;
+          color: green !important;
+          margin-top: 0.6rem !important;
         }
 
         .form-control {
