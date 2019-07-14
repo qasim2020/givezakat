@@ -9,6 +9,8 @@ const axios = require('axios');
 const {OAuth2Client} = require('google-auth-library');
 const session = require('express-session');
 var ip = require("ip");
+const publicIp = require('public-ip');
+const stripe = require('stripe')('sk_test_hysfFVSPpr2vUx2kbqXMNHOJ');
 
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
@@ -17,8 +19,6 @@ const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
 const {serverRunning} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
-
-const stripe = require('stripe')('sk_test_hysfFVSPpr2vUx2kbqXMNHOJ');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -191,7 +191,9 @@ app.get('/updateperson/:call',(req,res) => {
 app.get('/checkoutURL',(req,res) => {
   // console.log(req.connection);req.connection.remoteAddress
   // console.log(req.headers['x-forwarded-for']);
-  axios.get(`http://www.geoplugin.net/json.gp?ip=${req.connection.remoteAddress}`).then((result) => {
+  console.log(req.connection.remoteAddress || publicip.v4());
+  
+  axios.get(`http://www.geoplugin.net/json.gp?ip=${ip}`).then((result) => {
     console.log(result);
     return stripe.checkout.sessions.create({
         payment_method_types: ['card'],
@@ -209,8 +211,10 @@ app.get('/checkoutURL',(req,res) => {
   }).then((result) => {
     res.status(200).send(result);
   }).catch((e) => {
+    console.log(e);
     res.status(400).send(e);
   });
+
   // axios.post('https://vendors.paddle.com/api/2.0/product/generate_pay_link', {
   //   vendor_id: '52029',
   //   vendor_auth_code: '897b6543544f54c8e0c6d120796b0e8233c055a8fb1a8c70c9',
@@ -225,6 +229,7 @@ app.get('/checkoutURL',(req,res) => {
   // .catch((error) => {
   //   console.error(error)
   // })
+
 })
 
 app.post('/data',(req,res) => {
