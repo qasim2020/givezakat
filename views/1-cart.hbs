@@ -75,29 +75,43 @@
 
 
     <script type="text/javascript" src="/javascript.js"></script>
-    <script src="https://cdn.paddle.com/paddle/paddle.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
     <script type="text/javascript">
-    	Paddle.Setup({ vendor: 52029 });
-      function openCheckout(w) {
-        console.log(w-10);
-        Paddle.Checkout.open({
-          email: 'qasimali24@gmail.com',
-  				method: 'inline',
-          country: 'Pakistan',
-          override: '{{url}}',
-  				product: 564500,       // Replace with your Product or Plan ID
-  				allowQuantity: false,
-  				disableLogout: true,
-  				frameTarget: 'checkout-container', // The className of your checkout <div>
-  				frameInitialHeight: 366,
-  				frameStyle: `width:${w}px; background-color: transparent; border: none;`
-  			});
-    	}
+
+      var stripe = Stripe('pk_test_WJQN2iDakpSKGN9Va0KeHEDT');
+
       $('#buy').on('click',function() {
         $(this).closest('.form-grid').hide();
         let myWidth = $('.form-grid').width();
         $('.amount-total').removeClass('d-none');
-        openCheckout(myWidth);
+        // openCheckout(myWidth);
+
+        $.ajax({
+            url: '/checkoutURL',
+            type: 'get',
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+            return stripe.redirectToCheckout({sessionId:res.id})
+            // $('.upload-success').removeClass('d-none').html(res);
+            // $(this).toggleClass('btn-outline-dark btn-outline-success');
+          }).then((result => {
+            console.log(result);
+          })).fail((e) => {
+            console.log(e);
+            // $(this).toggleClass('btn-outline-dark btn-outline-danger');
+            // let errorMsg = '';
+            // $.each(JSON.parse(e.responseText),(key,val) => {
+            //   errorMsg += val + '<br>'
+            // })
+            // $('.upload-error').removeClass('d-none').html(errorMsg);
+          });
+
+        
+
       });
 
     </script>

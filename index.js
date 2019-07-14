@@ -8,6 +8,7 @@ const readXlsxFile = require('read-excel-file/node');
 const axios = require('axios');
 const {OAuth2Client} = require('google-auth-library');
 const session = require('express-session');
+var ip = require("ip");
 
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
@@ -16,6 +17,8 @@ const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
 const {serverRunning} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
+
+const stripe = require('stripe')('sk_test_hysfFVSPpr2vUx2kbqXMNHOJ');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -158,6 +161,7 @@ app.get('/addpeople/:token',authenticate,(req,res) => {
 });
 
 app.get('/cart/:token',authenticate,(req,res) => {
+
   res.render('1-cart.hbs',{
     cart: 'active',
     token: req.session.token,
@@ -185,20 +189,42 @@ app.get('/updateperson/:call',(req,res) => {
 });
 
 app.get('/checkoutURL',(req,res) => {
-  axios.post('https://vendors.paddle.com/api/2.0/product/generate_pay_link', {
-    vendor_id: '52029',
-    vendor_auth_code: '897b6543544f54c8e0c6d120796b0e8233c055a8fb1a8c70c9',
-    product_id: '564500',
-    prices: ['USD:105'],
-  })
-  .then((result) => {
-    console.log(`statusCode: ${result.statusCode}`)
-    console.log(result.data.response.url);
+  // console.log(req.connection);req.connection.remoteAddress
+  // console.log(req.headers['x-forwarded-for']);
+  axios.get(`http://www.geoplugin.net/json.gp?ip=${req.connection.remoteAddress}`).then((result) => {
     console.log(result);
-  })
-  .catch((error) => {
-    console.error(error)
-  })
+    return stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [{
+          name: 'zakat',
+          description: 'Amount is disbursed every 1st of a month.',
+          images: ['https://zakatlists.com/logo5.png'],
+          amount: 105,
+          currency: result.geoplugin_currencySymbol,
+          quantity: 1,
+        }],
+        success_url: 'http://localhost:3000/cart',
+        cancel_url: 'http://localhost:3000/cart',
+      });
+  }).then((result) => {
+    res.status(200).send(result);
+  }).catch((e) => {
+    res.status(400).send(e);
+  });
+  // axios.post('https://vendors.paddle.com/api/2.0/product/generate_pay_link', {
+  //   vendor_id: '52029',
+  //   vendor_auth_code: '897b6543544f54c8e0c6d120796b0e8233c055a8fb1a8c70c9',
+  //   product_id: '564500',
+  //   prices: ['USD:105'],
+  // })
+  // .then((result) => {
+  //   console.log(`statusCode: ${result.statusCode}`)
+  //   console.log(result.data.response.url);
+  //   console.log(result);
+  // })
+  // .catch((error) => {
+  //   console.error(error)
+  // })
 })
 
 app.post('/data',(req,res) => {
