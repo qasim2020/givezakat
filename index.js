@@ -160,16 +160,6 @@ app.get('/addpeople/:token',authenticate,(req,res) => {
 
 });
 
-app.get('/cart/:token',authenticate,(req,res) => {
-
-  res.render('1-cart.hbs',{
-    cart: 'active',
-    token: req.session.token,
-    name: req.session.name
-    // url: result.data.response.url,
-  });
-});
-
 app.get('/updateperson/:call',(req,res) => {
 
   if (!(req.session.token)) return res.render('1-signin.hbs',{
@@ -188,21 +178,39 @@ app.get('/updateperson/:call',(req,res) => {
   });
 });
 
+var getip = (req) => {
+  return new Promise(function(resolve, reject) {
+    console.log(process.env.PORT);
+    if (process.env.PORT == '3000') return resolve(publicIp.v4());
+    resolve(req.connection.remoteAddress);
+    });
+};
+
+app.get('/cart/:token',authenticate,(req,res) => {
+
+  res.render('1-cart.hbs',{
+    cart: 'active',
+    token: req.session.token,
+    name: req.session.name
+    // url: result.data.response.url,
+  });
+});
+
 app.get('/checkoutURL',(req,res) => {
-  // console.log(req.connection);req.connection.remoteAddress
-  // console.log(req.headers['x-forwarded-for']);
-  console.log(req.connection.remoteAddress || publicip.v4());
-  
-  axios.get(`http://www.geoplugin.net/json.gp?ip=${ip}`).then((result) => {
+
+  getip(req).then((res) => {
+    return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
+  }).then((result) => {
     console.log(result);
     return stripe.checkout.sessions.create({
+        customer_email: 'qasimali24@gmail.com',
         payment_method_types: ['card'],
         line_items: [{
           name: 'zakat',
           description: 'Amount is disbursed every 1st of a month.',
           images: ['https://zakatlists.com/logo5.png'],
-          amount: 105,
-          currency: result.geoplugin_currencySymbol,
+          amount: 15000,
+          currency: `${result.data.geoplugin_currencyCode.toLowerCase()}`,
           quantity: 1,
         }],
         success_url: 'http://localhost:3000/cart',
