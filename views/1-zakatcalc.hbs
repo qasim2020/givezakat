@@ -25,6 +25,30 @@
         font-weight: bold;
       }
 
+      .info-circle {
+        width: 20px;
+        height: 20px;
+        background: cornflowerblue;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+        font-size: 70%;
+        cursor: pointer;
+      }
+
+      .popover {
+        position: absolute;
+        background: cornflowerblue;
+        color: white;
+        font-size: 15px;
+        font-weight: normal;
+        width: 300px;
+        padding: 1rem;
+        z-index: 100;
+        line-height: 24px;
+        pointer-events: none;
+      }
+
     </style>
   </head>
   <body>
@@ -34,7 +58,10 @@
     <div class="container form-placement">
       <h4>Zakat Calculator</h4>
       <hr>
-      <p>+ Zakat Elegible Assets</p>
+      <div class="d-flex justify-content-between">
+        <p>+ Zakat Elegible Assets</p>
+        <p class="info-circle">!</p>
+      </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Stocks in $ USD">
       </div>
@@ -75,9 +102,40 @@
 
     </div>
 
+    <div class="popover d-none" >
+      hello world how are you i am waiting for something amazing and I coul;dnt do it without your help.
+    </div>
+
 
 
     <script type="text/javascript" src="/javascript.js"></script>
+    <script type="text/javascript">
+      $('.info-circle').on('mouseenter mouseleave', function() {
 
+        let posn = {
+          left: $(this).offset().left,
+          top: $(this).offset().top,
+          right: $(this).offset().right,
+          bottom: $(this).offset().bottom
+        };
+
+        if ((posn.left + $('.popover').width()/2) > $(window).width()) {
+          console.log('cond 1');
+          return $('.popover').css({
+            right: 20,
+            top: posn.top - $('.popover').height() - $(this).height() - 20,
+          });
+        }
+
+        $('.popover').css({
+          left: posn.left - ($('.popover').width()/2),
+          top: posn.top - $('.popover').height() - $(this).height() - 20,
+        });
+
+        $('.popover').toggleClass('d-none');
+
+
+      })
+    </script>
   </body>
 </html>
