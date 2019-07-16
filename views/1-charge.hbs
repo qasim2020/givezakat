@@ -125,38 +125,7 @@
 
     <script type="text/javascript">
 
-      $('#buy').on('click',function() {
-        $(this).closest('.form-grid').hide();
-        let myWidth = $('.form-grid').width();
-        $('.amount-total').removeClass('d-none');
-        // openCheckout(myWidth);
-
-        $.ajax({
-            url: '/checkoutURL',
-            type: 'get',
-            headers: {
-                'content-type': 'application/json',
-            }
-          }).done((res) => {
-            console.log(res);
-            return stripe.redirectToCheckout({sessionId:res.id})
-            // $('.upload-success').removeClass('d-none').html(res);
-            // $(this).toggleClass('btn-outline-dark btn-outline-success');
-          }).then((result => {
-            console.log(result);
-          })).fail((e) => {
-            console.log(e);
-            // $(this).toggleClass('btn-outline-dark btn-outline-danger');
-            // let errorMsg = '';
-            // $.each(JSON.parse(e.responseText),(key,val) => {
-            //   errorMsg += val + '<br>'
-            // })
-            // $('.upload-error').removeClass('d-none').html(errorMsg);
-          });
-
-
-
-      });
+      
 
     </script>
   </body>
