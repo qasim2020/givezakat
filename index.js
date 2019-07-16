@@ -192,9 +192,16 @@ app.get('/cart/:token',authenticate,(req,res) => {
     cart: 'active',
     token: req.session.token,
     name: req.session.name
-    // url: result.data.response.url,
   });
 });
+
+app.get('/charge',(req,res) => {
+  res.render('1-charge.hbs',{
+    cart: 'active',
+    token: req.session.token,
+    name: req.session.name
+  })
+})
 
 app.get('/checkoutURL',(req,res) => {
 

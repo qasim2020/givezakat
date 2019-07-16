@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/styles.css">
+
+    <title>Zakat Lists</title>
+    <style media="screen">
+    .StripeElement {
+      box-sizing: border-box;
+
+      height: 40px;
+
+      padding: 10px 12px;
+
+      border: 1px solid transparent;
+      border-radius: 4px;
+      background-color: white;
+
+      box-shadow: 0 1px 3px 0 #e6ebf1;
+      -webkit-transition: box-shadow 150ms ease;
+      transition: box-shadow 150ms ease;
+    }
+
+    .StripeElement--focus {
+      box-shadow: 0 1px 3px 0 #cfd7df;
+    }
+
+    .StripeElement--invalid {
+      border-color: #fa755a;
+    }
+
+    .StripeElement--webkit-autofill {
+      background-color: #fefde5 !important;
+    }
+
+    .normal {
+      font-weight: normal;
+      line-height: 28px;
+    }
+
+    p > span{
+      font-weight: normal;
+    }
+
+    .form-placement {
+      width: 1400px;
+      max-width: 90vw;
+    }
+
+    table {
+      width: 96%;
+      line-height: 28px;
+      text-align: center;
+      border-collapse: collapse;
+      display: block;
+      overflow: scroll;
+    }
+
+    th,td {
+      padding: 1rem;
+      border: 1px dotted green;
+    }
+
+    </style>
+
+  </head>
+  <body>
+    {{>header}}
+
+
+    <div class="container form-placement">
+      <h4>Successful Payment</h4>
+      <p class="amount-total d-none text-center">Pay 105.00 USD</p>
+
+      <p class="normal">Thank you for the payment. Details of your transaction are as under:-</p>
+
+      <p><span class="text-bold">Transaction ID.</span> <span>12312312312</span> </p>
+
+      <p class="text-bold">People's sponsored:-</p>
+
+      <table width="100%">
+        <tr>
+          <th>Status</th>
+          <th>Name</th>
+          <th>Zakat</th>
+          <th>Location</th>
+          <th>Mob No</th>
+          <th>Sponsor's Name</th>
+          <th>Sponsor's Location</th>
+          <th>Sponsor's Mob No</th>
+        </tr>
+        <tr>
+          <td>Delivered</td>
+          <td>Hashim Ali</td>
+          <td>49 USD</td>
+          <td>Bali, Indonesia</td>
+          <td>92 323 2344323</td>
+          <td>Qasim Ali</td>
+          <td>Karachi, Pakistan</td>
+          <td>92 323 5168638</td>
+        </tr>
+        <tr>
+          <td>Pending</td>
+          <td>Haskim Faroz</td>
+          <td>49 USD</td>
+          <td>Bali, Indonesia</td>
+          <td>92 323 2344323</td>
+          <td>Qasim Ali</td>
+          <td>Karachi, Pakistan</td>
+          <td>92 323 5168638</td>
+        </tr>
+      </table>
+
+      <p>These people are now unlocked for your future visits.</p>
+    </div>
+
+
+
+    <script type="text/javascript" src="/javascript.js"></script>
+
+    <script type="text/javascript">
+
+      $('#buy').on('click',function() {
+        $(this).closest('.form-grid').hide();
+        let myWidth = $('.form-grid').width();
+        $('.amount-total').removeClass('d-none');
+        // openCheckout(myWidth);
+
+        $.ajax({
+            url: '/checkoutURL',
+            type: 'get',
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+            return stripe.redirectToCheckout({sessionId:res.id})
+            // $('.upload-success').removeClass('d-none').html(res);
+            // $(this).toggleClass('btn-outline-dark btn-outline-success');
+          }).then((result => {
+            console.log(result);
+          })).fail((e) => {
+            console.log(e);
+            // $(this).toggleClass('btn-outline-dark btn-outline-danger');
+            // let errorMsg = '';
+            // $.each(JSON.parse(e.responseText),(key,val) => {
+            //   errorMsg += val + '<br>'
+            // })
+            // $('.upload-error').removeClass('d-none').html(errorMsg);
+          });
+
+
+
+      });
+
+    </script>
+  </body>
+</html>

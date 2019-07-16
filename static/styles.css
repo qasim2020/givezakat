@@ -818,7 +818,7 @@
       }
 
       .form-placement > p {
-        font-weight: bold;
+        font-weight: normal;
         font-size: 15px;
         color: #173627;
       }
@@ -1074,6 +1074,14 @@
         font-size: 15px;
       }
 
+      .text-bold  {
+        font-weight: bold !important;
+      }
+
+      .text-normal {
+        font-weight: normal;
+      }
+
 /* red red red red red red red red red */
 
 
@@ -1293,9 +1301,11 @@
         }
 
         .form-placement > p {
-          font-weight: bold;
-          font-size: 18px;
           color: #173627;
+        }
+
+        .text-md-18 {
+          font-size: 18px;
         }
 
       }
