@@ -41,9 +41,10 @@ function todayUpdates(auth, value) {
 
   sheets.spreadsheets.values.batchGet(request, function(err, response) {
     if (err) {
-      console.error(err);
+      console.error(err); 
       reject(err);
     }
+    console.log(response.data.valueRanges);
     resolve(response.data.valueRanges);
   });
   });
