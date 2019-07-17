@@ -47,6 +47,11 @@
         z-index: 100;
         line-height: 24px;
         pointer-events: none;
+        opacity: 0;
+      }
+
+      .opacity-1 {
+        opacity: 1;
       }
 
     </style>
@@ -102,7 +107,7 @@
 
     </div>
 
-    <div class="popover d-none" >
+    <div class="popover" >
       hello world how are you i am waiting for something amazing and I coul;dnt do it without your help.
     </div>
 
@@ -119,6 +124,8 @@
           bottom: $(this).offset().bottom
         };
 
+        $('.popover').toggleClass('opacity-1');
+
         if ((posn.left + $('.popover').width()/2) > $(window).width()) {
           console.log('cond 1');
           return $('.popover').css({
@@ -131,8 +138,6 @@
           left: posn.left - ($('.popover').width()/2),
           top: posn.top - $('.popover').height() - $(this).height() - 20,
         });
-
-        $('.popover').toggleClass('d-none');
 
 
       })
