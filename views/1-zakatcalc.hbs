@@ -28,7 +28,7 @@
       .info-circle {
         width: 20px;
         height: 20px;
-        background: cornflowerblue;
+        background: #009688;
         text-align: center;
         font-weight: bold;
         color: white;
@@ -38,7 +38,7 @@
 
       .popover {
         position: absolute;
-        background: cornflowerblue;
+        background: #009688;
         color: white;
         font-size: 15px;
         font-weight: normal;
@@ -54,62 +54,73 @@
         opacity: 1;
       }
 
+      #give-zakat {
+        white-space: normal;
+      }
+
     </style>
   </head>
   <body>
     {{>header}}
 
 
-    <div class="container form-placement">
+    <form id="zakat-calc-form" class="container form-placement">
       <h4>Zakat Calculator</h4>
       <hr>
       <div class="d-flex justify-content-between">
         <p>+ Zakat Elegible Assets</p>
-        <p class="info-circle">!</p>
+        <p class="info-circle" my-data="This is the first step in figuring out how much zakat you'll pay. You exclude the assets you use for everyday life. For example, your primary residence, car, clothes and business equipment are not used in you zakat asset calculations. It is  based on what is left after you take care of you and your family's living expenses.">!</p>
       </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Stocks in $ USD">
+        <input class="form-control flex-grow-1 add" type="number" name="" value="" placeholder="Stocks in $ USD">
       </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Savings in $ USD">
+        <input class="form-control flex-grow-1 add" type="number" name="" value="" placeholder="Savings in $ USD">
       </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Investment Properties in $ USD">
+        <input class="form-control flex-grow-1 add" type="number" name="" value="" placeholder="Investment Properties in $ USD">
       </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Cash in $ USD">
+        <input class="form-control flex-grow-1 add" type="number" name="" value="" placeholder="Cash in $ USD">
       </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Business Income in $ USD">
+        <input class="form-control flex-grow-1 add" type="number" name="" value="" placeholder="Business Income in $ USD">
       </div>
       <div class="d-flex justify-content-start border my-point5 mb-2 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Jewelery in $ USD">
+        <input class="form-control flex-grow-1 add" type="number" name="" value="" placeholder="Jewelery in $ USD">
       </div>
       <hr class="">
-      <p>- Zakat Liabilities</p>
+      <div class="d-flex justify-content-between">
+        <p>- Zakat Liabilities</p>
+        <p class="info-circle" my-data="Debt from credit cards, college or other loans subtracts from your personal net worth. These outstanding debts are deducted from your total zakat-eligible assets.">!</p>
+      </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Credit Cards Payments in $ USD">
+        <input class="form-control flex-grow-1 sub" type="number" name="" value="" placeholder="Credit Cards Payments in $ USD">
       </div>
       <div class="d-flex justify-content-start border my-point5 mb-2 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Other Debt Payments in $ USD">
+        <input class="form-control flex-grow-1 sub" type="number" name="" value="" placeholder="Other Debt Payments in $ USD">
       </div>
       <div class="bottom-contrast-div bg-green">
         <div class="d-flex justify-content-between">
-          <p class="">Nisab</p>
+          <div class="d-flex">
+            <p class="info-circle" my-data="For example, your zakat net worth is $4,000. Each ounce of silver is currently worth $15, so the nisab using the silver calculation is $315 ($15 X 21 ounces = $315). You have more than the nisab so you owe zakat.">!</p>
+            <p class=""> &nbsp Nisab</p>
+          </div>
           <p class="nisab-text">236.00 USD</p>
         </div>
         <div class="d-flex justify-content-between">
-          <p class="">Total Obligatory</p>
+          <div class="d-flex">
+            <p class="info-circle" my-data="Western calendar uses 2.557% of your net worth. Hijri calendar uses 2.5% of your net worth. We are using Western calendar cycle of <b>2.557%</b> to calculate your zakat.">!</p>
+            <p class=""> &nbsp Total Obligatory</p>
+          </div>
           <p class="total-zakat">456.00 USD</p>
         </div>
-        <button class="my-point5 mt-1 ml-auto btn btn-primary d-flex align-items-center" type="button" name="button" style="margin-right:15px">Give Zakat</button>
+        <button id="give-zakat" class="my-point5 mt-1 ml-auto btn btn-primary d-flex align-items-center" type="button" name="button" style="margin-right:15px">Give Zakat</button>
       </div>
 
-    </div>
+    </form>
 
-    <div class="popover" >
-      hello world how are you i am waiting for something amazing and I coul;dnt do it without your help.
-    </div>
+    <div class="popover shadow"></div>
 
 
 
@@ -123,23 +134,74 @@
           right: $(this).offset().right,
           bottom: $(this).offset().bottom
         };
-
+        let data = $(this).attr('my-data');
+        $('.popover').html(data);
+        $(this).toggleClass('shadow');
         $('.popover').toggleClass('opacity-1');
 
         if ((posn.left + $('.popover').width()/2) > $(window).width()) {
           console.log('cond 1');
-          return $('.popover').css({
+          $('.popover').css({
             right: 20,
+            top: posn.top - $('.popover').height() - $(this).height() - 20,
+          });
+        } else {
+          $('.popover').css({
+            left: posn.left - ($('.popover').width()/2),
             top: posn.top - $('.popover').height() - $(this).height() - 20,
           });
         }
 
-        $('.popover').css({
-          left: posn.left - ($('.popover').width()/2),
-          top: posn.top - $('.popover').height() - $(this).height() - 20,
+      });
+
+      $('#zakat-calc-form').click(function(e) {
+
+        console.log('log in clicked');
+        // if (!($(this).valid()))	return console.log('invalid email');;
+        //
+        // let data = {
+        //   "query": 'Login',
+        //   "email": $('#in-email').val(),
+        //   "password": $('#in-pass').val()
+        // };
+        //
+        // data = JSON.stringify(data);
+        //
+        // $.ajax({
+        //     url: '/signing',
+        //     type: 'post',
+        //     data,
+        //     headers: {
+        //         'content-type': 'application/json',
+        //     }
+        //   }).done((token) => {
+        //     console.log('successful login: ', token);
+        //     window.location.replace(`/home/${token}`);
+        //   }).fail((e) => {
+        //     console.log('error here', e);
+        //     let errors = { password: e.responseText };
+        //     $("#sign-in").validate().showErrors(errors);
+        //   });
+
+      });
+
+      $('input').on('input',function(){
+        let toadd = 0;
+        let tosub = 0;
+        let total = 0;
+        $.each($('.add'),(key,val)=> {
+          toadd = toadd + +$(val).val();
         });
-
-
+        $.each($('.sub'),(key,val)=> {
+          tosub = tosub + +$(val).val();
+        });
+        total = toadd - tosub;
+        let nisab = 315;
+        $('.nisab-text').html(`${nisab}.00 USD`);
+        if (total < nisab) return $('.total-zakat').html(`0.00 USD`);;
+        total = total * 0.2557;
+        $('.total-zakat').html(`${Math.ceil(total).toFixed(2)} USD`);
+        $('#give-zakat').html(`Give ${Math.ceil(total).toFixed(2)} USD Zakat to Eligible People in Trouble`)
       })
     </script>
   </body>

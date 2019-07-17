@@ -867,7 +867,7 @@
       .nisab-text {
         padding: 2px 8px;
         font-weight: bold;
-        border-bottom: 2px solid green;
+        /* border-bottom: 2px solid green; */
       }
 
       .ml-auto {
