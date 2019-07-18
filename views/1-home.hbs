@@ -7,10 +7,24 @@
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="/styles.css">
+    <style media="screen">
+
+    </style>
 
     <title>Zakat Lists</title>
   </head>
   <body>
+
+    <div class="zakat-due-box">
+      <div class="d-flex align-items-center justify-content-between">
+        <p>Due Zakat: 9.00 USD</p>
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect y="17.1097" width="24.1967" height="3" transform="rotate(-45 0 17.1097)" fill="whitesmoke"/>
+        <rect x="2.12109" width="24.1967" height="3" transform="rotate(45 2.12109 0)" fill="whitesmoke"/>
+        </svg>
+      </div>
+      <small class="d-block w-100">Calculated using <b><a href="/zakatcalc">zakat calculator</a></b></small>
+    </div>
 
     <div class="modal d-none d-flex flex-col align-items-center">
       <p class="text-white">Report an issue</p>
@@ -121,7 +135,7 @@
 
         {{#each data}}
 
-          <div class="card card-{{this.cardClass}}">
+          <div class="card card-{{this.cardClass}}" my-list='{{this.mylist}}'>
 
             <div class="place-1 d-flex justify-content-start align-items-center">
 
@@ -195,7 +209,7 @@
             <div class="card-browser alpha60 d-none">
               <div class="d-flex align-items-end flex-col">
                 <a  href="/updateperson" class="text-blue" type="button" name="button">Edit</a>
-                <a class="text-blue" type="button" name="button">Delete</a>
+                <a class="text-blue" type="button" name="button" onclick="deleteMe(this,'{{_id}}')" >Delete</a>
                 <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
                 <a class="text-blue report-an-issue" type="button" name="button">Report an issue</a>
               </div>
@@ -303,6 +317,34 @@
       $('.filter-btns .btn:eq(0)').addClass('active');
       updatecart();
       if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
+
+      function deleteMe(elem,id) {
+        console.log($(elem));
+        let data = {
+          query : "deleteMe",
+          id : id,
+          token: `{{token}}`,
+        }
+
+        data = JSON.stringify(data);
+
+        console.log(data);
+
+        $.ajax({
+            url: '/signing',
+            type: 'post',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+            // createcards(res);
+            // if (res.length < 12) $(this).attr('disabled',true).html('No more data found').css({border: 'none'});
+          }).fail((e) => {
+            console.log(e.responseText);
+          });
+      }
 
       $('.filter-btns .btn').on('click',function() {
         let filter = $(this).attr('data-target');

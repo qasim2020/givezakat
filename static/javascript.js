@@ -34,7 +34,7 @@ $(document).on('click','.card-browser',function(e){
 })
 
 $(document).on('click','.card',function(e) {
-  if (e.target.nodeName == 'IMG' || e.target.nodeName == 'BUTTON' || $(e.target).closest('.check-box').hasClass('check-box')) return console.log('open browser');
+  if ($(e.target).closest('.card-browser').length || e.target.nodeName == 'IMG' || e.target.nodeName == 'BUTTON' || $(e.target).closest('.check-box').hasClass('check-box')) return console.log('open browser');
   $('.place-2 > svg').removeClass('active');
   $('.card').not(this).find('.card-hover').removeClass('card-active').addClass('card-inactive');
   $(this).find('.card-hover').toggleClass('card-active card-inactive');

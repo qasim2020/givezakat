@@ -293,6 +293,13 @@ app.get('/home/:token', authenticate, (req,res) => {
 
   People.find().limit(12).then((msg) => {
     res.data = msg;
+    _.each(res.data,(val,key) => {
+      if (val.addedBy == req.params.user.id) {
+        return res.data[key]['mylist'] = true;
+      }
+      res.data[key]['mylist'] = false;
+    });
+    console.log(res.data[0]);
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
     res.render('1-home.hbs',{
@@ -462,6 +469,19 @@ app.get('/logout/:token', authenticate, (req,res) => {
     }).catch((e) => {
       if (e.code === 11000) return res.status(400).send('You are already subscribed with this email.');
       res.status(400).send(e);
+    });
+  }
+
+  if (req.body.query === 'deleteMe') {
+    Users.findByToken(req.body.token).then((user) => {
+      console.log(req.body.id, user._id);
+      return People.deleteOne({_id:req.body.id, addedBy: user._id});
+    }).then((person) => {
+      if (!person) return Promise.reject('Unauthorized Request');
+      res.status(200).send(person);
+    }).catch((e) => {
+      console.log(e);
+      res.status(400).send(e)
     });
   }
 
