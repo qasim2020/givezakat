@@ -473,13 +473,15 @@ app.get('/logout/:token', authenticate, (req,res) => {
   }
 
   if (req.body.query === 'deleteMe') {
+    console.log(req.body.token);
     Users.findByToken(req.body.token).then((user) => {
       console.log(req.body.id, user._id);
       return People.deleteOne({_id:req.body.id, addedBy: user._id});
     }).then((person) => {
-      if (!person) return Promise.reject('Unauthorized Request');
+      if (!person) return Promise.reject('Unauthorized request');
       res.status(200).send(person);
     }).catch((e) => {
+      if (e.name == "JsonWebTokenError") return res.status(400).send('Please sign in to perform this action.');
       console.log(e);
       res.status(400).send(e)
     });

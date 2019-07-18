@@ -1,3 +1,50 @@
+      .bottom-contrast-div {
+        margin: 0 0 -15px 0 !important;
+        padding: 15px 25px;
+        color: white !important;
+      }
+
+      .bottom-contrast-div > div {
+        padding: 5px 0px;
+      }
+
+      .bottom-contrast-div p {
+        font-weight: bold;
+      }
+
+      .info-circle {
+        width: 20px;
+        height: 20px;
+        background: #009688;
+        text-align: center;
+        font-weight: bold;
+        color: white;
+        font-size: 70%;
+        cursor: pointer;
+      }
+
+      .popover {
+        position: absolute;
+        background: #009688;
+        color: white;
+        font-size: 15px;
+        font-weight: normal;
+        width: 300px;
+        padding: 1rem;
+        z-index: 100;
+        line-height: 24px;
+        pointer-events: none;
+        opacity: 0;
+      }
+
+      .opacity-1 {
+        opacity: 1 !important;
+      }
+
+      #give-zakat {
+        white-space: normal;
+      }
+
       .zakat-due-box {
         position: fixed;
         right: 1rem;

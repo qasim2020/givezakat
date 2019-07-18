@@ -8,12 +8,43 @@
 
     <link rel="stylesheet" href="/styles.css">
     <style media="screen">
+      .notification-box {
+        position: fixed;
+        left: 1rem;
+        bottom: 1rem;
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        background: white;
+        z-index: 200;
+        border: 2px solid antiquewhite;
+        color: whitesmoke;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.15s ease-in-out;
+      }
 
+      .notification-box > p{
+        color: red;
+        font-weight: bold;
+        font-size: 80%;
+      }
+
+      .notification-box > svg {
+        margin-right: 0.5rem;
+      }
     </style>
 
     <title>Zakat Lists</title>
   </head>
   <body>
+
+    <div class="notification-box shadow">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V11H13V17ZM13 9H11V7H13V9Z" fill="red"/>
+      </svg>
+      <p>Please sign in to perform this action.</p>
+    </div>
 
     <div class="zakat-due-box">
       <div class="d-flex align-items-center justify-content-between">
@@ -319,7 +350,9 @@
       if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
 
       function deleteMe(elem,id) {
+
         console.log($(elem));
+
         let data = {
           query : "deleteMe",
           id : id,
@@ -339,10 +372,15 @@
             }
           }).done((res) => {
             console.log(res);
+            $(elem).remove();
             // createcards(res);
             // if (res.length < 12) $(this).attr('disabled',true).html('No more data found').css({border: 'none'});
           }).fail((e) => {
             console.log(e.responseText);
+            $('.notification-box').addClass('opacity-1').find('p').html(e.responseText);
+            setTimeout(function() {
+              $('.notification-box').css({opacity: 0}).removeClass('opacity-1');
+            }, 3000);
           });
       }
 
