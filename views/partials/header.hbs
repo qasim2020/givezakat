@@ -27,10 +27,20 @@
 
 <div class="nav-menu d-flex flex-col align-items-center justify-content-center theme-gradient">
   <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
-  <a class="nav-item my-point5 text-light" href="/signin">Sign in</a>
+  <a href="/" class="nav-item my-point5 text-light">Home</a>
+  {{#if token}}
+  <a class="nav-item my-point5 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
   <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
   <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
-  <a class="nav-item my-point5 text-light" href="/addpeople">Add people</a>
+  <a class="nav-item my-point5 text-light" href="/addpeople/{{token}}">Add people</a>
+  <a href="/cart/{{token}}" class="nav-item my-point5 text-light">Cart</a>
+  {{else}}
+  <a class="nav-item my-point5 text-light" href="/signin/home">Sign in</a>
+  <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
+  <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
+  <a class="nav-item my-point5 text-light" href="/signin/addpeople">Add people</a>
+  <a href="/signin/cart" class="nav-item my-point5 text-light">Cart</a>
+  {{/if}}
 </div>
 
 <div class="hero-bg h-40vh bg-green"></div>

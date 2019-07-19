@@ -41,7 +41,7 @@ $(document).on('click','.card',function(e) {
 })
 
 function opennav() {
-  $('.nav-menu').css({'z-index': '2',opacity: 1})
+  $('.nav-menu').css({'z-index': '150',opacity: 1})
 }
 
 function closenav() {

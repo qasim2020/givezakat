@@ -38,5 +38,11 @@
     "public-ip": "^3.1.0",
     "read-excel-file": "^4.0.1",
     "stripe": "^7.4.0"
+  },
+  "devDependencies": {
+    "http": "0.0.0",
+    "morgan": "^1.9.1",
+    "path": "^0.12.7",
+    "reload": "^3.0.1"
   }
 }
