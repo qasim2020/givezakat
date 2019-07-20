@@ -1,3 +1,40 @@
+      .notification-box {
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        background: white;
+        z-index: 200;
+        border: 2px solid antiquewhite;
+        color: whitesmoke;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.15s ease-in-out;
+        z-index: 200;
+        pointer-events: none;
+      }
+
+      .notification-box > p{
+        color: red;
+        font-weight: bold;
+        font-size: 80%;
+      }
+
+      .notification-box > svg {
+        margin-right: 0.5rem;
+      }
+
+      .corner-box {
+        position: fixed;
+        right: 1rem;
+        display: flex;
+        bottom: 1rem;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        z-index: 200;
+        pointer-events: none;
+      }
+
       .bottom-contrast-div {
         margin: 0 0 -15px 0 !important;
         padding: 15px 25px;
@@ -1179,11 +1216,11 @@
         }
 
         .form-grid p {
-          font-size: 18px;
+          font-size: 15px;
         }
 
         .form-grid .heading p{
-          font-size: 18px;
+          font-size: 15px;
         }
 
         .form-placement {

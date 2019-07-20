@@ -43,57 +43,48 @@
   <body>
     {{>header}}
 
-    <div class="zakat-due-box">
-      <div class="d-flex align-items-center justify-content-between">
-        <p>Due Zakat: 9.00 USD</p>
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect y="17.1097" width="24.1967" height="3" transform="rotate(-45 0 17.1097)" fill="whitesmoke"/>
-        <rect x="2.12109" width="24.1967" height="3" transform="rotate(45 2.12109 0)" fill="whitesmoke"/>
-        </svg>
+    <div class="corner-box">
+      <div class="zakat-due-box">
+        <div class="d-flex align-items-center justify-content-between">
+          <p>Due Zakat: 9.00 USD</p>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect y="17.1097" width="24.1967" height="3" transform="rotate(-45 0 17.1097)" fill="whitesmoke"/>
+          <rect x="2.12109" width="24.1967" height="3" transform="rotate(45 2.12109 0)" fill="whitesmoke"/>
+          </svg>
+        </div>
+        <small class="d-block w-100">Calculated using <b><a href="/zakatcalc">zakat calculator</a></b></small>
       </div>
-      <small class="d-block w-100">Calculated using <b><a href="/zakatcalc">zakat calculator</a></b></small>
     </div>
+
+
 
 
     <div class="container form-placement">
       <h4>Check out</h4>
-      <p class="amount-total d-none text-center">Pay 105.00 USD</p>
-      <div class="checkout-container">
-        <form action="/charge" method="get" id="payment-form">
-        <div class="form-row">
-          <label for="card-element">
-            Credit or debit card
-          </label>
-          <div id="card-element" class="my-1" style="background: lavender">
-            <!-- A Stripe Element will be inserted here. -->
+      <div class="checkout-container d-none">
+        <form class="stripe-form" action="/charge" method="get" id="payment-form">
+
+          <div class="form-row">
+            <label for="card-element" style="font-size: 15px">
+              Credit or debit card
+            </label>
+            <div id="card-element" class="my-1" style="background: lavender">
+              <!-- A Stripe Element will be inserted here. -->
+            </div>
+            <div class="error" id="card-errors" role="alert"></div>
           </div>
 
-          <!-- Used to display form errors. -->
-          <div class="error" id="card-errors" role="alert"></div>
-        </div>
-
-        <button class="btn btn-secondary mt-1">Submit Payment</button>
+          <button class="btn btn-secondary mt-1">Pay 105.00 USD</button>
         </form>
       </div>
-      <div class="form-grid d-none">
+
+      <div class="form-grid">
         <div class="heading">
           <p>Person(s)</p>
         </div>
         <div class="heading text-center">
           <p>Amount</p>
         </div>
-
-        <div class="delete-btn">
-          <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#173627"/>
-          </svg>
-        </div>
-        <div class="person">
-          <p>Earning 18 USD per month to support 18 family members</p>
-        </div>
-        <input class="form-control text-center" type="text" name="" value="" placeholder="50 USD">
-
-
 
         <div class="delete-btn">
           <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -129,6 +120,8 @@
 
     <script type="text/javascript" src="/javascript.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
+    <script src="/reload/reload.js"></script>
+
 
     <script type="text/javascript">
 
@@ -136,9 +129,7 @@
 
       $('#buy').on('click',function() {
         $(this).closest('.form-grid').hide();
-        let myWidth = $('.form-grid').width();
-        $('.amount-total').removeClass('d-none');
-        // openCheckout(myWidth);
+        $('.checkout-container').removeClass('d-none');
 
         $.ajax({
             url: '/checkoutURL',

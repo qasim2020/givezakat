@@ -8,42 +8,7 @@
 
     <link rel="stylesheet" href="/styles.css">
     <style media="screen">
-      .notification-box {
-        padding: 1rem;
-        display: flex;
-        justify-content: center;
-        background: white;
-        z-index: 200;
-        border: 2px solid antiquewhite;
-        color: whitesmoke;
-        align-items: center;
-        opacity: 0;
-        transition: opacity 0.15s ease-in-out;
-        z-index: 200;
-        pointer-events: none;
-      }
 
-      .notification-box > p{
-        color: red;
-        font-weight: bold;
-        font-size: 80%;
-      }
-
-      .notification-box > svg {
-        margin-right: 0.5rem;
-      }
-
-      .corner-box {
-        position: fixed;
-        right: 1rem;
-        display: flex;
-        bottom: 1rem;
-        flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
-        z-index: 200;
-        pointer-events: none;
-      }
     </style>
 
     <title>Zakat Lists</title>
@@ -150,7 +115,7 @@
           <a class="text-light px-point5 align-self-center" href="/signin/addpeople">Add people</a>
           <a href="/signin/cart" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
           {{/if}}
-          <span class="cart-circle">1</span>
+          <span class="cart-circle">{{cart}}</span>
         </div>
         </div>
         <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">
@@ -189,7 +154,7 @@
 
               <span class="report-badge text-white mr-point5">{{this.cardClass}}</span>
               <!-- hide report badge DONE-->
-              <span class="check-box card-select">
+              <span class="check-box card-select" my-id="{{this._id}}">
                 <svg class="check-box" width="13" height="13" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path class="check-box" d="M5.12512 8.04543L1.82387 5.5L0.699707 6.61625L5.12512 11.0417L14.6251 1.54166L13.5089 0.425415L5.12512 8.04543Z" fill="#C0C1C5"></path>
                 </svg>
@@ -257,7 +222,7 @@
             <div class="card-browser alpha60 d-none">
               <div class="d-flex align-items-end flex-col">
                 <a  href="/updateperson" class="text-blue" type="button" name="button">Edit</a>
-                <a class="text-blue" type="button" name="button" onclick="deleteMe(this,'{{_id}}')" >Delete</a>
+                <a class="text-blue" type="button" name="button" onclick="deleteMe(this,'{{this._id}}')" >Delete</a>
                 <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
                 <a class="text-blue report-an-issue" type="button" name="button">Report an issue</a>
               </div>
@@ -275,7 +240,7 @@
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
 
-        <button id="load-more" class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More here now iram how are you</button>
+        <button id="load-more" class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More</button>
         <p class="text-green" style="margin-top:1rem">Subscribe to our newsletters and updates</p>
 
         <form id="subscribe-input" class="d-flex justify-content-start border" action="" method="">
@@ -364,7 +329,7 @@
     <script type="text/javascript">
 
       $('.filter-btns .btn:eq(0)').addClass('active');
-      updatecart();
+
       if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
 
       function deleteMe(elem,id) {
@@ -390,9 +355,11 @@
             }
           }).done((res) => {
             console.log(res);
-            $(elem).remove();
-            // createcards(res);
-            // if (res.length < 12) $(this).attr('disabled',true).html('No more data found').css({border: 'none'});
+            $(elem).closest('.card').remove();
+            $('.notification-box').addClass('opacity-1').find('p').html('Deleted 1 person!');
+            setTimeout(function() {
+              $('.notification-box').css({opacity: 0}).removeClass('opacity-1');
+            }, 3000);
           }).fail((e) => {
             console.log(e.responseText);
             $('.notification-box').addClass('opacity-1').find('p').html(e.responseText);
@@ -424,10 +391,35 @@
         if (order.length == 1) $(`.card`).show();
       }
 
-      function updatecart() {
-        console.log();
-        if ($('.card-selected').length ) return $('.cart-circle').show().html($('.card-selected').length);
-        $('.cart-circle').hide();
+      function updatecart(id) {
+
+        console.log($('.card-selected').length);
+
+        if ($('.card-select').length < 1) return $('.cart-circle').hide();
+
+
+        let data = {
+          query: 'update-cart',
+          cart: id,
+        };
+
+        console.log(data);
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: '/signing',
+            type: 'post',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log('item added successful');
+            $('.cart-circle').show().html(res.length);
+          }).fail((e) => {
+            console.log(e.responseText);
+          });
+
       }
 
       $(document).on('click','.select-to-pay',function() {

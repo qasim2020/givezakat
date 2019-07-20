@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(session({
   secret: 'oasdfkljh2j3lgh123ljkhl12kjh3',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
 }))
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine','hbs');
@@ -76,20 +76,20 @@ app.get('/hacks',(req,res) => {
 })
 
 app.get('/',(req,res) => {
-  console.log('home page opened.');
 
-  // return res.render('hacks.hbs');
+  if (!req.session.cart) req.session.cart = [];
 
   People.find().limit(12).then((msg) => {
     res.data = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
     req.session.sampleRows = rows[0];
-    res.render('1-home.hbs',{
+    res.render('1-home.hbs', {
       data: res.data,
       sampleRows: rows[0],
       token: req.session.token,
-      name: req.session.name
+      name: req.session.name,
+      cart: req.session.cart.length
     });
   }).catch((e) => {
     console.log(e);
@@ -190,11 +190,26 @@ var getip = (req) => {
 
 app.get('/cart/:token',authenticate,(req,res) => {
 
-  res.render('1-cart.hbs',{
-    cart: 'active',
-    token: req.session.token,
-    name: req.session.name
-  });
+  console.log(req.session);
+
+  try {
+    People.find({'_id' : {$in : req.sesion.cart}}).then((msg) => {
+      res.render('1-cart.hbs',{
+        people: msg,
+        cart: 'active',
+        token: req.session.token,
+        name: req.session.name
+      });
+    });
+  }
+  catch(error) {
+    res.render('1-redirect.hbs',{
+      message: 'Your cart is empty. Redirecting to home page.',
+      error: 'r1',
+      token: req.params.token,
+    })
+  };
+
 });
 
 app.get('/charge',(req,res) => {
@@ -291,6 +306,8 @@ app.post('/excelData',(req,res) => {
 
 app.get('/home/:token', authenticate, (req,res) => {
 
+  if (!req.session.cart) req.session.cart = [];
+
   console.log(req.params.user.name,'entered home');
 
   People.find().limit(12).then((msg) => {
@@ -309,6 +326,7 @@ app.get('/home/:token', authenticate, (req,res) => {
       sampleRows: rows[0],
       token: req.params.token,
       name: req.params.user.name,
+      cart: req.session.cart.length
     });
   }).catch((e) => {
     console.log(e);
@@ -321,7 +339,6 @@ app.get('/logout/:token', authenticate, (req,res) => {
   console.log(req.params.user.name,'logged out');
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
-    req.session.destroy();
     return People.find().limit(12)
   }).then((msg) => {
     res.data = msg;
@@ -329,7 +346,8 @@ app.get('/logout/:token', authenticate, (req,res) => {
   }).then((rows) => {
     res.render('1-home.hbs',{
       data: res.data,
-      sampleRows: rows[0]
+      sampleRows: rows[0],
+      cart: req.session.cart.length
     });
   }).catch((e) => {
     console.log(e);
@@ -337,7 +355,13 @@ app.get('/logout/:token', authenticate, (req,res) => {
   });
 })
 
-  app.post('/signing',(req,res) => {
+app.post('/signing',(req,res) => {
+
+  if (req.body.query === 'update-cart') {
+    req.session.cart.push(req.body.cart);
+    console.log(req.session.cart);
+    return res.status(200).send(req.session.cart);
+  };
 
   if (req.body.query === 'Register') {
     var user = new Users(
