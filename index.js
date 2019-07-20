@@ -106,7 +106,6 @@ app.get('/signin/:call',(req,res) => {
   console.log(req.params.call);
   let options = {};
   if (req.params.call != 'home') {
-    console.log('here i am');
     options = {
       signin: 'active',
       call: `${req.params.call}`,
@@ -115,7 +114,6 @@ app.get('/signin/:call',(req,res) => {
   } else {
     options = {signin: 'active'};
   };
-  console.log(options);
   res.render('1-signin.hbs', options);
 })
 
@@ -182,12 +180,9 @@ var getip = (req) => {
 
 app.get('/cart/:token',authenticate,(req,res) => {
 
-
-
   let objectIdArray = req.session.cart.map(s => mongoose.Types.ObjectId(s));
   try {
     People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
-      console.log(msg);
       res.render('1-cart.hbs',{
         people: msg,
         cartStatus: 'active',
@@ -210,12 +205,17 @@ app.get('/cart/:token',authenticate,(req,res) => {
 
 app.get("/charge", authenticate, (req, res) => {
 
-
-  stripe.customers.create({
-    email: req.query.email,
-    card: req.query.stripeToken
-  })
-  .then(customer =>
+  stripe.products.create({
+    name: 'T-shirt',
+    type: 'good',
+    description: 'Comfortable cotton t-shirt',
+    attributes: ['size', 'gender']
+  }).then((msg) => {
+    return stripe.customers.create({
+      email: req.query.email,
+      card: req.query.stripeToken
+    });
+  }).then(customer =>
     stripe.charges.create({
       amount: req.query.amount,
       description: "Sample Charge",
@@ -342,6 +342,38 @@ app.get('/logout/:token', authenticate, (req,res) => {
 })
 
 app.post('/signing',(req,res) => {
+
+  if (req.body.query === 'paid-people') {
+
+    if (!req.session.token) return res.status(400).send('Un auhtorized request');
+
+    let objectIdArray = req.body.people.map(s => mongoose.Types.ObjectId(s.id));
+
+    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
+      req.people = msg;
+      return Users.findByToken(req.body.token)
+    }).then((user) => {
+      let array = [];
+      let values = {};
+      _.each(req.people,(val,key) => {
+        values.id = val._id.toString();
+        values.amount = req.body.people.filter(obj => {
+            return obj.id === val._id.toString();
+        });
+        values.status = 'pending';
+        console.log(values.amount);
+        array.push(values);
+      })
+      console.log(array);
+      return user.update({paidpeople: array});
+    }).then((updatedUser) => {
+      console.log(updatedUser);
+      return res.status(200).send('Successfully updated payment');
+    }).catch((e) => {
+      console.log(e);
+      res.status(400).send(e);
+    });
+  }
 
   if (req.body.query === 'update-cart') {
     if (req.body.type == 'push') {

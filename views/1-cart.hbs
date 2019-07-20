@@ -109,7 +109,7 @@
         <div class="person">
           <p>Earning PKR {{salary}} per month to support {{fMembers}} family members</p>
         </div>
-        <input class="form-control text-center" type="number" name="amount" value="" placeholder="50 USD" required>
+        <input class="input-person" id="{{_id}}" class="form-control text-center" type="number" name="amount" value="" placeholder="50 USD" required>
 
         {{/each}}
 
@@ -159,10 +159,44 @@
         $('#total-amount').html(`${total}.00 USD`);
         $('#processing-fee').html(`${processingfee}.00 USD`)
 
-        $(this).closest('.form-grid').hide();
-        $('.checkout-container').removeClass('d-none');
-        $('#stripe-btn').html(`Payout ${total}.00 USD`);
-        $('#input-amount').val(total);
+        let array = [];
+
+        $.each($('.input-person'),(key,val) => {
+          array.push({
+            id : $(val).attr('id'),
+            amount: $(val).val()
+          });
+        });
+
+        let data = {
+          "query": 'paid-people',
+          "people": array,
+          "token": `{{token}}`
+        };
+
+        console.log(data);
+
+        data = JSON.stringify(data);
+
+        // console.log(data);
+
+
+        $.ajax({
+            url: '/signing',
+            type: 'post',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((msg) => {
+            console.log(msg);
+            $(this).closest('.form-grid').hide();
+            $('.checkout-container').removeClass('d-none');
+            $('#stripe-btn').html(`Payout ${total}.00 USD`);
+            $('#input-amount').val(total * 100);
+          }).fail((e) => {
+            console.log('error here', e);
+          });
 
       });
 

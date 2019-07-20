@@ -40,7 +40,21 @@ var UsersSchema = new mongoose.Schema({
   attemptedTime: {
     type: Number,
     default: 0,
-  }
+  },
+  paidpeople: [{
+    id: {
+      type: String,
+      required: true,
+    },
+    status: {
+      type: String,
+      default: 'pending'
+    },
+    amount: {
+      type: String,
+      required: true
+    }
+  }]
 });
 
 UsersSchema.pre('save', function(next) {
