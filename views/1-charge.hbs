@@ -66,6 +66,13 @@
       border: 1px dotted green;
     }
 
+    .form-placement > a {
+      font-size: 15px;
+      color: cornflowerblue;
+      margin-left: 25px;
+      padding: 0px !important;
+    }
+
     </style>
 
   </head>
@@ -75,11 +82,11 @@
 
     <div class="container form-placement">
       <h4>Successful Payment</h4>
-      <p class="amount-total d-none text-center">Pay 105.00 USD</p>
+
 
       <p class="normal">Thank you for the payment. Details of your transaction are as under:-</p>
 
-      <p><span class="text-bold">Transaction ID.</span> <span>12312312312</span> </p>
+      <a href="{{receipt}}">Your payment receipt is here.</a>
 
       <p class="text-bold">People's sponsored:-</p>
 
@@ -94,26 +101,18 @@
           <th>Sponsor's Location</th>
           <th>Sponsor's Mob No</th>
         </tr>
+        {{#each payed}}
         <tr>
-          <td>Delivered</td>
-          <td>Hashim Ali</td>
-          <td>49 USD</td>
-          <td>Bali, Indonesia</td>
-          <td>92 323 2344323</td>
-          <td>Qasim Ali</td>
-          <td>Karachi, Pakistan</td>
-          <td>92 323 5168638</td>
+          <td>{{this.status}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.amount}}</td>
+          <td>{{this.address}}</td>
+          <td>{{this.mob}}</td>
+          <td>{{this.sponsorName}}</td>
+          <td>{{this.sponsorAddress}}</td>
+          <td>{{this.sponsorMob}}</td>
         </tr>
-        <tr>
-          <td>Pending</td>
-          <td>Haskim Faroz</td>
-          <td>49 USD</td>
-          <td>Bali, Indonesia</td>
-          <td>92 323 2344323</td>
-          <td>Qasim Ali</td>
-          <td>Karachi, Pakistan</td>
-          <td>92 323 5168638</td>
-        </tr>
+        {{/each}}
       </table>
 
       <p>These people are now unlocked for your future visits.</p>
@@ -125,7 +124,7 @@
 
     <script type="text/javascript">
 
-      
+
 
     </script>
   </body>

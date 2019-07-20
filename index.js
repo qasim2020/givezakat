@@ -40,23 +40,8 @@ hbs.registerHelper("inc", function(value, options)
     return parseInt(value) + 1;
 });
 
-// sheet('construction','read');
-// sheet('material','read');
-// sheet('material','update',[
-// [new Date().toString(),'MES','Sand','2000', 'cft','Brought it for const of Washroom']
-// ]);
-// sheet('ramadan','read').then((msg) => {
-//   res.render('home.hbs',{
-//     data: msg[0].values,
-//   });
-// }).catch((e) => {
-//   console.log(e);
-// });
-
-
-
 let authenticate = (req,res,next) => {
-  let token = req.params.token || req.body.token;
+  let token = req.params.token || req.body.token || req.query.token;
   console.log('token receiveed',token);
   Users.findByToken(token).then((user) => {
     if (!user) return Promise.reject('No user found');
@@ -86,8 +71,6 @@ app.get('/',(req,res) => {
     res.render('1-home.hbs', {
       data: res.data,
       sampleRows: rows[0],
-      token: req.session.token,
-      name: req.session.name,
       cart: req.session.cart.length,
       cartIds: req.session.cart,
     });
@@ -117,7 +100,6 @@ app.get('/zakatcalc',(req,res) => {
     cart: req.session.cart.length,
   });
 
-  // res.render('signup.hbs');
 })
 
 app.get('/signin/:call',(req,res) => {
@@ -192,9 +174,16 @@ var getip = (req) => {
     });
 };
 
+// app.get('/cart',(req,res)=> {
+//   res.render('1-cart.hbs',{
+//
+//   });
+// })
+
 app.get('/cart/:token',authenticate,(req,res) => {
 
-  console.log('this is the cart',req.session.cart);
+
+
   let objectIdArray = req.session.cart.map(s => mongoose.Types.ObjectId(s));
   try {
     People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
@@ -204,7 +193,8 @@ app.get('/cart/:token',authenticate,(req,res) => {
         cartStatus: 'active',
         cart: req.session.cart.length,
         token: req.session.token,
-        name: req.session.name
+        name: req.session.name,
+        email: req.params.user.email
       });
     });
   }
@@ -218,41 +208,38 @@ app.get('/cart/:token',authenticate,(req,res) => {
 
 });
 
-app.get('/charge',(req,res) => {
-  res.render('1-charge.hbs',{
-    cartStatus: 'active',
-    cart: req.session.cart.length,
-    token: req.session.token,
-    name: req.session.name
+app.get("/charge", authenticate, (req, res) => {
+
+
+  stripe.customers.create({
+    email: req.query.email,
+    card: req.query.stripeToken
   })
-})
+  .then(customer =>
+    stripe.charges.create({
+      amount: req.query.amount,
+      description: "Sample Charge",
+      currency: "usd",
+      customer: customer.id
+    }))
+  .then((charge) => {
+    console.log(charge);
+    res.render('1-charge.hbs',{
+      cartStatus: 'active',
+      cart: req.session.cart.length,
+      token: req.session.token,
+      name: req.session.name,
+      charge: charge,
+      receipt: charge.receipt_url
+    });
+  })
+  .catch(err => {
+    console.log("Error:", err);
+    res.status(500).send({error: err.stack});
+  });
+});
 
 app.get('/checkoutURL',(req,res) => {
-
-  getip(req).then((res) => {
-    return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
-  }).then((result) => {
-    console.log(result);
-    return stripe.checkout.sessions.create({
-        customer_email: 'qasimali24@gmail.com',
-        payment_method_types: ['card'],
-        line_items: [{
-          name: 'zakat',
-          description: 'Amount is disbursed every 1st of a month.',
-          images: ['https://zakatlists.com/logo5.png'],
-          amount: 15000,
-          currency: `${result.data.geoplugin_currencyCode.toLowerCase()}`,
-          quantity: 1,
-        }],
-        success_url: 'http://localhost:3000/cart',
-        cancel_url: 'http://localhost:3000/cart',
-      });
-  }).then((result) => {
-    res.status(200).send(result);
-  }).catch((e) => {
-    console.log(e);
-    res.status(400).send(e);
-  });
 
   // axios.post('https://vendors.paddle.com/api/2.0/product/generate_pay_link', {
   //   vendor_id: '52029',
@@ -347,7 +334,7 @@ app.get('/logout/:token', authenticate, (req,res) => {
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
     req.url = '/';
-    return app._router.handle(req, res, next);
+    return app._router.handle(req, res);
   }).catch((e) => {
     console.log(e);
     res.status(404).send(e);

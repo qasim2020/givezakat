@@ -4,7 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
 
     <link rel="stylesheet" href="/styles.css">
 
@@ -37,6 +36,11 @@
     .StripeElement--webkit-autofill {
       background-color: #fefde5 !important;
     }
+
+    .error {
+      grid-column: 1/4;
+      text-align: center;
+    }
     </style>
 
   </head>
@@ -44,9 +48,10 @@
     {{>header}}
 
     <div class="corner-box">
+      {{#if dueZakat}}
       <div class="zakat-due-box">
         <div class="d-flex align-items-center justify-content-between">
-          <p>Due Zakat: 9.00 USD</p>
+          <p>Due Zakat: {{this}}.00 USD</p>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect y="17.1097" width="24.1967" height="3" transform="rotate(-45 0 17.1097)" fill="whitesmoke"/>
           <rect x="2.12109" width="24.1967" height="3" transform="rotate(45 2.12109 0)" fill="whitesmoke"/>
@@ -54,6 +59,7 @@
         </div>
         <small class="d-block w-100">Calculated using <b><a href="/zakatcalc">zakat calculator</a></b></small>
       </div>
+      {{/if}}
     </div>
 
 
@@ -74,17 +80,23 @@
             <div class="error" id="card-errors" role="alert"></div>
           </div>
 
-          <button class="btn btn-secondary mt-1">Pay 105.00 USD</button>
+          <input class="d-none" type="text" name="email" value="{{email}}">
+          <input class="d-none" type="text" name="token" value="{{token}}">
+          <input id="input-amount" class="d-none" type="text" name="amount" value="">
+
+
+          <button id="stripe-btn" class="btn btn-secondary mt-1"></button>
         </form>
       </div>
 
-      <div class="form-grid">
+      <form id="pay-out-form" class="form-grid">
         <div class="heading">
           <p>Person(s)</p>
         </div>
         <div class="heading text-center">
           <p>Amount</p>
         </div>
+
 
         {{#each people}}
 
@@ -97,7 +109,7 @@
         <div class="person">
           <p>Earning PKR {{salary}} per month to support {{fMembers}} family members</p>
         </div>
-        <input class="form-control text-center" type="text" name="" value="" placeholder="50 USD">
+        <input class="form-control text-center" type="number" name="amount" value="" placeholder="50 USD" required>
 
         {{/each}}
 
@@ -106,23 +118,24 @@
         </div>
 
         <div class="person-amount">
-          <p>5.00 USD</p>
+          <p id="processing-fee">5.00 USD</p>
         </div>
         <div class="label total">
           <p>Total</p>
         </div>
         <div class="person-amount">
-          <p>105 USD</p>
+          <p id="total-amount">105 USD</p>
         </div>
+
         <div class="person-amount">
           <button id="buy" class="btn btn-secondary" type="button" name="button">Pay Out</button>
         </div>
-      </div>
+      </form>
 
     </div>
 
-
-
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/javascript.js"></script>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/reload/reload.js"></script>
@@ -133,33 +146,41 @@
       var stripe = Stripe('pk_test_WJQN2iDakpSKGN9Va0KeHEDT');
 
       $('#buy').on('click',function() {
+
+        if (!($('#pay-out-form').valid())) return console.log('form is in-valid');
+        let total = 0;
+        $.each($('#pay-out-form').find('input'),(key,val) => {
+          total += +$(val).val();
+        })
+
+        let processingfee = total * 0.1;
+        total = total + processingfee;
+
+        $('#total-amount').html(`${total}.00 USD`);
+        $('#processing-fee').html(`${processingfee}.00 USD`)
+
         $(this).closest('.form-grid').hide();
         $('.checkout-container').removeClass('d-none');
+        $('#stripe-btn').html(`Payout ${total}.00 USD`);
+        $('#input-amount').val(total);
 
-        $.ajax({
-            url: '/checkoutURL',
-            type: 'get',
-            headers: {
-                'content-type': 'application/json',
-            }
-          }).done((res) => {
-            console.log(res);
-            return stripe.redirectToCheckout({sessionId:res.id})
-            // $('.upload-success').removeClass('d-none').html(res);
-            // $(this).toggleClass('btn-outline-dark btn-outline-success');
-          }).then((result => {
-            console.log(result);
-          })).fail((e) => {
-            console.log(e);
-            // $(this).toggleClass('btn-outline-dark btn-outline-danger');
-            // let errorMsg = '';
-            // $.each(JSON.parse(e.responseText),(key,val) => {
-            //   errorMsg += val + '<br>'
-            // })
-            // $('.upload-error').removeClass('d-none').html(errorMsg);
-          });
+      });
 
+      $("#pay-out-form").validate({
 
+        rules: {
+          'amount' : {
+            required: true,
+          }
+        },
+        messages: {
+          'amount' : {
+            required: `Please fill above fields.`,
+          }
+        },
+        errorPlacement: function(error, element) {
+          $('#buy').closest('div').before(error);
+        },
 
       });
 
