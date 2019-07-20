@@ -64,9 +64,8 @@ let authenticate = (req,res,next) => {
     next();
   }).catch((e) => {
     console.log(e);
-    return res.status(404).render('1-home.hbs', {
-      error: 'Bad Request! Please use proper URL to open app.'
-    });
+    req.url = '/';
+    return app._router.handle(req, res, next);
   });
 };
 
@@ -89,7 +88,8 @@ app.get('/',(req,res) => {
       sampleRows: rows[0],
       token: req.session.token,
       name: req.session.name,
-      cart: req.session.cart.length
+      cart: req.session.cart.length,
+      cartIds: req.session.cart,
     });
   }).catch((e) => {
     console.log(e);
@@ -113,7 +113,8 @@ app.get('/zakatcalc',(req,res) => {
   res.render('1-zakatcalc.hbs',{
     zakatcalc: 'active',
     token: req.session.token,
-    name: req.session.name
+    name: req.session.name,
+    cart: req.session.cart.length,
   });
 
   // res.render('signup.hbs');
@@ -126,7 +127,8 @@ app.get('/signin/:call',(req,res) => {
     console.log('here i am');
     options = {
       signin: 'active',
-      call: `${req.params.call}`
+      call: `${req.params.call}`,
+      cart: req.session.cart.length,
     };
   } else {
     options = {signin: 'active'};
@@ -143,7 +145,8 @@ app.get('/signup',(req,res) => {
 
 app.get('/forgotpw',(req,res) => {
   res.render('1-fp.hbs',{
-    signin: 'active'
+    signin: 'active',
+    cart: req.session.cart.length,
   });
 });
 
@@ -154,7 +157,8 @@ app.get('/addpeople/:token',authenticate,(req,res) => {
       addpeople: 'active',
       sampleRows: rows[0],
       token: req.session.token,
-      name: req.session.name
+      name: req.session.name,
+      cart: req.session.cart.length,
     });
   }).catch((e) => {
     res.render('1-404');
@@ -190,22 +194,24 @@ var getip = (req) => {
 
 app.get('/cart/:token',authenticate,(req,res) => {
 
-  console.log(req.session);
-
+  console.log('this is the cart',req.session.cart);
+  let objectIdArray = req.session.cart.map(s => mongoose.Types.ObjectId(s));
   try {
-    People.find({'_id' : {$in : req.sesion.cart}}).then((msg) => {
+    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
+      console.log(msg);
       res.render('1-cart.hbs',{
         people: msg,
-        cart: 'active',
+        cartStatus: 'active',
+        cart: req.session.cart.length,
         token: req.session.token,
         name: req.session.name
       });
     });
   }
   catch(error) {
+    console.log(error);
     res.render('1-redirect.hbs',{
-      message: 'Your cart is empty. Redirecting to home page.',
-      error: 'r1',
+      message: `Due to an error: [${error}], Redirecting to home page.`,
       token: req.params.token,
     })
   };
@@ -214,7 +220,8 @@ app.get('/cart/:token',authenticate,(req,res) => {
 
 app.get('/charge',(req,res) => {
   res.render('1-charge.hbs',{
-    cart: 'active',
+    cartStatus: 'active',
+    cart: req.session.cart.length,
     token: req.session.token,
     name: req.session.name
   })
@@ -318,7 +325,6 @@ app.get('/home/:token', authenticate, (req,res) => {
       }
       res.data[key]['mylist'] = false;
     });
-    console.log(res.data[0]);
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
     res.render('1-home.hbs',{
@@ -326,7 +332,8 @@ app.get('/home/:token', authenticate, (req,res) => {
       sampleRows: rows[0],
       token: req.params.token,
       name: req.params.user.name,
-      cart: req.session.cart.length
+      cart: req.session.cart.length,
+      cartIds: req.session.cart,
     });
   }).catch((e) => {
     console.log(e);
@@ -339,16 +346,8 @@ app.get('/logout/:token', authenticate, (req,res) => {
   console.log(req.params.user.name,'logged out');
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
-    return People.find().limit(12)
-  }).then((msg) => {
-    res.data = msg;
-    return readXlsxFile(__dirname+'/static/sample.xlsx')
-  }).then((rows) => {
-    res.render('1-home.hbs',{
-      data: res.data,
-      sampleRows: rows[0],
-      cart: req.session.cart.length
-    });
+    req.url = '/';
+    return app._router.handle(req, res, next);
   }).catch((e) => {
     console.log(e);
     res.status(404).send(e);
@@ -358,7 +357,11 @@ app.get('/logout/:token', authenticate, (req,res) => {
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'update-cart') {
-    req.session.cart.push(req.body.cart);
+    if (req.body.type == 'push') {
+      req.session.cart.push(req.body.cart);
+    } else {
+      req.session.cart.splice(req.body.cart, 1);
+    };
     console.log(req.session.cart);
     return res.status(200).send(req.session.cart);
   };

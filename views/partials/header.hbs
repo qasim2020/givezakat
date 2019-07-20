@@ -10,14 +10,14 @@
         <a class="text-light px-point5 align-self-center {{signin}}" href="/logout/{{token}}">Sign out - {{name}}</a>
         <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
         <a href="/addpeople/{{token}}" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
-        <a href="/cart/{{token}}" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
+        <a href="/cart/{{token}}" class="text-light px-point5 align-self-center {{cartStatus}}">Cart</a>
       {{else}}
         <a href="/signin/home" class="text-light px-point5 align-self-center {{signin}}">Sign in</a>
         <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
         <a href="/signin/addpeople" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
-        <a href="/signin/cart" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
+        <a href="/signin/cart" class="text-light px-point5 align-self-center {{cartStatus}}">Cart</a>
       {{/if}}
-      <span class="cart-circle">1</span>
+      <span class="cart-circle">{{cart}}</span>
     </div>
     <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">
       <img onclick="opennav()" id="nav-open-icon" src="/nav-icon.svg" alt="">

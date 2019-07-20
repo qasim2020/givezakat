@@ -3,25 +3,33 @@ $(document).on('hover','.card-select',function(e) {
 })
 
 $(document).on('click','.card-select',function(e){
-  console.log('here');
 
-  $(this).closest('.card').toggleClass('card-selected');
+  changeCardState(this);
 
-  $.each($(this).closest('.card').find('path'),function() {
-    if ($(this).attr('fill') == '#05386B') return $(this).attr('fill', '#C0C1C5');
-    $(this).attr('fill','#05386B');
-  })
-
-  $.each($(this).closest('.card').find('circle'),function() {
-    if ($(this).attr('fill') == '#05386B') return $(this).attr('fill', '#C0C1C5');
-    $(this).attr('fill','#05386B');
-  })
-
-  $('.card-hover').find('path').attr('fill', '#C0C1C5');
-
-  updatecart($(this).attr('my-id'));
+  if ($(this).closest('.card').hasClass('card-selected')) {
+    updatecart($(this).closest('.card').attr('id'), 'push');
+  } else {
+    updatecart($(this).closest('.card').attr('id'), 'pop');
+  }
 
 })
+
+function changeCardState(elem){
+  // console.log(elem);
+  $(elem).closest('.card').toggleClass('card-selected');
+
+  $.each($(elem).closest('.card').find('path'),function() {
+    if ($(this).attr('fill') == '#05386B') return $(this).attr('fill', '#C0C1C5');
+    $(this).attr('fill','#05386B');
+  });
+
+  $.each($(elem).closest('.card').find('circle'),function() {
+    if ($(this).attr('fill') == '#05386B') return $(this).attr('fill', '#C0C1C5');
+    $(this).attr('fill','#05386B');
+  });
+
+  $('.card-hover').find('path').attr('fill', '#C0C1C5');
+}
 
 $(document).on('click','.place-2 > svg',function() {
   $('.place-2 > svg').not(this).removeClass('active').parent().siblings('.card-browser').addClass('d-none');

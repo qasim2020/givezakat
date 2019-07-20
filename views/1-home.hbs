@@ -148,7 +148,7 @@
 
         {{#each data}}
 
-          <div class="card card-{{this.cardClass}}" my-list='{{this.mylist}}'>
+          <div class="card card-{{this.cardClass}}" my-list='{{this.mylist}}' id='{{this._id}}'>
 
             <div class="place-1 d-flex justify-content-start align-items-center">
 
@@ -330,6 +330,11 @@
 
       $('.filter-btns .btn:eq(0)').addClass('active');
 
+      {{#each cartIds}}
+        console.log('{{this}}');
+        changeCardState($(`#{{this}}`));
+      {{/each}}
+
       if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
 
       function deleteMe(elem,id) {
@@ -391,7 +396,7 @@
         if (order.length == 1) $(`.card`).show();
       }
 
-      function updatecart(id) {
+      function updatecart(id,type) {
 
         console.log($('.card-selected').length);
 
@@ -400,6 +405,7 @@
 
         let data = {
           query: 'update-cart',
+          type: type,
           cart: id,
         };
 
@@ -463,7 +469,15 @@
 
       function createcards(data) {
         $.each(data,(key,val) => {
-          $('.card:eq(0)').clone().appendTo('.content-grid').removeClass('card-done card-pending card-issue card-inprogress').addClass(`card-${val.cardClass}`).find('span:eq(0)').removeClass('bg-done bg-pending bg-issue bg-inprogress').addClass(`bg-${val.cardClass}`);
+          $('.card:eq(0)').clone().appendTo('.content-grid').removeClass('card-done card-pending card-issue card-inprogress').addClass(`card-${val.cardClass}`).attr({id: val._id}).find('span:eq(0)').removeClass('bg-done bg-pending bg-issue bg-inprogress').addClass(`bg-${val.cardClass}`);
+
+          {{#each cartIds}}
+          if (val._id == `{{this}}`) {
+            console.log(val._id, `{{this}}`);
+            return changeCardState($(`#{{this}}`));
+          };
+          {{/each}}
+
         })
       };
 

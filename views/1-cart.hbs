@@ -86,15 +86,20 @@
           <p>Amount</p>
         </div>
 
+        {{#each people}}
+
         <div class="delete-btn">
           <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#173627"/>
           </svg>
         </div>
+
         <div class="person">
-          <p>Earning 18 USD per month to support 18 family members</p>
+          <p>Earning PKR {{salary}} per month to support {{fMembers}} family members</p>
         </div>
         <input class="form-control text-center" type="text" name="" value="" placeholder="50 USD">
+
+        {{/each}}
 
         <div class="label">
           <p style="font-weight: normal">Processing fee</p>
