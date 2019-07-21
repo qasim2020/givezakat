@@ -40,21 +40,7 @@ var UsersSchema = new mongoose.Schema({
   attemptedTime: {
     type: Number,
     default: 0,
-  },
-  paidpeople: [{
-    id: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      default: 'pending'
-    },
-    amount: {
-      type: String,
-      required: true
-    }
-  }]
+  }
 });
 
 UsersSchema.pre('save', function(next) {
@@ -88,9 +74,11 @@ UsersSchema.methods.generateAuthToken = function (req) {
   var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
 
   user.tokens = {access, token};
+
   req.session.token = token;
   req.session.name = user.name;
   req.session.myid = user._id;
+
   return user.save().then(() => {
     return user;
   });

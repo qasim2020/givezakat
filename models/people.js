@@ -45,30 +45,6 @@ var People = mongoose.model('people', {
     type: String,
     // required: true,
   },
-  package: {
-    type: String,
-    // required: true,
-  },
-  packageCost: {
-    type: String,
-    // required: true
-  },
-  packageQty: {
-    type: String,
-    // required: true
-  },
-  orderDate: {
-    type: String,
-  },
-  deliveryDate: {
-    type: String,
-  },
-  pteInfo: {
-    type: String,
-  },
-  nearestCSD: {
-    type: String,
-  },
   cardClass: {
     type: String,
     default: 'pending'

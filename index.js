@@ -17,10 +17,12 @@ const stripe = require('stripe')('sk_test_hysfFVSPpr2vUx2kbqXMNHOJ');
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
 const {People} = require('./models/people');
+const {Orders} = require('./models/orders');
 const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
 const {serverRunning} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
+
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -203,60 +205,86 @@ app.get('/cart/:token',authenticate,(req,res) => {
 
 });
 
+function updateOrders(req,res) {
+  // if (!req.session.token) return res.status(400).send('Un auhtorized request');
+  return new Promise(function(resolve, reject) {
+    let paymentDetails = JSON.parse(req.query.paymentDetails);
+    let objectIdArray = paymentDetails.map(s => mongoose.Types.ObjectId(s.id));
+    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
+      req.people = msg;
+      return Users.findByToken(req.query.token);
+    }).then((user) => {
+      if (!user) return Promise.reject('un authorized request');
+      let array = [];
+      let values = {};
+      _.each(req.people,(val,key) => {
+        values = {};
+        values.paidby = user._id.toString();
+        values.paidto = val._id.toString();
+        values.amount = paymentDetails.filter(obj => {
+                            return obj.id === val._id.toString();
+                        })[0].amount;
+        values.status = 'pending';
+        values.currency = req.currency;
+        values.customer = req.charge.customer;
+        array.push(values);
+      });
+      return Orders.create(array);
+    }).then((order) => {
+      return resolve(order);
+    }).catch((e) => {
+      return reject(e);
+    });
+  });
+
+}
+
 app.get("/charge", authenticate, (req, res) => {
 
-  stripe.products.create({
-    name: 'T-shirt',
-    type: 'good',
-    description: 'Comfortable cotton t-shirt',
-    attributes: ['size', 'gender']
+  // console.log(req.query);
+
+  getip(req).then((res) => {
+    return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
+  }).then((result) => {
+    req.currency = `${result.data.geoplugin_currencyCode.toLowerCase()}`;
+    return stripe.products.create({
+      name: 'T-shirt',
+      type: 'good',
+      description: 'Comfortable cotton t-shirt',
+      attributes: ['size', 'gender']
+    })
   }).then((msg) => {
     return stripe.customers.create({
       email: req.query.email,
       card: req.query.stripeToken
     });
   }).then(customer =>
-    stripe.charges.create({
+     stripe.charges.create({
       amount: req.query.amount,
       description: "Sample Charge",
-      currency: "usd",
+      currency: req.currency,
       customer: customer.id
-    }))
-  .then((charge) => {
-    console.log(charge);
+  })).then((charge) => {
+    req.charge = charge;
+    return updateOrders(req,res);
+  }).then((msg) => {
+    // msg.push(req.charge);
+    // return res.status(200).send(msg);
+    req.session.cart = [];
     res.render('1-charge.hbs',{
       cartStatus: 'active',
       cart: req.session.cart.length,
       token: req.session.token,
       name: req.session.name,
-      charge: charge,
-      receipt: charge.receipt_url
+      receipt: req.charge.receipt_url,
+      payed: req.people
     });
-  })
-  .catch(err => {
+  }).catch(err => {
     console.log("Error:", err);
-    res.status(500).send({error: err.stack});
+    // return res.status(400).send(err);
+    res.status(500).send({error: err});
   });
 });
-
-app.get('/checkoutURL',(req,res) => {
-
-  // axios.post('https://vendors.paddle.com/api/2.0/product/generate_pay_link', {
-  //   vendor_id: '52029',
-  //   vendor_auth_code: '897b6543544f54c8e0c6d120796b0e8233c055a8fb1a8c70c9',
-  //   product_id: '564500',
-  //   prices: ['USD:105'],
-  // })
-  // .then((result) => {
-  //   console.log(`statusCode: ${result.statusCode}`)
-  //   console.log(result.data.response.url);
-  //   console.log(result);
-  // })
-  // .catch((error) => {
-  //   console.error(error)
-  // })
-
-})
 
 app.post('/data',(req,res) => {
 
@@ -317,7 +345,7 @@ app.get('/home/:token', authenticate, (req,res) => {
     res.render('1-home.hbs',{
       data: res.data,
       sampleRows: rows[0],
-      token: req.params.token,
+      token: req.session.token,
       name: req.params.user.name,
       cart: req.session.cart.length,
       cartIds: req.session.cart,
@@ -342,38 +370,6 @@ app.get('/logout/:token', authenticate, (req,res) => {
 })
 
 app.post('/signing',(req,res) => {
-
-  if (req.body.query === 'paid-people') {
-
-    if (!req.session.token) return res.status(400).send('Un auhtorized request');
-
-    let objectIdArray = req.body.people.map(s => mongoose.Types.ObjectId(s.id));
-
-    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
-      req.people = msg;
-      return Users.findByToken(req.body.token)
-    }).then((user) => {
-      let array = [];
-      let values = {};
-      _.each(req.people,(val,key) => {
-        values.id = val._id.toString();
-        values.amount = req.body.people.filter(obj => {
-            return obj.id === val._id.toString();
-        });
-        values.status = 'pending';
-        console.log(values.amount);
-        array.push(values);
-      })
-      console.log(array);
-      return user.update({paidpeople: array});
-    }).then((updatedUser) => {
-      console.log(updatedUser);
-      return res.status(200).send('Successfully updated payment');
-    }).catch((e) => {
-      console.log(e);
-      res.status(400).send(e);
-    });
-  }
 
   if (req.body.query === 'update-cart') {
     if (req.body.type == 'push') {

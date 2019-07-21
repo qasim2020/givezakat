@@ -82,10 +82,11 @@
 
           <input class="d-none" type="text" name="email" value="{{email}}">
           <input class="d-none" type="text" name="token" value="{{token}}">
+          <input id="paymentDetails" class="d-none" type="text" name="paymentDetails" value="">
           <input id="input-amount" class="d-none" type="text" name="amount" value="">
 
-
           <button id="stripe-btn" class="btn btn-secondary mt-1"></button>
+
         </form>
       </div>
 
@@ -109,7 +110,7 @@
         <div class="person">
           <p>Earning PKR {{salary}} per month to support {{fMembers}} family members</p>
         </div>
-        <input class="input-person" id="{{_id}}" class="form-control text-center" type="number" name="amount" value="" placeholder="50 USD" required>
+        <input class="input-person" class="form-control text-center" type="number" name="{{_id}}" value="" placeholder="50 USD" required>
 
         {{/each}}
 
@@ -148,6 +149,7 @@
       $('#buy').on('click',function() {
 
         if (!($('#pay-out-form').valid())) return console.log('form is in-valid');
+
         let total = 0;
         $.each($('#pay-out-form').find('input'),(key,val) => {
           total += +$(val).val();
@@ -163,23 +165,31 @@
 
         $.each($('.input-person'),(key,val) => {
           array.push({
-            id : $(val).attr('id'),
+            id : $(val).attr('name'),
             amount: $(val).val()
           });
         });
 
-        let data = {
-          "query": 'paid-people',
+        let data = JSON.stringify(array);
+        $('#paymentDetails').val(data);
+
+
+        $(this).closest('.form-grid').hide();
+        $('.checkout-container').removeClass('d-none');
+        $('#stripe-btn').html(`Payout ${total}.00 USD`);
+        $('#input-amount').val(total * 100);
+
+        return;
+
+        data = {
+          "query": 'add-new-orders',
           "people": array,
           "token": `{{token}}`
         };
 
-        console.log(data);
-
         data = JSON.stringify(data);
 
-        // console.log(data);
-
+        console.log(data);
 
         $.ajax({
             url: '/signing',
@@ -203,14 +213,18 @@
       $("#pay-out-form").validate({
 
         rules: {
-          'amount' : {
+          {{#each people}}
+          '{{_id}}' : {
             required: true,
-          }
+          },
+          {{/each}}
         },
         messages: {
-          'amount' : {
+          {{#each people}}
+          '{{_id}}' : {
             required: `Please fill above fields.`,
-          }
+          },
+          {{/each}}
         },
         errorPlacement: function(error, element) {
           $('#buy').closest('div').before(error);
