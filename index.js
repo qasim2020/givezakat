@@ -59,11 +59,19 @@ let authenticate = (req,res,next) => {
 
 app.get('/hacks',(req,res) => {
   res.render('1-fp.hbs');
-})
+});
+
+app.get('/profile/:token',authenticate,(req,res) => {
+  res.render('1-profile.hbs',{
+    token: req.params.token,
+    name: req.params.user.name,
+    profile: 'active'
+  });
+});
 
 app.get('/',(req,res) => {
 
-  if (!req.session.cart) req.session.cart = [];
+  if (!req.session.due) req.session.due = [];
 
   People.find().limit(12).then((msg) => {
     res.data = msg;
@@ -73,8 +81,8 @@ app.get('/',(req,res) => {
     res.render('1-home.hbs', {
       data: res.data,
       sampleRows: rows[0],
-      cart: req.session.cart.length,
-      cartIds: req.session.cart,
+      due: req.session.due.length,
+      dueIds: req.session.due,
     });
   }).catch((e) => {
     console.log(e);
@@ -99,7 +107,7 @@ app.get('/zakatcalc',(req,res) => {
     zakatcalc: 'active',
     token: req.session.token,
     name: req.session.name,
-    cart: req.session.cart.length,
+    due: req.session.due.length,
   });
 
 })
@@ -111,7 +119,7 @@ app.get('/signin/:call',(req,res) => {
     options = {
       signin: 'active',
       call: `${req.params.call}`,
-      cart: req.session.cart.length,
+      due: req.session.due.length,
     };
   } else {
     options = {signin: 'active'};
@@ -128,7 +136,7 @@ app.get('/signup',(req,res) => {
 app.get('/forgotpw',(req,res) => {
   res.render('1-fp.hbs',{
     signin: 'active',
-    cart: req.session.cart.length,
+    due: req.session.due.length,
   });
 });
 
@@ -140,7 +148,7 @@ app.get('/addpeople/:token',authenticate,(req,res) => {
       sampleRows: rows[0],
       token: req.session.token,
       name: req.session.name,
-      cart: req.session.cart.length,
+      due: req.session.due.length,
     });
   }).catch((e) => {
     res.render('1-404');
@@ -157,7 +165,7 @@ app.get('/updateperson/:call',(req,res) => {
   });
 
   res.render('1-updateperson.hbs',{
-    // cart: 'active',
+    // due: 'active',
     // url: result.data.response.url,
     addpeople: 'active',
     token: req.session.token,
@@ -174,21 +182,21 @@ var getip = (req) => {
     });
 };
 
-// app.get('/cart',(req,res)=> {
-//   res.render('1-cart.hbs',{
+// app.get('/due',(req,res)=> {
+//   res.render('1-due.hbs',{
 //
 //   });
 // })
 
-app.get('/cart/:token',authenticate,(req,res) => {
+app.get('/due/:token',authenticate,(req,res) => {
 
-  let objectIdArray = req.session.cart.map(s => mongoose.Types.ObjectId(s));
+  let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
   try {
     People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
-      res.render('1-cart.hbs',{
+      res.render('1-due.hbs',{
         people: msg,
-        cartStatus: 'active',
-        cart: req.session.cart.length,
+        dueStatus: 'active',
+        due: req.session.due.length,
         token: req.session.token,
         name: req.session.name,
         email: req.params.user.email
@@ -270,10 +278,10 @@ app.get("/charge", authenticate, (req, res) => {
   }).then((msg) => {
     // msg.push(req.charge);
     // return res.status(200).send(msg);
-    req.session.cart = [];
+    req.session.due = [];
     res.render('1-charge.hbs',{
-      cartStatus: 'active',
-      cart: req.session.cart.length,
+      dueStatus: 'active',
+      due: req.session.due.length,
       token: req.session.token,
       name: req.session.name,
       receipt: req.charge.receipt_url,
@@ -328,7 +336,7 @@ app.post('/excelData',(req,res) => {
 
 app.get('/home/:token', authenticate, (req,res) => {
 
-  if (!req.session.cart) req.session.cart = [];
+  if (!req.session.due) req.session.due = [];
 
   console.log(req.params.user.name,'entered home');
 
@@ -347,8 +355,8 @@ app.get('/home/:token', authenticate, (req,res) => {
       sampleRows: rows[0],
       token: req.session.token,
       name: req.params.user.name,
-      cart: req.session.cart.length,
-      cartIds: req.session.cart,
+      due: req.session.due.length,
+      dueIds: req.session.due,
     });
   }).catch((e) => {
     console.log(e);
@@ -371,14 +379,14 @@ app.get('/logout/:token', authenticate, (req,res) => {
 
 app.post('/signing',(req,res) => {
 
-  if (req.body.query === 'update-cart') {
+  if (req.body.query === 'update-due') {
     if (req.body.type == 'push') {
-      req.session.cart.push(req.body.cart);
+      req.session.due.push(req.body.due);
     } else {
-      req.session.cart.splice(req.body.cart, 1);
+      req.session.due.splice(req.body.due, 1);
     };
-    console.log(req.session.cart);
-    return res.status(200).send(req.session.cart);
+    console.log(req.session.due);
+    return res.status(200).send(req.session.due);
   };
 
   if (req.body.query === 'Register') {

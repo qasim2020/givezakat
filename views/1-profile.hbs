@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/styles.css">
+    <style media="screen">
+      .profile-pic-area {
+        position: absolute;
+        margin-top: -15rem;
+        color: white;
+        margin-left: 35px;
+      }
+
+      .profile-pic-area > .small-content {
+        align-items: center;
+        margin-left: 10px;
+      }
+
+      .no-data-context > p {
+        line-height: 28px;
+      }
+
+      .no-data-context {
+        grid-column: 1/-1;
+        max-width: 800px;
+        margin: 0 auto 3rem auto;
+      }
+
+      .pro-badge {
+        padding: 3px 10px;
+        background: #fff036;
+        font-size: 12px;
+        border-radius: 2px;
+        color: #173627;
+      }
+    </style>
+
+
+
+    <title>Zakat Lists</title>
+  </head>
+  <body>
+
+    {{>header}}
+
+
+
+    <div class="modal d-none d-flex flex-col align-items-center">
+      <p class="text-white">Report an issue</p>
+      <textarea class="my-2" type="text" name="" value="" placeholder="Submit an issue, I will get back to you soon. Thanks."></textarea>
+      <div class="d-flex flex-row">
+        <button class="btn btn-secondary" type="button" name="button">Submit</button>
+        <button class="close-modal btn btn-primary ml-point5" type="button" name="button">Close</button>
+      </div>
+
+    </div>
+
+<div class="profile-pic-area">
+  <p class="text-brand">Qasim Ali</p>
+  <div class="d-flex justify-content-start small-content">
+    <svg width="15" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20H15V18H10C5.66 18 2 14.34 2 10C2 5.66 5.66 2 10 2C14.34 2 18 5.66 18 10V11.43C18 12.22 17.29 13 16.5 13C15.71 13 15 12.22 15 11.43V10C15 7.24 12.76 5 10 5C7.24 5 5 7.24 5 10C5 12.76 7.24 15 10 15C11.38 15 12.64 14.44 13.54 13.53C14.19 14.42 15.31 15 16.5 15C18.47 15 20 13.4 20 11.43V10C20 4.48 15.52 0 10 0ZM10 13C8.34 13 7 11.66 7 10C7 8.34 8.34 7 10 7C11.66 7 13 8.34 13 10C13 11.66 11.66 13 10 13Z" fill="white"/>
+    </svg>
+
+    <p class="ml-1">qasimali24@gmail.com</p>
+  </div>
+  <div class="d-flex justify-content-start small-content">
+    <svg width="15" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M3.62 7.79C5.06 10.62 7.38 12.93 10.21 14.38L12.41 12.18C12.68 11.91 13.08 11.82 13.43 11.94C14.55 12.31 15.76 12.51 17 12.51C17.55 12.51 18 12.96 18 13.51V17C18 17.55 17.55 18 17 18C7.61 18 0 10.39 0 1C0 0.45 0.45 0 1 0H4.5C5.05 0 5.5 0.45 5.5 1C5.5 2.25 5.7 3.45 6.07 4.57C6.18 4.92 6.1 5.31 5.82 5.59L3.62 7.79Z" fill="white"/>
+</svg>
+
+    <p class="ml-1">+92 323 5168638</p>
+  </div>
+</div>
+
+    <section id="content" class="container pt-md-2 pt-1 px-1 px-md-2">
+      <div class="filter-btns d-flex flex-wrap justify-content-start align-items-center">
+        <div class="d-flex justify-content-start overflow-scroll">
+          <button data-target="sponsored" class="btn btn-primary d-flex align-items-center" type="button" name="button">Sponsored <span class="ml-point5 badge bg-primary text-white">248</span> </button>
+          <button data-target="orders" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Orders<span class="ml-point5 badge bg-primary text-white">148</span> </button>
+          <button data-target="suggestions" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button">Suggestions<span class="ml-point5 badge bg-delivered text-white">28</span> </button>
+        </div>
+
+        <div class="d-flex justify-content-start border my-point5 search-bar flex-grow-1">
+          <input class="form-control flex-grow-1" type="text" name="" value="" placeholder="Search">
+          <img class="px-point5" src="/search-icon.svg" width="25px" alt="">
+        </div>
+
+      </div>
+
+      <div class="all-content sponsored content-grid pt-md-2 pt-1">
+
+        {{#unless data}}
+        <div class="no-data-context">
+          <p>You have not sponsored any one yet. If you want to sponsor people to let others give them zakat, please update your profile to <span class="pro-badge">pro</span> after getting nec verification from us. You will need a government document proving your ID with a valid bank account to recieve zakats for delivering to sponsored people. Click below to proceed.</p>
+          <button class="btn btn-primary mt-1" type="button" name="button">Update to Pro for Free</button>
+        </div>
+        {{/unless}}
+
+        {{#each data}}
+
+          <div class="card card-{{this.cardClass}}" my-list='{{this.mylist}}' id='{{this._id}}'>
+
+            <div class="place-1 d-flex justify-content-start align-items-center">
+
+              <span class="report-badge text-white mr-point5">{{this.cardClass}}</span>
+              <!-- hide report badge DONE-->
+              <span class="check-box card-select" my-id="{{this._id}}">
+                <svg class="check-box" width="13" height="13" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path class="check-box" d="M5.12512 8.04543L1.82387 5.5L0.699707 6.61625L5.12512 11.0417L14.6251 1.54166L13.5089 0.425415L5.12512 8.04543Z" fill="#C0C1C5"></path>
+                </svg>
+              </span>
+              <!-- make fill blue and tick white DONE CHECK ONCE COMPLETED-->
+
+            </div>
+
+            <div class="place-2 text-right">
+              <svg class="check-box" width="22" height="6" viewBox="0 0 22 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="3" cy="3" r="3" fill="#05386B"/>
+                <circle cx="11" cy="3" r="3" fill="#05386B"/>
+                <circle cx="19" cy="3" r="3" fill="#05386B"/>
+              </svg>
+            </div>
+            <!-- circles updated DONE-->
+            <div class="place-3">
+              <div class="d-flex justify-content-start mt-1">
+                <svg width="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6.66659 13.3333V9.33333H9.33325V13.3333H12.6666V8H14.6666L7.99992 2L1.33325 8H3.33325V13.3333H6.66659Z" fill="#05386B"/>
+                </svg>
+                <svg width="16" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <g clip-path="url(#clip0)">
+                  <path d="M7.04004 8.23827C7.3335 10.3347 8.29453 12.2943 9.76369 13.8226L11.628 12.9133C11.8567 12.8017 12.1284 12.8318 12.323 12.9834C12.9487 13.4597 13.668 13.8484 14.4496 14.1176C14.7963 14.2369 14.9823 14.6183 14.8629 14.965L14.1054 17.1649C13.9861 17.5116 13.6047 17.6975 13.258 17.5782C7.33909 15.5401 4.19387 9.09147 6.23193 3.17252C6.3513 2.82583 6.73263 2.63985 7.07932 2.75922L9.28553 3.51888C9.63222 3.63825 9.81821 4.01958 9.69883 4.36627C9.42752 5.1542 9.29314 5.95403 9.28328 6.74032C9.27665 6.98482 9.14157 7.21329 8.9043 7.32901L7.04004 8.23827Z" fill="#05386B"/>
+                  </g>
+                  <defs>
+                  <clipPath id="clip0">
+                  <rect width="16" height="16" fill="white" transform="translate(5.20898) rotate(19)"/>
+                  </clipPath>
+                  </defs>
+                </svg>
+
+              </div>
+              <!-- change icon background to white DONE -->
+              <p class="font-card">
+                Earning <br class="d-md-none">
+                <span class="report-badge text-white bg-pending">100 USD per Month</span><br>
+                to support <br class="d-md-none">
+                <span class="report-badge text-white bg-pending">9 Family Members.</span>
+              </p>
+              <!-- change texg to white and bg-pending to bg-white with text-green here DONE-->
+            </div>
+            <div class="place-4 d-flex justify-content-start">
+              <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12.0001 5.33335H11.3334V4.00002C11.3334 2.16002 9.84008 0.666687 8.00008 0.666687C6.16008 0.666687 4.66675 2.16002 4.66675 4.00002V5.33335H4.00008C3.26675 5.33335 2.66675 5.93335 2.66675 6.66669V13.3334C2.66675 14.0667 3.26675 14.6667 4.00008 14.6667H12.0001C12.7334 14.6667 13.3334 14.0667 13.3334 13.3334V6.66669C13.3334 5.93335 12.7334 5.33335 12.0001 5.33335ZM8.00008 11.3334C7.26675 11.3334 6.66675 10.7334 6.66675 10C6.66675 9.26669 7.26675 8.66669 8.00008 8.66669C8.73341 8.66669 9.33341 9.26669 9.33341 10C9.33341 10.7334 8.73341 11.3334 8.00008 11.3334ZM10.0667 5.33335H5.93341V4.00002C5.93341 2.86002 6.86008 1.93335 8.00008 1.93335C9.14008 1.93335 10.0667 2.86002 10.0667 4.00002V5.33335Z" fill="#05386B"/>
+              </svg>
+              <span class="font-name">Name</span>
+            </div>
+            <!-- change locked icon to white and font-name to white DONE -->
+            <div class="place-5 text-right">
+              <span class="badge badge-secondary font-weight-bold">Q</span>
+            </div>
+            <!-- change Q to white DONE-->
+            <div class="card-hover bg-pending text-light card-inactive">
+              <svg width="16" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 7H13V5C13 2.24 10.76 0 8 0C5.24 0 3 2.24 3 5V7H2C0.9 7 0 7.9 0 9V19C0 20.1 0.9 21 2 21H14C15.1 21 16 20.1 16 19V9C16 7.9 15.1 7 14 7ZM8 16C6.9 16 6 15.1 6 14C6 12.9 6.9 12 8 12C9.1 12 10 12.9 10 14C10 15.1 9.1 16 8 16ZM11.1 7H4.9V5C4.9 3.29 6.29 1.9 8 1.9C9.71 1.9 11.1 3.29 11.1 5V7Z" fill="#C0C1C5"/>
+              </svg>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7.41 8.58997L12 13.17L16.59 8.58997L18 9.99997L12 16L6 9.99997L7.41 8.58997Z" fill="#C0C1C5"/>
+              </svg>
+
+              <p class="text-white">Contact details and Name will be visible after paying zakat.</p>
+            </div>
+
+            <div class="card-browser alpha60 d-none">
+              <div class="d-flex align-items-end flex-col">
+                <a  href="/updateperson" class="text-blue" type="button" name="button">Edit</a>
+                <a class="text-blue" type="button" name="button" onclick="deleteMe(this,'{{this._id}}')" >Delete</a>
+                <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
+                <a class="text-blue report-an-issue" type="button" name="button">Report an issue</a>
+              </div>
+            </div>
+
+          </div>
+
+          <script type="text/javascript">
+            $('.place-1:eq(-1)').children('span:eq(0)').addClass('bg-'+`{{this.cardClass}}`.replace(/ /g,'').toLowerCase());
+          </script>
+
+        {{/each}}
+
+      </div>
+
+
+      <div class="all-content orders d-none pt-md-2 pt-1">
+        {{#unless payed}}
+        <div class="no-data-context">
+          <p>You have not given zakat to any body yet. If you want to calculate your yearly zakat you can check below. Or you can visit home page to find people (below nisab) to give zakat.</p>
+          <a href="/zakatcalc" class="btn btn-primary mt-1 " type="button" name="button" style="display: inline-block; font-family: system-ui">Calculate zakat</a>
+          <a href="/home/{{token}}" class="btn btn-primary mt-1 " type="button" name="button" style="display: inline-block; font-family: system-ui">Find people to give zakat</a>
+        </div>
+        {{/unless}}
+        {{#if payed}}
+        <table width="100%">
+          <tr>
+            <th>Status</th>
+            <th>Name</th>
+            <th>Zakat</th>
+            <th>Location</th>
+            <th>Mob No</th>
+            <th>Sponsor's Name</th>
+            <th>Sponsor's Location</th>
+            <th>Sponsor's Mob No</th>
+          </tr>
+          {{#each payed}}
+          <tr>
+            <td>{{this.status}}</td>
+            <td>{{this.name}}</td>
+            <td>{{this.amount}}</td>
+            <td>{{this.address}}</td>
+            <td>{{this.mob}}</td>
+            <td>{{this.sponsorName}}</td>
+            <td>{{this.sponsorAddress}}</td>
+            <td>{{this.sponsorMob}}</td>
+          </tr>
+          {{/each}}
+        </table>
+        {{/if}}
+      </div>
+
+      <div class="all-content suggestions d-none pt-md-2 pt-1">
+        {{#unless suggestions}}
+        <div class="no-data-context">
+          <p>No suggestions found.</p>
+        </div>
+        {{/unless}}
+      </div>
+
+    </section>
+
+    <script type="text/javascript" src="/javascript.js"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+    <script src="/reload/reload.js"></script>
+
+    <script type="text/javascript">
+
+      $('.filter-btns .btn:eq(0)').addClass('active');
+
+      {{#each dueIds}}
+        changeCardState($(`#{{this}}`));
+      {{/each}}
+
+      if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
+
+      function deleteMe(elem,id) {
+
+        console.log($(elem));
+
+        let data = {
+          query : "deleteMe",
+          id : id,
+          token: `{{token}}`,
+        }
+
+        data = JSON.stringify(data);
+
+        console.log(data);
+
+        $.ajax({
+            url: '/signing',
+            type: 'post',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+            $(elem).closest('.card').remove();
+            $('.notification-box').addClass('opacity-1').find('p').html('Deleted 1 person!');
+            setTimeout(function() {
+              $('.notification-box').css({opacity: 0}).removeClass('opacity-1');
+            }, 3000);
+          }).fail((e) => {
+            console.log(e.responseText);
+            $('.notification-box').addClass('opacity-1').find('p').html(e.responseText);
+            setTimeout(function() {
+              $('.notification-box').css({opacity: 0}).removeClass('opacity-1');
+            }, 3000);
+          });
+      }
+
+      $('.filter-btns .btn').on('click',function() {
+        let filter = $(this).attr('data-target');
+        $('.filter-btns .btn').not(this).removeClass('active');
+        $(this).addClass('active');
+        $('.all-content').addClass('d-none');
+        $(`.${filter}`).removeClass('d-none');
+      });
+
+      function updatedue(id,type) {
+
+        console.log($('.card-selected').length);
+
+        if ($('.card-select').length < 1) return $('.due-circle').hide();
+
+
+        let data = {
+          query: 'update-due',
+          type: type,
+          due: id,
+        };
+
+        console.log(data);
+        data = JSON.stringify(data);
+
+        $.ajax({
+            url: '/signing',
+            type: 'post',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log('item added successful');
+            $('.due-circle').show().html(res.length);
+          }).fail((e) => {
+            console.log(e.responseText);
+          });
+
+      }
+
+      $(document).on('click','.select-to-pay',function() {
+        $(this).closest('.card').find('.card-select').trigger('click');
+      })
+
+      $(document).on('click','.report-an-issue',function() {
+        $('.modal').removeClass('d-none');
+      })
+
+      $(document).on('click','.close-modal',function() {
+        $('.modal').addClass('d-none');
+      })
+
+      $('#load-more').on('click',function() {
+        console.log('hello');
+        let skip = $('.card').length;
+
+        let data = {
+          skip: skip,
+        }
+
+        console.log(data);
+
+        $.ajax({
+            url: '/loadmore',
+            type: 'get',
+            data,
+            headers: {
+                'content-type': 'application/json',
+            }
+          }).done((res) => {
+            console.log(res);
+            createcards(res);
+            if (res.length < 12) $(this).attr('disabled',true).html('No more data found').css({border: 'none'});
+          }).fail((e) => {
+            console.log(e.responseText);
+          });
+
+      });
+
+      function createcards(data) {
+        $.each(data,(key,val) => {
+          $('.card:eq(0)').clone().appendTo('.content-grid').removeClass('card-done card-pending card-issue card-inprogress').addClass(`card-${val.cardClass}`).attr({id: val._id}).find('span:eq(0)').removeClass('bg-done bg-pending bg-issue bg-inprogress').addClass(`bg-${val.cardClass}`);
+
+          {{#each dueIds}}
+          if (val._id == `{{this}}`) {
+            console.log(val._id, `{{this}}`);
+            return changeCardState($(`#{{this}}`));
+          };
+          {{/each}}
+
+        })
+      };
+
+
+    </script>
+
+  </body>
+</html>

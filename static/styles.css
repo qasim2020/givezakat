@@ -1,3 +1,18 @@
+      table {
+        width: 96%;
+        line-height: 28px;
+        text-align: center;
+        border-collapse: collapse;
+        display: block;
+        overflow: scroll;
+        margin: auto;
+      }
+
+      th,td {
+        padding: 1rem;
+        border: 1px dotted green;
+      }
+
       .notification-box {
         padding: 1rem;
         display: flex;
@@ -1054,7 +1069,7 @@
         color: white;
       }
 
-      .cart-circle {
+      .due-circle {
         background: #fff036;
         border-radius: 50%;
         padding: 0.2rem 0.4rem;
@@ -1065,7 +1080,7 @@
         color: #183627;
       }
 
-      .cart-circle {
+      .due-circle {
         background: #fff036;
         border-radius: 50%;
         padding: 0.2rem 0.4rem;

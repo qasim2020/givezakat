@@ -59,8 +59,8 @@
         <div class="item-3 text-white">
           <div class="d-md-flex d-none flex-col justify-content-start">
             {{#if token}}
-            <a class="nav-item my-1 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
-            <a class="nav-item my-1 text-light" href="#explore">Explore</a>
+            <a class="nav-item my-1 text-light" href="/profile/{{token}}">{{name}}</a>
+            <a class="nav-item my-1 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out</a>
             <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
             <a class="nav-item my-1 text-light" href="/addpeople/{{token}}">Add people</a>
             {{else}}
@@ -80,17 +80,17 @@
       <div class="nav-menu d-flex flex-col align-items-center justify-content-center theme-gradient">
         <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
         {{#if token}}
-        <a class="nav-item my-point5 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
-        <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
+        <a class="nav-item my-point5 text-light" href="/profile/{{token}}">{{name}}</a>
+        <a class="nav-item my-point5 text-light" href="/logout/{{token}}" onclick="signOut()">Sign out</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
         <a class="nav-item my-point5 text-light" href="/addpeople/{{token}}">Add people</a>
-        <a href="/cart/{{token}}" class="nav-item my-point5 text-light">Cart</a>
+        <a href="/due/{{token}}" class="nav-item my-point5 text-light">Due</a>
         {{else}}
         <a class="nav-item my-point5 text-light" href="/signin/home">Sign in</a>
         <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
         <a class="nav-item my-point5 text-light" href="/signin/addpeople">Add people</a>
-        <a href="/cart/{{token}}" class="nav-item my-point5 text-light">Cart</a>
+        <a href="/due/{{token}}" class="nav-item my-point5 text-light">Due</a>
         {{/if}}
       </div>
     </section>
@@ -103,19 +103,21 @@
         </div>
         <div class="d-md-flex justify-content-around mr-2 d-none">
           {{#if token}}
-          <a class="text-light px-point5 align-self-center" href="/logout/{{token}}" onclick="signOut()">Sign out - {{name}}</a>
-          <a class="text-light px-point5 align-self-center" href="#explore">Explore</a>
+          <a class="text-light px-point5 align-self-center" href="/profile/{{token}}">{{name}}</a>
+          <a class="text-light px-point5 align-self-center" href="/logout/{{token}}" onclick="signOut()">Sign out</a>
           <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
           <a class="text-light px-point5 align-self-center" href="/addpeople/{{token}}">Add people</a>
-          <a href="/cart/{{token}}" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
+          <a href="/due/{{token}}" class="text-light px-point5 align-self-center {{due}}">Due</a>
           {{else}}
           <a class="text-light px-point5 align-self-center" href="/signin/home">Sign in</a>
           <a class="text-light px-point5 align-self-center" href="#explore">Explore</a>
           <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
           <a class="text-light px-point5 align-self-center" href="/signin/addpeople">Add people</a>
-          <a href="/signin/cart" class="text-light px-point5 align-self-center {{cart}}">Cart</a>
+          <a href="/signin/due" class="text-light px-point5 align-self-center {{due}}">Due</a>
           {{/if}}
-          <span class="cart-circle">{{cart}}</span>
+          {{#unless due}}
+          <span class="due-circle">{{due}}</span>
+          {{/unless}}
         </div>
         </div>
         <div class="d-md-none mr-2 d-flex align-items-center justify-content-center">
@@ -330,7 +332,7 @@
 
       $('.filter-btns .btn:eq(0)').addClass('active');
 
-      {{#each cartIds}}
+      {{#each dueIds}}
         console.log('{{this}}');
         changeCardState($(`#{{this}}`));
       {{/each}}
@@ -396,17 +398,17 @@
         if (order.length == 1) $(`.card`).show();
       }
 
-      function updatecart(id,type) {
+      function updatedue(id,type) {
 
         console.log($('.card-selected').length);
 
-        if ($('.card-select').length < 1) return $('.cart-circle').hide();
+        if ($('.card-select').length < 1) return $('.due-circle').hide();
 
 
         let data = {
-          query: 'update-cart',
+          query: 'update-due',
           type: type,
-          cart: id,
+          due: id,
         };
 
         console.log(data);
@@ -421,7 +423,7 @@
             }
           }).done((res) => {
             console.log('item added successful');
-            $('.cart-circle').show().html(res.length);
+            $('.due-circle').show().html(res.length);
           }).fail((e) => {
             console.log(e.responseText);
           });
@@ -471,7 +473,7 @@
         $.each(data,(key,val) => {
           $('.card:eq(0)').clone().appendTo('.content-grid').removeClass('card-done card-pending card-issue card-inprogress').addClass(`card-${val.cardClass}`).attr({id: val._id}).find('span:eq(0)').removeClass('bg-done bg-pending bg-issue bg-inprogress').addClass(`bg-${val.cardClass}`);
 
-          {{#each cartIds}}
+          {{#each dueIds}}
           if (val._id == `{{this}}`) {
             console.log(val._id, `{{this}}`);
             return changeCardState($(`#{{this}}`));

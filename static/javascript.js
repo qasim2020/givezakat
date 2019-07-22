@@ -7,9 +7,9 @@ $(document).on('click','.card-select',function(e){
   changeCardState(this);
 
   if ($(this).closest('.card').hasClass('card-selected')) {
-    updatecart($(this).closest('.card').attr('id'), 'push');
+    updatedue($(this).closest('.card').attr('id'), 'push');
   } else {
-    updatecart($(this).closest('.card').attr('id'), 'pop');
+    updatedue($(this).closest('.card').attr('id'), 'pop');
   }
 
 })
