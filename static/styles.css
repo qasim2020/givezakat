@@ -6,6 +6,7 @@
         display: block;
         overflow: scroll;
         margin: auto;
+        white-space: nowrap;
       }
 
       th,td {

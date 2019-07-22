@@ -62,10 +62,42 @@ app.get('/hacks',(req,res) => {
 });
 
 app.get('/profile/:token',authenticate,(req,res) => {
-  res.render('1-profile.hbs',{
-    token: req.params.token,
-    name: req.params.user.name,
-    profile: 'active'
+  // get all data updated by me
+  People.find({addedBy: req.params.user._id}).then((sponsored) => {
+    // get all orders placed by me
+    req.sponsored = sponsored;
+    return Orders.find({paidby: req.params.user._id});
+  }).then((orders) => {
+    req.orders = orders;
+    let ids = [];
+    _.each(orders,(val,key) => {
+      ids.push(val.paidto);
+    });
+    return People.find({_id:{ $in: ids}});
+  }).then((payed) => {
+    // get all suggestions raised by me - FEATURE PENDING
+    let stuff = {};
+    _.each(payed,(val,key) => {
+      stuff = req.orders.filter(obj => {
+        return val._id == obj.paidto;
+      })[0];
+      val.amount = stuff.amount + ' ' + stuff.currency.toUpperCase();
+      val.status = stuff.status;
+    });
+
+    res.status(200).render('1-profile.hbs',{
+      token: req.params.token,
+      name: req.params.user.name,
+      email: req.params.user.email,
+      phone: req.params.user.phone,
+      profile: 'active',
+      data: req.sponsored,
+      dueIds: req.session.due,
+      payed: payed,
+    });
+  }).catch((e) => {
+    console.log(e);
+    res.status(400).send(e);
   });
 });
 
