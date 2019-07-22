@@ -51,7 +51,7 @@
       {{#if dueZakat}}
       <div class="zakat-due-box">
         <div class="d-flex align-items-center justify-content-between">
-          <p>Due Zakat: {{this}}.00 USD</p>
+          <p>Due Zakat: {{this}}.00 </p>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect y="17.1097" width="24.1967" height="3" transform="rotate(-45 0 17.1097)" fill="whitesmoke"/>
           <rect x="2.12109" width="24.1967" height="3" transform="rotate(45 2.12109 0)" fill="whitesmoke"/>
@@ -108,9 +108,9 @@
         </div>
 
         <div class="person">
-          <p>Earning PKR {{salary}} per month to support {{fMembers}} family members</p>
+          <p>Earning {{currency}} {{salary}} per month to support {{fMembers}} family members</p>
         </div>
-        <input class="input-person" class="form-control text-center" type="number" name="{{_id}}" value="" placeholder="50 USD" required>
+        <input class="input-person" class="form-control text-center" type="number" name="{{_id}}" value="" placeholder="50 {{localCurrency}}" required>
 
         {{/each}}
 
@@ -119,13 +119,13 @@
         </div>
 
         <div class="person-amount">
-          <p id="processing-fee">5.00 USD</p>
+          <p id="processing-fee">0.00 {{localCurrency}}</p>
         </div>
         <div class="label total">
           <p>Total</p>
         </div>
         <div class="person-amount">
-          <p id="total-amount">105 USD</p>
+          <p id="total-amount">0 {{localCurrency}}</p>
         </div>
 
         <div class="person-amount">

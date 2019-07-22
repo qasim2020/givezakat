@@ -71,7 +71,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
     req.orders = orders;
     let ids = [];
     _.each(orders,(val,key) => {
-      ids.push(val.paidto);
+      ids.push(mongoose.Types.ObjectId(val.paidto));
     });
     return People.find({_id:{ $in: ids}});
   }).then((payed) => {
@@ -82,7 +82,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
         return val._id == obj.paidto;
       })[0];
       val.amount = stuff.amount + ' ' + stuff.currency.toUpperCase();
-      val.status = stuff.status;
+      val.status = stuff.status.toUpperCase();
     });
 
     res.status(200).render('1-profile.hbs',{
@@ -224,14 +224,21 @@ app.get('/due/:token',authenticate,(req,res) => {
 
   let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
   try {
-    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
+    getip(req).then((res) => {
+      return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
+    }).then((result) => {
+      req.currency = `${result.data.geoplugin_currencyCode.toUpperCase()}`;
+      return People.find({'_id' : {$in : objectIdArray}});
+    }).then((msg) => {
+      console.log(msg[0].currency);
       res.render('1-due.hbs',{
         people: msg,
         dueStatus: 'active',
         due: req.session.due.length,
         token: req.session.token,
         name: req.session.name,
-        email: req.params.user.email
+        email: req.params.user.email,
+        localCurrency: req.currency
       });
     });
   }
