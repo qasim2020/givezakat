@@ -381,7 +381,7 @@ app.get('/home/:token', authenticate, (req,res) => {
 
   // LIST ALL PEOPLE
   People.find().limit(12).then((msg) => {
-    res.data = msg;
+    req.data = msg;
     // FIND PEOPLE PAID ZAKAT BY ME
     return Orders.find({paidby: req.params.user._id});
   }).then((msg) => {
@@ -400,16 +400,17 @@ app.get('/home/:token', authenticate, (req,res) => {
     _.each(req.data,(val,key) => {
       val.paidbyme = req.paidpeople.filter(paidpeople => {
         return paidpeople._id == val._id;
-      }).name.length;
-      if (val._id == req.params.user._id) {
+      }).name;
+      if (val.addedBy == req.params.user._id) {
         val.addedbyme = true;
       } else {
         val.addedbyme = false;
       };
+      if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
     });
-    console.log(req.data);
+    // console.log(req.data);
     res.render('1-home.hbs',{
-      data: res.data,
+      data: req.data,
       sampleRows: rows[0],
       token: req.session.token,
       name: req.params.user.name,
