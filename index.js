@@ -379,16 +379,35 @@ app.get('/home/:token', authenticate, (req,res) => {
 
   console.log(req.params.user.name,'entered home');
 
+  // LIST ALL PEOPLE
   People.find().limit(12).then((msg) => {
     res.data = msg;
-    _.each(res.data,(val,key) => {
-      if (val.addedBy == req.params.user.id) {
-        return res.data[key]['mylist'] = true;
-      }
-      res.data[key]['mylist'] = false;
+    // FIND PEOPLE PAID ZAKAT BY ME
+    return Orders.find({paidby: req.params.user._id});
+  }).then((msg) => {
+    let ids = [];
+    _.each(msg,(val,key) => {
+      ids.push(val.paidto);
     });
+    return People.find({_id: {$in : ids}});
+  }).then((msg) => {
+    // EXCEL SHEET PATTERN
+    req.paidpeople = msg;
     return readXlsxFile(__dirname+'/static/sample.xlsx')
   }).then((rows) => {
+    // Add PAIDBYME and ADDEDBYME on People's list retrieved
+    let values = {};
+    _.each(req.data,(val,key) => {
+      val.paidbyme = req.paidpeople.filter(paidpeople => {
+        return paidpeople._id == val._id;
+      }).name.length;
+      if (val._id == req.params.user._id) {
+        val.addedbyme = true;
+      } else {
+        val.addedbyme = false;
+      };
+    });
+    console.log(req.data);
     res.render('1-home.hbs',{
       data: res.data,
       sampleRows: rows[0],
