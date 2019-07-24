@@ -3,6 +3,7 @@ require('./config/config');
 const http = require('http');
 const reload = require('reload');
 const express = require('express');
+const pjax    = require('express-pjax');
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
 const _ = require('lodash');
@@ -26,6 +27,7 @@ const {Subscription} = require('./models/subscription');
 
 var app = express();
 var port = process.env.PORT || 3000;
+app.use(pjax());
 app.use(express.static(__dirname+'/static'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
@@ -434,6 +436,10 @@ app.get('/logout/:token', authenticate, (req,res) => {
     console.log(e);
     res.status(404).send(e);
   });
+});
+
+app.get('/explore',(req,res) => {
+  res.renderPjax('testing.hbs', { name: 'Hashim' });
 })
 
 app.post('/signing',(req,res) => {

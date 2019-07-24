@@ -46,6 +46,7 @@
       </div>
 
     </div>
+
     <section id="hero">
       <div class="grid theme-gradient">
         <div class="item-1">
@@ -337,13 +338,17 @@
 
     </section>
 
+    <a href='/explore' data-pjax='.corner-box'>Explore</a>
+
     <script type="text/javascript" src="/javascript.js"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
     <script src="/reload/reload.js"></script>
+    <script type="text/javascript" src="/jquery.pjax.js"></script>
 
     <script type="text/javascript">
 
       $('.filter-btns .btn:eq(0)').addClass('active');
+      $('a[data-pjax]').pjax();
 
       {{#each dueIds}}
         console.log('{{this}}');
