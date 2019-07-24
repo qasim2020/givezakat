@@ -132,12 +132,11 @@
       <p id="explore" class="text-brand text-green">Filter Lists</p>
       <div class="filter-btns d-flex flex-wrap justify-content-start align-items-center">
         <div class="d-flex justify-content-start overflow-scroll">
-          <button data-target="all" class="btn btn-primary d-flex align-items-center" type="button" name="button" onclick="$('#showAll').click();" data-pjax='.content-grid'>Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
-          <button data-target="my" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
-          <button data-target="done" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
-          <button data-target="pending" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
-          <button data-target="inprogress" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">In progress <span class="ml-point5 badge bg-inprogress text-white">81</span> </button>
-          <button data-target="issue" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button">Issues <span class="ml-point5 badge bg-issue text-white">8</span> </button>
+          <button data-target="showAll" class="btn btn-primary d-flex align-items-center" type="button" name="button" onclick="showMyData(this)">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
+          <button data-target="showMy" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button" onclick="showMyData(this)">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
+          <button data-target="showAllDone" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button" onclick="showMyData(this)">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
+          <button data-target="showAllPending" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button" onclick="showMyData(this)">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
+          <button data-target="showAllInprogress" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button" onclick="showMyData(this)">In progress <span class="ml-point5 badge bg-inprogress text-white">81</span> </button>
         </div>
 
         <div class="d-flex justify-content-start border my-point5 search-bar flex-grow-1">
@@ -233,7 +232,7 @@
 
     </section>
 
-    <a class="d-none" id="showAll" href='/peopleBussinessCards?token={{token}}&type=showAll' data-pjax='.content-grid'></a>
+    <a data-pjax=".content-grid" class="" id="showCards" href=''></a>
 
     <script type="text/javascript" src="/javascript.js"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
@@ -243,9 +242,15 @@
     <script type="text/javascript">
 
       $('.filter-btns .btn:eq(0)').addClass('active');
-      
+
       $('a[data-pjax]').pjax();
       $.pjax.defaults.scrollTo = false;
+
+      function showMyData(elem) {
+        let request = $(elem).attr('data-target');
+        let skip = $('.cards').not('.d-none').length + 12;
+        $('#showCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${request}&skip=${skip}`}).trigger('click');
+      }
 
       {{#each dueIds}}
         console.log('{{this}}');

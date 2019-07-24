@@ -112,8 +112,7 @@ app.get('/',(req,res) => {
     res.render('1-home.hbs', {
       sampleRows: rows[0],
       due: req.session.due.length,
-      dueIds: req.session.due,
-      skip: 0,
+      dueIds: req.session.due
     });
   }).catch((e) => {
     console.log(e);
@@ -434,11 +433,19 @@ app.get('/logout/:token', authenticate, (req,res) => {
 });
 
 app.get('/peopleBussinessCards',(req,res) => {
+
   console.log(req.query);
+
   if (req.query.type == 'showAll') {
 
-    People.find().limit(req.query.skip).then((msg) => {
+    req.query.expression = 'inprogress|delieved|pending';
+
+    let regex = new RegExp(req.query.expression, 'gi');
+
+    People.find({cardClass: regex}).limit(parseInt(req.query.skip)).then((msg) => {
+      if (!msg) return res.renderPjax('2-error.hbs');
       req.data = msg;
+      if (req.query.token.length < 10) return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
       return Users.findByToken(req.query.token);
     }).then((user) => {
       // IF USER IS LOGGED IN > UNLOCK HIS LIST (ADDED BY HIM + PAID BY HIM)
@@ -470,14 +477,24 @@ app.get('/peopleBussinessCards',(req,res) => {
         };
 
         if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
-
+        console.log('successfully retrieved data ');
         return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
 
       });
     }).catch((e) => {
-      return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
+      console.log(e)
+      return res.renderPjax('2-error.hbs');
     });
+
   };
+
+  return;
+
+  if (req.query.loggedIn) {
+
+  };
+
+
 });
 
 app.post('/signing',(req,res) => {
