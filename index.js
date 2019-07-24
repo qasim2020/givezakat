@@ -107,16 +107,13 @@ app.get('/',(req,res) => {
 
   if (!req.session.due) req.session.due = [];
 
-  People.find().limit(12).then((msg) => {
-    res.data = msg;
-    return readXlsxFile(__dirname+'/static/sample.xlsx')
-  }).then((rows) => {
+  readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
     req.session.sampleRows = rows[0];
     res.render('1-home.hbs', {
-      data: res.data,
       sampleRows: rows[0],
       due: req.session.due.length,
       dueIds: req.session.due,
+      skip: 0,
     });
   }).catch((e) => {
     console.log(e);
@@ -131,7 +128,7 @@ app.get('/loadmore',(req,res) => {
   }).catch((e) => {
     console.log(e);
     res.status(400).send(e);
-  })
+  });
 });
 
 
@@ -412,8 +409,6 @@ app.get('/home/:token', authenticate, (req,res) => {
     });
     // console.log(req.data);
     res.render('1-home.hbs',{
-      data: req.data,
-      sampleRows: rows[0],
       token: req.session.token,
       name: req.params.user.name,
       due: req.session.due.length,
@@ -438,9 +433,52 @@ app.get('/logout/:token', authenticate, (req,res) => {
   });
 });
 
-app.get('/explore',(req,res) => {
-  res.renderPjax('testing.hbs', { name: 'Hashim' });
-})
+app.get('/peopleBussinessCards',(req,res) => {
+  console.log(req.query);
+  if (req.query.type == 'showAll') {
+
+    People.find().limit(req.query.skip).then((msg) => {
+      req.data = msg;
+      return Users.findByToken(req.query.token);
+    }).then((user) => {
+      // IF USER IS LOGGED IN > UNLOCK HIS LIST (ADDED BY HIM + PAID BY HIM)
+      req.loggedIn = user;
+      return Orders.find({paidby: req.loggedIn._id});
+    }).then((msg) => {
+      let ids = [];
+      _.each(msg,(val,key) => {
+        ids.push(val.paidto);
+      });
+      return People.find({_id: {$in : ids}});
+    }).then((msg) => {
+      // EXCEL SHEET PATTERN
+      req.paidpeople = msg;
+      return readXlsxFile(__dirname+'/static/sample.xlsx')
+    }).then((rows) => {
+      // Add PAIDBYME and ADDEDBYME on People's list retrieved
+      let values = {};
+      _.each(req.data,(val,key) => {
+
+        val.paidbyme = req.paidpeople.filter(paidpeople => {
+          return paidpeople._id == val._id;
+        }).name;
+
+        if (val.addedBy == req.params.user._id) {
+          val.addedbyme = true;
+        } else {
+          val.addedbyme = false;
+        };
+
+        if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
+
+        return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
+
+      });
+    }).catch((e) => {
+      return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
+    });
+  };
+});
 
 app.post('/signing',(req,res) => {
 
@@ -608,14 +646,13 @@ app.post('/signing',(req,res) => {
 
 serverRunning();
 app.set('port', process.env.PORT || 3000);
-var server = http.createServer(app)
+var server = http.createServer(app);
+
 // Reload code here
 reload(app).then(function (reloadReturned) {
-  // reloadReturned is documented in the returns API in the README
-  // Reload started, start web server
   server.listen(app.get('port'), function () {
     console.log('Web server listening on port ' + app.get('port'))
   })
 }).catch(function (err) {
-  console.error('Reload could not start, could not start server/sample app', err)
+  console.error('Reload could not start, could not start server/sample app', err);
 });
