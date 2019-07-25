@@ -1,3 +1,8 @@
+{{#unless data}}
+  <p>No data found !</p>
+{{/unless}}
+
+
 {{#each data}}
 
 <div class="card card-{{this.cardClass}}" my-list='{{this.mylist}}' id='{{this._id}}'>

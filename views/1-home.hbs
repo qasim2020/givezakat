@@ -132,11 +132,11 @@
       <p id="explore" class="text-brand text-green">Filter Lists</p>
       <div class="filter-btns d-flex flex-wrap justify-content-start align-items-center">
         <div class="d-flex justify-content-start overflow-scroll">
-          <button data-target="showAll" class="btn btn-primary d-flex align-items-center" type="button" name="button" onclick="showMyData(this)">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
-          <button data-target="showMy" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button" onclick="showMyData(this)">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
-          <button data-target="showAllDone" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button" onclick="showMyData(this)">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
-          <button data-target="showAllPending" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button" onclick="showMyData(this)">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
-          <button data-target="showAllInprogress" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button" onclick="showMyData(this)">In progress <span class="ml-point5 badge bg-inprogress text-white">81</span> </button>
+          <button data-target="all" class="btn btn-primary d-flex align-items-center" type="button" name="button">Show All <span class="ml-point5 badge bg-primary text-white">248</span> </button>
+          <button data-target="my" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span class="ml-point5 badge bg-primary text-white">148</span> </button>
+          <button data-target="delivered" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span class="ml-point5 badge bg-delivered text-white">28</span> </button>
+          <button data-target="pending" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span class="ml-point5 badge bg-pending text-white">18</span> </button>
+          <button data-target="inprogress" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button">In progress <span class="ml-point5 badge bg-inprogress text-white">81</span> </button>
         </div>
 
         <div class="d-flex justify-content-start border my-point5 search-bar flex-grow-1">
@@ -146,7 +146,8 @@
 
       </div>
 
-      <div class="content-grid pt-md-2 pt-1"></div>
+      <div id="all-data-here" class="content-grid pt-md-2 pt-1"></div>
+      <div id="my-data-here" class="pt-md-2 pt-1"></div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
 
@@ -232,7 +233,8 @@
 
     </section>
 
-    <a data-pjax=".content-grid" class="" id="showCards" href=''></a>
+    <a data-pjax="#all-data-here" class="" id="showAllCards" href=''></a>
+    <a data-pjax="#my-data-here" class="" id="showMyCards" href=''></a>
 
     <script type="text/javascript" src="/javascript.js"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
@@ -241,15 +243,17 @@
 
     <script type="text/javascript">
 
-      $('.filter-btns .btn:eq(0)').addClass('active');
+      $(document).ready(function(){
+        $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+      })
 
       $('a[data-pjax]').pjax();
       $.pjax.defaults.scrollTo = false;
 
       function showMyData(elem) {
-        let request = $(elem).attr('data-target');
-        let skip = $('.cards').not('.d-none').length + 12;
-        $('#showCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${request}&skip=${skip}`}).trigger('click');
+        // let request = $(elem).attr('data-target');
+        // let skip = $('.cards').not('.d-none').length + 12;
+        // $('#showCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${request}&skip=${skip}&expression=`}).trigger('click');
       }
 
       {{#each dueIds}}
@@ -257,7 +261,7 @@
         changeCardState($(`#{{this}}`));
       {{/each}}
 
-      if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
+      // if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
 
       function deleteMe(elem,id) {
 
@@ -309,13 +313,30 @@
       })
 
       function filterfn(order) {
+        // return console.log(order);
         order = order.trim().split(' ');
-        console.log(order);
-        $(`.card`).hide();
+        let type = order[0];
+        let str = '';
+        order.shift();
         $.each(order,(key,val) => {
-          $(`.card-${val}`).show();
+          str += val + '|';
         });
-        if (order.length == 1) $(`.card`).show();
+        var expression = str.slice(0,str.length-1);
+        if (expression.length < 1) expression = 'pending|delivered|inprogress';
+        console.log(expression);
+
+        let skip = $('.cards').not('.d-none').length + 12;
+        if (type == 'all') {
+          $('#my-data-here').addClass('d-none').children().remove();
+          $('#showAllCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&skip=${skip}&expression=${expression}`}).trigger('click');
+
+        }
+
+        if (type == 'my') {
+          $('#all-data-here').addClass('d-none').children().remove();
+          $('#showMyCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&skip=${skip}&expression=${expression}`}).trigger('click');
+        }
+
       }
 
       function updatedue(id,type) {
@@ -323,7 +344,6 @@
         console.log($('.card-selected').length);
 
         if ($('.card-select').length < 1) return $('.due-circle').hide();
-
 
         let data = {
           query: 'update-due',

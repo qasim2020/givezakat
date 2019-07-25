@@ -344,6 +344,7 @@ app.post('/excelData',(req,res) => {
   var body = [];
   _.each(req.body,(val,key)=> {
     val.addedBy = req.session.myid;
+    val.cardClass = 'pending';
     body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
   });
 
@@ -436,19 +437,18 @@ app.get('/peopleBussinessCards',(req,res) => {
 
   console.log(req.query);
 
-  if (req.query.type == 'showAll') {
+  if (req.query.type == 'all') {
 
-    req.query.expression = 'inprogress|delieved|pending';
-
-    let regex = new RegExp(req.query.expression, 'gi');
-
+    let regex = new RegExp(req.query.expression,'gi');
+    console.log(regex);
     People.find({cardClass: regex}).limit(parseInt(req.query.skip)).then((msg) => {
-      if (!msg) return res.renderPjax('2-error.hbs');
+      if (!msg) return Promise.reject('Bad query.');
       req.data = msg;
-      if (req.query.token.length < 10) return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
+      if (req.query.token.length < 10) return Promise.reject({code:404,msg:'Not logged In! Showing all locked data'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
       // IF USER IS LOGGED IN > UNLOCK HIS LIST (ADDED BY HIM + PAID BY HIM)
+      if (!user) return Promise.reject('No user logged in found.');
       req.loggedIn = user;
       return Orders.find({paidby: req.loggedIn._id});
     }).then((msg) => {
@@ -470,29 +470,65 @@ app.get('/peopleBussinessCards',(req,res) => {
           return paidpeople._id == val._id;
         }).name;
 
-        if (val.addedBy == req.params.user._id) {
+        if (val.addedBy == req.loggedIn._id) {
           val.addedbyme = true;
         } else {
           val.addedbyme = false;
         };
 
         if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
-        console.log('successfully retrieved data ');
-        return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
 
       });
+      return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
     }).catch((e) => {
       console.log(e)
+      if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
       return res.renderPjax('2-error.hbs');
     });
 
   };
 
-  return;
+  if (req.query.type == 'my') {
 
-  if (req.query.loggedIn) {
+    if (!req.query.token) return res.renderPjax('2-error.hbs',{msg: 'You are not logged in. Please log in to view people you have sponsored and your orders !'});
 
-  };
+    let regex = new RegExp(req.query.expression,'gi');
+
+    Users.findByToken(req.query.token).then((user) => {
+      if (!user) Promise.reject({code: '404',msg: 'Please log in to make this request !'});
+      req.loggedIn = user;
+      return People.find({addedBy: user._id, cardClass: regex}).limit(4);
+    }).then((people) => {
+      req.addedbyme = people;
+      if (!people) Promise.reject({msg: 'You have not sponsored any user yet !'});
+      _.each(people,(val,key) => {
+        val.addedbyme = true;
+        val.unlocked = true;
+      });
+      return Orders.find({paidby: req.loggedIn._id}).limit(4);
+    }).then((orders) => {
+      req.orders = orders;
+      let ids = [];
+      _.each(orders,(val,key) => {
+        ids.push(orders.paidto);
+      });
+      return People.find({_id: {$in: ids}, cardClass: regex});
+    }).then((people) => {
+      req.paidbyme = people;
+      _.each(people,(val,key) => {
+        val.paidbyme = true;
+        val.unlocked = true;
+      });
+      return res.renderPjax('2-peopleMyList.hbs',{
+        paidbyme: req.paidbyme,
+        addedbyme: req.addedbyme,
+      });
+    }).catch((e) => {
+      console.log(e);
+      if (e.code == 404) return res.renderPjax('2-peopleMyList.hbs',{ data: req.data });
+      return res.renderPjax('2-error.hbs',{ msg: e.msg });
+    })
+  }
 
 
 });
