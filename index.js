@@ -435,12 +435,10 @@ app.get('/logout/:token', authenticate, (req,res) => {
 
 app.get('/peopleBussinessCards',(req,res) => {
 
-  console.log(req.query);
-
   if (req.query.type == 'all') {
 
     let regex = new RegExp(req.query.expression,'gi');
-    console.log(regex);
+
     People.find({cardClass: regex}).limit(parseInt(req.query.skip)).then((msg) => {
       if (!msg) return Promise.reject('Bad query.');
       req.data = msg;

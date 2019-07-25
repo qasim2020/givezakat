@@ -146,12 +146,11 @@
 
       </div>
 
-      <div id="all-data-here" class="content-grid pt-md-2 pt-1"></div>
+      <div id="all-data-here" class="pt-md-2 pt-1"></div>
       <div id="my-data-here" class="pt-md-2 pt-1"></div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
 
-        <button id="load-more" class="btn btn-primary d-flex align-items-center" type="button" name="button">Load More</button>
         <p class="text-green" style="margin-top:1rem">Subscribe to our newsletters and updates</p>
 
         <form id="subscribe-input" class="d-flex justify-content-start border" action="" method="">
@@ -328,12 +327,14 @@
         let skip = $('.cards').not('.d-none').length + 12;
         if (type == 'all') {
           $('#my-data-here').addClass('d-none').children().remove();
+          $('#all-data-here').removeClass('d-none')
           $('#showAllCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&skip=${skip}&expression=${expression}`}).trigger('click');
 
         }
 
         if (type == 'my') {
           $('#all-data-here').addClass('d-none').children().remove();
+          $('#my-data-here').removeClass('d-none')
           $('#showMyCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&skip=${skip}&expression=${expression}`}).trigger('click');
         }
 
