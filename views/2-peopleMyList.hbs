@@ -1,9 +1,14 @@
-<h3 style="font-size:120%;color:darkgreen;">People added by me</h3>
+<h3 style="font-size:120%;color:#173627;">People added by me</h3>
 
 <div class="content-grid pt-md-2 pt-1">
 
   {{#unless addedbyme}}
-    <p style="grid-column:1/-1;align-self:center;text-align:center;padding: 1rem;display: inline;width: fit-content;margin: auto;border-radius: 2px;font-weight: bold;color: brown;">You have not added any people yet !</p>
+  <h2 class="w-100 text-center" style="
+  grid-column: 1/-1;
+  font-size: 91%;
+  color: brown;
+  align-self: center;
+  ">Did not find any data for this filter !</h2>
   {{/unless}}
 
 
@@ -112,12 +117,17 @@
   <button id="load-more" class="btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button>
 {{/if}}
 
-<h3 style="font-size:120%;color:darkgreen;">People given zakat by me</h3>
+<h3 style="font-size:120%;color:#173627;">People given zakat by me</h3>
 
 <div class="content-grid pt-md-2 pt-1">
 
   {{#unless paidbyme}}
-    <p style="grid-column:1/-1;align-self:center;text-align:center;padding: 1rem;;display: inline;width: fit-content;margin: auto;border-radius: 2px;font-weight: bold;color: brown;">You have not given zakat to anybody yet !</p>
+  <h2 class="w-100 text-center" style="
+  grid-column: 1/-1;
+  font-size: 91%;
+  color: brown;
+  align-self: center;
+  ">Did not find any data for this filter !</h2>
   {{/unless}}
 
   {{#each paidbyme}}
