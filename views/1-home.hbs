@@ -24,7 +24,7 @@
         <p>Please sign in to perform this action.</p>
       </div>
 
-      <div class="zakat-due-box shadow my-point5">
+      <div class="zakat-due-box shadow my-point5 d-none">
         <div class="d-flex align-items-center justify-content-between">
           <p>Due Zakat: 9.00 USD</p>
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -144,6 +144,47 @@
           <img class="px-point5" src="/search-icon.svg" width="25px" alt="">
         </div>
 
+      </div>
+
+      <style media="screen">
+        .filter-badges p{
+          padding: 4px 12px;
+          background: mediumseagreen;
+          margin-right: 8px;
+          color: ghostwhite;
+          font-size: 12px;
+          font-weight: bold;
+          border-radius: 3px;
+        }
+
+        .filter-badges span{
+          padding: 0px 4px 1px 4px;
+          box-shadow: 0 0 2px #ffffff;
+          font-size: 75%;
+          padding-bottom: 2px;
+          display: inline-block;
+          line-height: normal;
+          display: block;
+          float: right;
+          margin-top: 5px;
+          margin-left: 6px;
+          border-radius: 0;
+          cursor: pointer;
+        }
+
+        .filter-badges span:hover{
+          color: mediumseagreen;
+          background: white;
+        }
+
+      </style>
+
+      <div class="filter-badges d-flex justify-content-start flex-wrap align-items-center my-1">
+        <p linked-data="all" id="all-badge" class="d-none">Show All <span>x</span> </p>
+        <p linked-data="my" id="my-badge" class="d-none">My Lists <span>x</span> </p>
+        <p linked-data="delivered" id="delivered-badge" class="d-none">Delivered <span>x</span> </p>
+        <p linked-data="pending" id="pending-badge" class="d-none">Pending <span>x</span> </p>
+        <p linked-data="inprogress" id="inprogress-badge" class="d-none">In progress <span>x</span> </p>
       </div>
 
       <div id="all-data-here" class="pt-md-2 pt-1"></div>
@@ -313,8 +354,12 @@
 
       function filterfn(order) {
         // return console.log(order);
+        $('.filter-badges').children().addClass('d-none');
         order = order.trim().split(' ');
         let type = order[0];
+        $.each(order,(key,val) => {
+          $(`#${val}-badge`).removeClass('d-none');
+        });
         let str = '';
         order.shift();
         $.each(order,(key,val) => {
@@ -338,7 +383,13 @@
           $('#showMyCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&skip=${skip}&expression=${expression}`}).trigger('click');
         }
 
-      }
+      };
+
+      $(document).on('click','.filter-badges span',function() {
+        let removeFilter = $(this).closest('p').attr('linked-data');
+        console.log(removeFilter);
+        $(`[data-target=${removeFilter}]`).trigger('click');
+      })
 
       function updatedue(id,type) {
 
