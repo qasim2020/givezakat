@@ -17,6 +17,7 @@
       .notification-box {
         padding: 1rem;
         display: flex;
+        display:-webkit-box;
         justify-content: center;
         background: white;
         z-index: 200;
@@ -43,6 +44,7 @@
         position: fixed;
         right: 1rem;
         display: flex;
+        display:-webkit-box;
         bottom: 1rem;
         flex-direction: column;
         justify-content: center;
@@ -369,6 +371,7 @@
 
       .d-flex {
         display: flex;
+        display:-webkit-box;
         justify-content: center;
       }
 
@@ -1417,6 +1420,7 @@
 
         .d-md-flex {
           display: flex !important;
+          display:-webkit-box !important;
           justify-content: center;
         }
 
