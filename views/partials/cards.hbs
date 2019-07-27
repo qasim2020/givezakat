@@ -1,0 +1,126 @@
+<div style="cursor: pointer" class="card card-{{this.cardClass}}" my-list='{{this.mylist}}' id='{{this._id}}'>
+
+  <div class="place-1 d-flex justify-content-start align-items-center">
+
+    <span class="report-badge text-white mr-point5 status-badge bg-{{this.cardClass}}">{{this.cardClass}}</span>
+    <!-- hide report badge DONE-->
+    <span class="check-box card-select" my-id="{{this._id}}">
+      <svg class="check-box" width="13" height="13" viewBox="0 0 15 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path class="check-box" d="M5.12512 8.04543L1.82387 5.5L0.699707 6.61625L5.12512 11.0417L14.6251 1.54166L13.5089 0.425415L5.12512 8.04543Z" fill="darkcyan"></path>
+      </svg>
+    </span>
+    <!-- make fill blue and tick white DONE CHECK ONCE COMPLETED-->
+
+  </div>
+
+  <div class="place-2 text-right">
+    <svg class="check-box" width="22" height="6" viewBox="0 0 22 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="3" cy="3" r="3" fill="darkcyan"/>
+      <circle cx="11" cy="3" r="3" fill="darkcyan"/>
+      <circle cx="19" cy="3" r="3" fill="darkcyan"/>
+    </svg>
+  </div>
+  <!-- circles updated DONE-->
+  <div class="place-3">
+    <div class="d-flex justify-content-start mt-1">
+      <svg width="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6.66659 13.3333V9.33333H9.33325V13.3333H12.6666V8H14.6666L7.99992 2L1.33325 8H3.33325V13.3333H6.66659Z" fill="darkcyan"/>
+      </svg>
+      <svg width="16" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip0)">
+        <path d="M7.04004 8.23827C7.3335 10.3347 8.29453 12.2943 9.76369 13.8226L11.628 12.9133C11.8567 12.8017 12.1284 12.8318 12.323 12.9834C12.9487 13.4597 13.668 13.8484 14.4496 14.1176C14.7963 14.2369 14.9823 14.6183 14.8629 14.965L14.1054 17.1649C13.9861 17.5116 13.6047 17.6975 13.258 17.5782C7.33909 15.5401 4.19387 9.09147 6.23193 3.17252C6.3513 2.82583 6.73263 2.63985 7.07932 2.75922L9.28553 3.51888C9.63222 3.63825 9.81821 4.01958 9.69883 4.36627C9.42752 5.1542 9.29314 5.95403 9.28328 6.74032C9.27665 6.98482 9.14157 7.21329 8.9043 7.32901L7.04004 8.23827Z" fill="darkcyan"/>
+        </g>
+        <defs>
+        <clipPath id="clip0">
+        <rect width="16" height="16" fill="white" transform="translate(5.20898) rotate(19)"/>
+        </clipPath>
+        </defs>
+      </svg>
+
+    </div>
+    <!-- change icon background to white DONE -->
+    <p class="font-card">
+      Earning <br class="d-md-none">
+      <span class="report-badge text-white bg-pending">100 USD per Month</span><br>
+      to support <br class="d-md-none">
+      <span class="report-badge text-white bg-pending">9 Family Members.</span>
+    </p>
+    <!-- change texg to white and bg-pending to bg-white with text-green here DONE-->
+  </div>
+  <div class="place-4 d-flex justify-content-start">
+
+
+
+    {{#if unlocked}}
+
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M8.00008 11.3334C8.73341 11.3334 9.33341 10.7334 9.33341 10C9.33341 9.26669 8.73341 8.66669 8.00008 8.66669C7.26675 8.66669 6.66675 9.26669 6.66675 10C6.66675 10.7334 7.26675 11.3334 8.00008 11.3334ZM12.0001 5.33335H11.3334V4.00002C11.3334 2.16002 9.84008 0.666687 8.00008 0.666687C6.16008 0.666687 4.66675 2.16002 4.66675 4.00002H5.93341C5.93341 2.86002 6.86008 1.93335 8.00008 1.93335C9.14008 1.93335 10.0667 2.86002 10.0667 4.00002V5.33335H4.00008C3.26675 5.33335 2.66675 5.93335 2.66675 6.66669V13.3334C2.66675 14.0667 3.26675 14.6667 4.00008 14.6667H12.0001C12.7334 14.6667 13.3334 14.0667 13.3334 13.3334V6.66669C13.3334 5.93335 12.7334 5.33335 12.0001 5.33335ZM12.0001 13.3334H4.00008V6.66669H12.0001V13.3334Z" fill="darkcyan"/>
+    </svg>
+
+    <span class="font-name text-blue">{{name}}</span>
+
+    {{else}}
+
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.0001 5.33335H11.3334V4.00002C11.3334 2.16002 9.84008 0.666687 8.00008 0.666687C6.16008 0.666687 4.66675 2.16002 4.66675 4.00002V5.33335H4.00008C3.26675 5.33335 2.66675 5.93335 2.66675 6.66669V13.3334C2.66675 14.0667 3.26675 14.6667 4.00008 14.6667H12.0001C12.7334 14.6667 13.3334 14.0667 13.3334 13.3334V6.66669C13.3334 5.93335 12.7334 5.33335 12.0001 5.33335ZM8.00008 11.3334C7.26675 11.3334 6.66675 10.7334 6.66675 10C6.66675 9.26669 7.26675 8.66669 8.00008 8.66669C8.73341 8.66669 9.33341 9.26669 9.33341 10C9.33341 10.7334 8.73341 11.3334 8.00008 11.3334ZM10.0667 5.33335H5.93341V4.00002C5.93341 2.86002 6.86008 1.93335 8.00008 1.93335C9.14008 1.93335 10.0667 2.86002 10.0667 4.00002V5.33335Z" fill="darkcyan"/>
+    </svg>
+    <span class="font-name">Name</span>
+
+    {{/if}}
+
+  </div>
+  <!-- change locked icon to white and font-name to white DONE -->
+  <div class="place-5 text-right">
+    <span class="badge badge-secondary font-weight-bold">Q</span>
+  </div>
+  <!-- change Q to white DONE-->
+  <div class="card-hover bg-pending text-white card-inactive" style="width: -webkit-fill-available;">
+
+    {{#if unlocked}}
+    <div class="" style="grid-column:1/-1;align-self:center">
+      <svg width="16" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="float: left;margin-top: 3px;">
+        <g clip-path="url(#clip0)">
+        <path d="M7.04004 8.23827C7.3335 10.3347 8.29453 12.2943 9.76369 13.8226L11.628 12.9133C11.8567 12.8017 12.1284 12.8318 12.323 12.9834C12.9487 13.4597 13.668 13.8484 14.4496 14.1176C14.7963 14.2369 14.9823 14.6183 14.8629 14.965L14.1054 17.1649C13.9861 17.5116 13.6047 17.6975 13.258 17.5782C7.33909 15.5401 4.19387 9.09147 6.23193 3.17252C6.3513 2.82583 6.73263 2.63985 7.07932 2.75922L9.28553 3.51888C9.63222 3.63825 9.81821 4.01958 9.69883 4.36627C9.42752 5.1542 9.29314 5.95403 9.28328 6.74032C9.27665 6.98482 9.14157 7.21329 8.9043 7.32901L7.04004 8.23827Z" fill="white"/>
+        </g>
+        <defs>
+        <clipPath id="clip0">
+        <rect width="16" height="16" fill="white" transform="translate(5.20898) rotate(19)"/>
+        </clipPath>
+        </defs>
+      </svg>
+
+      <span class="font-name text-white" style="margin-left:0.3rem">{{mob}}</span>
+    </div>
+
+    <div class="" style="grid-column:1/-1;align-self:center">
+      <svg width="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="float: left;margin-top: 3px;">
+        <path d="M6.66659 13.3333V9.33333H9.33325V13.3333H12.6666V8H14.6666L7.99992 2L1.33325 8H3.33325V13.3333H6.66659Z" fill="white"/>
+      </svg>
+
+
+      <span class="font-name text-white" style="margin-left:0.3rem">{{address}}</span>
+    </div>
+    {{else}}
+    <svg width="16" viewBox="0 0 16 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M14 7H13V5C13 2.24 10.76 0 8 0C5.24 0 3 2.24 3 5V7H2C0.9 7 0 7.9 0 9V19C0 20.1 0.9 21 2 21H14C15.1 21 16 20.1 16 19V9C16 7.9 15.1 7 14 7ZM8 16C6.9 16 6 15.1 6 14C6 12.9 6.9 12 8 12C9.1 12 10 12.9 10 14C10 15.1 9.1 16 8 16ZM11.1 7H4.9V5C4.9 3.29 6.29 1.9 8 1.9C9.71 1.9 11.1 3.29 11.1 5V7Z" fill="white"/>
+    </svg>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.41 8.58997L12 13.17L16.59 8.58997L18 9.99997L12 16L6 9.99997L7.41 8.58997Z" fill="white"/>
+    </svg>
+    <p class="text-white">Contact details and Name will be visible after paying zakat.</p>
+    {{/if}}
+
+
+
+  </div>
+
+  <div class="card-browser alpha60 d-none">
+    <div class="d-flex align-items-end flex-col">
+      <a  href="/updateperson" class="text-blue" type="button" name="button">Edit</a>
+      <a class="text-blue" type="button" name="button" onclick="deleteMe(this,'{{this._id}}')" >Delete</a>
+      <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
+      <a class="text-blue report-an-issue" type="button" name="button">Report an issue</a>
+    </div>
+  </div>
+
+</div>

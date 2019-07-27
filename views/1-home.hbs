@@ -146,39 +146,6 @@
 
       </div>
 
-      <style media="screen">
-        .filter-badges p{
-          padding: 4px 12px;
-          background: mediumseagreen;
-          margin-right: 8px;
-          color: ghostwhite;
-          font-size: 12px;
-          font-weight: bold;
-          border-radius: 3px;
-        }
-
-        .filter-badges span{
-          padding: 0px 4px 1px 4px;
-          box-shadow: 0 0 2px #ffffff;
-          font-size: 75%;
-          padding-bottom: 2px;
-          display: inline-block;
-          line-height: normal;
-          display: block;
-          float: right;
-          margin-top: 5px;
-          margin-left: 6px;
-          border-radius: 0;
-          cursor: pointer;
-        }
-
-        .filter-badges span:hover{
-          color: mediumseagreen;
-          background: white;
-        }
-
-      </style>
-
       <div class="filter-badges d-flex justify-content-start flex-wrap align-items-center my-1">
         <p linked-data="all" id="all-badge" class="d-none">Show All <span>x</span> </p>
         <p linked-data="my" id="my-badge" class="d-none">My Lists <span>x</span> </p>
@@ -187,8 +154,8 @@
         <p linked-data="inprogress" id="inprogress-badge" class="d-none">In progress <span>x</span> </p>
       </div>
 
-      <div id="all-data-here" class="pt-md-2 pt-1"></div>
-      <div id="my-data-here" class="pt-md-2 pt-1"></div>
+      <div data-show="showAllCards" id="all-data-here" class="encloser pt-md-2 pt-1"></div>
+      <div data-show="showMyCards" id="my-data-here" class="encloser pt-md-2 pt-1"></div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
 
@@ -377,14 +344,14 @@
         if (type == 'all') {
           $('#my-data-here').addClass('d-none').children().remove();
           $('#all-data-here').removeClass('d-none')
-          $('#showAllCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&skip=${skip}&expression=${expression}`}).trigger('click');
+          $('#showAllCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
 
         }
 
         if (type == 'my') {
           $('#all-data-here').addClass('d-none').children().remove();
           $('#my-data-here').removeClass('d-none')
-          $('#showMyCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&skip=${skip}&expression=${expression}`}).trigger('click');
+          $('#showMyCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
         }
 
       };
@@ -438,30 +405,16 @@
         $('.modal').addClass('d-none');
       })
 
-      $('#load-more').on('click',function() {
-        console.log('hello');
-        let skip = $('.card').length;
-
-        let data = {
-          skip: skip,
-        }
-
-        console.log(data);
-
-        $.ajax({
-            url: '/loadmore',
-            type: 'get',
-            data,
-            headers: {
-                'content-type': 'application/json',
-            }
-          }).done((res) => {
-            console.log(res);
-            createcards(res);
-            if (res.length < 12) $(this).attr('disabled',true).html('No more data found').css({border: 'none'});
-          }).fail((e) => {
-            console.log(e.responseText);
-          });
+      $(document).on('click','.load-more',function() {
+        console.log('here');
+        let idoflink = $(this).closest('.encloser').attr('data-show');
+        let my = {
+          type: $(this).attr('type'),
+          expression: $(this).attr('expression'),
+        };
+        console.log(my);
+        let visiblecards = $('.cards').not('.d-none').length;
+        $(`#${idoflink}`).attr({href:`/peopleBussinessCards?token={{token}}&type=${my.type}&showQty=${visiblecards+20}&expression=${my.expression}`}).trigger('click');
 
       });
 

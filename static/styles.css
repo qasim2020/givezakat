@@ -1,3 +1,41 @@
+      .card .d-flex {
+        display: -webkit-box;
+      }
+
+      .card-browser .d-flex {
+        display: flex;
+      }
+
+      .filter-badges p{
+        padding: 4px 12px;
+        background: darkcyan;
+        margin-right: 8px;
+        color: ghostwhite;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 3px;
+      }
+
+      .filter-badges span{
+        padding: 0px 4px 1px 4px;
+        box-shadow: 0 0 2px #ffffff;
+        font-size: 75%;
+        padding-bottom: 2px;
+        display: inline-block;
+        line-height: normal;
+        display: block;
+        float: right;
+        margin-top: 5px;
+        margin-left: 6px;
+        border-radius: 0;
+        cursor: pointer;
+      }
+
+      .filter-badges span:hover{
+        color: mediumseagreen;
+        background: white;
+      }
+
       table {
         width: 96%;
         line-height: 28px;
@@ -17,7 +55,6 @@
       .notification-box {
         padding: 1rem;
         display: flex;
-        display:-webkit-box;
         justify-content: center;
         background: white;
         z-index: 200;
@@ -44,7 +81,6 @@
         position: fixed;
         right: 1rem;
         display: flex;
-        display:-webkit-box;
         bottom: 1rem;
         flex-direction: column;
         justify-content: center;
@@ -223,11 +259,11 @@
       }
 
       .bg-delivered, .bg-done {
-        background: #4E7BEF;
+        background: #ED5349;
       }
 
       .bg-inprogress {
-        background: #EF4EA9;
+        background: #DEA54B;
       }
 
       .bg-issue {
@@ -235,7 +271,11 @@
       }
 
       .bg-pending {
-        background: #05386B;
+        background: darkcyan;
+      }
+
+      .status-badge.bg-pending, .badge.bg-pending {
+        background: #259B23;
       }
 
       .bg-light {
@@ -371,7 +411,6 @@
 
       .d-flex {
         display: flex;
-        display:-webkit-box;
         justify-content: center;
       }
 
@@ -473,8 +512,9 @@
       }
 
       .btn-primary:hover {
-        background: #d7d7d7;
+        background: darkcyan;
         cursor: pointer;
+        color: white;
       }
 
       .btn:focus, .btn:active {
@@ -483,14 +523,15 @@
 
       .filter-btns .active {
         outline: none;
-        background: #173627;
+        background: darkcyan;
         color: #FFFFFF;
       }
 
       .btn-primary {
         font-weight: bold;
-        border: 1px solid #173627;
+        border: 1px solid darkcyan;
         background: white;
+        color: darkcyan;
       }
 
       .pr-1 {
@@ -531,7 +572,7 @@
       }
 
       .border {
-        border: 1px solid #173627;
+        border: 1px solid darkcyan;
       }
 
       .w-100 {
@@ -570,9 +611,10 @@
 
       .content-grid > .card {
         position: relative;
-        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+        box-shadow: 0px 0px 17px darkcyan;
         padding: 1rem;
         display: grid;
+        color: darkcyan;
         grid-template-columns: 1fr, 1fr;
         grid-template-rows: 17px auto auto;
         grid-gap: 0px;
@@ -586,6 +628,7 @@
       .place-2 {
         grid-column: 2 / 3;
         grid-row: 1 / 2;
+        margin-top: 3px;
       }
 
       .place-3 {
@@ -658,7 +701,7 @@
       }
 
       .badge-secondary {
-        border: 2px solid #05386B;
+        border: 1px solid darkcyan;
       }
 
       .card-hover {
@@ -778,9 +821,11 @@
         z-index: 5;
         width: 16px;
         height: 16px;
-        border: 1px solid #05386B;
+        border: 1px solid darkcyan;
         padding: 0 0 0 2px;
         cursor: pointer;
+        margin-top: 2px;
+        float: right;
       }
 
       .active {
@@ -822,15 +867,15 @@
 
       .btn-secondary {
         font-weight: bold;
-        border: 1px solid #173627;
+        border: 1px solid darkcyan;
         color: white;
-        background: #173627;
+        background: darkcyan;
         cursor: pointer;
       }
 
       .btn-secondary:hover {
-        background: black;
-        border: 1px solid black;
+        background: darkcyan;
+        border: 1px solid darkcyan;
         color: white;
       }
 
@@ -1310,7 +1355,6 @@
         }
 
         .content-grid > .card {
-          box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
           padding: 1rem;
         }
 
@@ -1420,7 +1464,6 @@
 
         .d-md-flex {
           display: flex !important;
-          display:-webkit-box !important;
           justify-content: center;
         }
 

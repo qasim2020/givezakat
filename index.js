@@ -67,6 +67,9 @@ app.get('/profile/:token',authenticate,(req,res) => {
   // get all data updated by me
   People.find({addedBy: req.params.user._id}).then((sponsored) => {
     // get all orders placed by me
+    _.each(sponsored,(val,key) => {
+      val.unlocked = true;
+    })
     req.sponsored = sponsored;
     return Orders.find({paidby: req.params.user._id});
   }).then((orders) => {
@@ -439,7 +442,7 @@ app.get('/peopleBussinessCards',(req,res) => {
 
     let regex = new RegExp(req.query.expression,'gi');
 
-    People.find({cardClass: regex}).limit(parseInt(req.query.skip)).then((msg) => {
+    People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).then((msg) => {
       if (!msg) return Promise.reject('Bad query.');
       req.data = msg;
       if (req.query.token.length < 10) return Promise.reject({code:404,msg:'Not logged In! Showing all locked data'});
@@ -477,10 +480,13 @@ app.get('/peopleBussinessCards',(req,res) => {
         if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
 
       });
-      return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
+      return res.renderPjax('2-peopleBussinessCards.hbs',{
+        data: req.data,
+        query: req.query
+      });
     }).catch((e) => {
       console.log(e)
-      if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data });
+      if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data, query: req.query });
       return res.renderPjax('2-error.hbs');
     });
 
@@ -495,7 +501,7 @@ app.get('/peopleBussinessCards',(req,res) => {
     Users.findByToken(req.query.token).then((user) => {
       if (!user) Promise.reject({code: '404',msg: 'Please log in to make this request !'});
       req.loggedIn = user;
-      return People.find({addedBy: user._id, cardClass: regex}).limit(4);
+      return People.find({addedBy: user._id, cardClass: regex}).limit(parseInt(req.query.showQty));
     }).then((people) => {
       req.addedbyme = people;
       if (!people) Promise.reject({msg: 'You have not sponsored any user yet !'});
@@ -520,10 +526,11 @@ app.get('/peopleBussinessCards',(req,res) => {
       return res.renderPjax('2-peopleMyList.hbs',{
         paidbyme: req.paidbyme,
         addedbyme: req.addedbyme,
+        query: req.query,
       });
     }).catch((e) => {
       console.log(e);
-      if (e.code == 404) return res.renderPjax('2-peopleMyList.hbs',{ data: req.data });
+      if (e.code == 404) return res.renderPjax('2-peopleMyList.hbs',{ data: req.data, query:req.query });
       return res.renderPjax('2-error.hbs',{ msg: e.msg });
     })
   }
