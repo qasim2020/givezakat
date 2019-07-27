@@ -438,14 +438,14 @@ app.get('/logout/:token', authenticate, (req,res) => {
 
 app.get('/peopleBussinessCards',(req,res) => {
 
+  let regex = new RegExp(req.query.expression,'gi');
+
   if (req.query.type == 'all') {
 
-    let regex = new RegExp(req.query.expression,'gi');
-
-    People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).then((msg) => {
+    return People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).then((msg) => {
       if (!msg) return Promise.reject('Bad query.');
       req.data = msg;
-      if (req.query.token.length < 10) return Promise.reject({code:404,msg:'Not logged In! Showing all locked data'});
+      if (req.query.token.length <  30) return Promise.reject({code: 404,msg: 'No user found, showing all data as locked !'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
       // IF USER IS LOGGED IN > UNLOCK HIS LIST (ADDED BY HIM + PAID BY HIM)
@@ -486,7 +486,10 @@ app.get('/peopleBussinessCards',(req,res) => {
       });
     }).catch((e) => {
       console.log(e)
-      if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{ data: req.data, query: req.query });
+      if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{
+        data: req.data,
+        query: req.query
+      });
       return res.renderPjax('2-error.hbs');
     });
 
@@ -496,9 +499,7 @@ app.get('/peopleBussinessCards',(req,res) => {
 
     if (!req.query.token) return res.renderPjax('2-error.hbs',{msg: 'You are not logged in. Please log in to view people you have sponsored and your orders !'});
 
-    let regex = new RegExp(req.query.expression,'gi');
-
-    Users.findByToken(req.query.token).then((user) => {
+    return Users.findByToken(req.query.token).then((user) => {
       if (!user) Promise.reject({code: '404',msg: 'Please log in to make this request !'});
       req.loggedIn = user;
       return People.find({addedBy: user._id, cardClass: regex}).limit(parseInt(req.query.showQty));
@@ -534,7 +535,6 @@ app.get('/peopleBussinessCards',(req,res) => {
       return res.renderPjax('2-error.hbs',{ msg: e.msg });
     })
   }
-
 
 });
 
