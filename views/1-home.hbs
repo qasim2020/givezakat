@@ -249,8 +249,8 @@
 
     <script type="text/javascript" src="/javascript.js"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
-    <script src="/reload/reload.js"></script>
     <script type="text/javascript" src="/jquery.pjax.js"></script>
+    <script src="/reload/reload.js"></script>
 
     <script type="text/javascript">
 
@@ -259,20 +259,13 @@
       })
 
       $('a[data-pjax]').pjax();
+      $.pjax.defaults.timeout = 10000000;
       $.pjax.defaults.scrollTo = false;
-
-      function showMyData(elem) {
-        // let request = $(elem).attr('data-target');
-        // let skip = $('.cards').not('.d-none').length + 12;
-        // $('#showCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${request}&skip=${skip}&expression=`}).trigger('click');
-      }
 
       {{#each dueIds}}
         console.log('{{this}}');
         changeCardState($(`#{{this}}`));
       {{/each}}
-
-      // if ($('.card').length < 1) {$('#load-more').attr('disabled',true).html('No data found').css({border: 'none'});}
 
       function deleteMe(elem,id) {
 
@@ -345,7 +338,7 @@
           $('#my-data-here').addClass('d-none').children().remove();
           $('#all-data-here').removeClass('d-none')
           $('#showAllCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
-
+          return;
         }
 
         if (type == 'my') {
