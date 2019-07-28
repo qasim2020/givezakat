@@ -225,6 +225,7 @@ app.get('/due/:token',authenticate,(req,res) => {
 
   let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
   try {
+    if (!req.session.due.length) throw 'No item selected ! Returning to home page !';
     getip(req).then((res) => {
       return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
     }).then((result) => {
@@ -246,8 +247,9 @@ app.get('/due/:token',authenticate,(req,res) => {
   catch(error) {
     console.log(error);
     res.render('1-redirect.hbs',{
-      message: `Due to an error: [${error}], Redirecting to home page.`,
+      message: error,
       token: req.params.token,
+      page: 'Due People',
     })
   };
 

@@ -22,7 +22,7 @@
   </div>
   <!-- circles updated DONE-->
   <div class="place-3">
-    <div class="d-flex justify-content-start mt-1">
+    <div class="d-flex justify-content-start mt-point5 mt-lg-1">
       <svg width="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M6.66659 13.3333V9.33333H9.33325V13.3333H12.6666V8H14.6666L7.99992 2L1.33325 8H3.33325V13.3333H6.66659Z" fill="darkcyan"/>
       </svg>
@@ -40,9 +40,9 @@
     </div>
     <!-- change icon background to white DONE -->
     <p class="font-card">
-      Earning <br class="d-md-none">
+      Earning <br class="d-lg-none">
       <span class="report-badge text-white bg-pending">100 USD per Month</span><br>
-      to support <br class="d-md-none">
+      to support <br class="d-lg-none">
       <span class="report-badge text-white bg-pending">9 Family Members.</span>
     </p>
     <!-- change texg to white and bg-pending to bg-white with text-green here DONE-->
@@ -53,11 +53,7 @@
 
     {{#if unlocked}}
 
-    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M8.00008 11.3334C8.73341 11.3334 9.33341 10.7334 9.33341 10C9.33341 9.26669 8.73341 8.66669 8.00008 8.66669C7.26675 8.66669 6.66675 9.26669 6.66675 10C6.66675 10.7334 7.26675 11.3334 8.00008 11.3334ZM12.0001 5.33335H11.3334V4.00002C11.3334 2.16002 9.84008 0.666687 8.00008 0.666687C6.16008 0.666687 4.66675 2.16002 4.66675 4.00002H5.93341C5.93341 2.86002 6.86008 1.93335 8.00008 1.93335C9.14008 1.93335 10.0667 2.86002 10.0667 4.00002V5.33335H4.00008C3.26675 5.33335 2.66675 5.93335 2.66675 6.66669V13.3334C2.66675 14.0667 3.26675 14.6667 4.00008 14.6667H12.0001C12.7334 14.6667 13.3334 14.0667 13.3334 13.3334V6.66669C13.3334 5.93335 12.7334 5.33335 12.0001 5.33335ZM12.0001 13.3334H4.00008V6.66669H12.0001V13.3334Z" fill="darkcyan"/>
-    </svg>
-
-    <span class="font-name" style="color:darkcyan">{{name}}</span>
+    <span class="font-name" style="color:darkcyan; display:normal; margin-left:0px; float:none">{{name}}</span>
 
     {{else}}
 
