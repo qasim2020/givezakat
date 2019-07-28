@@ -657,9 +657,9 @@
       }
 
       .place-4 .font-name {
-        display: none;
+        display: inline;
         margin-left: 0.3rem;
-        font-size: 20px;
+        font-size: 14px;
       }
 
       .place-5 {
