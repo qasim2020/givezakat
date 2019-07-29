@@ -225,7 +225,7 @@
       .item-1 {
         grid-column: 1/2;
         grid-row: 1/2;
-        padding: 2rem 0px 0px 2rem;
+        padding: 3rem 0px 0px 2rem;
       }
 
       .item-2 {
@@ -376,7 +376,7 @@
       }
 
       .item-1 > img {
-        width: 72px;
+        width: 35px;
       }
 
       .border-offwhite {
@@ -1474,7 +1474,7 @@
         }
 
         .item-1 > img {
-          width: 115px;
+          width: 35px;
         }
 
         .d-md-flex {
