@@ -211,7 +211,10 @@ var getip = (req) => {
   return new Promise(function(resolve, reject) {
     console.log(process.env.PORT);
     if (process.env.PORT == '3000') return resolve(publicIp.v4());
-    resolve(req.connection.remoteAddress);
+    let val = '::ffff:10.65.109.147';
+    let array = val.split(':');
+    // let array = req.connection.remoteAddress.split(':');
+    resolve(val);
     });
 };
 
@@ -230,6 +233,7 @@ app.get('/due/:token',authenticate,(req,res) => {
       console.log(result);
       return axios.get(`http://www.geoplugin.net/json.gp?ip=${result}`);
     }).then((result) => {
+      console.log(result);
       req.currency = `${result.data.geoplugin_currencyCode.toUpperCase()}`;
       return People.find({'_id' : {$in : objectIdArray}});
     }).then((msg) => {
@@ -542,6 +546,10 @@ app.get('/peopleBussinessCards',(req,res) => {
 });
 
 app.post('/signing',(req,res) => {
+
+  if (req.body.query === 'create-currency-session') {
+    return res.status(200).send('saved session');
+  }
 
   if (req.body.query === 'update-due') {
     if (req.body.type == 'push') {

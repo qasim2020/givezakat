@@ -282,8 +282,42 @@
     <script type="text/javascript">
 
       $(document).ready(function(){
+
         $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
-      })
+        doajax('http://www.geoplugin.net/json.gp?ip','get').then((res) => {
+          console.log(res);
+          let data = {
+            query : "create-currency-session",
+            msg: res,
+          }
+
+          data = JSON.stringify(data);
+          let headers = {
+              'content-type': 'application/json',
+          };
+          return doajax('/signing','post',headers,data);
+        }).then((msg) => {
+          console.log(msg);
+        }).catch((e) => {
+          console.log(e);
+        });
+
+      });
+
+      let doajax = function(url,type,headers,datastringified) {
+        return new Promise(function(resolve, reject) {
+          $.ajax({
+              url: url,
+              type: type,
+              data: datastringified,
+              headers: headers,
+          }).done((msg) => {
+            resolve(msg);
+          }).fail((error) => {
+            reject(error);
+          });
+        });
+      }
 
       $('a[data-pjax]').pjax();
       $.pjax.defaults.timeout = 10000000;
