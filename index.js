@@ -226,13 +226,14 @@ app.get('/due/:token',authenticate,(req,res) => {
   let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
   try {
     if (!req.session.due.length) throw 'No item selected ! Returning to home page !';
-    getip(req).then((res) => {
-      return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
+    getip(req).then((result) => {
+      console.log(result);
+      return axios.get(`http://www.geoplugin.net/json.gp?ip=${result}`);
     }).then((result) => {
       req.currency = `${result.data.geoplugin_currencyCode.toUpperCase()}`;
       return People.find({'_id' : {$in : objectIdArray}});
     }).then((msg) => {
-      console.log(msg[0].currency);
+      console.log(req.currency);
       res.render('1-due.hbs',{
         people: msg,
         dueStatus: 'active',
