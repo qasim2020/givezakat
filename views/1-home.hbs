@@ -322,6 +322,7 @@
       $('a[data-pjax]').pjax();
       $.pjax.defaults.timeout = 10000000;
       $.pjax.defaults.scrollTo = false;
+      $.pjax.defaults.push = false;
 
       {{#each dueIds}}
         console.log('{{this}}');
