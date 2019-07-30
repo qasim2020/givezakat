@@ -19,6 +19,7 @@ const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
 const {People} = require('./models/people');
 const {Orders} = require('./models/orders');
+const {CurrencyRates} = require('./models/currencyrates');
 const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
 const {serverRunning} = require('./js/serverRunning');
@@ -39,10 +40,10 @@ app.use(session({
 hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine','hbs');
 
-hbs.registerHelper("inc", function(value, options)
-{
+hbs.registerHelper("inc", function(value, options) {
     return parseInt(value) + 1;
 });
+
 
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token || req.query.token;
@@ -548,8 +549,21 @@ app.get('/peopleBussinessCards',(req,res) => {
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
-    return res.status(200).send('saved session');
-  }
+    console.log(req.body.msg);
+    req.session.currency = req.body.msg;
+    req.body.msg = JSON.parse(req.body.msg);
+    // TODO: Store this currency in database if not then get new data and dont waste the repitions
+    
+    // console.log(req.body.msg.geoplugin_currencyCode);
+    // axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
+    // // axios.get(`https://api.exchangeratesapi.io/latest?base=USD`).then((reply) => {
+    //   console.log(reply.data);
+    //   res.status(200).send('done');
+    // }).catch((e) => {
+    //   console.log(e);
+    //   res.status(404).send(e);
+    // })
+  };
 
   if (req.body.query === 'update-due') {
     if (req.body.type == 'push') {
