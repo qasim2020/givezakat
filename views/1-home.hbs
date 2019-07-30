@@ -283,7 +283,10 @@
 
       $(document).ready(function(){
 
+        {{#if currency}}
+        console.log('currrency is set ',currency);
         $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+        {{else}}
         doajax('http://www.geoplugin.net/json.gp?ip','get').then((res) => {
           console.log(res);
           let data = {
@@ -297,9 +300,11 @@
           return doajax('/signing','post',headers,data);
         }).then((msg) => {
           console.log(msg);
+          $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
         }).catch((e) => {
           console.log(e);
         });
+        {{/if}}
 
       });
 

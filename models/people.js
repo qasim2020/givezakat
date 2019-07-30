@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var People = mongoose.model('people', {
+var PeopleSchema = new mongoose.Schema({
   // Ser":"1","Name":"Zubaida Shauket","Mobile No":"03433044044","Earning per month":"8000","Occupation":"maid","Currency":"PKR","Family Members":"8","Address":
   name: {
     type: String,
@@ -54,5 +54,16 @@ var People = mongoose.model('people', {
     required: true,
   }
 });
+
+// PeopleSchema.post('find', function(req,next) {
+//   var user = this;
+//   console.log(req.session);
+//
+//   next();
+// });
+
+
+
+var People = mongoose.model('People', PeopleSchema);
 
 module.exports = {People};

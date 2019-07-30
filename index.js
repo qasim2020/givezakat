@@ -453,6 +453,7 @@ app.get('/peopleBussinessCards',(req,res) => {
     return People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).then((msg) => {
       if (!msg) return Promise.reject('Bad query.');
       req.data = msg;
+      // TODO: give currency value to each user here
       if (req.query.token.length <  30) return Promise.reject({code: 404,msg: 'No user found, showing all data as locked !'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
@@ -550,10 +551,29 @@ app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
     console.log(req.body.msg);
-    req.session.currency = req.body.msg;
+    // req.session.currency = req.body.msg;
     req.body.msg = JSON.parse(req.body.msg);
+    let dt = new Date(), today = '';
+    // console.log();
+    if (dt.getMonth + 1 < 10) {
+      today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+    } else {
+      today = dt.getFullYear() + "-0" + (dt.getMonth() + 1) + "-" + dt.getDate();
+    }
+    // console.log(today);
+    CurrencyRates.findOne({date: today}).then((reply) => {
+      if (!reply || !reply.length) return updateCurrencyRate();
+      return Promise.resolve(reply);
+    }).then((reply) => {
+      console.log(reply);
+      req.session.currency = reply;
+      res.status(200).send(reply);
+    }).catch((e) => {
+      res.status(400).send(e);
+    })
     // TODO: Store this currency in database if not then get new data and dont waste the repitions
-    
+    // CurrencyRates.find({})
+    // CurrencyRates.save();
     // console.log(req.body.msg.geoplugin_currencyCode);
     // axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
     // // axios.get(`https://api.exchangeratesapi.io/latest?base=USD`).then((reply) => {
@@ -563,6 +583,33 @@ app.post('/signing',(req,res) => {
     //   console.log(e);
     //   res.status(404).send(e);
     // })
+  };
+
+  let updateCurrencyRate = function() {
+    return new Promise(function(resolve, reject) {
+
+      let rates = {
+        "AED": 4.094152,
+        "AFN": 87.936482,
+        "ALL": 121.715336,
+        "AMD": 530.50715,
+        "ANG": 1.98385,
+        "AOA": 387.504156,
+        "ARS": 48.760011,
+        "AUD": 1.619507,
+        "AWG": 2.003523,
+      };
+      let currency = new CurrencyRates({
+        timestamp: 12345,
+        base  : 'EUR',
+        date  : '2019-07-30',
+        rates : JSON.stringify(rates)
+      })
+      console.log('saving this data as new');
+      resolve(currency.save());
+
+    });
+
   };
 
   if (req.body.query === 'update-due') {
