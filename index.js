@@ -565,7 +565,7 @@ let createCurrencySession = function(req) {
   return new Promise(function(resolve, reject) {
     var ip = req.connection.remoteAddress.replace(/^.*:/, '');
     console.log(ip);
-    axios.get(`http://www.geoplugin.net/json.gp?ip=${ip}`).then((msg) => {
+    axios.get(`http://www.geoplugin.net/json.gp?${ip}`).then((msg) => {
       console.log(msg.data.geoplugin_status);
       if (msg.data.geoplugin_status == 404) {
       req.session.browserCurrency = {geoplugin_currencyCode: 'USD'};
