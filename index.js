@@ -561,11 +561,12 @@ app.get('/peopleBussinessCards',(req,res) => {
 
 });
 
-let createCurrencySession = function(req) {
+let createCurrencySession = function(req,msg) {
   return new Promise(function(resolve, reject) {
-    var ip = req.connection.remoteAddress.replace(/^.*:/, '');
-    console.log(ip);
-    axios.get(`http://www.geoplugin.net/json.gp?10.28.119.231`).then((msg) => {
+    // var ip = req.connection.remoteAddress.replace(/^.*:/, '');
+    // console.log(ip);
+    // axios.get(`http://www.geoplugin.net/json.gp?10.28.119.231`).then((msg) => {
+      console.log(JSON.parse(msg));
       console.log(msg.data.geoplugin_status, msg.data.geoplugin_currencyCode);
       if (msg.data.geoplugin_status === 404) {
         req.session.browserCurrency = {geoplugin_currencyCode: 'USD'};
@@ -578,13 +579,12 @@ let createCurrencySession = function(req) {
       } else {
         today = dt.getFullYear() + "-0" + (dt.getMonth() + 1) + "-" + dt.getDate();
       };
-      return CurrencyRates.findOne({date: today});
-    }).then((reply) => {
-      if (!reply) return updateCurrencyRate();
-      return resolve(reply);
-    }).catch((e) => {
-      reject(e);
-    });
+      CurrencyRates.findOne({date: today}).then((reply) => {
+        if (!reply) return updateCurrencyRate();
+        return resolve(reply);
+      }).catch((e) => {
+        reject(e);
+      });
   });
 };
 
@@ -608,10 +608,11 @@ let updateCurrencyRate = function() {
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
-    createCurrencySession(req).then((reply) => {
+    createCurrencySession(req,req.body.data).then((reply) => {
       res.status(200).send(reply);
     }).catch((e) => {
-      res.status(400).send(e);
+      console.log(e);
+      res.status(400).send('sorry bad error');
     });
 
   }
