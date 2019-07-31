@@ -68,6 +68,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
   // get all data updated by me
   People.find({addedBy: req.params.user._id}).then((sponsored) => {
     // get all orders placed by me
+    req.sponsored = getEachSalaryText(sponsored,req);
     _.each(sponsored,(val,key) => {
       val.unlocked = true;
     })
@@ -116,7 +117,8 @@ app.get('/',(req,res) => {
     res.render('1-home.hbs', {
       sampleRows: rows[0],
       due: req.session.due.length,
-      dueIds: req.session.due
+      dueIds: req.session.due,
+      currency: req.session.hasOwnProperty('browserCurrency'),
     });
   }).catch((e) => {
     console.log(e);
@@ -228,17 +230,9 @@ var getip = (req) => {
 app.get('/due/:token',authenticate,(req,res) => {
 
   let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
-  try {
-    if (!req.session.due.length) throw 'No item selected ! Returning to home page !';
-    getip(req).then((result) => {
-      console.log(result);
-      return axios.get(`http://www.geoplugin.net/json.gp?ip=${result}`);
-    }).then((result) => {
-      console.log(result);
-      req.currency = `${result.data.geoplugin_currencyCode.toUpperCase()}`;
-      return People.find({'_id' : {$in : objectIdArray}});
-    }).then((msg) => {
-      console.log(req.currency);
+
+  return People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
+      msg = getEachSalaryText(msg,req);
       res.render('1-due.hbs',{
         people: msg,
         dueStatus: 'active',
@@ -248,16 +242,14 @@ app.get('/due/:token',authenticate,(req,res) => {
         email: req.params.user.email,
         localCurrency: req.currency
       });
+    }).catch((error) => {
+      console.log(error);
+      res.render('1-redirect.hbs',{
+        message: error,
+        token: req.params.token,
+        page: 'Due People',
+      })
     });
-  }
-  catch(error) {
-    console.log(error);
-    res.render('1-redirect.hbs',{
-      message: error,
-      token: req.params.token,
-      page: 'Due People',
-    })
-  };
 
 });
 
@@ -418,12 +410,12 @@ app.get('/home/:token', authenticate, (req,res) => {
       };
       if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
     });
-    // console.log(req.data);
     res.render('1-home.hbs',{
       token: req.session.token,
       name: req.params.user.name,
       due: req.session.due.length,
       dueIds: req.session.due,
+      currency: req.session.hasOwnProperty('browserCurrency'),
     });
   }).catch((e) => {
     console.log(e);
@@ -444,6 +436,23 @@ app.get('/logout/:token', authenticate, (req,res) => {
   });
 });
 
+let getEachSalaryText = function(msg,req) {
+  let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
+  _.each(msg,(val,key) => {
+    browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)[req.session.browserCurrency.geoplugin_currencyCode];
+    if (!browserCurrencyRate || browserCurrencyRate == '') {
+      browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)['USD'];
+      thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates.rates)[val.currency];
+      mySalaryInBrowsersCurrency = Math.floor(browserCurrencyRate / thisPersonsCurrencyRate * val.salary);
+      return val.salary = `${mySalaryInBrowsersCurrency} USD per Month`;
+    }
+    thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates.rates)[val.currency];
+    mySalaryInBrowsersCurrency = Math.floor(browserCurrencyRate / thisPersonsCurrencyRate * val.salary);
+    val.salary = `${mySalaryInBrowsersCurrency} ${req.session.browserCurrency.geoplugin_currencyCode} per Month`;
+  });
+  return msg;
+}
+
 app.get('/peopleBussinessCards',(req,res) => {
 
   let regex = new RegExp(req.query.expression,'gi');
@@ -453,7 +462,7 @@ app.get('/peopleBussinessCards',(req,res) => {
     return People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).then((msg) => {
       if (!msg) return Promise.reject('Bad query.');
       req.data = msg;
-      // TODO: give currency value to each user here
+      msg = getEachSalaryText(msg,req);
       if (req.query.token.length <  30) return Promise.reject({code: 404,msg: 'No user found, showing all data as locked !'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
@@ -512,10 +521,10 @@ app.get('/peopleBussinessCards',(req,res) => {
       if (!user) Promise.reject({code: '404',msg: 'Please log in to make this request !'});
       req.loggedIn = user;
       return People.find({addedBy: user._id, cardClass: regex}).limit(parseInt(req.query.showQty));
-    }).then((people) => {
-      req.addedbyme = people;
-      if (!people) Promise.reject({msg: 'You have not sponsored any user yet !'});
-      _.each(people,(val,key) => {
+    }).then((peopleAddedByMe) => {
+      if (!peopleAddedByMe) Promise.reject({msg: 'You have not sponsored any user yet !'});
+      req.addedbyme = getEachSalaryText(peopleAddedByMe,req);
+      _.each(peopleAddedByMe,(val,key) => {
         val.addedbyme = true;
         val.unlocked = true;
       });
@@ -527,12 +536,14 @@ app.get('/peopleBussinessCards',(req,res) => {
         ids.push(orders.paidto);
       });
       return People.find({_id: {$in: ids}, cardClass: regex});
-    }).then((people) => {
-      req.paidbyme = people;
-      _.each(people,(val,key) => {
+    }).then((peopleOrderedByMe) => {
+      // req.paidbyme = peopleOrderedByMe;
+      console.log(peopleOrderedByMe.length, '<< People ordered by  me');
+      _.each(peopleOrderedByMe,(val,key) => {
         val.paidbyme = true;
         val.unlocked = true;
       });
+      req.paidbyme = getEachSalaryText(peopleOrderedByMe,req);
       return res.renderPjax('2-peopleMyList.hbs',{
         paidbyme: req.paidbyme,
         addedbyme: req.addedbyme,
@@ -550,8 +561,7 @@ app.get('/peopleBussinessCards',(req,res) => {
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
-    console.log(req.body.msg);
-    // req.session.currency = req.body.msg;
+    req.session.browserCurrency = JSON.parse(req.body.msg);
     req.body.msg = JSON.parse(req.body.msg);
     let dt = new Date(), today = '';
     // console.log();
@@ -559,57 +569,33 @@ app.post('/signing',(req,res) => {
       today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
     } else {
       today = dt.getFullYear() + "-0" + (dt.getMonth() + 1) + "-" + dt.getDate();
-    }
-    // console.log(today);
+    };
     CurrencyRates.findOne({date: today}).then((reply) => {
-      if (!reply || !reply.length) return updateCurrencyRate();
+      if (!reply) return updateCurrencyRate();
       return Promise.resolve(reply);
     }).then((reply) => {
-      console.log(reply);
-      req.session.currency = reply;
+      req.session.currencyRates = reply;
       res.status(200).send(reply);
     }).catch((e) => {
       res.status(400).send(e);
-    })
-    // TODO: Store this currency in database if not then get new data and dont waste the repitions
-    // CurrencyRates.find({})
-    // CurrencyRates.save();
-    // console.log(req.body.msg.geoplugin_currencyCode);
-    // axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
-    // // axios.get(`https://api.exchangeratesapi.io/latest?base=USD`).then((reply) => {
-    //   console.log(reply.data);
-    //   res.status(200).send('done');
-    // }).catch((e) => {
-    //   console.log(e);
-    //   res.status(404).send(e);
-    // })
+    });
   };
 
   let updateCurrencyRate = function() {
     return new Promise(function(resolve, reject) {
-
-      let rates = {
-        "AED": 4.094152,
-        "AFN": 87.936482,
-        "ALL": 121.715336,
-        "AMD": 530.50715,
-        "ANG": 1.98385,
-        "AOA": 387.504156,
-        "ARS": 48.760011,
-        "AUD": 1.619507,
-        "AWG": 2.003523,
-      };
-      let currency = new CurrencyRates({
-        timestamp: 12345,
-        base  : 'EUR',
-        date  : '2019-07-30',
-        rates : JSON.stringify(rates)
-      })
-      console.log('saving this data as new');
-      resolve(currency.save());
-
+      axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
+        let currency = new CurrencyRates({
+          timestamp: reply.data.timestamp,
+          base  : reply.data.base,
+          date  : reply.data.date,
+          rates : JSON.stringify(reply.data.rates)
+        });
+        console.log('saving new data fixer');
+        resolve(currency.save());
+      }).catch((e) => {
+        reject(e);
+      });
     });
-
   };
 
   if (req.body.query === 'update-due') {

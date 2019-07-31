@@ -14,6 +14,9 @@ var PeopleSchema = new mongoose.Schema({
   salary: {
     type: String,
   },
+  currency :{
+    type: String,
+  },
   fMembers: {
     type: String,
   },

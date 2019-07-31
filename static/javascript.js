@@ -71,7 +71,6 @@ window.onscroll = function() {
 function myFunction() {
   if (window.pageYOffset >= sticky) {
     $('.nav-bar-home').addClass('sticky');
-    console.log(sticky);
   } else {
     $('.nav-bar-home').removeClass('sticky');
   }

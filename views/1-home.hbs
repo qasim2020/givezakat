@@ -281,14 +281,13 @@
 
     <script type="text/javascript">
 
-      $(document).ready(function(){
+      $(document).ready(function() {
 
         {{#if currency}}
-        console.log('currrency is set ',currency);
+        console.log('currrency is set');
         $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
         {{else}}
         doajax('http://www.geoplugin.net/json.gp?ip','get').then((res) => {
-          console.log(res);
           let data = {
             query : "create-currency-session",
             msg: res,
@@ -299,7 +298,7 @@
           };
           return doajax('/signing','post',headers,data);
         }).then((msg) => {
-          console.log(msg);
+          console.log('stored current session of browser currency');
           $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
         }).catch((e) => {
           console.log(e);
@@ -397,7 +396,6 @@
         });
         var expression = str.slice(0,str.length-1);
         if (expression.length < 1) expression = 'pending|delivered|inprogress';
-        console.log(expression);
 
         let skip = $('.cards').not('.d-none').length + 12;
         if (type == 'all') {
