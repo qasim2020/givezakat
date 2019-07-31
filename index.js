@@ -111,9 +111,12 @@ app.get('/profile/:token',authenticate,(req,res) => {
 app.get('/',(req,res) => {
 
   if (!req.session.due) req.session.due = [];
-
-  readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
+  createCurrencySession(req).then((msg) => {
+    req.session.currencyRates = msg;
+    return readXlsxFile(__dirname+'/static/sample.xlsx')
+  }).then((rows) => {
     req.session.sampleRows = rows[0];
+    console.log(req.session.browserCurrency);
     res.render('1-home.hbs', {
       sampleRows: rows[0],
       due: req.session.due.length,
@@ -558,45 +561,51 @@ app.get('/peopleBussinessCards',(req,res) => {
 
 });
 
-app.post('/signing',(req,res) => {
-
-  if (req.body.query === 'create-currency-session') {
-    req.session.browserCurrency = JSON.parse(req.body.msg);
-    req.body.msg = JSON.parse(req.body.msg);
-    let dt = new Date(), today = '';
-    // console.log();
-    if (dt.getMonth + 1 < 10) {
-      today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
-    } else {
-      today = dt.getFullYear() + "-0" + (dt.getMonth() + 1) + "-" + dt.getDate();
-    };
-    CurrencyRates.findOne({date: today}).then((reply) => {
-      if (!reply) return updateCurrencyRate();
-      return Promise.resolve(reply);
+let createCurrencySession = function(req) {
+  return new Promise(function(resolve, reject) {
+    var ip = req.connection.remoteAddress.replace(/^.*:/, '');
+    console.log(ip);
+    axios.get(`http://www.geoplugin.net/json.gp?ip=${ip}`).then((msg) => {
+      console.log(msg.data.geoplugin_status);
+      if (msg.data.geoplugin_status == 404) {
+      req.session.browserCurrency = {geoplugin_currencyCode: 'USD'};
+      } else {
+      req.session.browserCurrency = {geoplugin_currencyCode: msg.data.geoplugin_currencyCode};
+      }
+      let dt = new Date(), today = '';
+      if (dt.getMonth + 1 < 10) {
+        today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
+      } else {
+        today = dt.getFullYear() + "-0" + (dt.getMonth() + 1) + "-" + dt.getDate();
+      };
+      return CurrencyRates.findOne({date: today});
     }).then((reply) => {
-      req.session.currencyRates = reply;
-      res.status(200).send(reply);
+      if (!reply) return updateCurrencyRate();
+      return resolve(reply);
     }).catch((e) => {
-      res.status(400).send(e);
+      reject(e);
     });
-  };
+  });
+};
 
-  let updateCurrencyRate = function() {
-    return new Promise(function(resolve, reject) {
-      axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
-        let currency = new CurrencyRates({
-          timestamp: reply.data.timestamp,
-          base  : reply.data.base,
-          date  : reply.data.date,
-          rates : JSON.stringify(reply.data.rates)
-        });
-        console.log('saving new data fixer');
-        resolve(currency.save());
-      }).catch((e) => {
-        reject(e);
+let updateCurrencyRate = function() {
+  return new Promise(function(resolve, reject) {
+    axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
+      let currency = new CurrencyRates({
+        timestamp: reply.data.timestamp,
+        base  : reply.data.base,
+        date  : reply.data.date,
+        rates : JSON.stringify(reply.data.rates)
       });
+      console.log('saving new data fixer');
+      resolve(currency.save());
+    }).catch((e) => {
+      reject(e);
     });
-  };
+  });
+};
+
+app.post('/signing',(req,res) => {
 
   if (req.body.query === 'update-due') {
     if (req.body.type == 'push') {
