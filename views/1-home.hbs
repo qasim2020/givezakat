@@ -288,7 +288,8 @@
         $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
         {{else}}
         console.log('performing request to get local currency');
-        doajax('http://www.geoplugin.net/json.gp?ip','get').then((res) => {
+        doajax('https://json.geoiplookup.io/','get').then((res) => {
+          console.log(res);
           let data = {
             query : "create-currency-session",
             msg: res,

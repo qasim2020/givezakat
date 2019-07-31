@@ -111,10 +111,10 @@ app.get('/profile/:token',authenticate,(req,res) => {
 app.get('/',(req,res) => {
 
   if (!req.session.due) req.session.due = [];
-  createCurrencySession(req).then((msg) => {
-    req.session.currencyRates = msg;
-    return readXlsxFile(__dirname+'/static/sample.xlsx')
-  }).then((rows) => {
+  // createCurrencySession(req).then((msg) => {
+  //   req.session.currencyRates = msg;
+  readXlsxFile(__dirname+'/static/sample.xlsx')
+  .then((rows) => {
     req.session.sampleRows = rows[0];
     console.log(req.session.browserCurrency);
     res.render('1-home.hbs', {
@@ -565,12 +565,12 @@ let createCurrencySession = function(req) {
   return new Promise(function(resolve, reject) {
     var ip = req.connection.remoteAddress.replace(/^.*:/, '');
     console.log(ip);
-    axios.get(`http://www.geoplugin.net/json.gp?${ip}`).then((msg) => {
-      console.log(msg.data.geoplugin_status);
-      if (msg.data.geoplugin_status == 404) {
-      req.session.browserCurrency = {geoplugin_currencyCode: 'USD'};
+    axios.get(`http://www.geoplugin.net/json.gp?10.28.119.231`).then((msg) => {
+      console.log(msg.data.geoplugin_status, msg.data.geoplugin_currencyCode);
+      if (msg.data.geoplugin_status === 404) {
+        req.session.browserCurrency = {geoplugin_currencyCode: 'USD'};
       } else {
-      req.session.browserCurrency = {geoplugin_currencyCode: msg.data.geoplugin_currencyCode};
+        req.session.browserCurrency = {geoplugin_currencyCode: msg.data.geoplugin_currencyCode};
       }
       let dt = new Date(), today = '';
       if (dt.getMonth + 1 < 10) {
@@ -607,6 +607,14 @@ let updateCurrencyRate = function() {
 
 app.post('/signing',(req,res) => {
 
+  if (req.body.query === 'create-currency-session') {
+    createCurrencySession(req).then((reply) => {
+      res.status(200).send(reply);
+    }).catch((e) => {
+      res.status(400).send(e);
+    });
+
+  }
   if (req.body.query === 'update-due') {
     if (req.body.type == 'push') {
       req.session.due.push(req.body.due);
