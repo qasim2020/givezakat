@@ -232,6 +232,24 @@ var getip = (req) => {
 
 app.get('/due/:token',authenticate,(req,res) => {
 
+  if (!req.session.due) {
+    return res.render('1-redirect.hbs',{
+      timer: 6,
+      page: 'No Session Found !',
+      message: 'Sorry you have not logged in yet.',
+      token: req.session.token
+    })
+  };
+
+  if (req.session.due.length < 1) {
+    return res.render('1-redirect.hbs',{
+      timer: 3,
+      page: 'No People Selected !',
+      message: 'Sorry you have not selected any body yet. Redirecting you to home page.',
+      token: req.session.token
+    })
+  };
+
   let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
 
   return People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
@@ -293,34 +311,22 @@ function updateOrders(req,res) {
 app.get("/charge", authenticate, (req, res) => {
 
   // console.log(req.query);
-
-  getip(req).then((res) => {
-    return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
-  }).then((result) => {
-    req.currency = `${result.data.currency_code.toLowerCase()}`;
-    return stripe.products.create({
-      name: 'T-shirt',
-      type: 'good',
-      description: 'Comfortable cotton t-shirt',
-      attributes: ['size', 'gender']
-    })
-  }).then((msg) => {
-    return stripe.customers.create({
+  // req.session.browserCurrency = {
+  //   currency_code: 'EUR',
+  // };
+  stripe.customers.create({
       email: req.query.email,
       card: req.query.stripeToken
-    });
   }).then(customer =>
-     stripe.charges.create({
+    stripe.charges.create({
       amount: req.query.amount,
-      description: "Sample Charge",
-      currency: req.currency,
+      description: "Zakat",
+      currency: 'usd',
       customer: customer.id
   })).then((charge) => {
     req.charge = charge;
     return updateOrders(req,res);
   }).then((msg) => {
-    // msg.push(req.charge);
-    // return res.status(200).send(msg);
     req.session.due = [];
     res.render('1-charge.hbs',{
       dueStatus: 'active',
@@ -332,8 +338,12 @@ app.get("/charge", authenticate, (req, res) => {
     });
   }).catch(err => {
     console.log("Error:", err);
-    // return res.status(400).send(err);
-    res.status(500).send({error: err});
+    res.render('1-redirect.hbs',{
+      timer: 6,
+      page: 'Payment Failed !',
+      message: err.message,
+      token: req.session.token,
+    });
   });
 });
 
@@ -615,8 +625,8 @@ let updateCurrencyRate = function(today) {
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
-    console.log(typeof req.body.msg);
     createCurrencySession(req,req.body.msg).then((msg) => {
+      console.log('currency session stored');
       req.session.currencyRates = msg;
       res.status(200).send(msg);
     }).catch((e) => {

@@ -29,7 +29,7 @@
       <h4>{{page}}</h4>
 
       <h4 style="font-size: 15px">{{message}}</h4>
-      <p class="timer">3</p>
+      <p class="timer">{{timer}}</p>
 
     </div>
 
@@ -49,10 +49,12 @@
 
     let running = function(timer) {
       parseInt(timer);
-      console.log(3 - timer);
-      $('.timer').html(`${3 - timer}`);
+      $('.timer').html({{timer}} - timer);
       timer++;
-      if (4 - timer == 0) window.location.replace(`/home/{{token}}`);
+      if ({{timer}} - timer == 0) {
+        if (`{{token}}`.length > 0) return window.location.replace(`/home/{{token}}`);
+        window.location.replace(`/`);
+      };
       return setTimeout(() => running(timer),1000);
     };
 
