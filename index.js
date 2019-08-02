@@ -111,12 +111,12 @@ app.get('/profile/:token',authenticate,(req,res) => {
 app.get('/',(req,res) => {
 
   if (!req.session.due) req.session.due = [];
+  console.log('session created');
   // createCurrencySession(req).then((msg) => {
   //   req.session.currencyRates = msg;
   readXlsxFile(__dirname+'/static/sample.xlsx')
   .then((rows) => {
     req.session.sampleRows = rows[0];
-    console.log(req.session.browserCurrency);
     res.render('1-home.hbs', {
       sampleRows: rows[0],
       due: req.session.due.length,
@@ -297,7 +297,7 @@ app.get("/charge", authenticate, (req, res) => {
   getip(req).then((res) => {
     return axios.get(`http://www.geoplugin.net/json.gp?ip=${res}`);
   }).then((result) => {
-    req.currency = `${result.data.geoplugin_currencyCode.toLowerCase()}`;
+    req.currency = `${result.data.currency_code.toLowerCase()}`;
     return stripe.products.create({
       name: 'T-shirt',
       type: 'good',
@@ -442,7 +442,7 @@ app.get('/logout/:token', authenticate, (req,res) => {
 let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
   _.each(msg,(val,key) => {
-    browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)[req.session.browserCurrency.geoplugin_currencyCode];
+    browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)[req.session.browserCurrency.currency_code];
     if (!browserCurrencyRate || browserCurrencyRate == '') {
       browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)['USD'];
       thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates.rates)[val.currency];
@@ -451,7 +451,7 @@ let getEachSalaryText = function(msg,req) {
     }
     thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates.rates)[val.currency];
     mySalaryInBrowsersCurrency = Math.floor(browserCurrencyRate / thisPersonsCurrencyRate * val.salary);
-    val.salary = `${mySalaryInBrowsersCurrency} ${req.session.browserCurrency.geoplugin_currencyCode} per Month`;
+    val.salary = `${mySalaryInBrowsersCurrency} ${req.session.browserCurrency.currency_code} per Month`;
   });
   return msg;
 }
@@ -561,26 +561,33 @@ app.get('/peopleBussinessCards',(req,res) => {
 
 });
 
-let createCurrencySession = function(req,msg) {
+let createCurrencySession = function(req,input) {
   return new Promise(function(resolve, reject) {
     // var ip = req.connection.remoteAddress.replace(/^.*:/, '');
     // console.log(ip);
     // axios.get(`http://www.geoplugin.net/json.gp?10.28.119.231`).then((msg) => {
-      console.log(JSON.parse(msg));
-      console.log(msg.data.geoplugin_status, msg.data.geoplugin_currencyCode);
-      if (msg.data.geoplugin_status === 404) {
-        req.session.browserCurrency = {geoplugin_currencyCode: 'USD'};
-      } else {
-        req.session.browserCurrency = {geoplugin_currencyCode: msg.data.geoplugin_currencyCode};
-      }
+      // console.log('here', msg.currency_code, req.session);
+      // console.log(msg.data.geoplugin_status, msg.data.currency_code);
+      // if (msg.data.geoplugin_status === 404) {
+      //   req.session.browserCurrency = {currency_code: 'USD'};
+      // } else {
+      // }
+      // let browserCurrency = input.currency_code;
+      // console.log(req.session);
+      // req.session.browserCurrency = {};
+      // var gotInput = new Object(input);
+      // console.log('herelo', typeof input, typeof gotInput);
+      req.session.browserCurrency = {currency_code: input.currency_code};
+      // req.session.browserCurrency = browserCurrency;
       let dt = new Date(), today = '';
       if (dt.getMonth + 1 < 10) {
         today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
       } else {
-        today = dt.getFullYear() + "-0" + (dt.getMonth() + 1) + "-" + dt.getDate();
+        today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
       };
       CurrencyRates.findOne({date: today}).then((reply) => {
-        if (!reply) return updateCurrencyRate();
+        // return console.log(today,reply);
+        if (!reply) return updateCurrencyRate(today);
         return resolve(reply);
       }).catch((e) => {
         reject(e);
@@ -588,13 +595,13 @@ let createCurrencySession = function(req,msg) {
   });
 };
 
-let updateCurrencyRate = function() {
+let updateCurrencyRate = function(today) {
   return new Promise(function(resolve, reject) {
     axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
       let currency = new CurrencyRates({
         timestamp: reply.data.timestamp,
         base  : reply.data.base,
-        date  : reply.data.date,
+        date  : today,
         rates : JSON.stringify(reply.data.rates)
       });
       console.log('saving new data fixer');
@@ -608,8 +615,10 @@ let updateCurrencyRate = function() {
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
-    createCurrencySession(req,req.body.data).then((reply) => {
-      res.status(200).send(reply);
+    console.log(typeof req.body.msg);
+    createCurrencySession(req,req.body.msg).then((msg) => {
+      req.session.currencyRates = msg;
+      res.status(200).send(msg);
     }).catch((e) => {
       console.log(e);
       res.status(400).send('sorry bad error');
