@@ -283,13 +283,6 @@
     <script src="/reload/reload.js"></script>
 
     <script type="text/javascript">
-      $( document ).ajaxStart(function() {
-        $('.modal-loading').removeClass('d-none');
-      });
-
-      $( document ).ajaxStop(function() {
-        $('.modal-loading').addClass('d-none');
-      });
 
       $(document).on('pjax:send', function() {
         $('.modal-loading').removeClass('d-none');
@@ -305,6 +298,7 @@
         console.log('currrency is set');
         $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
         {{else}}
+        $('.modal-loading').removeClass('d-none');
         console.log('performing request to get local currency');
         doajax('https://json.geoiplookup.io/','get').then((res) => {
           console.log(res);
