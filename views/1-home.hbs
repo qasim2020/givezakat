@@ -28,7 +28,17 @@
 
     <link rel="stylesheet" href="/styles.css">
     <style media="screen">
-
+      .modal-loading {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        text-align: center;
+        padding-top: 50vh;
+        background: white;
+        color: darkcyan;
+        font-weight: bold;
+        z-index: 1000;
+      }
     </style>
 
     <title>Zakat Lists</title>
@@ -65,6 +75,10 @@
         <button class="close-modal btn btn-primary ml-point5" type="button" name="button">Close</button>
       </div>
 
+    </div>
+
+    <div class="modal-loading d-none">
+      loading content
     </div>
 
     <section id="hero">
@@ -269,6 +283,21 @@
     <script src="/reload/reload.js"></script>
 
     <script type="text/javascript">
+      $( document ).ajaxStart(function() {
+        $('.modal-loading').removeClass('d-none');
+      });
+
+      $( document ).ajaxStop(function() {
+        $('.modal-loading').addClass('d-none');
+      });
+
+      $(document).on('pjax:send', function() {
+        $('.modal-loading').removeClass('d-none');
+      });
+
+      $(document).on('pjax:complete', function() {
+        $('.modal-loading').addClass('d-none');
+      });
 
       $(document).ready(function() {
 
