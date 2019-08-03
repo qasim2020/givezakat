@@ -111,7 +111,7 @@
         <div class="person">
           <p>Earning {{salary}} to support {{fMembers}} family members</p>
         </div>
-        <input class="input-person" class="form-control text-center" type="number" name="{{_id}}" value="" placeholder="50 {{localCurrency}}" required>
+        <input class="input-person" class="form-control text-center" type="number" name="{{mob}}" value="" placeholder="50 {{localCurrency}}" required>
 
         {{/each}}
 
@@ -166,7 +166,7 @@
 
         $.each($('.input-person'),(key,val) => {
           array.push({
-            id : $(val).attr('name'),
+            mob : $(val).attr('name'),
             amount: $(val).val()
           });
         });
@@ -179,35 +179,6 @@
         $('.checkout-container').removeClass('d-none');
         $('#stripe-btn').html(`Payout ${total}.00 USD`);
         $('#input-amount').val(total * 100);
-
-        return;
-
-        data = {
-          "query": 'add-new-orders',
-          "people": array,
-          "token": `{{token}}`
-        };
-
-        data = JSON.stringify(data);
-
-        console.log(data);
-
-        $.ajax({
-            url: '/signing',
-            type: 'post',
-            data,
-            headers: {
-                'content-type': 'application/json',
-            }
-          }).done((msg) => {
-            console.log(msg);
-            $(this).closest('.form-grid').hide();
-            $('.checkout-container').removeClass('d-none');
-            $('#stripe-btn').html(`Payout ${total}.00 USD`);
-            $('#input-amount').val(total * 100);
-          }).fail((e) => {
-            console.log('error here', e);
-          });
 
       });
 
@@ -296,7 +267,8 @@
         hiddenInput.setAttribute('name', 'stripeToken');
         hiddenInput.setAttribute('value', token.id);
         form.appendChild(hiddenInput);
-
+        // console.log(token);
+        // return console.log( $( form ).serialize() );
         // Submit the form
         form.submit();
       }

@@ -66,6 +66,15 @@ app.get('/hacks',(req,res) => {
 
 app.get('/profile/:token',authenticate,(req,res) => {
   // get all data updated by me
+
+  if (!req.session.token) {
+      return res.render('1-redirect.hbs',{
+      timer: 3,
+      page: 'No Session Found !',
+      message: 'You are not logged in, redirecting you to home page',
+    });
+  };
+
   People.find({addedBy: req.params.user._id}).then((sponsored) => {
     // get all orders placed by me
     req.sponsored = getEachSalaryText(sponsored,req);
@@ -88,8 +97,9 @@ app.get('/profile/:token',authenticate,(req,res) => {
       stuff = req.orders.filter(obj => {
         return val._id == obj.paidto;
       })[0];
-      val.amount = stuff.amount + ' ' + stuff.currency.toUpperCase();
-      val.status = stuff.status.toUpperCase();
+      val.amount = stuff.amount + ' ' + stuff.currency;
+      val.status = stuff.status;
+      val.receipt = stuff.receipt;
     });
 
     res.status(200).render('1-profile.hbs',{
@@ -104,24 +114,60 @@ app.get('/profile/:token',authenticate,(req,res) => {
     });
   }).catch((e) => {
     console.log(e);
-    res.status(400).send(e);
+    res.render('1-redirect.hbs',{
+      timer: 6,
+      page: 'No Session Found !',
+      message: e,
+      token: req.session.token
+    });
   });
 });
+
+let getCount = function () {
+  return People.aggregate([
+    { "$facet": {
+      "Total": [
+        { "$match" : { "cardClass": {'$exists' : true}}},
+        { "$count": "Total" },
+      ],
+      "pending": [
+        { "$match" : { "cardClass": 'pending'}},
+        { "$count": "pending" },
+      ],
+      "delivered": [
+        { "$match" : { "cardClass": 'delivered'}},
+        { "$count": "delivered" },
+      ],
+      "inprogress": [
+        { "$match" : { "cardClass": 'inprogress'}},
+        { "$count": "inprogress" },
+      ],
+    }},
+    { "$project": {
+      "Total": { "$arrayElemAt": ["$Total.Total", 0] },
+      "pending": { "$arrayElemAt": ["$pending.pending", 0] },
+      "delivered": { "$arrayElemAt": ["$delivered.delivered", 0] },
+      "inprogress": { "$arrayElemAt": ["$inprogress.inprogress", 0] },
+    }}
+  ]);
+};
 
 app.get('/',(req,res) => {
 
   if (!req.session.due) req.session.due = [];
-  console.log('session created');
-  // createCurrencySession(req).then((msg) => {
-  //   req.session.currencyRates = msg;
-  readXlsxFile(__dirname+'/static/sample.xlsx')
-  .then((rows) => {
+  console.log('****session created*****');
+  getCount().then((msg) => {
+    req.count = msg;
+    console.log(msg);
+    return readXlsxFile(__dirname+'/static/sample.xlsx');
+  }).then((rows) => {
     req.session.sampleRows = rows[0];
     res.render('1-home.hbs', {
       sampleRows: rows[0],
       due: req.session.due.length,
       dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
+      count: req.count[0],
     });
   }).catch((e) => {
     console.log(e);
@@ -149,7 +195,7 @@ app.get('/zakatcalc',(req,res) => {
     due: req.session.due.length,
   });
 
-})
+});
 
 app.get('/signin/:call',(req,res) => {
   console.log(req.params.call);
@@ -224,13 +270,10 @@ var getip = (req) => {
     });
 };
 
-// app.get('/due',(req,res)=> {
-//   res.render('1-due.hbs',{
-//
-//   });
-// })
 
 app.get('/due/:token',authenticate,(req,res) => {
+
+  console.log('****Due Page*****');
 
   if (!req.session.due) {
     return res.render('1-redirect.hbs',{
@@ -275,11 +318,11 @@ app.get('/due/:token',authenticate,(req,res) => {
 });
 
 function updateOrders(req,res) {
-  // if (!req.session.token) return res.status(400).send('Un auhtorized request');
+
   return new Promise(function(resolve, reject) {
     let paymentDetails = JSON.parse(req.query.paymentDetails);
-    let objectIdArray = paymentDetails.map(s => mongoose.Types.ObjectId(s.id));
-    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
+    let objectIdArray = paymentDetails.map(s => s.mob);
+    People.find({'mob' : {$in : objectIdArray}}).then((msg) => {
       req.people = msg;
       return Users.findByToken(req.query.token);
     }).then((user) => {
@@ -291,14 +334,18 @@ function updateOrders(req,res) {
         values.paidby = user._id.toString();
         values.paidto = val._id.toString();
         values.amount = paymentDetails.filter(obj => {
-                            return obj.id === val._id.toString();
+                            return obj.mob === val.mob;
                         })[0].amount;
         values.status = 'pending';
-        values.currency = req.currency;
+        values.currency = req.session.browserCurrency.currency_code.toLowerCase();
         values.customer = req.charge.customer;
+        values.receipt = req.charge.receipt_url;
         array.push(values);
+
+        val.status = 'pending';
+        val.amount = `${values.amount} ${values.currency}`;
       });
-      return Orders.create(array);
+      return Orders.create(array,{new:true});
     }).then((order) => {
       return resolve(order);
     }).catch((e) => {
@@ -310,20 +357,25 @@ function updateOrders(req,res) {
 
 app.get("/charge", authenticate, (req, res) => {
 
-  // console.log(req.query);
-  // req.session.browserCurrency = {
-  //   currency_code: 'EUR',
-  // };
-  stripe.customers.create({
+  console.log('***making Charge***');
+  stripe.products.create({
+	      name: 'T-shirt',
+	      type: 'good',
+        description: 'Comfortable cotton t-shirt',
+        attributes: ['size', 'gender']
+  }).then((msg) => {
+    return stripe.customers.create({
       email: req.query.email,
       card: req.query.stripeToken
-  }).then(customer =>
-    stripe.charges.create({
+    });
+  }).then((customer) => {
+     return stripe.charges.create({
       amount: req.query.amount,
       description: "Zakat",
-      currency: 'usd',
+      currency: req.session.browserCurrency.currency_code.toLowerCase(),
       customer: customer.id
-  })).then((charge) => {
+    });
+  }).then((charge) => {
     req.charge = charge;
     return updateOrders(req,res);
   }).then((msg) => {
@@ -337,7 +389,7 @@ app.get("/charge", authenticate, (req, res) => {
       payed: req.people
     });
   }).catch(err => {
-    console.log("Error:", err);
+    console.log(err);
     res.render('1-redirect.hbs',{
       timer: 6,
       page: 'Payment Failed !',
@@ -392,12 +444,14 @@ app.get('/home/:token', authenticate, (req,res) => {
 
   if (!req.session.due) req.session.due = [];
 
-  console.log(req.params.user.name,'entered home');
+  console.log(`**** `,req.params.user.name,'entered home *****');
 
   // LIST ALL PEOPLE
-  People.find().limit(12).then((msg) => {
+  getCount().then((msg) => {
+    req.count = msg;
+    return People.find().limit(12);
+  }).then((msg) => {
     req.data = msg;
-    // FIND PEOPLE PAID ZAKAT BY ME
     return Orders.find({paidby: req.params.user._id});
   }).then((msg) => {
     let ids = [];
@@ -429,6 +483,7 @@ app.get('/home/:token', authenticate, (req,res) => {
       due: req.session.due.length,
       dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
+      count: req.count[0]
     });
   }).catch((e) => {
     console.log(e);
@@ -441,8 +496,10 @@ app.get('/logout/:token', authenticate, (req,res) => {
   console.log(req.params.user.name,'logged out');
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
-    req.url = '/';
-    return app._router.handle(req, res);
+    req.session.destroy(function(err) {
+      req.url = '/';
+      return app._router.handle(req, res);
+    });
   }).catch((e) => {
     console.log(e);
     res.status(404).send(e);

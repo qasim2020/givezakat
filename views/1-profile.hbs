@@ -39,6 +39,18 @@
         color: #173627;
       }
 
+      .status-pending {
+        color: indianred;
+      }
+
+      .status-delivered {
+        color: darkgreen;
+      }
+
+      .status-inprogress {
+        color: cornflowerblue;
+      }
+
       @media (min-width:600px) {
         .profile-pic-area > .small-content {
           align-items: center;
@@ -127,29 +139,37 @@
         </div>
         {{/unless}}
         {{#if payed}}
-        <table width="100%">
-          <tr>
-            <th>Status</th>
-            <th>Name</th>
-            <th>Zakat</th>
-            <th>Location</th>
-            <th>Mob No</th>
-            <th>Sponsor's Name</th>
-            <th>Sponsor's Location</th>
-            <th>Sponsor's Mob No</th>
-          </tr>
-          {{#each payed}}
-          <tr>
-            <td>{{this.status}}</td>
-            <td>{{this.name}}</td>
-            <td>{{this.amount}}</td>
-            <td>{{this.address}}</td>
-            <td>{{this.mob}}</td>
-            <td>{{this.sponsorName}}</td>
-            <td>{{this.sponsorAddress}}</td>
-            <td>{{this.sponsorMob}}</td>
-          </tr>
-          {{/each}}
+        <table width="100%" style="display: inline-table; table-layout: auto">
+          <tbody  style="color:darkcyan">
+
+            <tr>
+              <th>Status</th>
+              <th>Receipt</th>
+              <th>Zakat</th>
+              <th>Person</th>
+              <th>Sponsor</th>
+            </tr>
+            {{#each payed}}
+            <tr>
+              <td class="status-{{this.status}}">{{this.status}}</td>
+              {{#if receipt}}
+              <td><a href="{{receipt}}" target="_blank">click here</a></td>
+              {{else}}
+              <td>N/A</td>
+              {{/if}}
+              <td>{{this.amount}}</td>
+              <td style="text-align: left">
+                {{this.name}} <br>
+                {{this.salary}} {{this.currency}} per month <br>
+                {{this.fMembers}} family members <br>
+                {{this.mob}} <br>
+                {{this.address}}
+              </td>
+              <td style="text-align: left"><b>{{this.sponsorName}}</b> <br> {{this.sponsorMob}} <br> {{this.sponsorAddress}} </td>
+            </tr>
+            {{/each}}
+
+          </tbody>
         </table>
         {{/if}}
       </div>

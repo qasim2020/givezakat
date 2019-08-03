@@ -26,6 +26,10 @@ var Orders = mongoose.model('orders', {
   customer: {
     type: String,
     required: true,
+  },
+  receipt: {
+    type: String,
+    required: true,
   }
 });
 
