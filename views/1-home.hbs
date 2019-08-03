@@ -29,11 +29,11 @@
     <link rel="stylesheet" href="/styles.css">
     <style media="screen">
       .modal-loading {
-        position: fixed;
+        position: absolute;
         width: 100vw;
         height: 100vh;
+        left: 0;
         text-align: center;
-        padding-top: 50vh;
         background: white;
         color: darkcyan;
         font-weight: bold;
@@ -75,10 +75,6 @@
         <button class="close-modal btn btn-primary ml-point5" type="button" name="button">Close</button>
       </div>
 
-    </div>
-
-    <div class="modal-loading d-none">
-      loading content
     </div>
 
     <section id="hero">
@@ -181,6 +177,10 @@
         <p linked-data="delivered" id="delivered-badge" class="d-none">Delivered <span>x</span> </p>
         <p linked-data="pending" id="pending-badge" class="d-none">Pending <span>x</span> </p>
         <p linked-data="inprogress" id="inprogress-badge" class="d-none">In progress <span>x</span> </p>
+      </div>
+
+      <div class="modal-loading d-none">
+        loading content
       </div>
 
       <div data-show="showAllCards" id="all-data-here" class="encloser pt-md-2 pt-1"></div>
