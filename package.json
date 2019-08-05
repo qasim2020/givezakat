@@ -25,6 +25,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "cloudinary": "^1.13.2",
+    "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
     "express-pjax": "0.0.1",
     "express-session": "^1.16.2",

@@ -6,6 +6,7 @@ const express = require('express');
 const pjax    = require('express-pjax');
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
+var cookieParser = require('cookie-parser')
 const _ = require('lodash');
 const readXlsxFile = require('read-excel-file/node');
 const axios = require('axios');
@@ -32,18 +33,24 @@ app.use(pjax());
 app.use(express.static(__dirname+'/static'));
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+app.use(cookieParser());
 app.use(session({
   secret: 'oasdfkljh2j3lgh123ljkhl12kjh3',
   resave: false,
   saveUninitialized: true,
+  cookie: {maxAge:6000}
 }))
-hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine','hbs');
-
+hbs.registerPartials(__dirname + '/views/partials');
 hbs.registerHelper("inc", function(value, options) {
     return parseInt(value) + 1;
 });
-
+app.use(function(req, res, next) {
+  // if now() is after `req.session.cookie.expires`
+  console.log(req.session.cookie.expires);
+  //   regenerate the session
+  next();
+});
 
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token || req.query.token;
@@ -118,7 +125,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
       timer: 6,
       page: 'No Session Found !',
       message: e,
-      token: req.session.token
+      token: req.session.token,
     });
   });
 });
@@ -204,7 +211,7 @@ app.get('/signin/:call',(req,res) => {
     options = {
       signin: 'active',
       call: `${req.params.call}`,
-      due: req.session.due.length,
+      due: req.session.due && req.session.due.length,
     };
   } else {
     options = {signin: 'active'};
@@ -233,9 +240,10 @@ app.get('/addpeople/:token',authenticate,(req,res) => {
       sampleRows: rows[0],
       token: req.session.token,
       name: req.session.name,
-      due: req.session.due.length,
+      due: req.session.due && req.session.due.length,
     });
   }).catch((e) => {
+    console.log(e);
     res.render('1-404');
   })
 
@@ -475,7 +483,7 @@ app.get('/home/:token', authenticate, (req,res) => {
       } else {
         val.addedbyme = false;
       };
-      if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
+      if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
     });
     res.render('1-home.hbs',{
       token: req.session.token,
@@ -509,6 +517,7 @@ app.get('/logout/:token', authenticate, (req,res) => {
 let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
   _.each(msg,(val,key) => {
+    console.log(req.session.currencyRates);
     browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)[req.session.browserCurrency.currency_code];
     if (!browserCurrencyRate || browserCurrencyRate == '') {
       browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)['USD'];
@@ -530,9 +539,10 @@ app.get('/peopleBussinessCards',(req,res) => {
   if (req.query.type == 'all') {
 
     return People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).then((msg) => {
-      if (!msg) return Promise.reject('Bad query.');
+      if (!msg || msg.length < 1) return Promise.reject({code: 404,msg: 'Did not find any people for this filter !'});
       req.data = msg;
       msg = getEachSalaryText(msg,req);
+      console.log(msg);
       if (req.query.token.length <  30) return Promise.reject({code: 404,msg: 'No user found, showing all data as locked !'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
@@ -565,7 +575,7 @@ app.get('/peopleBussinessCards',(req,res) => {
           val.addedbyme = false;
         };
 
-        if (val.addedbyme || val.paidbyme.length > 0) val.unlocked = true;
+        if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
 
       });
       return res.renderPjax('2-peopleBussinessCards.hbs',{
@@ -576,7 +586,8 @@ app.get('/peopleBussinessCards',(req,res) => {
       console.log(e)
       if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{
         data: req.data,
-        query: req.query
+        query: req.query,
+        message: e.msg
       });
       return res.renderPjax('2-error.hbs');
     });
@@ -630,22 +641,9 @@ app.get('/peopleBussinessCards',(req,res) => {
 
 let createCurrencySession = function(req,input) {
   return new Promise(function(resolve, reject) {
-    // var ip = req.connection.remoteAddress.replace(/^.*:/, '');
-    // console.log(ip);
-    // axios.get(`http://www.geoplugin.net/json.gp?10.28.119.231`).then((msg) => {
-      // console.log('here', msg.currency_code, req.session);
-      // console.log(msg.data.geoplugin_status, msg.data.currency_code);
-      // if (msg.data.geoplugin_status === 404) {
-      //   req.session.browserCurrency = {currency_code: 'USD'};
-      // } else {
-      // }
-      // let browserCurrency = input.currency_code;
-      // console.log(req.session);
-      // req.session.browserCurrency = {};
-      // var gotInput = new Object(input);
-      // console.log('herelo', typeof input, typeof gotInput);
+
       req.session.browserCurrency = {currency_code: input.currency_code};
-      // req.session.browserCurrency = browserCurrency;
+
       let dt = new Date(), today = '';
       if (dt.getMonth + 1 < 10) {
         today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
@@ -653,7 +651,7 @@ let createCurrencySession = function(req,input) {
         today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
       };
       CurrencyRates.findOne({date: today}).then((reply) => {
-        // return console.log(today,reply);
+
         if (!reply) return updateCurrencyRate(today);
         return resolve(reply);
       }).catch((e) => {
@@ -672,7 +670,9 @@ let updateCurrencyRate = function(today) {
         rates : JSON.stringify(reply.data.rates)
       });
       console.log('saving new data fixer');
-      resolve(currency.save());
+      return currency.save();
+    }).then((reply) => {
+      resolve(reply);
     }).catch((e) => {
       reject(e);
     });
