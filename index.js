@@ -12,9 +12,8 @@ const readXlsxFile = require('read-excel-file/node');
 const axios = require('axios');
 const {OAuth2Client} = require('google-auth-library');
 const session = require('express-session');
-var ip = require("ip");
-const publicIp = require('public-ip');
-const stripe = require('stripe')('sk_test_hysfFVSPpr2vUx2kbqXMNHOJ');
+
+const stripe = require('stripe')(process.env.stripePrivate);
 
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
@@ -35,7 +34,7 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(cookieParser());
 app.use(session({
-  secret: 'oasdfkljh2j3lgh123ljkhl12kjh3',
+  secret: process.env.sessionSecret,
   resave: false,
   saveUninitialized: true,
   cookie: {maxAge:6000}
@@ -266,18 +265,6 @@ app.get('/updateperson/:call',(req,res) => {
     call: req.params.call.split('+').join(' '),
   });
 });
-
-var getip = (req) => {
-  return new Promise(function(resolve, reject) {
-    console.log(process.env.PORT);
-    if (process.env.PORT == '3000') return resolve(publicIp.v4());
-    let val = '::ffff:10.65.109.147';
-    let array = val.split(':');
-    // let array = req.connection.remoteAddress.split(':');
-    resolve(val);
-    });
-};
-
 
 app.get('/due/:token',authenticate,(req,res) => {
 
@@ -866,3 +853,7 @@ reload(app).then(function (reloadReturned) {
 }).catch(function (err) {
   console.error('Reload could not start, could not start server/sample app', err);
 });
+
+module.exports = {
+  app : app
+};
