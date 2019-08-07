@@ -709,7 +709,9 @@ app.post('/signing',(req,res) => {
   };
 
   if (req.body.query === 'Register') {
-    Users.findOne({"email": req.body.email}).then((result) => {
+    Users.findOne({
+      "email": req.body.email,
+    }).then((result) => {
       if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
       return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name, "password": 'fake_password'}}, {new: true, upsert: true});
     }).then((returned) => {
@@ -758,8 +760,7 @@ app.post('/signing',(req,res) => {
     if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
     Users.findOne({"email":req.body.email}).then((user) => {
       if (!user) return res.status(404).send('Sorry, you never registered before with this email. Please sign up.');
-      return sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
-    }).then((msg) => {
+      sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
       return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
     }).then((user) => {
       res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode});

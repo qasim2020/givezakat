@@ -64,7 +64,6 @@ describe('Sign In related tests', () => {
               email: 'qasimali24@gmail.com',
             })
             .expect((res) => {
-              console.log(res.body);
               phoneCode = res.body.phoneCode;
             })
             .expect(200)
@@ -76,16 +75,12 @@ describe('Sign In related tests', () => {
               email: 'qasimali24@gmail.com',
               code: phoneCode,
             })
-            .expect((res) => {
-              console.log(res.text);
-              // expect(res._id).toBe(stored_google);
-            })
             .expect(200)
     await request(app)
             .post('/signing')
             .set('Accept',process.env.test_call)
             .send({
-              query: 'new_password',
+              query: 'Register',
               email: 'qasimali24@gmail.com',
               password: '12341234qasim',
               code: phoneCode
