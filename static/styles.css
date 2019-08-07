@@ -884,7 +884,7 @@
         color: white;
       }
 
-      .subscription  input {
+      .subscription  input, .subscription  input::placeholder {
         width: 100%;
         font-size: 18px;
         font-weight: bold;
@@ -1004,7 +1004,7 @@
         color: #173627;
       }
 
-      .input-heading {
+      .input-heading, .input-heading::placeholder {
         color: #173627;
         font-size: 18px;
         font-weight: bold;
@@ -1022,7 +1022,7 @@
         background: #173627;
       }
 
-      .form-placement input{
+      .form-placement input, .form-placement input::placeholder{
         color: #173627;
         font-weight: bold;
         font-size: 18px;
@@ -1097,7 +1097,7 @@
 
       }
 
-      .form-placement .input-heading {
+      .form-placement .input-heading, .form-placement .input-heading::placeholder {
         font-weight: normal;
       }
 
@@ -1396,7 +1396,8 @@
         }
 
         input::placeholder , textarea::placeholder {
-          font-size: 15px;
+          font-size: 18px;
+          font-weight: bold;
         }
 
         .success {

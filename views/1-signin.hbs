@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     {{>googleAnalytics}}
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-signin-client_id" content="133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com">
@@ -76,7 +76,11 @@
           }
         }).done((token) => {
           console.log('successful login: ', token);
-          window.location.replace(`/home/${token}`);
+          {{#if call}}
+          window.location.assign(`/{{call}}/${token}`);
+          {{else}}
+          window.location.assign(`/home/${token}`);
+          {{/if}}
         }).fail((e) => {
           console.log(e);
           let errors = { password: e.responseText };
@@ -167,7 +171,7 @@
             'content-type': 'application/json',
         }
       }).done((token) => {
-        console.log('successful: ', token);
+        return console.log('successful: ', token);
         {{#if call}}
         window.location.assign(`/{{call}}/${token}`);
         {{else}}

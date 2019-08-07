@@ -168,7 +168,7 @@ app.get('/',(req,res) => {
     req.session.sampleRows = rows[0];
     let options = {
       sampleRows: rows[0],
-      due: req.session.due.length,
+      due: req.session.due && req.session.due.length,
       dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
       count: req.count[0],
@@ -198,7 +198,7 @@ app.get('/zakatcalc',(req,res) => {
     zakatcalc: 'active',
     token: req.session.token,
     name: req.session.name,
-    due: req.session.due.length,
+    due: req.session.due && req.session.due.length,
   });
 
 });
@@ -227,7 +227,7 @@ app.get('/signup',(req,res) => {
 app.get('/forgotpw',(req,res) => {
   res.render('1-fp.hbs',{
     signin: 'active',
-    due: req.session.due.length,
+    due: req.session.due && req.session.due.length,
   });
 });
 
@@ -279,7 +279,7 @@ app.get('/due/:token',authenticate,(req,res) => {
     })
   };
 
-  if (req.session.due.length < 1) {
+  if (req.session.due && req.session.due.length < 1) {
     return res.render('1-redirect.hbs',{
       timer: 3,
       page: 'No People Selected !',
@@ -295,7 +295,7 @@ app.get('/due/:token',authenticate,(req,res) => {
       res.render('1-due.hbs',{
         people: msg,
         dueStatus: 'active',
-        due: req.session.due.length,
+        due: req.session.due && req.session.due.length,
         token: req.session.token,
         name: req.session.name,
         email: req.params.user.email,
@@ -377,7 +377,7 @@ app.get("/charge", authenticate, (req, res) => {
     req.session.due = [];
     res.render('1-charge.hbs',{
       dueStatus: 'active',
-      due: req.session.due.length,
+      due: req.session.due && req.session.due.length,
       token: req.session.token,
       name: req.session.name,
       receipt: req.charge.receipt_url,
@@ -475,7 +475,7 @@ app.get('/home/:token', authenticate, (req,res) => {
     res.render('1-home.hbs',{
       token: req.session.token,
       name: req.params.user.name,
-      due: req.session.due.length,
+      due: req.session.due && req.session.due.length,
       dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
       count: req.count[0]
