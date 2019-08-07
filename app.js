@@ -709,24 +709,24 @@ app.post('/signing',(req,res) => {
   };
 
   if (req.body.query === 'Register') {
-    Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name, "password": 'fake_password'}}, {new: true, upsert: true})
-    .then((returned) => {
-      if (!returned) return Promise.reject('Invalid Request');
-      returned.password = req.body.password
+    Users.findOne({"email": req.body.email}).then((result) => {
+      if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
+      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name, "password": 'fake_password'}}, {new: true, upsert: true});
+    }).then((returned) => {
+      if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
+      returned.password = req.body.password;
       return returned.generateAuthToken(req);
     }).then((msg) => {
       res.status(200).send(msg.tokens[0].token);
     }).catch((e) => {
       console.log(e);
-      if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
-      return res.status(400).send('Server - Bad Request');
+      return res.status(401).send(e);
     });
   };
 
   if (req.body.query === 'Google_ID') {
-    req.body.SigninType = 'Google';
     testGoogleToken(req).then((res) => {
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":req.body.SigninType}}, {new: true, upsert: true});
+      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google'}}, {new: true, upsert: true});
     }).then((returned) => {
       if (!returned) return Promise.reject('Invalid Request');
       return returned.generateAuthToken(req);
