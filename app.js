@@ -173,7 +173,7 @@ app.get('/',(req,res) => {
       currency: req.session.hasOwnProperty('browserCurrency'),
       count: req.count[0],
     };
-    if (req.headers.accept == 'test_call') return res.status(200).send(options);
+    if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
     res.status(200).render('1-home.hbs', options);
   }).catch((e) => {
     console.log(e);
@@ -666,7 +666,7 @@ let updateCurrencyRate = function(today) {
 
 let testGoogleToken = function(req) {
   return new Promise(function(resolve, reject) {
-    if (req.headers.accept == 'test_call') {
+    if (req.headers.accept == process.env.test_call) {
       resolve(true);
     };
     const client = new OAuth2Client(process.env.GoogleSignInKey);
@@ -717,7 +717,7 @@ app.post('/signing',(req,res) => {
       returned.password = req.body.password;
       return returned.generateAuthToken(req);
     }).then((msg) => {
-      res.status(200).send(msg.tokens[0].token);
+      return res.status(200).send(msg.tokens[0].token);
     }).catch((e) => {
       console.log(e);
       return res.status(401).send(e);
@@ -734,7 +734,6 @@ app.post('/signing',(req,res) => {
       return res.status(200).send(returned.tokens[0].token);
     }).catch((e) => {
       console.log(e);
-      if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
       return res.status(400).send(`${e}`);
     });
 
@@ -756,13 +755,14 @@ app.post('/signing',(req,res) => {
 
   if (req.body.query === 'Email_Verify') {
     var phoneCode = Math.floor(100000 + Math.random() * 900000);
+    if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
     Users.findOne({"email":req.body.email}).then((user) => {
       if (!user) return res.status(404).send('Sorry, you never registered before with this email. Please sign up.');
-      return sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Make a story - Forgot Password')
+      return sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
     }).then((msg) => {
       return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
     }).then((user) => {
-      res.status(200).send('Mail sent !');
+      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode});
     }).catch((e) => {
       console.log(e);
       if (e.errno) return res.status(404).send(e.errno);
@@ -776,12 +776,12 @@ app.post('/signing',(req,res) => {
       "phoneCode": req.body.code
     }).then((user) => {
       if (!user) return Users.findOneAndUpdate({"email":req.body.email},{$set: {attemptedTime: new Date()}, $inc:{wrongAttempts:1}},{new:true});
-      console.log('user found', user);
       return Promise.resolve('Found');
     }).then((response) => {
       if (response === 'Found') return res.status(200).send('Verified !');
-      console.log(`${response}:::: Wrong attempt no: ${response.wrongAttempts} x Attempt`);
-      if (response.wrongAttempts > 4) return res.status(404).send('5 wrong attempts, please try again after 2 mins.');
+      if (!response) return Promise.reject('could not add this user due to some thing');
+      // console.log(`${response}:::: Wrong attempt no: ${response.wrongAttempts} x Attempt`);
+      if (response.wrongAttempts > 4 && req.headers.accept != process.env.test_call) return res.status(404).send('5 wrong attempts, please try again after 2 mins.');
       return res.status(400).send('Did not match !');
     }).catch((e) => {
       console.log(e);
@@ -798,7 +798,6 @@ app.post('/signing',(req,res) => {
       user.password = req.body.password;
       return user.generateAuthToken(req);
     }).then((response)=> {
-      console.log(response);
       res.status(200).send('Password changed, please login with new password.');
     }).catch((e) => {
       console.log(e);

@@ -12,7 +12,7 @@ describe('Open all pages just fine', () => {
   test('Should open home page with basic data', (done) => {
     request(app)
       .get('/')
-      .set('Accept', 'test_call')
+      .set('Accept', `${process.env.test_call}`)
       .expect((res) => {
         expect(res.body.sampleRows.length).toBe(9);
         expect(res.body.due).toBe(0);
@@ -29,7 +29,7 @@ describe('Sign In related tests', () => {
   test('Should sign in with google', (done) => {
     request(app)
       .post('/signing')
-      .set('Accept', 'test_call')
+      .set('Accept', process.env.test_call)
       .send({
         'query': 'Google_ID',
         "name": 'Qasim',
@@ -41,11 +41,11 @@ describe('Sign In related tests', () => {
       .expect(200,done)
   });
 
-  test('Should sign in with google and then register as a new user', async () => {
-    let stored_google;
+  test('Google Sign in > Manual Register > Verify Email > Update Account', async () => {
+    let stored_google, phoneCode;
     await request(app)
             .post('/signing')
-            .set('Accept', 'test_call')
+            .set('Accept', process.env.test_call)
             .send({
               'query': 'Google_ID',
               "name": 'Qasim',
@@ -58,16 +58,40 @@ describe('Sign In related tests', () => {
             .expect(200)
     await request(app)
             .post('/signing')
-            .set('Accept','test_call')
+            .set('Accept',process.env.test_call)
             .send({
-              query: 'Register',
-              name: 'Qasim',
+              query: 'Email_Verify',
               email: 'qasimali24@gmail.com',
-              password: '1234qasim'
+            })
+            .expect((res) => {
+              console.log(res.body);
+              phoneCode = res.body.phoneCode;
+            })
+            .expect(200)
+    await request(app)
+            .post('/signing')
+            .set('Accept',process.env.test_call)
+            .send({
+              query: 'Test_Code',
+              email: 'qasimali24@gmail.com',
+              code: phoneCode,
+            })
+            .expect((res) => {
+              console.log(res.text);
+              // expect(res._id).toBe(stored_google);
+            })
+            .expect(200)
+    await request(app)
+            .post('/signing')
+            .set('Accept',process.env.test_call)
+            .send({
+              query: 'new_password',
+              email: 'qasimali24@gmail.com',
+              password: '12341234qasim',
+              code: phoneCode
             })
             .expect((res) => {
               expect(res._id).toBe(stored_google);
-              expect(res.text.length).toBe(171);
             })
             .expect(200)
   });
@@ -75,7 +99,7 @@ describe('Sign In related tests', () => {
   test('Should not register an email that has already been created manually', async() => {
     await request(app)
             .post('/signing')
-            .set('Accept','test_call')
+            .set('Accept',process.env.test_call)
             .send({
               query: 'Register',
               name: 'Qasim',
@@ -88,7 +112,7 @@ describe('Sign In related tests', () => {
             .expect(200);
     await request(app)
             .post('/signing')
-            .set('Accept','test_call')
+            .set('Accept',process.env.test_call)
             .send({
               query: 'Register',
               name: 'hacker',
@@ -101,7 +125,7 @@ describe('Sign In related tests', () => {
   test('Should register manually and then log in manually', async() => {
     await request(app)
             .post('/signing')
-            .set('Accept','test_call')
+            .set('Accept',process.env.test_call)
             .send({
               query: 'Register',
               name: 'Qasim',
@@ -114,7 +138,7 @@ describe('Sign In related tests', () => {
             .expect(200)
     await request(app)
             .post('/signing')
-            .set('Accept','test_call')
+            .set('Accept',process.env.test_call)
             .send({
               "query": 'Login',
               "email": 'qasimali24@gmail.com',
@@ -125,11 +149,11 @@ describe('Sign In related tests', () => {
             })
             .expect(200)
   });
-  
+
   test('Should register manually and then log in with google' , async() => {
     await request(app)
             .post('/signing')
-            .set('Accept','test_call')
+            .set('Accept',process.env.test_call)
             .send({
               query: 'Register',
               name: 'Qasim',
@@ -142,7 +166,7 @@ describe('Sign In related tests', () => {
             .expect(200)
     await request(app)
             .post('/signing')
-            .set('Accept', 'test_call')
+            .set('Accept', process.env.test_call)
             .send({
               'query': 'Google_ID',
               "name": 'Qasim',
