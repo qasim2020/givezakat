@@ -45,7 +45,6 @@ var UsersSchema = new mongoose.Schema({
 
 UsersSchema.pre('save', function(next) {
   var user = this;
-  console.log('password modified?',user.isModified('password'));
   if (user.isModified('password')) {
     bcrypt.genSalt(10, (err, salt) => {
       bcrypt.hash(user.password, salt, (err, hash) => {
@@ -72,13 +71,10 @@ UsersSchema.methods.generateAuthToken = function (req) {
   var user = this;
   var access = 'auth';
   var token = jwt.sign({_id: user._id.toHexString(), access}, process.env.JWT_SECRET).toString();
-
   user.tokens = {access, token};
-
   req.session.token = token;
   req.session.name = user.name;
   req.session.myid = user._id;
-
   return user.save().then(() => {
     return user;
   });

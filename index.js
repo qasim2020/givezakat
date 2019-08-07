@@ -1,7 +1,6 @@
-const app = require('./app');
+const {app, http} = require('./app');
 const reload = require('reload');
 
-var app = express();
 var port = process.env.PORT || 3000;
 
 

@@ -76,7 +76,7 @@
           console.log('successful login: ', token);
           window.location.replace(`/home/${token}`);
         }).fail((e) => {
-          console.log('error here', e);
+          console.log(e);
           let errors = { password: e.responseText };
           $("#sign-in").validate().showErrors(errors);
         });
@@ -172,7 +172,7 @@
         window.location.assign(`/home/${token}`);
         {{/if}}
       }).fail((e) => {
-        console.log('error here', e.responseText);
+        console.log(e.responseText);
       });
 
     }

@@ -2,34 +2,126 @@ require('../config/config');
 
 const express = require('express');
 const request = require('supertest');
-const {app} = require('../app.js');
+const {app,mongoose,People,Orders,CurrencyRates,Users} = require('../app.js');
 
-test('Should open home page with basic data', (done) => {
-  request(app)
-    .get('/')
-    .set('Accept', 'test_call')
-    .expect((res) => {
-      expect(res.body.sampleRows.length).toBe(9);
-      expect(res.body.due).toBe(0);
-      expect(res.body).toHaveProperty('dueIds');
-      expect(res.body.currency).toBeFalsy();
-      expect(res.body).toHaveProperty('count');
-    })
-    .expect(200, done)
+beforeEach(() => {
+  return Users.find().deleteMany();
 });
 
-test('Should create a new user by google', (done) => {
-  request(app)
-    .post('/signing')
-    .send({
-      'query': 'Google_ID',
-      "id_token": '123412341234efasdf24',
-      "client_id": 'asdfasdfq2rsfdg',
-      "name": 'Qasim',
-      "email": 'qasimali24@gmail.com',
-    })
-    .expect(res => {
-      // console.log(res);
-    })
-    .expect(200, done)
+describe('Open all pages just fine', () => {
+  test('Should open home page with basic data', (done) => {
+    request(app)
+      .get('/')
+      .set('Accept', 'test_call')
+      .expect((res) => {
+        expect(res.body.sampleRows.length).toBe(9);
+        expect(res.body.due).toBe(0);
+        expect(res.body).toHaveProperty('dueIds');
+        expect(res.body.currency).toBeFalsy();
+        expect(res.body).toHaveProperty('count');
+      })
+      .expect(200, done)
+  });
+})
+
+describe('Sign In related tests', () => {
+
+  test('Should sign in with google', (done) => {
+    request(app)
+      .post('/signing')
+      .set('Accept', 'test_call')
+      .send({
+        'query': 'Google_ID',
+        "name": 'Qasim',
+        "email": 'qasimali24@gmail.com',
+      })
+      .expect((res) => {
+        expect(res.text.length).toBe(171);
+      })
+      .expect(200,done)
+  });
+
+  test('Should sign in with google and then register as a new user', async () => {
+    await request(app)
+            .post('/signing')
+            .set('Accept', 'test_call')
+            .send({
+              'query': 'Google_ID',
+              "name": 'Qasim',
+              "email": 'qasimali24@gmail.com',
+            })
+            .expect((res) => {
+              expect(res.text.length).toBe(171);
+            })
+            .expect(200)
+    await request(app)
+            .post('/signing')
+            .set('Accept','test_call')
+            .send({
+              query: 'Register',
+              name: 'Qasim',
+              email: 'qasimali24@gmail.com',
+              password: '1234qasim'
+            })
+            .expect((res) => {
+              expect(res.text.length).toBe(171);
+            })
+            .expect(200)
+  });
+
+  test('Should register manually and then log in manually', async() => {
+    await request(app)
+            .post('/signing')
+            .set('Accept','test_call')
+            .send({
+              query: 'Register',
+              name: 'Qasim',
+              email: 'qasimali24@gmail.com',
+              password: '1234qasim'
+            })
+            .expect((res) => {
+              expect(res.text.length).toBe(171);
+            })
+            .expect(200)
+    await request(app)
+            .post('/signing')
+            .set('Accept','test_call')
+            .send({
+              "query": 'Login',
+              "email": 'qasimali24@gmail.com',
+              "password": '1234qasim'
+            })
+            .expect(res => {
+              expect(res.text.length).toBe(171);
+            })
+            .expect(200)
+  });
+
+  test('Should register manually and then log in with google' , async() => {
+    await request(app)
+            .post('/signing')
+            .set('Accept','test_call')
+            .send({
+              query: 'Register',
+              name: 'Qasim',
+              email: 'qasimali24@gmail.com',
+              password: '1234qasim'
+            })
+            .expect((res) => {
+              expect(res.text.length).toBe(171);
+            })
+            .expect(200)
+    await request(app)
+            .post('/signing')
+            .set('Accept', 'test_call')
+            .send({
+              'query': 'Google_ID',
+              "name": 'Qasim',
+              "email": 'qasimali24@gmail.com',
+            })
+            .expect((res) => {
+              expect(res.text.length).toBe(171);
+            })
+            .expect(200)
+  });
 })

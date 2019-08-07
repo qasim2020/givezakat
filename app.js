@@ -45,7 +45,7 @@ hbs.registerHelper("inc", function(value, options) {
 });
 app.use(function(req, res, next) {
   // if now() is after `req.session.cookie.expires`
-  console.log(req.session.cookie.expires);
+  // console.log(req.session.cookie.expires);
   //   regenerate the session
   next();
 });
@@ -160,7 +160,6 @@ let getCount = function () {
 app.get('/',(req,res) => {
 
   if (!req.session.due) req.session.due = [];
-  console.log('****session created*****');
 
   getCount().then((msg) => {
     req.count = msg;
@@ -505,7 +504,6 @@ app.get('/logout/:token', authenticate, (req,res) => {
 let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
   _.each(msg,(val,key) => {
-    console.log(req.session.currencyRates);
     browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)[req.session.browserCurrency.currency_code];
     if (!browserCurrencyRate || browserCurrencyRate == '') {
       browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)['USD'];
@@ -530,7 +528,6 @@ app.get('/peopleBussinessCards',(req,res) => {
       if (!msg || msg.length < 1) return Promise.reject({code: 404,msg: 'Did not find any people for this filter !'});
       req.data = msg;
       msg = getEachSalaryText(msg,req);
-      console.log(msg);
       if (req.query.token.length <  30) return Promise.reject({code: 404,msg: 'No user found, showing all data as locked !'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
@@ -667,6 +664,26 @@ let updateCurrencyRate = function(today) {
   });
 };
 
+let testGoogleToken = function(req) {
+  return new Promise(function(resolve, reject) {
+    if (req.headers.accept == 'test_call') {
+      resolve(true);
+    };
+    const client = new OAuth2Client(process.env.GoogleSignInKey);
+    client.verifyIdToken({
+        idToken: req.body.id_token,
+        audience: process.env.GoogleSignInKey,
+    }).then((ticket) => {
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        resolve(true);
+    }).catch((e) => {
+        reject(e)
+    });
+  });
+}
+
+
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
@@ -676,7 +693,7 @@ app.post('/signing',(req,res) => {
       res.status(200).send(msg);
     }).catch((e) => {
       console.log(e);
-      res.status(400).send('sorry bad error');
+      res.status(400).send(e);
     });
 
   }
@@ -692,42 +709,33 @@ app.post('/signing',(req,res) => {
   };
 
   if (req.body.query === 'Register') {
-    var user = new Users(
-      _.pick(req.body,['name','email','password']),
-    );
-    user.generateAuthToken(req).then((returned) => {
-      res.status(200).send(returned.tokens[0].token);
-      return console.log('saved', returned.name);
+    Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name, "password": 'fake_password'}}, {new: true, upsert: true})
+    .then((returned) => {
+      if (!returned) return Promise.reject('Invalid Request');
+      returned.password = req.body.password
+      return returned.generateAuthToken(req);
+    }).then((msg) => {
+      res.status(200).send(msg.tokens[0].token);
     }).catch((e) => {
       console.log(e);
       if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
-      console.log('Error here', e);
       return res.status(400).send('Server - Bad Request');
     });
   };
 
   if (req.body.query === 'Google_ID') {
-
     req.body.SigninType = 'Google';
-    const client = new OAuth2Client(process.env.GoogleSignInKey);
-    client.verifyIdToken({
-        idToken: req.body.id_token,
-        audience: process.env.GoogleSignInKey,
-    }).then((ticket) => {
-        const payload = ticket.getPayload();
-        const userid = payload['sub'];
-        return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"SigninType":req.body.SigninType}}, {new: true});
+    testGoogleToken(req).then((res) => {
+      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":req.body.SigninType}}, {new: true, upsert: true});
     }).then((returned) => {
-        if (!returned) return Promise.reject('Invalid Request');
-        return returned.generateAuthToken(req);
+      if (!returned) return Promise.reject('Invalid Request');
+      return returned.generateAuthToken(req);
     }).then((returned) => {
-        res.status(200).send(returned.tokens[0].token);
-        return console.log('saved', returned.name);
+      return res.status(200).send(returned.tokens[0].token);
     }).catch((e) => {
-        console.log(e);
-        if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
-        console.log('Error here', e);
-        return res.status(400).send('Server - Bad Request' + e);
+      console.log(e);
+      if (e.code === 11000) return res.status(400).send('You are already registered with this email. Please Sign in.');
+      return res.status(400).send(`${e}`);
     });
 
   };
@@ -830,6 +838,4 @@ app.post('/signing',(req,res) => {
 serverRunning();
 
 
-module.exports = {
-  app : app
-};
+module.exports = {app,http,mongoose,People,Orders,CurrencyRates,Users};

@@ -312,7 +312,7 @@
           };
           return doajax('/signing','post',headers,data);
         }).then((msg) => {
-          console.log('stored current session of browser currency');
+          console.log(msg);
           $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
         }).catch((e) => {
           console.log(e);
