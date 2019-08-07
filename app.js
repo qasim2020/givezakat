@@ -504,16 +504,16 @@ app.get('/logout/:token', authenticate, (req,res) => {
 let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
   _.each(msg,(val,key) => {
-    browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)[req.session.browserCurrency.currency_code];
+    browserCurrencyRate = JSON.parse(req.session.currencyRates && req.session.currencyRates.rates)[req.session.browserCurrency && req.session.browserCurrency.currency_code];
     if (!browserCurrencyRate || browserCurrencyRate == '') {
-      browserCurrencyRate = JSON.parse(req.session.currencyRates.rates)['USD'];
-      thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates.rates)[val.currency];
+      browserCurrencyRate = JSON.parse(req.session.browserCurrency && req.session.currencyRates.rates)['USD'];
+      thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates && req.session.currencyRates.rates)[val.currency];
       mySalaryInBrowsersCurrency = Math.floor(browserCurrencyRate / thisPersonsCurrencyRate * val.salary);
       return val.salary = `${mySalaryInBrowsersCurrency} USD per Month`;
     }
-    thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates.rates)[val.currency];
+    thisPersonsCurrencyRate = JSON.parse(req.session.currencyRates && req.session.currencyRates.rates)[val.currency];
     mySalaryInBrowsersCurrency = Math.floor(browserCurrencyRate / thisPersonsCurrencyRate * val.salary);
-    val.salary = `${mySalaryInBrowsersCurrency} ${req.session.browserCurrency.currency_code} per Month`;
+    val.salary = `${mySalaryInBrowsersCurrency} ${req.session.browserCurrency && req.session.browserCurrency.currency_code} per Month`;
   });
   return msg;
 }
