@@ -20,5 +20,16 @@ test('Should open home page with basic data', (done) => {
 
 test('Should create a new user by google', (done) => {
   request(app)
-    .get('/')
+    .post('/signing')
+    .send({
+      'query': 'Google_ID',
+      "id_token": '123412341234efasdf24',
+      "client_id": 'asdfasdfq2rsfdg',
+      "name": 'Qasim',
+      "email": 'qasimali24@gmail.com',
+    })
+    .expect(res => {
+      // console.log(res);
+    })
+    .expect(200, done)
 })
