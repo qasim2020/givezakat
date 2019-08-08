@@ -5,7 +5,25 @@ const request = require('supertest');
 const {app,mongoose,People,Orders,CurrencyRates,Users} = require('../app.js');
 
 beforeEach(() => {
-  return Users.find().deleteMany();
+  let user = new Users({
+      wrongAttempts: 0,
+      attemptedTime: 0,
+      _id: mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
+      email: 'register@gmail.com',
+      // SigninType: 'manual',
+      // __v: 1,
+      name: 'registeredName',
+      tokens:
+       [ { _id: mongoose.Types.ObjectId('5d4c207f4abfaf2ef2cc65f1'),
+           access: 'auth',
+           token:
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDRjMjA3ZjllMDI4YTNkNmEzNzNmNjUiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTY1MjcwMTQzfQ.r-Ohc4zXwRTb7CtVGucjRe93XVmLmLpIW4frb6YyCcE' } ],
+      phoneCode: '123456',
+      password: 'aaksdjfhasfd'
+    });
+  return Users.find().deleteMany().then(() => {
+    return user.save();
+  });
 });
 
 describe('Open all pages just fine', () => {
@@ -52,6 +70,7 @@ describe('Sign In related tests', () => {
               "email": 'qasimali24@gmail.com',
             })
             .expect((res) => {
+              console.log('stage 1');
               stored_google = res._id
               expect(res.text.length).toBe(171);
             })
@@ -64,6 +83,7 @@ describe('Sign In related tests', () => {
               email: 'qasimali24@gmail.com',
             })
             .expect((res) => {
+              console.log('stage 2');
               phoneCode = res.body.phoneCode;
             })
             .expect(200)
@@ -83,13 +103,25 @@ describe('Sign In related tests', () => {
               query: 'Register',
               email: 'qasimali24@gmail.com',
               password: '12341234qasim',
-              code: phoneCode
+              phoneCode: phoneCode
             })
             .expect((res) => {
+              console.log('stage 4');
               expect(res._id).toBe(stored_google);
             })
             .expect(200)
   });
+
+  test('Should not register an email if it is not verified', async() => {
+    await request(app).post('/signing').set('Accept',process.env.test_call).send({
+      query: 'Register',
+      email: 'qasimali24@gmail.com',
+      password: '12341234qasim',
+      phoneCode: ''
+    }).expect(res => {
+      // console.log(res.text);
+    }).expect(401)
+  })
 
   test('Should not register an email that has already been created manually', async() => {
     await request(app)
@@ -97,47 +129,26 @@ describe('Sign In related tests', () => {
             .set('Accept',process.env.test_call)
             .send({
               query: 'Register',
-              name: 'Qasim',
-              email: 'qasimali24@gmail.com',
-              password: '1234qasim'
+              name: 'fakeName',
+              email: 'register@gmail.com',
+              password: '123412341324',
+              phoneCode: '123456'
             })
             .expect((res) => {
-              expect(res.text.length).toBe(171);
-            })
-            .expect(200);
-    await request(app)
-            .post('/signing')
-            .set('Accept',process.env.test_call)
-            .send({
-              query: 'Register',
-              name: 'hacker',
-              email: 'qasimali24@gmail.com',
-              password: '12345qasim'
+              // expect(res.text.length).toBe(171);
+              // console.log('*****',res.text);
             })
             .expect(401);
   })
 
-  test('Should register manually and then log in manually', async() => {
-    await request(app)
-            .post('/signing')
-            .set('Accept',process.env.test_call)
-            .send({
-              query: 'Register',
-              name: 'Qasim',
-              email: 'qasimali24@gmail.com',
-              password: '1234qasim'
-            })
-            .expect((res) => {
-              expect(res.text.length).toBe(171);
-            })
-            .expect(200)
+  test('Should log in manually', async() => {
     await request(app)
             .post('/signing')
             .set('Accept',process.env.test_call)
             .send({
               "query": 'Login',
-              "email": 'qasimali24@gmail.com',
-              "password": '1234qasim'
+              "email": 'register@gmail.com',
+              "password": 'aaksdjfhasfd'
             })
             .expect(res => {
               expect(res.text.length).toBe(171);
@@ -145,27 +156,14 @@ describe('Sign In related tests', () => {
             .expect(200)
   });
 
-  test('Should register manually and then log in with google' , async() => {
-    await request(app)
-            .post('/signing')
-            .set('Accept',process.env.test_call)
-            .send({
-              query: 'Register',
-              name: 'Qasim',
-              email: 'qasimali24@gmail.com',
-              password: '1234qasim'
-            })
-            .expect((res) => {
-              expect(res.text.length).toBe(171);
-            })
-            .expect(200)
+  test('Should log in with google when already registered manually' , async() => {
     await request(app)
             .post('/signing')
             .set('Accept', process.env.test_call)
             .send({
               'query': 'Google_ID',
-              "name": 'Qasim',
-              "email": 'qasimali24@gmail.com',
+              "name": 'Hashim Ali',
+              "email": 'register@gmail.com',
             })
             .expect((res) => {
               expect(res.text.length).toBe(171);
