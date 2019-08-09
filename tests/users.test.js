@@ -2,10 +2,13 @@ require('../config/config');
 
 const express = require('express');
 const request = require('supertest');
+const session = require('supertest-session');
+const _ = require('lodash');
 const {app,mongoose,People,Orders,CurrencyRates,Users} = require('../app.js');
 const {addpeoplefortest} = require('./addpeoplefortest');
 
 beforeEach(() => {
+  testSession = session(app);
   let user = new Users({
       wrongAttempts: 0,
       attemptedTime: 0,
@@ -44,7 +47,7 @@ describe('Open pages just fine', () => {
         expect(res.body.count.inprogress).toBe(2);
       })
       .expect(200)
-  });
+  })
 
   test('Should create currency session', async() => {
     await request(app)
@@ -54,17 +57,54 @@ describe('Open pages just fine', () => {
           query : "create-currency-session",
           msg: 'NOK',
         })
-      .expect((res) => {
-        console.log(JSON.parse(res.body.rates));
+      .expect(200)
+  })
+
+  var currencySession;
+
+  test('Should open home page after conversion to local currency', async () => {
+    await testSession.post('/signing')
+      .set('Accept', `${process.env.test_call}`)
+      .send({
+          query : "create-currency-session",
+          msg: 'USD',
+        })
+      .expect(res => {
+        currencySession = testSession
+        expect(Object.keys(JSON.parse(res.body.rates)).length).not.toBeNull;
+        console.log(Object.keys(JSON.parse(res.body.rates)).length, 'currencies are supported today !');
       })
       .expect(200)
+    await currencySession.get('/')
+      .set('Accept', `${process.env.test_call}`)
+      .expect((res) => {
+        expect(res.body).not.toBeNull();
+        _.each(res.body.data, (val,key) => {
+          expect(val.salary).toContain('USD');
+        })
+      })
+      .expect(200)
+  })
+
+  test('Should open after logging data that is unlocked', async() => {
+    var token;
+    await currencySession.post('/signing').set('Accept',`${process.env.test_call}`).send({
+      'query': 'Google_ID',
+      "name": 'registeredName',
+      "email": 'register@gmail.com'
+    }).expect(res => {
+      expect(res.text.length).toBe(171);
+      token = res.text;
+    }).expect(200);
+    await currencySession.get(`/home/${token}`).set('Accept',`${process.env.test_call}`).expect(res => {
+      expect(res.body.data.length).toBe(12);
+      _.each(res.body.data,(val,key) => {
+        expect(val.name).not.toBe();
+        expect(val.unlocked).toBeTruthy();
+      })
+    }).expect(200);
   });
 
-  test('Should convert all values to local currency', async() => {
-    // await request(app).post('/signing').set('Accept',`${process.env.test_call}`).send({
-    //   query: "get-currency-rates",
-    // })
-  })
 })
 
 describe('Sign In related tests', () => {

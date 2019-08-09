@@ -10,11 +10,11 @@ People.find().deleteMany().then(ok => {
       "addedBy" : mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
       "address" : "Multan",
       "cardClass" : "pending",
-      "currency" : "PKR",
+      "currency" : "GBP",
       "fMembers" : "3",
       "name" : "Foxtrot Heluy",
       "occupation" : "worker",
-      "salary" : "29000",
+      "salary" : "190",
       "story" : "Financially broke and can barely bear his expenses"
   },
 

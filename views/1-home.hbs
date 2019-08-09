@@ -316,39 +316,37 @@
     <script type="text/javascript">
 
       $(document).on('pjax:send', function() {
-        $('.modal-loading').removeClass('d-none');
+        // $('.modal-loading').removeClass('d-none');
       });
 
       $(document).on('pjax:complete', function() {
-        $('.modal-loading').addClass('d-none');
+        // $('.modal-loading').addClass('d-none');
       });
 
       $(document).ready(function() {
 
-        // {{#if currency}}
-        // console.log('currrency is set');
-        // $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
-        // {{else}}
-        // $('.modal-loading').removeClass('d-none');
-        // console.log('performing request to get local currency');
-        // doajax('https://json.geoiplookup.io/','get').then((res) => {
-        //   console.log(res);
-        //   let data = {
-        //     query : "create-currency-session",
-        //     msg: res,
-        //   };
-        //   data = JSON.stringify(data);
-        //   let headers = {
-        //       'content-type': 'application/json',
-        //   };
-        //   return doajax('/signing','post',headers,data);
-        // }).then((msg) => {
-        //   console.log(msg);
-        //   $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
-        // }).catch((e) => {
-        //   console.log(e);
-        // });
-        // {{/if}}
+        {{#if currency}}
+          $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+        {{else}}
+          console.log('performing request to get local currency');
+          doajax('https://json.geoiplookup.io/','get').then((res) => {
+            console.log(res);
+            let data = {
+              query : "create-currency-session",
+              msg: res.currency_code,
+            };
+            data = JSON.stringify(data);
+            let headers = {
+                'content-type': 'application/json',
+            };
+            return doajax('/signing','post',headers,data);
+          }).then((msg) => {
+            console.log(msg);
+            $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+          }).catch((e) => {
+            console.log(e);
+          });
+        {{/if}}
 
       });
 
@@ -427,7 +425,7 @@
       })
 
       function filterfn(order) {
-        // return console.log(order);
+
         $('.filter-badges').children().addClass('d-none');
         order = order.trim().split(' ');
         let type = order[0];

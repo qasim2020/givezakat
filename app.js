@@ -173,9 +173,15 @@ app.get('/',(req,res) => {
   });
 
   Promise.all([promise1, promise2]).then(results => {
-    _.each(results[1],(val,key) => {
-      val.salary = `${val.salary} ${val.currency} per month`;
-    });
+    console.log('****', req.session.browserCurrency);
+    if (req.session.browserCurrency) {
+      getEachSalaryText(results[1],req);
+    } else {
+      _.each(results[1],(val,key) => {
+        val.salary = `${val.salary} ${val.currency} per month`;
+      });
+    }
+
     let options = {
       data: results[1],
       due: req.session.due && req.session.due.length,
@@ -189,6 +195,76 @@ app.get('/',(req,res) => {
     console.log(e);
     res.status(400).send(e);
   });
+});
+
+app.get('/home/:token', authenticate, (req,res) => {
+
+  if (!req.session.due) req.session.due = [];
+
+  let promise1 = new Promise(function(resolve, reject) {
+    return getCount().then(msg => {
+      resolve(msg);
+    })
+  });
+  let promise2 = new Promise(function(resolve, reject) {
+    return People.find().limit(12).lean().then(people => {
+      resolve(people);
+    })
+  });
+  let promise3 = new Promise(function(resolve, reject) {
+    return Orders.find({paidby: req.params.user._id}).lean().then(paid => resolve(paid));
+  });
+
+  Promise.all([promise1, promise2, promise3]).then(results => {
+    console.log('****HOME****', req.session.browserCurrency);
+    if (req.session.browserCurrency) {
+      getEachSalaryText(results[1],req);
+    } else {
+      _.each(results[1],(val,key) => {
+        val.salary = `${val.salary} ${val.currency} per month`;
+      });
+    }
+    req.results = results;
+    let ids = [];
+    _.each(results[2],(val,key) => {
+      ids.push(val.paidto);
+    });
+    return People.find({_id: {$in : ids}});
+  }).then((msg) => {
+    req.paidpeople = msg;
+    // Add PAIDBYME and ADDEDBYME on People's list retrieved
+
+    let values = {};
+
+    let updatedObjects = req.results[1].map(function(val) {
+      val.paidbyme = req.paidpeople.filter(paidpeople => {
+        return paidpeople._id == val._id;
+      }).name;
+      if (val.addedBy == req.params.user._id) {
+        val.addedbyme = true;
+      } else {
+        val.addedbyme = false;
+      };
+      if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
+      return val;
+    });
+    
+    let options = {
+      data: updatedObjects,
+      token: req.session.token,
+      name: req.params.user.name,
+      due: req.session.due && req.session.due.length,
+      dueIds: req.session.due,
+      currency: req.session.hasOwnProperty('browserCurrency'),
+      count: req.results[0]
+    };
+    if (req.headers.accept == process.env.test_call) res.status(200).send(options);
+    res.status(200).render('1-home.hbs',options);
+  }).catch((e) => {
+    console.log('home page error', e);
+    res.status(404).send(e);
+  });
+
 });
 
 app.get('/loadmore',(req,res) => {
@@ -444,58 +520,6 @@ app.post('/excelData',(req,res) => {
 
 });
 
-app.get('/home/:token', authenticate, (req,res) => {
-
-  if (!req.session.due) req.session.due = [];
-
-  console.log(`**** `,req.params.user.name,'entered home *****');
-
-  // LIST ALL PEOPLE
-  getCount().then((msg) => {
-    req.count = msg;
-    return People.find().limit(12);
-  }).then((msg) => {
-    req.data = msg;
-    return Orders.find({paidby: req.params.user._id});
-  }).then((msg) => {
-    let ids = [];
-    _.each(msg,(val,key) => {
-      ids.push(val.paidto);
-    });
-    return People.find({_id: {$in : ids}});
-  }).then((msg) => {
-    // EXCEL SHEET PATTERN
-    req.paidpeople = msg;
-    return readXlsxFile(__dirname+'/static/sample.xlsx')
-  }).then((rows) => {
-    // Add PAIDBYME and ADDEDBYME on People's list retrieved
-    let values = {};
-    _.each(req.data,(val,key) => {
-      val.paidbyme = req.paidpeople.filter(paidpeople => {
-        return paidpeople._id == val._id;
-      }).name;
-      if (val.addedBy == req.params.user._id) {
-        val.addedbyme = true;
-      } else {
-        val.addedbyme = false;
-      };
-      if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
-    });
-    res.render('1-home.hbs',{
-      token: req.session.token,
-      name: req.params.user.name,
-      due: req.session.due && req.session.due.length,
-      dueIds: req.session.due,
-      currency: req.session.hasOwnProperty('browserCurrency'),
-      count: req.count[0]
-    });
-  }).catch((e) => {
-    console.log(e);
-    res.status(404).send(e);
-  });
-
-});
-
 app.get('/logout/:token', authenticate, (req,res) => {
   console.log(req.params.user.name,'logged out');
   let user = req.params.user;
@@ -510,6 +534,7 @@ app.get('/logout/:token', authenticate, (req,res) => {
   });
 });
 
+// salarytext
 let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
   _.each(msg,(val,key) => {
@@ -697,7 +722,7 @@ app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
     createCurrencySession(req,req.body.msg).then((msg) => {
-      console.log('currency session stored');
+      // console.log(req.session);
       req.session.currencyRates = msg;
       res.status(200).send(req.session.currencyRates);
     }).catch((e) => {
