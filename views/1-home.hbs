@@ -190,7 +190,31 @@
         loading content
       </div>
 
-      <div data-show="showAllCards" id="all-data-here" class="encloser pt-md-2 pt-1"></div>
+      <div data-show="showAllCards" id="all-data-here" class="encloser pt-md-2 pt-1">
+        {{#unless data}}
+        <h2 class="w-100 text-center" style="
+            font-size: 91%;
+            color: brown;
+        ">{{message}}</h2>
+        {{/unless}}
+
+        <div class="content-grid">
+
+        {{#each data}}
+
+        {{>cards}}
+
+        {{/each}}
+
+
+        </div>
+
+        {{#if data}}
+
+        <button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button>
+
+        {{/if}}
+      </div>
       <div data-show="showMyCards" id="my-data-here" class="encloser pt-md-2 pt-1"></div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
@@ -301,30 +325,30 @@
 
       $(document).ready(function() {
 
-        {{#if currency}}
-        console.log('currrency is set');
-        $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
-        {{else}}
-        $('.modal-loading').removeClass('d-none');
-        console.log('performing request to get local currency');
-        doajax('https://json.geoiplookup.io/','get').then((res) => {
-          console.log(res);
-          let data = {
-            query : "create-currency-session",
-            msg: res,
-          };
-          data = JSON.stringify(data);
-          let headers = {
-              'content-type': 'application/json',
-          };
-          return doajax('/signing','post',headers,data);
-        }).then((msg) => {
-          console.log(msg);
-          $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
-        }).catch((e) => {
-          console.log(e);
-        });
-        {{/if}}
+        // {{#if currency}}
+        // console.log('currrency is set');
+        // $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+        // {{else}}
+        // $('.modal-loading').removeClass('d-none');
+        // console.log('performing request to get local currency');
+        // doajax('https://json.geoiplookup.io/','get').then((res) => {
+        //   console.log(res);
+        //   let data = {
+        //     query : "create-currency-session",
+        //     msg: res,
+        //   };
+        //   data = JSON.stringify(data);
+        //   let headers = {
+        //       'content-type': 'application/json',
+        //   };
+        //   return doajax('/signing','post',headers,data);
+        // }).then((msg) => {
+        //   console.log(msg);
+        //   $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+        // }).catch((e) => {
+        //   console.log(e);
+        // });
+        // {{/if}}
 
       });
 

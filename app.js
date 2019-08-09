@@ -161,23 +161,33 @@ app.get('/',(req,res) => {
 
   if (!req.session.due) req.session.due = [];
 
-  getCount().then((msg) => {
-    req.count = msg;
-    return readXlsxFile(__dirname+'/static/sample.xlsx');
-  }).then((rows) => {
-    req.session.sampleRows = rows[0];
+  let promise1 = new Promise(function(resolve, reject) {
+    return getCount().then(msg => {
+      resolve(msg);
+    })
+  });
+  let promise2 = new Promise(function(resolve, reject) {
+    return People.find().limit(12).then(people => {
+      resolve(people);
+    })
+  });
+
+  Promise.all([promise1, promise2]).then(results => {
+    _.each(results[1],(val,key) => {
+      val.salary = `${val.salary} ${val.currency} per month`;
+    });
     let options = {
-      sampleRows: rows[0],
+      data: results[1],
       due: req.session.due && req.session.due.length,
       dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
-      count: req.count[0],
+      count: results[0][0],
     };
     if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
     res.status(200).render('1-home.hbs', options);
   }).catch((e) => {
     console.log(e);
-    res.status(404).send(e);
+    res.status(400).send(e);
   });
 });
 
@@ -291,7 +301,6 @@ app.get('/due/:token',authenticate,(req,res) => {
   let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
 
   return People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
-      msg = getEachSalaryText(msg,req);
       res.render('1-due.hbs',{
         people: msg,
         dueStatus: 'active',
@@ -624,10 +633,10 @@ app.get('/peopleBussinessCards',(req,res) => {
 
 });
 
-let createCurrencySession = function(req,input) {
+let createCurrencySession = function(req,currency) {
   return new Promise(function(resolve, reject) {
 
-      req.session.browserCurrency = {currency_code: input.currency_code};
+      req.session.browserCurrency = {currency_code: currency};
 
       let dt = new Date(), today = '';
       if (dt.getMonth + 1 < 10) {
@@ -690,7 +699,7 @@ app.post('/signing',(req,res) => {
     createCurrencySession(req,req.body.msg).then((msg) => {
       console.log('currency session stored');
       req.session.currencyRates = msg;
-      res.status(200).send(msg);
+      res.status(200).send(req.session.currencyRates);
     }).catch((e) => {
       console.log(e);
       res.status(400).send(e);

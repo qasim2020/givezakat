@@ -3,6 +3,7 @@ require('../config/config');
 const express = require('express');
 const request = require('supertest');
 const {app,mongoose,People,Orders,CurrencyRates,Users} = require('../app.js');
+const {addpeoplefortest} = require('./addpeoplefortest');
 
 beforeEach(() => {
   let user = new Users({
@@ -26,20 +27,44 @@ beforeEach(() => {
   });
 });
 
-describe('Open all pages just fine', () => {
-  test('Should open home page with basic data', (done) => {
-    request(app)
+describe('Open pages just fine', () => {
+  test('Should open home page with basic data', async () => {
+    await addpeoplefortest();
+    await request(app)
       .get('/')
       .set('Accept', `${process.env.test_call}`)
       .expect((res) => {
-        expect(res.body.sampleRows.length).toBe(9);
+        expect(res.body.data.length).toBe(12);
         expect(res.body.due).toBe(0);
-        expect(res.body).toHaveProperty('dueIds');
+        expect(res.body.dueIds.length).toBe(0);
         expect(res.body.currency).toBeFalsy();
-        expect(res.body).toHaveProperty('count');
+        expect(res.body.count.Total).toBe(14);
+        expect(res.body.count.pending).toBe(10);
+        expect(res.body.count.delivered).toBe(2);
+        expect(res.body.count.inprogress).toBe(2);
       })
-      .expect(200, done)
+      .expect(200)
   });
+
+  test('Should create currency session', async() => {
+    await request(app)
+      .post('/signing')
+      .set('Accept', `${process.env.test_call}`)
+      .send({
+          query : "create-currency-session",
+          msg: 'NOK',
+        })
+      .expect((res) => {
+        console.log(JSON.parse(res.body.rates));
+      })
+      .expect(200)
+  });
+
+  test('Should convert all values to local currency', async() => {
+    // await request(app).post('/signing').set('Accept',`${process.env.test_call}`).send({
+    //   query: "get-currency-rates",
+    // })
+  })
 })
 
 describe('Sign In related tests', () => {
