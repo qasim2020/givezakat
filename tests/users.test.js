@@ -14,8 +14,6 @@ beforeEach(() => {
       attemptedTime: 0,
       _id: mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
       email: 'register@gmail.com',
-      // SigninType: 'manual',
-      // __v: 1,
       name: 'registeredName',
       tokens:
        [ { _id: mongoose.Types.ObjectId('5d4c207f4abfaf2ef2cc65f1'),

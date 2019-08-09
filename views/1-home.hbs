@@ -179,7 +179,7 @@
       </div>
 
       <div class="filter-badges d-flex justify-content-start flex-wrap align-items-center my-1">
-        <p linked-data="all" id="all-badge" class="d-none">Show All <span>x</span> </p>
+        <p linked-data="all" id="all-badge" class="">Show All <span>x</span> </p>
         <p linked-data="my" id="my-badge" class="d-none">My Lists <span>x</span> </p>
         <p linked-data="delivered" id="delivered-badge" class="d-none">Delivered <span>x</span> </p>
         <p linked-data="pending" id="pending-badge" class="d-none">Pending <span>x</span> </p>
@@ -344,6 +344,7 @@
             console.log(msg);
             $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
           }).catch((e) => {
+            $('.notification-box').css({opacity:1}).find('p').html('Geo IP Lookup: ' + JSON.parse(e.responseText).error);
             console.log(e);
           });
         {{/if}}

@@ -56,21 +56,17 @@
         padding: 1rem;
         display: flex;
         justify-content: center;
-        background: white;
+        background: lightgoldenrodyellow;
         z-index: 200;
-        border: 2px solid antiquewhite;
         color: whitesmoke;
         align-items: center;
         opacity: 0;
         transition: opacity 0.15s ease-in-out;
         z-index: 200;
-        pointer-events: none;
-      }
-
-      .notification-box > p{
-        color: red;
-        font-weight: bold;
         font-size: 80%;
+        font-weight: bold;
+        pointer-events: none;
+        color: darkred;
       }
 
       .notification-box > svg {

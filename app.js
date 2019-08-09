@@ -181,7 +181,6 @@ app.get('/',(req,res) => {
         val.salary = `${val.salary} ${val.currency} per month`;
       });
     }
-
     let options = {
       data: results[1],
       due: req.session.due && req.session.due.length,
@@ -248,7 +247,7 @@ app.get('/home/:token', authenticate, (req,res) => {
       if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
       return val;
     });
-    
+
     let options = {
       data: updatedObjects,
       token: req.session.token,
@@ -256,7 +255,7 @@ app.get('/home/:token', authenticate, (req,res) => {
       due: req.session.due && req.session.due.length,
       dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
-      count: req.results[0]
+      count: req.results[0][0]
     };
     if (req.headers.accept == process.env.test_call) res.status(200).send(options);
     res.status(200).render('1-home.hbs',options);
@@ -537,6 +536,13 @@ app.get('/logout/:token', authenticate, (req,res) => {
 // salarytext
 let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
+
+  try {
+    console.log(JSON.parse(req.session.currencyRates && req.session.currencyRates.rates)[req.session.browserCurrency && req.session.browserCurrency.currency_code]);
+  } catch(e) {
+    console.log(req.session);
+    return console.log(e);
+  }
   _.each(msg,(val,key) => {
     browserCurrencyRate = JSON.parse(req.session.currencyRates && req.session.currencyRates.rates)[req.session.browserCurrency && req.session.browserCurrency.currency_code];
     if (!browserCurrencyRate || browserCurrencyRate == '') {
