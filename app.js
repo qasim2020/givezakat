@@ -715,7 +715,12 @@ app.post('/signing',(req,res) => {
     }).then((result) => {
       if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
       if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name, "password": 'fake_password'}}, {new: true, upsert: true});
+      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
+        "name":req.body.name,
+        "password": 'fake_password',
+        "phoneCode": process.env.phoneCode,
+        "SigninType": 'Manual'
+      }}, {new: true, upsert: true});
     }).then((returned) => {
       if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
       returned.password = req.body.password;
