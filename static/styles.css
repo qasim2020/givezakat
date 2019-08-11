@@ -841,6 +841,10 @@
         margin-right: 0.5rem;
       }
 
+      .card-selected > .place-1 {
+        display: inherit;
+      }
+
       .card-selected > .place-1 > span:nth-child(1) {
         display: none;
       }

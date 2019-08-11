@@ -4,40 +4,34 @@ const express = require('express');
 const request = require('supertest');
 const session = require('supertest-session');
 const _ = require('lodash');
-const {app,mongoose,People,Orders,CurrencyRates,Users} = require('../app.js');
+const {app,mongoose,People,Orders,CurrencyRates,Users,axios} = require('../app.js');
 const {addpeoplefortest} = require('./addpeoplefortest');
+const {getStripeToken} = require('./getStripeToken');
 
 beforeEach(() => {
   testSession = session(app);
-  let user = new Users({
-      wrongAttempts: 0,
-      attemptedTime: 0,
-      _id: mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
-      email: 'register@gmail.com',
-      name: 'registeredName',
-      tokens:
-       [ { _id: mongoose.Types.ObjectId('5d4c207f4abfaf2ef2cc65f1'),
-           access: 'auth',
-           token:
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDRjMjA3ZjllMDI4YTNkNmEzNzNmNjUiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTY1MjcwMTQzfQ.r-Ohc4zXwRTb7CtVGucjRe93XVmLmLpIW4frb6YyCcE' } ],
-      phoneCode: '123456',
-      password: 'aaksdjfhasfd'
-    });
-  return Users.find().deleteMany().then(() => {
-    return user.save();
-  });
 });
 
 describe('Open pages just fine', () => {
-  test('Should open home page with basic data', async () => {
+
+  var currencySession = session(app);
+
+  test('Should put people in due ids', async() => {
     await addpeoplefortest();
-    await request(app)
-      .get('/')
+    await currencySession.post('/signing').set('Accept',`${process.env.test_call}`).send({
+      query: 'update-due',
+      type: 'push',
+      due: "5d477e1b006cfdef99932bbe",
+    }).expect(200)
+  })
+
+  test('Should open home page with basic data', async () => {
+    await currencySession.get('/')
       .set('Accept', `${process.env.test_call}`)
       .expect((res) => {
+        expect(res.body.data[0].dueIds).toContain('card-selected');
         expect(res.body.data.length).toBe(12);
-        expect(res.body.due).toBe(0);
-        expect(res.body.dueIds.length).toBe(0);
+        expect(res.body.due).toBe(1);
         expect(res.body.currency).toBeFalsy();
         expect(res.body.count.Total).toBe(14);
         expect(res.body.count.pending).toBe(10);
@@ -48,57 +42,80 @@ describe('Open pages just fine', () => {
   })
 
   test('Should create currency session', async() => {
-    await request(app)
+    await currencySession
       .post('/signing')
       .set('Accept', `${process.env.test_call}`)
       .send({
           query : "create-currency-session",
           msg: 'NOK',
         })
-      .expect(200)
-  })
-
-  var currencySession;
-
-  test('Should open home page after conversion to local currency', async () => {
-    await testSession.post('/signing')
-      .set('Accept', `${process.env.test_call}`)
-      .send({
-          query : "create-currency-session",
-          msg: 'USD',
-        })
       .expect(res => {
-        currencySession = testSession
-        expect(Object.keys(JSON.parse(res.body.rates)).length).not.toBeNull;
-        console.log(Object.keys(JSON.parse(res.body.rates)).length, 'currencies are supported today !');
-      })
-      .expect(200)
-    await currencySession.get('/')
-      .set('Accept', `${process.env.test_call}`)
-      .expect((res) => {
-        expect(res.body).not.toBeNull();
-        _.each(res.body.data, (val,key) => {
-          expect(val.salary).toContain('USD');
-        })
+        // console.log(res.text);
       })
       .expect(200)
   })
 
-  test('Should open after logging data that is unlocked', async() => {
-    var token;
+  test('Should add select a person to session and log in with google',async() => {
+    await currencySession.post('/signing').set('Accept',`${process.env.test_call}`).send({
+      query: 'update-due',
+      type: 'push',
+      due: "5d477e1b006cfdef99932bbe",
+    }).expect(200);
     await currencySession.post('/signing').set('Accept',`${process.env.test_call}`).send({
       'query': 'Google_ID',
       "name": 'registeredName',
       "email": 'register@gmail.com'
     }).expect(res => {
       expect(res.text.length).toBe(171);
-      token = res.text;
+      currencySession.token = res.text;
     }).expect(200);
-    await currencySession.get(`/home/${token}`).set('Accept',`${process.env.test_call}`).expect(res => {
+  })
+
+  test('Should open home page after conversion to local currency', async () => {
+    await currencySession.get('/')
+      .set('Accept', `${process.env.test_call}`)
+      .expect((res) => {
+        expect(res.body).not.toBeNull();
+        _.each(res.body.data, (val,key) => {
+          expect(val.salary).toContain('NOK');
+        })
+      })
+      .expect(200)
+  })
+
+  test('Should place an order successfully', async() => {
+    jest.setTimeout(30000);
+    let array = [];
+    array.push(
+    {
+      id : '5d477e1b006cfdef99932bbe',
+      amount: '99000'
+    },
+    {
+      id: '5d477e1b006cfdef99932bc0',
+      amount: '10000'
+    }
+    );
+    peoplePaid = JSON.stringify(array);
+    await currencySession
+    .get(`/charge?email=register@gmail.com&token=${currencySession.token}&amount=${99000}&stripeToken=tok_visa&paymentDetails=${peoplePaid}`)
+    .set('Accept',`${process.env.test_call}`)
+    .expect(res => {
+      expect(res.body.name).toBe('registeredName');
+      expect(res.body.receipt).not.toBe();
+      expect(res.body.payed[0]._id).toBe('5d477e1b006cfdef99932bbe');
+    })
+    .expect(200);
+  })
+
+  test('Should show people paid by me', async() => {
+    await currencySession.get(`/home/${currencySession.token}`).set('Accept',`${process.env.test_call}`).expect(res => {
       expect(res.body.data.length).toBe(12);
+      expect(res.body.due).toBe(0);
       _.each(res.body.data,(val,key) => {
-        expect(val.name).not.toBe();
-        expect(val.unlocked).toBeTruthy();
+        if (val.paidbyme) expect(val.unlocked).toBeTruthy();
+        if (val.addedbyme) expect(val.unlocked).toBeTruthy();
+        if (!val.addedbyme && !val.paidbyme) expect(val.unlocked).toBeFalsy();
       })
     }).expect(200);
   });
@@ -106,6 +123,26 @@ describe('Open pages just fine', () => {
 })
 
 describe('Sign In related tests', () => {
+
+  beforeEach(() => {
+    let user = new Users({
+        wrongAttempts: 0,
+        attemptedTime: 0,
+        _id: mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
+        email: 'register@gmail.com',
+        name: 'registeredName',
+        tokens:
+         [ { _id: mongoose.Types.ObjectId('5d4c207f4abfaf2ef2cc65f1'),
+             access: 'auth',
+             token:
+              'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDRjMjA3ZjllMDI4YTNkNmEzNzNmNjUiLCJhY2Nlc3MiOiJhdXRoIiwiaWF0IjoxNTY1MjcwMTQzfQ.r-Ohc4zXwRTb7CtVGucjRe93XVmLmLpIW4frb6YyCcE' } ],
+        phoneCode: '123456',
+        password: 'aaksdjfhasfd'
+      });
+    return Users.find().deleteMany().then(() => {
+      return user.save();
+    });
+  })
 
   test('Should sign in with google', (done) => {
     request(app)

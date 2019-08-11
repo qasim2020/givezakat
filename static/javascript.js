@@ -15,17 +15,17 @@ $(document).on('click','.card-select',function(e){
 })
 
 function changeCardState(elem){
-  // console.log(elem);
+
   $(elem).closest('.card').toggleClass('card-selected');
 
   $.each($(elem).closest('.card').find('path'),function() {
-    if ($(this).attr('fill') == '#05386B') return $(this).attr('fill', '#C0C1C5');
-    $(this).attr('fill','#05386B');
+    if ($(this).attr('fill') == 'darkcyan') return $(this).attr('fill', 'darkcyan');
+    $(this).attr('fill','darkcyan');
   });
 
   $.each($(elem).closest('.card').find('circle'),function() {
-    if ($(this).attr('fill') == '#05386B') return $(this).attr('fill', '#C0C1C5');
-    $(this).attr('fill','#05386B');
+    if ($(this).attr('fill') == 'darkcyan') return $(this).attr('fill', 'darkcyan');
+    $(this).attr('fill','darkcyan');
   });
 
   $('.card-hover').find('path').attr('fill', '#C0C1C5');

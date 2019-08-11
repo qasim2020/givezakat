@@ -1,18 +1,17 @@
 {{#unless data}}
-<h2 class="w-100 text-center" style="
-    font-size: 91%;
-    color: brown;
-">{{message}}</h2>
+  <h2 class="w-100 text-center" style="
+      font-size: 91%;
+      color: brown;
+  ">{{message}}</h2>
 {{/unless}}
 
 <div class="content-grid">
 
-{{#each data}}
+  {{#each data}}
 
-{{>cards}}
+  {{>cards}}
 
-{{/each}}
-
+  {{/each}}
 
 </div>
 

@@ -21,7 +21,7 @@ const {Orders} = require('./models/orders');
 const {CurrencyRates} = require('./models/currencyrates');
 const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
-const {serverRunning} = require('./js/serverRunning');
+const {serverRunning,checkCurrencyExists} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
 
 
@@ -36,7 +36,10 @@ app.use(session({
   secret: process.env.sessionSecret,
   resave: false,
   saveUninitialized: true,
-  cookie: {maxAge:6000}
+  cookie: {
+    maxAge:5 * 60 * 1000,
+  },
+  rolling: true,
 }))
 app.set('view engine','hbs');
 hbs.registerPartials(__dirname + '/views/partials');
@@ -44,17 +47,15 @@ hbs.registerHelper("inc", function(value, options) {
     return parseInt(value) + 1;
 });
 app.use(function(req, res, next) {
-  // if now() is after `req.session.cookie.expires`
-  // console.log(req.session.cookie.expires);
-  //   regenerate the session
+  if (!req.session.due) req.session.due = [];
+  if (req.headers.accept != process.env.test_call) console.log('SESSION STATE', Object.keys(req.session));
   next();
 });
 
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token || req.query.token;
-  console.log('token receiveed',token);
   Users.findByToken(token).then((user) => {
-    if (!user) return Promise.reject('No user found');
+    if (!user) return Promise.reject('No user found for token :', token);
     req.params.user = user;
     next();
   }).catch((e) => {
@@ -157,9 +158,25 @@ let getCount = function () {
   ]);
 };
 
-app.get('/',(req,res) => {
+let updatePeople = function(req,o) {
 
-  if (!req.session.due) req.session.due = [];
+  if (!req.session.due) return o;
+
+  let updatedObjects = o.map(function(val) {
+
+    findPeople = req.session.due.filter(o => {
+      return o == val._id.toString();
+    });
+    if (findPeople.length > 0) val.dueIds = 'card-selected';
+
+    return val;
+
+  })
+
+  return updatedObjects;
+}
+
+app.get('/',(req,res) => {
 
   let promise1 = new Promise(function(resolve, reject) {
     return getCount().then(msg => {
@@ -167,13 +184,13 @@ app.get('/',(req,res) => {
     })
   });
   let promise2 = new Promise(function(resolve, reject) {
-    return People.find().limit(12).then(people => {
+    return People.find().limit(12).lean().then(people => {
       resolve(people);
     })
   });
 
   Promise.all([promise1, promise2]).then(results => {
-    console.log('****', req.session.browserCurrency);
+
     if (req.session.browserCurrency) {
       getEachSalaryText(results[1],req);
     } else {
@@ -181,10 +198,12 @@ app.get('/',(req,res) => {
         val.salary = `${val.salary} ${val.currency} per month`;
       });
     }
+
+    let updatedObjects = updatePeople(req,results[1]);
+
     let options = {
-      data: results[1],
+      data: updatedObjects,
       due: req.session.due && req.session.due.length,
-      dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
       count: results[0][0],
     };
@@ -197,8 +216,6 @@ app.get('/',(req,res) => {
 });
 
 app.get('/home/:token', authenticate, (req,res) => {
-
-  if (!req.session.due) req.session.due = [];
 
   let promise1 = new Promise(function(resolve, reject) {
     return getCount().then(msg => {
@@ -215,7 +232,7 @@ app.get('/home/:token', authenticate, (req,res) => {
   });
 
   Promise.all([promise1, promise2, promise3]).then(results => {
-    console.log('****HOME****', req.session.browserCurrency);
+
     if (req.session.browserCurrency) {
       getEachSalaryText(results[1],req);
     } else {
@@ -228,32 +245,37 @@ app.get('/home/:token', authenticate, (req,res) => {
     _.each(results[2],(val,key) => {
       ids.push(val.paidto);
     });
+
     return People.find({_id: {$in : ids}});
   }).then((msg) => {
+
     req.paidpeople = msg;
-    // Add PAIDBYME and ADDEDBYME on People's list retrieved
 
     let values = {};
 
     let updatedObjects = req.results[1].map(function(val) {
-      val.paidbyme = req.paidpeople.filter(paidpeople => {
-        return paidpeople._id == val._id;
-      }).name;
-      if (val.addedBy == req.params.user._id) {
-        val.addedbyme = true;
-      } else {
-        val.addedbyme = false;
-      };
-      if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
+
+      val.paidbyme = msg.filter(o => {
+                        return o._id.toString() === val._id.toString();
+                      })[0];
+
+      if (val.addedBy == req.params.user._id) val.addedbyme = true;
+      else val.addedbyme = false;
+
+      if (val.addedbyme || val.paidbyme && Object.keys(val.paidbyme).length > 0) val.unlocked = true;
+      else val.unlocked = false;
+
       return val;
+
     });
+
+    updatedObjects = updatePeople(req,updatedObjects);
 
     let options = {
       data: updatedObjects,
       token: req.session.token,
       name: req.params.user.name,
       due: req.session.due && req.session.due.length,
-      dueIds: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
       count: req.results[0][0]
     };
@@ -400,12 +422,12 @@ function updateOrders(req,res) {
 
   return new Promise(function(resolve, reject) {
     let paymentDetails = JSON.parse(req.query.paymentDetails);
-    let objectIdArray = paymentDetails.map(s => s.mob);
-    People.find({'mob' : {$in : objectIdArray}}).then((msg) => {
+    let objectIdArray = paymentDetails.map(s => s.id);
+    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
       req.people = msg;
       return Users.findByToken(req.query.token);
     }).then((user) => {
-      if (!user) return Promise.reject('un authorized request');
+      if (!user) return Promise.reject('User has not logged in because no token is associated to this request !');
       let array = [];
       let values = {};
       _.each(req.people,(val,key) => {
@@ -413,7 +435,7 @@ function updateOrders(req,res) {
         values.paidby = user._id.toString();
         values.paidto = val._id.toString();
         values.amount = paymentDetails.filter(obj => {
-                            return obj.mob === val.mob;
+                            return obj.id === val._id.toString();
                         })[0].amount;
         values.status = 'pending';
         values.currency = req.session.browserCurrency.currency_code.toLowerCase();
@@ -436,17 +458,15 @@ function updateOrders(req,res) {
 
 app.get("/charge", authenticate, (req, res) => {
 
-  console.log('***making Charge***');
-  stripe.products.create({
-	      name: 'T-shirt',
-	      type: 'good',
-        description: 'Comfortable cotton t-shirt',
-        attributes: ['size', 'gender']
-  }).then((msg) => {
-    return stripe.customers.create({
+  // stripe.products.create({
+	//       name: 'T-shirt',
+	//       type: 'good',
+  //       description: 'Comfortable cotton t-shirt',
+  //       attributes: ['size', 'gender']
+  // }).then((msg) => {
+  stripe.customers.create({
       email: req.query.email,
-      card: req.query.stripeToken
-    });
+      source: req.query.stripeToken
   }).then((customer) => {
      return stripe.charges.create({
       amount: req.query.amount,
@@ -459,17 +479,19 @@ app.get("/charge", authenticate, (req, res) => {
     return updateOrders(req,res);
   }).then((msg) => {
     req.session.due = [];
-    res.render('1-charge.hbs',{
+    let options = {
       dueStatus: 'active',
       due: req.session.due && req.session.due.length,
       token: req.session.token,
       name: req.session.name,
       receipt: req.charge.receipt_url,
       payed: req.people
-    });
+    };
+    if (req.headers.accept == process.env.test_call) res.status(200).send(options);
+    res.status(200).render('1-charge.hbs',options);
   }).catch(err => {
     console.log(err);
-    res.render('1-redirect.hbs',{
+    res.status(400).render('1-redirect.hbs',{
       timer: 6,
       page: 'Payment Failed !',
       message: err.message,
@@ -538,9 +560,8 @@ let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
 
   try {
-    console.log(JSON.parse(req.session.currencyRates && req.session.currencyRates.rates)[req.session.browserCurrency && req.session.browserCurrency.currency_code]);
+    JSON.parse(req.session.currencyRates && req.session.currencyRates.rates)[req.session.browserCurrency && req.session.browserCurrency.currency_code];
   } catch(e) {
-    console.log(req.session);
     return console.log(e);
   }
   _.each(msg,(val,key) => {
@@ -564,14 +585,13 @@ app.get('/peopleBussinessCards',(req,res) => {
 
   if (req.query.type == 'all') {
 
-    return People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).then((msg) => {
+    return People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).lean().then((msg) => {
       if (!msg || msg.length < 1) return Promise.reject({code: 404,msg: 'Did not find any people for this filter !'});
-      req.data = msg;
+      req.data = updatePeople(req,msg);
       msg = getEachSalaryText(msg,req);
       if (req.query.token.length <  30) return Promise.reject({code: 404,msg: 'No user found, showing all data as locked !'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
-      // IF USER IS LOGGED IN > UNLOCK HIS LIST (ADDED BY HIM + PAID BY HIM)
       if (!user) return Promise.reject('No user logged in found.');
       req.loggedIn = user;
       return Orders.find({paidby: req.loggedIn._id});
@@ -580,13 +600,9 @@ app.get('/peopleBussinessCards',(req,res) => {
       _.each(msg,(val,key) => {
         ids.push(val.paidto);
       });
-      return People.find({_id: {$in : ids}});
+      return People.find({_id: {$in : ids}}).lean();
     }).then((msg) => {
-      // EXCEL SHEET PATTERN
       req.paidpeople = msg;
-      return readXlsxFile(__dirname+'/static/sample.xlsx')
-    }).then((rows) => {
-      // Add PAIDBYME and ADDEDBYME on People's list retrieved
       let values = {};
       _.each(req.data,(val,key) => {
 
@@ -603,8 +619,9 @@ app.get('/peopleBussinessCards',(req,res) => {
         if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
 
       });
+
       return res.renderPjax('2-peopleBussinessCards.hbs',{
-        data: req.data,
+        data: updatedObjects,
         query: req.query
       });
     }).catch((e) => {
@@ -667,40 +684,7 @@ app.get('/peopleBussinessCards',(req,res) => {
 let createCurrencySession = function(req,currency) {
   return new Promise(function(resolve, reject) {
 
-      req.session.browserCurrency = {currency_code: currency};
 
-      let dt = new Date(), today = '';
-      if (dt.getMonth + 1 < 10) {
-        today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
-      } else {
-        today = dt.getFullYear() + "-" + (dt.getMonth() + 1) + "-" + dt.getDate();
-      };
-      CurrencyRates.findOne({date: today}).then((reply) => {
-
-        if (!reply) return updateCurrencyRate(today);
-        return resolve(reply);
-      }).catch((e) => {
-        reject(e);
-      });
-  });
-};
-
-let updateCurrencyRate = function(today) {
-  return new Promise(function(resolve, reject) {
-    axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
-      let currency = new CurrencyRates({
-        timestamp: reply.data.timestamp,
-        base  : reply.data.base,
-        date  : today,
-        rates : JSON.stringify(reply.data.rates)
-      });
-      console.log('saving new data fixer');
-      return currency.save();
-    }).then((reply) => {
-      resolve(reply);
-    }).catch((e) => {
-      reject(e);
-    });
   });
 };
 
@@ -727,15 +711,14 @@ let testGoogleToken = function(req) {
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
-    createCurrencySession(req,req.body.msg).then((msg) => {
-      // console.log(req.session);
-      req.session.currencyRates = msg;
-      res.status(200).send(req.session.currencyRates);
-    }).catch((e) => {
-      console.log(e);
-      res.status(400).send(e);
-    });
-
+      req.session.browserCurrency = {currency_code: req.body.msg};
+      checkCurrencyExists().then(ok => {
+        req.session.currencyRates = ok;
+        return res.status(200).send(ok);
+      }).catch(e => {
+        console.log(e);
+        res.status(400).send(e);
+      });
   }
 
   if (req.body.query === 'update-due') {
@@ -744,7 +727,6 @@ app.post('/signing',(req,res) => {
     } else {
       req.session.due.splice(req.body.due, 1);
     };
-    console.log(req.session.due);
     return res.status(200).send(req.session.due);
   };
 

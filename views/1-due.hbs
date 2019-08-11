@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     {{>googleAnalytics}}
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel=icon href=/favicon.png>
@@ -147,7 +147,7 @@
 
     <script type="text/javascript">
 
-      var stripe = Stripe('pk_test_WJQN2iDakpSKGN9Va0KeHEDT');
+      var stripe = Stripe(`${process.env.stripePrivate}`);
 
       $('#buy').on('click',function() {
 
@@ -168,7 +168,7 @@
 
         $.each($('.input-person'),(key,val) => {
           array.push({
-            mob : $(val).attr('name'),
+            id : $(val).attr('name'),
             amount: $(val).val()
           });
         });

@@ -37,7 +37,7 @@ People.find().deleteMany().then(ok => {
   {
       "_id" : mongoose.Types.ObjectId("5d477e1b006cfdef99932bc0"),
       "mob" : "+923069531940",
-      "addedBy" : mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
+      "addedBy" : mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f35'),
       "address" : "Rwp",
       "cardClass" : "pending",
       "currency" : "PKR",
@@ -52,7 +52,7 @@ People.find().deleteMany().then(ok => {
   {
       "_id" : mongoose.Types.ObjectId("5d477e1b006cfdef99932bc1"),
       "mob" : "+923434430577",
-      "addedBy" : mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
+      "addedBy" : mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f35'),
       "address" : "Rwp",
       "cardClass" : "pending",
       "currency" : "PKR",
@@ -202,7 +202,7 @@ People.find().deleteMany().then(ok => {
   {
       "_id" : mongoose.Types.ObjectId("5d477e1b006cfdef99932bcb"),
       "mob" : "+923446187687",
-      "addedBy" : mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f65'),
+      "addedBy" : mongoose.Types.ObjectId('5d4c207f9e028a3d6a373f55'),
       "address" : "DI Khan",
       "cardClass" : "delivered",
       "currency" : "PKR",

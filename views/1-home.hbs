@@ -349,6 +349,12 @@
           });
         {{/if}}
 
+        {{#each dueIds}}
+          console.log(`{{this}}`);
+          // console.log($(`.{{this}}`));
+          // changeCardState($(`#{{this}}`).find('.card-select'));
+        {{/each}}
+
       });
 
       let doajax = function(url,type,headers,datastringified) {
@@ -370,11 +376,6 @@
       $.pjax.defaults.timeout = 10000000;
       $.pjax.defaults.scrollTo = false;
       $.pjax.defaults.push = false;
-
-      {{#each dueIds}}
-        console.log('{{this}}');
-        changeCardState($(`#{{this}}`));
-      {{/each}}
 
       function deleteMe(elem,id) {
 
