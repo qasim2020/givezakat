@@ -621,7 +621,7 @@ app.get('/peopleBussinessCards',(req,res) => {
       });
 
       return res.renderPjax('2-peopleBussinessCards.hbs',{
-        data: updatedObjects,
+        data: req.data,
         query: req.query
       });
     }).catch((e) => {
@@ -643,7 +643,7 @@ app.get('/peopleBussinessCards',(req,res) => {
     return Users.findByToken(req.query.token).then((user) => {
       if (!user) Promise.reject({code: '404',msg: 'Please log in to make this request !'});
       req.loggedIn = user;
-      return People.find({addedBy: user._id, cardClass: regex}).limit(parseInt(req.query.showQty));
+      return People.find({addedBy: user._id, cardClass: regex}).limit(parseInt(req.query.showQty)).lean();
     }).then((peopleAddedByMe) => {
       if (!peopleAddedByMe) Promise.reject({msg: 'You have not sponsored any user yet !'});
       req.addedbyme = getEachSalaryText(peopleAddedByMe,req);
