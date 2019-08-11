@@ -5,7 +5,7 @@ const request = require('supertest');
 const session = require('supertest-session');
 const _ = require('lodash');
 const {app,mongoose,People,Orders,CurrencyRates,Users,axios} = require('../app.js');
-const {addpeoplefortest} = require('./addpeoplefortest');
+const {zeroiseDB} = require('./zeroiseDB');
 const {getStripeToken} = require('./getStripeToken');
 
 beforeEach(() => {
@@ -17,7 +17,7 @@ describe('Open pages just fine', () => {
   var currencySession = session(app);
 
   test('Should put people in due ids', async() => {
-    await addpeoplefortest();
+    await zeroiseDB();
     await currencySession.post('/signing').set('Accept',`${process.env.test_call}`).send({
       query: 'update-due',
       type: 'push',

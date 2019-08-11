@@ -1,7 +1,9 @@
-const {People, mongoose} = require('../app');
+const {People, mongoose, Orders} = require('../app');
 
-let addpeoplefortest = (user) =>
+let zeroiseDB = (user) =>
 People.find().deleteMany().then(ok => {
+  return Orders.find().deleteMany();
+}).then(ok => {
   return People.insertMany(
     [/* 1 */
   {
@@ -215,4 +217,4 @@ People.find().deleteMany().then(ok => {
 ])
 });
 
-module.exports = {addpeoplefortest};
+module.exports = {zeroiseDB};
