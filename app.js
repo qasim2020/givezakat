@@ -588,7 +588,7 @@ app.get('/peopleBussinessCards',(req,res) => {
     return People.find({cardClass: regex}).limit(parseInt(req.query.showQty)).lean().then((msg) => {
       if (!msg || msg.length < 1) return Promise.reject({code: 404,msg: 'Did not find any people for this filter !'});
       req.data = updatePeople(req,msg);
-      msg = getEachSalaryText(msg,req);
+      req.data = getEachSalaryText(req.data,req);
       if (req.query.token.length <  30) return Promise.reject({code: 404,msg: 'No user found, showing all data as locked !'});
       return Users.findByToken(req.query.token);
     }).then((user) => {
@@ -620,10 +620,12 @@ app.get('/peopleBussinessCards',(req,res) => {
 
       });
 
-      return res.renderPjax('2-peopleBussinessCards.hbs',{
+      let options = {
         data: req.data,
         query: req.query
-      });
+      }
+      if (req.headers.accept == `${process.env.test_call}`) res.status(200).send(options);
+      return res.renderPjax('2-peopleBussinessCards.hbs',options);
     }).catch((e) => {
       console.log(e)
       if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{
@@ -660,7 +662,6 @@ app.get('/peopleBussinessCards',(req,res) => {
       });
       return People.find({_id: {$in: ids}, cardClass: regex});
     }).then((peopleOrderedByMe) => {
-      // req.paidbyme = peopleOrderedByMe;
       console.log(peopleOrderedByMe.length, '<< People ordered by  me');
       _.each(peopleOrderedByMe,(val,key) => {
         val.paidbyme = true;

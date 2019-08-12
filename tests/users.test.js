@@ -120,6 +120,29 @@ describe('Open pages just fine', () => {
     }).expect(200);
   });
 
+  test('Should fetch pjax links fine', async() => {
+    await currencySession.get(`/peopleBussinessCards?token=${currencySession.token}&type=all&showQty=12&expression=delivered|pending|inprogress`)
+    .set('Accept',`${process.env.test_call}`)
+    .expect(res => {
+      expect(res.body.data.length).toBe(12);
+      _.each(res.body.data,(val,key) => {
+        if (val.paidbyme) expect(val.unlocked).toBeTruthy();
+        if (val.addedbyme) expect(val.unlocked).toBeTruthy();
+        if (!val.addedbyme && !val.paidbyme) expect(val.unlocked).toBeFalsy();
+      })
+    }).expect(200)
+    await currencySession.get(`/peopleBussinessCards?token=${currencySession.token}&type=my&showQty=12&expression=delivered|pending|inprogress`)
+    .set('Accept',`${process.env.test_call}`)
+    .expect(res => {
+      expect(res.body.data.length).toBe(12);
+      _.each(res.body.data,(val,key) => {
+        if (val.paidbyme) expect(val.unlocked).toBeTruthy();
+        if (val.addedbyme) expect(val.unlocked).toBeTruthy();
+        if (!val.addedbyme && !val.paidbyme) expect(val.unlocked).toBeFalsy();
+      })
+    }).expect(200)
+  })
+
 })
 
 describe('Sign In related tests', () => {
@@ -170,7 +193,6 @@ describe('Sign In related tests', () => {
               "email": 'qasimali24@gmail.com',
             })
             .expect((res) => {
-              console.log('stage 1');
               stored_google = res._id
               expect(res.text.length).toBe(171);
             })
@@ -183,7 +205,6 @@ describe('Sign In related tests', () => {
               email: 'qasimali24@gmail.com',
             })
             .expect((res) => {
-              console.log('stage 2');
               phoneCode = res.body.phoneCode;
             })
             .expect(200)
@@ -206,7 +227,6 @@ describe('Sign In related tests', () => {
               phoneCode: phoneCode
             })
             .expect((res) => {
-              console.log('stage 4');
               expect(res._id).toBe(stored_google);
             })
             .expect(200)
