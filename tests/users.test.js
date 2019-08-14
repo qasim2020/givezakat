@@ -163,6 +163,33 @@ describe('Sign In related tests', () => {
     });
   })
 
+  test('Should manually sign up a user', async() => {
+    await request(app).post('/signing').set('Accept',process.env.test_call).send({
+      query: 'Email_Verify',
+      email: 'qasimali24@gmail.com',
+    })
+    .expect((res) => {
+      phoneCode = res.body.phoneCode;
+    })
+    .expect(200)
+    await request(app).post('/signing').set('Accept',process.env.test_call).send({
+      query: 'Test_Code',
+      email: 'qasimali24@gmail.com',
+      code: phoneCode,
+    })
+    .expect(200)
+    await request(app).post('/signing').set('Accept',process.env.test_call).send({
+      query: 'Register',
+      email: 'qasimali24@gmail.com',
+      password: '12341234qasim',
+      phoneCode: phoneCode
+    })
+    .expect((res) => {
+      expect(res._id).toBe(stored_google);
+    })
+    .expect(200)
+  })
+
   test('Should sign in with google', (done) => {
     request(app)
       .post('/signing')

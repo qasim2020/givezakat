@@ -790,7 +790,7 @@ app.post('/signing',(req,res) => {
     var phoneCode = Math.floor(100000 + Math.random() * 900000);
     if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
     Users.findOne({"email":req.body.email}).then((user) => {
-      if (!user) return res.status(404).send('Sorry, you never registered before with this email. Please sign up.');
+      if (!user) return res.status(404).send('Sorry, failed to send code !');   
       sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
       return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
     }).then((user) => {
