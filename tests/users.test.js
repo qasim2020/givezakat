@@ -131,15 +131,11 @@ describe('Open pages just fine', () => {
         if (!val.addedbyme && !val.paidbyme) expect(val.unlocked).toBeFalsy();
       })
     }).expect(200)
-    await currencySession.get(`/peopleBussinessCards?token=${currencySession.token}&type=my&showQty=12&expression=delivered|pending|inprogress`)
+    await currencySession.get(`/peopleBussinessCards?token=${currencySession.token}&type=my&showQty=4&expression=delivered|pending|inprogress`)
     .set('Accept',`${process.env.test_call}`)
     .expect(res => {
-      expect(res.body.data.length).toBe(12);
-      _.each(res.body.data,(val,key) => {
-        if (val.paidbyme) expect(val.unlocked).toBeTruthy();
-        if (val.addedbyme) expect(val.unlocked).toBeTruthy();
-        if (!val.addedbyme && !val.paidbyme) expect(val.unlocked).toBeFalsy();
-      })
+      expect(res.body.addedbyme.length).toBe(4);
+      expect(res.body.paidbyme.length).toBe(2);
     }).expect(200)
   })
 

@@ -658,24 +658,25 @@ app.get('/peopleBussinessCards',(req,res) => {
       req.orders = orders;
       let ids = [];
       _.each(orders,(val,key) => {
-        ids.push(orders.paidto);
+        ids.push(val.paidto);
       });
       return People.find({_id: {$in: ids}, cardClass: regex});
     }).then((peopleOrderedByMe) => {
-      console.log(peopleOrderedByMe.length, '<< People ordered by  me');
       _.each(peopleOrderedByMe,(val,key) => {
         val.paidbyme = true;
         val.unlocked = true;
       });
       req.paidbyme = getEachSalaryText(peopleOrderedByMe,req);
-      return res.renderPjax('2-peopleMyList.hbs',{
+      let options = {
         paidbyme: req.paidbyme,
         addedbyme: req.addedbyme,
         query: req.query,
-      });
+      }
+      if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
+      return res.renderPjax('2-peopleMyList.hbs',options);
     }).catch((e) => {
       console.log(e);
-      if (e.code == 404) return res.renderPjax('2-peopleMyList.hbs',{ data: req.data, query:req.query });
+      // if (e.code == 404) return res.renderPjax('2-peopleMyList.hbs',{ data: req.data, query:req.query });
       return res.renderPjax('2-error.hbs',{ msg: e.msg });
     })
   }
