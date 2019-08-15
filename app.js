@@ -786,12 +786,25 @@ app.post('/signing',(req,res) => {
     });
   };
 
+  // if (req.body.query === 'Register_email_verify') {
+  //   var phoneCode = Math.floor(100000 + Math.random() * 900000);
+  //   if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
+  //   sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
+  //   req.session.phoneCode = phoneCode;
+  //   res.status(200).send({msg: 'Mail Sent !', phoneCode: req.body.phonecode});
+  // }
+
   if (req.body.query === 'Email_Verify') {
     var phoneCode = Math.floor(100000 + Math.random() * 900000);
     if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
     Users.findOne({"email":req.body.email}).then((user) => {
-      if (!user) return res.status(404).send('Sorry, failed to send code !');   
-      sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
+      if (req.body.registerNew) {
+        let user = new User({name: req.body.name, email: req.body.email});
+        return user.save();
+      }
+      if (!user) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
+    }).then(newUser => {
+      sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
       return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
     }).then((user) => {
       res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode});

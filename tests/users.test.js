@@ -166,6 +166,7 @@ describe('Sign In related tests', () => {
   test('Should manually sign up a user', async() => {
     await request(app).post('/signing').set('Accept',process.env.test_call).send({
       query: 'Email_Verify',
+      registerNew: true,
       email: 'qasimali24@gmail.com',
     })
     .expect((res) => {
