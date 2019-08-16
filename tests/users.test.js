@@ -164,6 +164,7 @@ describe('Sign In related tests', () => {
   })
 
   test('Should manually sign up a user', async() => {
+    let phoneCode;
     await request(app).post('/signing').set('Accept',process.env.test_call).send({
       query: 'Email_Verify',
       registerNew: true,
@@ -186,7 +187,7 @@ describe('Sign In related tests', () => {
       phoneCode: phoneCode
     })
     .expect((res) => {
-      expect(res._id).toBe(stored_google);
+      expect(res.text.length).toBe(171);
     })
     .expect(200)
   })

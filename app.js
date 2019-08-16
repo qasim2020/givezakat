@@ -167,6 +167,7 @@ let updatePeople = function(req,o) {
     findPeople = req.session.due.filter(o => {
       return o == val._id.toString();
     });
+
     if (findPeople.length > 0) val.dueIds = 'card-selected';
 
     return val;
@@ -262,7 +263,9 @@ app.get('/home/:token', authenticate, (req,res) => {
       if (val.addedBy == req.params.user._id) val.addedbyme = true;
       else val.addedbyme = false;
 
-      if (val.addedbyme || val.paidbyme && Object.keys(val.paidbyme).length > 0) val.unlocked = true;
+      if (val.addedbyme || val.paidbyme && Object.keys(val.paidbyme).length > 0) {
+        val.unlocked = true;
+      }
       else val.unlocked = false;
 
       return val;
@@ -604,19 +607,22 @@ app.get('/peopleBussinessCards',(req,res) => {
     }).then((msg) => {
       req.paidpeople = msg;
       let values = {};
-      _.each(req.data,(val,key) => {
+      //// TODO:
+      req.data = req.data.map(function(val) {
 
-        val.paidbyme = req.paidpeople.filter(paidpeople => {
-          return paidpeople._id == val._id;
-        }).name;
+        val.paidbyme = msg.filter(o => {
+                          return o._id.toString() === val._id.toString();
+                        })[0];
 
-        if (val.addedBy == req.loggedIn._id) {
-          val.addedbyme = true;
-        } else {
-          val.addedbyme = false;
-        };
+        if (val.addedBy == req.loggedIn._id) val.addedbyme = true
+        else val.addedbyme = false;
 
-        if (val.addedbyme || val.paidbyme && val.paidbyme.length > 0) val.unlocked = true;
+        if (val.addedbyme || val.paidbyme && Object.keys(val.paidbyme).length > 0) {
+          val.unlocked = true;
+        }
+        else val.unlocked = false;
+
+        return val;
 
       });
 
@@ -624,7 +630,8 @@ app.get('/peopleBussinessCards',(req,res) => {
         data: req.data,
         query: req.query
       }
-      if (req.headers.accept == `${process.env.test_call}`) res.status(200).send(options);
+      if (req.headers.accept == `${process.env.test_call}`) return res.status(200).send(options);
+      console.log('loading people cards');
       return res.renderPjax('2-peopleBussinessCards.hbs',options);
     }).catch((e) => {
       console.log(e)
@@ -633,7 +640,7 @@ app.get('/peopleBussinessCards',(req,res) => {
         query: req.query,
         message: e.msg
       });
-      return res.renderPjax('2-error.hbs');
+      return res.renderPjax('2-error.hbs',{msg: e});
     });
 
   };
@@ -786,23 +793,16 @@ app.post('/signing',(req,res) => {
     });
   };
 
-  // if (req.body.query === 'Register_email_verify') {
-  //   var phoneCode = Math.floor(100000 + Math.random() * 900000);
-  //   if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
-  //   sendmail(req.body.email,`Your Code is <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
-  //   req.session.phoneCode = phoneCode;
-  //   res.status(200).send({msg: 'Mail Sent !', phoneCode: req.body.phonecode});
-  // }
-
   if (req.body.query === 'Email_Verify') {
     var phoneCode = Math.floor(100000 + Math.random() * 900000);
     if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
     Users.findOne({"email":req.body.email}).then((user) => {
       if (req.body.registerNew) {
-        let user = new User({name: req.body.name, email: req.body.email});
-        return user.save();
+        let user = new Users({name: req.body.name, email: req.body.email, SigninType: 'Google'});
+        return user.save().catch(e => Promise.reject('You are already registered !'));
       }
       if (!user) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
+      return Promise.resolve(user);
     }).then(newUser => {
       sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
       return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
