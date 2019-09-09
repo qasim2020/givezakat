@@ -111,7 +111,7 @@
         </div>
 
         <div class="person">
-          <p>Earning {{salary}} to support {{fMembers}} family members</p>
+          <p>Earning {{localCurrency}} {{salary}} to support {{fMembers}} family members</p>
         </div>
         <input class="input-person" class="form-control text-center" type="number" name="{{_id}}" value="" placeholder="50 {{localCurrency}}" required>
 
@@ -147,6 +147,19 @@
 
     <script type="text/javascript">
 
+      $('.input-person').on('keyup',function() {
+        let total = 0;
+        $.each($('#pay-out-form').find('input'),(key,val) => {
+          total += +$(val).val();
+        })
+
+        let processingfee = Math.ceil(total * 0.1);
+        total = total + processingfee;
+
+        $('#total-amount').html(`${total} {{localCurrency}}`);
+        $('#processing-fee').html(`${processingfee} {{localCurrency}}`);
+      });
+
       var stripe = Stripe(`pk_test_WJQN2iDakpSKGN9Va0KeHEDT`);
 
       $('#buy').on('click',function() {
@@ -158,11 +171,11 @@
           total += +$(val).val();
         })
 
-        let processingfee = total * 0.1;
+        let processingfee = Math.ceil(total * 0.1);
         total = total + processingfee;
 
-        $('#total-amount').html(`${total}.00 USD`);
-        $('#processing-fee').html(`${processingfee}.00 USD`)
+        $('#total-amount').html(`${total} {{localCurrency}}`);
+        $('#processing-fee').html(`${processingfee} {{localCurrency}}`)
 
         let array = [];
 
@@ -179,7 +192,7 @@
 
         $(this).closest('.form-grid').hide();
         $('.checkout-container').removeClass('d-none');
-        $('#stripe-btn').html(`Payout ${total}.00 USD`);
+        $('#stripe-btn').html(`Payout ${total} {{localCurrency}}`);
         $('#input-amount').val(total * 100);
 
       });

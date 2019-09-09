@@ -54,14 +54,26 @@ app.use(function(req, res, next) {
 
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token || req.query.token;
+  if (!token) return res.status(400).render('1-redirect.hbs', {
+    timer: 3,
+    message: 'You are not signed in to perform this action',
+    page: 'Un authorized Request'
+  });
+
   Users.findByToken(token).then((user) => {
     if (!user) return Promise.reject('No user found for token :', token);
     req.params.user = user;
     next();
   }).catch((e) => {
     console.log(e);
-    req.url = '/';
-    return app._router.handle(req, res, next);
+    res.status(400).render('1-redirect.hbs',{
+      timer: 3,
+      message: e,
+      token: req.params.token,
+      page: 'Error',
+    })
+    // req.url = '/';
+    // return app._router.handle(req, res, next);
   });
 };
 
@@ -247,7 +259,7 @@ app.get('/home/:token', authenticate, (req,res) => {
       ids.push(val.paidto);
     });
 
-    return People.find({_id: {$in : ids}});
+    return People.find({_id: {$in : ids}}).lean();
   }).then((msg) => {
 
     req.paidpeople = msg;
@@ -267,13 +279,11 @@ app.get('/home/:token', authenticate, (req,res) => {
         val.unlocked = true;
       }
       else val.unlocked = false;
-
       return val;
 
     });
 
     updatedObjects = updatePeople(req,updatedObjects);
-
     let options = {
       data: updatedObjects,
       token: req.session.token,
@@ -358,22 +368,35 @@ app.get('/addpeople/:token',authenticate,(req,res) => {
 
 });
 
-app.get('/updateperson/:call',(req,res) => {
+app.get('/updateperson', authenticate, (req,res) => {
 
-  if (!(req.session.token)) return res.render('1-signin.hbs',{
-    signin: 'active',
-    message: 'You need to sign in to add people.',
-    call: 'addpeople',
-  });
+  console.log(req.query);
 
-  res.render('1-updateperson.hbs',{
-    // due: 'active',
-    // url: result.data.response.url,
-    addpeople: 'active',
-    token: req.session.token,
-    name: req.session.name,
-    call: req.params.call.split('+').join(' '),
-  });
+  People.findOne({_id:req.query.id, addedBy: req.params.user._id}).lean().then(msg => {
+    if (!msg) return Promise.reject('This person was not added by you. You can update only people added by you !');
+    return res.status(200).render('1-updateperson.hbs',msg);
+  }).catch(e => {
+    res.status(400).render('1-redirect.hbs',{
+      message: e,
+      token: req.params.token,
+      page: 'Update Person',
+    })
+  })
+
+  // if (!(req.session.token)) return res.render('1-signin.hbs',{
+  //   signin: 'active',
+  //   message: 'You need to sign in to add people.',
+  //   call: 'addpeople',
+  // });
+  //
+  // res.render('1-updateperson.hbs',{
+  //   // due: 'active',
+  //   // url: result.data.response.url,
+  //   addpeople: 'active',
+  //   token: req.session.token,
+  //   name: req.session.name,
+  //   call: req.params.call.split('+').join(' '),
+  // });
 });
 
 app.get('/due/:token',authenticate,(req,res) => {
@@ -399,8 +422,11 @@ app.get('/due/:token',authenticate,(req,res) => {
   };
 
   let objectIdArray = req.session.due.map(s => mongoose.Types.ObjectId(s));
-
-  return People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
+  console.log(req.session.browserCurrency.currency_code.toLowerCase());
+  return People.find({'_id' : {$in : objectIdArray}}).lean().then((msg) => {
+      _.each(msg,val => {
+        val.localCurrency = req.session.browserCurrency.currency_code;
+      });
       res.render('1-due.hbs',{
         people: msg,
         dueStatus: 'active',
@@ -408,7 +434,7 @@ app.get('/due/:token',authenticate,(req,res) => {
         token: req.session.token,
         name: req.session.name,
         email: req.params.user.email,
-        localCurrency: req.currency
+        localCurrency: req.session.browserCurrency.currency_code
       });
     }).catch((error) => {
       console.log(error);
@@ -638,7 +664,8 @@ app.get('/peopleBussinessCards',(req,res) => {
       if (e.code == 404) return res.renderPjax('2-peopleBussinessCards.hbs',{
         data: req.data,
         query: req.query,
-        message: e.msg
+        message: e.msg,
+        token: req.session.token
       });
       return res.renderPjax('2-error.hbs',{msg: e});
     });
@@ -823,9 +850,10 @@ app.post('/signing',(req,res) => {
       if (!user) return Users.findOneAndUpdate({"email":req.body.email},{$set: {attemptedTime: new Date()}, $inc:{wrongAttempts:1}},{new:true});
       return Promise.resolve('Found');
     }).then((response) => {
+      console.log(response);
       if (response === 'Found') return res.status(200).send('Verified !');
       if (!response) return Promise.reject('could not add this user due to some thing');
-      // console.log(`${response}:::: Wrong attempt no: ${response.wrongAttempts} x Attempt`);
+
       if (response.wrongAttempts > 4 && req.headers.accept != process.env.test_call) return res.status(404).send('5 wrong attempts, please try again after 2 mins.');
       return res.status(400).send('Did not match !');
     }).catch((e) => {
