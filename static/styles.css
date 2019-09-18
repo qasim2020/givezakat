@@ -517,7 +517,7 @@
         outline: none;
       }
 
-      .filter-btns .active {
+      .filter-btns .active, .btn.active {
         outline: none;
         background: darkcyan;
         color: #FFFFFF;

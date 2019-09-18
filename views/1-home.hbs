@@ -178,6 +178,94 @@
         {{>filterBtns}}
       </div>
 
+      <style media="screen">
+
+        .sponsors {
+          display: flex;
+        }
+
+        .s_card {
+          padding: 24px 18px 26px 21px;
+          margin-top: 10px;
+          border-radius: 2px;
+
+          background: #FFFFFF;
+          box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+        }
+
+        .s_card > p:nth-child(1) {
+          /* h5 */
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 18px;
+          line-height: 26px;
+          /* identical to box height */
+
+          /* theme-green */
+          color: #173627;
+          display: flex;
+          align-items: center;
+        }
+
+        .s_card svg:nth-child(1) {
+          padding: 0px 8px 3px 8px;
+          flex-grow: 1;
+          width: 17px;
+        }
+
+        .s_card > p:nth-child(2) {
+          /* p */
+          font-family: Montserrat;
+          font-style: normal;
+          font-weight: 500;
+          font-size: 18px;
+          line-height: 22px;
+          /* identical to box height */
+
+          /* theme-green */
+          color: #173627;
+        }
+
+        .s_card svg:nth-child(3) {
+          margin-left: -6px;
+        }
+
+      </style>
+
+      <button data-target="all" class="btn btn-primary d-flex align-items-center active" type="button" name="button">Sponsors <span class="ml-point5 badge bg-primary text-white">{{count.Total}}</span> </button>
+      <div class="sponsors">
+        <div class="s_card">
+          <p>
+            Qasim
+            <svg width="17" height="21" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.5 0L0 3.77774V9.44436C0 14.686 3.62667 19.5876 8.5 20.7776C13.3733 19.5876 17 14.686 17 9.44436V3.77774L8.5 0ZM6.61111 15.111L2.83333 11.3332L4.165 10.0016L6.61111 12.4382L12.835 6.21439L14.1667 7.55549L6.61111 15.111Z" fill="#F76963"/>
+            </svg>
+          </p>
+          <p>21 Persons</p>
+          <svg width="46" height="38" viewBox="0 0 46 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <g filter="url(#filter0_d)">
+          <path d="M31.0083 16.3732L29.9975 18.0582L29.8241 16.1007L27.9091 15.6607L29.7175 14.8907L29.545 12.9333L30.835 14.4158L32.6434 13.6458L31.6333 15.3316L32.9234 16.8141L31.0083 16.3732ZM26.75 25.0599C23.2983 25.0599 20.5 22.2615 20.5 18.8099C20.5 15.7099 22.7592 13.1449 25.7192 12.6524C23.8684 13.5141 22.5833 15.3849 22.5833 17.5599C22.5833 20.5516 25.0083 22.9767 28 22.9767C30.175 22.9767 32.0458 21.6916 32.9075 19.8408C32.415 22.8008 29.85 25.0599 26.75 25.0599ZM34.6667 7.99976H15.5V29.6666H34.6667C36.5075 29.6666 38 28.1741 38 26.3333V11.3331C38 9.49223 36.5075 7.99976 34.6667 7.99976Z" fill="#004600"/>
+          <path d="M11.3333 7.99976C9.49253 7.99976 8 9.49223 8 11.3331V26.3333C8 28.1742 9.49253 29.6666 11.3333 29.6666H15.5V7.99976H11.3333Z" fill="#EEEEEE"/>
+          <path d="M32.6434 13.6501L30.8351 14.4201L29.5451 12.9376L29.7175 14.8951L27.9092 15.6642L29.8242 16.1042L29.9975 18.0625L31.0084 16.3775L32.9234 16.8184L31.6333 15.3359L32.6434 13.6501Z" fill="white"/>
+          <path d="M28 22.9749C25.0084 22.9749 22.5833 20.5499 22.5833 17.5582C22.5833 15.3823 23.8691 13.5115 25.7192 12.6498C22.7592 13.1423 20.5 15.7081 20.5 18.8082C20.5 22.2599 23.2984 25.0582 26.75 25.0582C29.85 25.0582 32.4159 22.7991 32.9083 19.839C32.0466 21.6891 30.1758 22.9749 28 22.9749Z" fill="white"/>
+          </g>
+          <defs>
+          <filter id="filter0_d" x="0" y="-0.000244141" width="46" height="37.6669" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+          <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+          <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"/>
+          <feOffset/>
+          <feGaussianBlur stdDeviation="4"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.25 0"/>
+          <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow"/>
+          <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow" result="shape"/>
+          </filter>
+          </defs>
+          </svg>
+        </div>
+      </div>
+
+
       <div class="filter-badges d-flex justify-content-start flex-wrap align-items-center my-1">
         <p linked-data="all" id="all-badge" class="">Show All <span>x</span> </p>
         <p linked-data="my" id="my-badge" class="d-none">My Lists <span>x</span> </p>
@@ -186,9 +274,6 @@
         <p linked-data="inprogress" id="inprogress-badge" class="d-none">In progress <span>x</span> </p>
       </div>
 
-      <div class="modal-loading d-none">
-        loading content
-      </div>
 
       <div data-show="showAllCards" id="all-data-here" class="encloser pt-md-2 pt-1">
         {{#unless data}}
