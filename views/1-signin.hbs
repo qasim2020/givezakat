@@ -171,7 +171,7 @@
             'content-type': 'application/json',
         }
       }).done((token) => {
-        return console.log('successful: ', token);
+        // return console.log('successful: ', token);
         {{#if call}}
         window.location.assign(`/{{call}}/${token}`);
         {{else}}
