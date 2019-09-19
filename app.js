@@ -143,31 +143,56 @@ app.get('/profile/:token',authenticate,(req,res) => {
 
 let getCount = function () {
   return People.aggregate([
-    { "$facet": {
-      "Total": [
-        { "$match" : { "cardClass": {'$exists' : true}}},
-        { "$count": "Total" },
-      ],
-      "pending": [
-        { "$match" : { "cardClass": 'pending'}},
-        { "$count": "pending" },
-      ],
-      "delivered": [
-        { "$match" : { "cardClass": 'delivered'}},
-        { "$count": "delivered" },
-      ],
-      "inprogress": [
-        { "$match" : { "cardClass": 'inprogress'}},
-        { "$count": "inprogress" },
-      ],
-    }},
-    { "$project": {
-      "Total": { "$arrayElemAt": ["$Total.Total", 0] },
-      "pending": { "$arrayElemAt": ["$pending.pending", 0] },
-      "delivered": { "$arrayElemAt": ["$delivered.delivered", 0] },
-      "inprogress": { "$arrayElemAt": ["$inprogress.inprogress", 0] },
-    }}
+    {$facet :
+        {
+        Total : [
+                { $match: {} },
+                { $count: "added" }
+                ]
+        ,
+        Pending: [
+                { $match: {cardClass: "pending"} },
+                { $count: "pending" }
+                ]
+        ,
+        Delivered: [
+                { $match: {cardClass: "delivered"} },
+                { $count: "delivered" }
+                ]
+        ,
+        inprogress: [
+                { "$match" : { cardClass: 'inprogress'}},
+                { "$count": "inprogress" },
+                ]
+        ,
+        Sponsors : [
+                { $match: {} },
+                { $group: {_id: "$addedBy", people: { $sum: Number(1) } } },
+                { $lookup: {
+                    from: 'users',
+                    localField: "_id.str",
+                    foreignField: "_id.str",
+                    as: "users"
+                } },
+                { $project : {
+                    name: { $arrayElemAt: [ "$users.name",0 ] },
+                    sponsored: "$people"
+                    }
+                }
+
+                ]
+        }
+    },
+    {$project: {
+            Total: { $arrayElemAt: [ "$Total.added", 0 ] } ,
+            pending: { $arrayElemAt: [ "$Pending.pending", 0 ] } ,
+            delivered: { $arrayElemAt: [ "$Delivered.delivered", 0 ] } ,
+            inprogress: { $arrayElemAt: [ "$inprogress.inprogress", 0 ] } ,
+            Sponsors: "$Sponsors"
+         }
+    }
   ]);
+
 };
 
 let updatePeople = function(req,o) {

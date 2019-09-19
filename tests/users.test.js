@@ -8,10 +8,6 @@ const {app,mongoose,People,Orders,CurrencyRates,Users,axios} = require('../app.j
 const {zeroiseDB} = require('./zeroiseDB');
 const {getStripeToken} = require('./getStripeToken');
 
-beforeEach(() => {
-  testSession = session(app);
-});
-
 describe('Open pages just fine', () => {
 
   var currencySession = session(app);
@@ -29,11 +25,16 @@ describe('Open pages just fine', () => {
     await currencySession.get('/')
       .set('Accept', `${process.env.test_call}`)
       .expect((res) => {
+        let sum = 0;
+        _.each(res.body.count.Sponsors,(val,key) => {
+          expect(val.sponsored).not.toBe();
+          sum = sum + val.sponsored;;
+        })
         expect(res.body.data[0].dueIds).toContain('card-selected');
         expect(res.body.data.length).toBe(12);
         expect(res.body.due).toBe(1);
         expect(res.body.currency).toBeFalsy();
-        expect(res.body.count.Total).toBe(14);
+        expect(res.body.count.Total).toBe(sum);
         expect(res.body.count.pending).toBe(10);
         expect(res.body.count.delivered).toBe(2);
         expect(res.body.count.inprogress).toBe(2);
@@ -49,9 +50,6 @@ describe('Open pages just fine', () => {
           query : "create-currency-session",
           msg: 'NOK',
         })
-      .expect(res => {
-        // console.log(res.text);
-      })
       .expect(200)
   })
 
