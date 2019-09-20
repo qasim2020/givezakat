@@ -142,7 +142,8 @@ app.get('/profile/:token',authenticate,(req,res) => {
 });
 
 let getCount = function () {
-  return People.aggregate([
+  return People.aggregate(
+    [
     {$facet :
         {
         Total : [
@@ -165,21 +166,25 @@ let getCount = function () {
                 { "$count": "inprogress" },
                 ]
         ,
+        people: [
+          { "$limit": 12 },
+          { "$match": {} }
+        ]
+        ,
         Sponsors : [
                 { $match: {} },
                 { $group: {_id: "$addedBy", people: { $sum: Number(1) } } },
+                { $addFields: { addedBy: { $toObjectId: "$_id" } } },
                 { $lookup: {
                     from: 'users',
-                    localField: "_id.str",
-                    foreignField: "_id.str",
+                    localField: "addedBy",
+                    foreignField: "_id",
                     as: "users"
                 } },
-                { $project : {
-                    name: { $arrayElemAt: [ "$users.name",0 ] },
+                { $project: {
+                    name: { $arrayElemAt: ["$users.name",0] },
                     sponsored: "$people"
-                    }
-                }
-
+                    } }
                 ]
         }
     },
@@ -188,10 +193,12 @@ let getCount = function () {
             pending: { $arrayElemAt: [ "$Pending.pending", 0 ] } ,
             delivered: { $arrayElemAt: [ "$Delivered.delivered", 0 ] } ,
             inprogress: { $arrayElemAt: [ "$inprogress.inprogress", 0 ] } ,
-            Sponsors: "$Sponsors"
+            Sponsors: "$Sponsors",
+            people: "$people"
          }
     }
-  ]);
+  ]
+  );
 
 };
 
@@ -216,34 +223,46 @@ let updatePeople = function(req,o) {
 
 app.get('/',(req,res) => {
 
-  let promise1 = new Promise(function(resolve, reject) {
-    return getCount().then(msg => {
-      resolve(msg);
-    })
-  });
-  let promise2 = new Promise(function(resolve, reject) {
-    return People.find().limit(12).lean().then(people => {
-      resolve(people);
-    })
-  });
+  // let promise1 = new Promise(function(resolve, reject) {
+  //   return getCount().then(msg => {
+  //     resolve(msg);
+  //   })
+  // });
+  // let promise2 = new Promise(function(resolve, reject) {
+  //   return People.find().limit(12).lean().then(people => {
+  //     resolve(people);
+  //   })
+  // });
 
-  Promise.all([promise1, promise2]).then(results => {
+  // Promise.all([promise1, promise2]).then(results => {
+
+  getCount().then(results => {
 
     if (req.session.browserCurrency) {
-      getEachSalaryText(results[1],req);
+      getEachSalaryText(results[0].people,req);
     } else {
-      _.each(results[1],(val,key) => {
+      _.each(results[0].people,(val,key) => {
         val.salary = `${val.salary} ${val.currency} per month`;
       });
     }
 
-    let updatedObjects = updatePeople(req,results[1]);
+    _.each(results[0].Sponsors,(val,key) => {
+      val.name = val.name.split(' ')[0].trim();
+    })
+console.log(results[0]);
+    let updatedObjects = updatePeople(req,results[0].people);
 
     let options = {
       data: updatedObjects,
       due: req.session.due && req.session.due.length,
       currency: req.session.hasOwnProperty('browserCurrency'),
-      count: results[0][0],
+      count: {
+        Total: results[0].Total,
+        pending: results[0].pending,
+        delivered: results[0].delivered,
+        inprogress: results[0].inprogress,
+        Sponsors: results[0].Sponsors
+      },
     };
     if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
     res.status(200).render('1-home.hbs', options);
