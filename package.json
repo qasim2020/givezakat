@@ -32,6 +32,7 @@
     "express": "^4.16.4",
     "express-pjax": "0.0.1",
     "express-session": "^1.16.2",
+    "connect-mongo": "^3.0.0",
     "google-auth-library": "^4.2.5",
     "googleapis": "^40.0.0",
     "hbs": "^4.0.1",

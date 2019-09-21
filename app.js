@@ -3,6 +3,8 @@ require('./config/config');
 const http = require('http');
 const express = require('express');
 const pjax    = require('express-pjax');
+const session = require('express-session');
+const MongoStore = require('connect-mongo')(session);
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
 var cookieParser = require('cookie-parser')
@@ -10,7 +12,6 @@ const _ = require('lodash');
 const readXlsxFile = require('read-excel-file/node');
 const axios = require('axios');
 const {OAuth2Client} = require('google-auth-library');
-const session = require('express-session');
 
 const stripe = require('stripe')(process.env.stripePrivate);
 
@@ -40,6 +41,7 @@ app.use(session({
     maxAge:5 * 60 * 1000,
   },
   rolling: true,
+  store: new MongoStore({ mongooseConnection: mongoose.connection })
 }))
 app.set('view engine','hbs');
 hbs.registerPartials(__dirname + '/views/partials');
@@ -59,9 +61,8 @@ let authenticate = (req,res,next) => {
     message: 'You are not signed in to perform this action',
     page: 'Un authorized Request'
   });
-
   Users.findByToken(token).then((user) => {
-    if (!user) return Promise.reject('No user found for token :', token);
+    if (!user) return Promise.reject('No user found with the requested token !');
     req.params.user = user;
     next();
   }).catch((e) => {
@@ -69,11 +70,8 @@ let authenticate = (req,res,next) => {
     res.status(400).render('1-redirect.hbs',{
       timer: 3,
       message: e,
-      token: req.params.token,
       page: 'Error',
     })
-    // req.url = '/';
-    // return app._router.handle(req, res, next);
   });
 };
 
@@ -223,19 +221,6 @@ let updatePeople = function(req,o) {
 
 app.get('/',(req,res) => {
 
-  // let promise1 = new Promise(function(resolve, reject) {
-  //   return getCount().then(msg => {
-  //     resolve(msg);
-  //   })
-  // });
-  // let promise2 = new Promise(function(resolve, reject) {
-  //   return People.find().limit(12).lean().then(people => {
-  //     resolve(people);
-  //   })
-  // });
-
-  // Promise.all([promise1, promise2]).then(results => {
-
   getCount().then(results => {
 
     if (req.session.browserCurrency) {
@@ -249,7 +234,7 @@ app.get('/',(req,res) => {
     _.each(results[0].Sponsors,(val,key) => {
       val.name = val.name.split(' ')[0].trim();
     })
-console.log(results[0]);
+// console.log(results[0]);
     let updatedObjects = updatePeople(req,results[0].people);
 
     let options = {
@@ -618,10 +603,16 @@ app.get('/logout/:token', authenticate, (req,res) => {
   console.log(req.params.user.name,'logged out');
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
-    req.session.destroy(function(err) {
-      req.url = '/';
-      return app._router.handle(req, res);
+    req.session.destroy();
+    return res.render('1-redirect.hbs',{
+      timer: 10,
+      page: 'You have been logged out !',
+      message: 'Redirecting you to home page',
     });
+    // return req.session.destroy(function(err) {
+    //   req.url = '/';
+    //   return app._router.handle(req, res);
+    // });
   }).catch((e) => {
     console.log(e);
     res.status(404).send(e);
