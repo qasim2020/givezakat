@@ -174,7 +174,7 @@
     <section id="content" class="container pt-md-2 pt-1 px-1 px-md-2">
 
       <p id="explore" class="text-brand text-green">Filter Lists</p>
-      <div class="filter-btns d-flex flex-wrap justify-content-start align-items-center">
+      <div data-show="showFilterBtns" id="filter-btns" class="filter-btns d-flex flex-wrap justify-content-start align-items-center">
         {{>filterBtns}}
       </div>
 
@@ -234,7 +234,6 @@
 
       </style>
 
-      <!-- <button data-target="all" class="btn btn-primary d-flex align-items-center active" type="button" name="button">Sponsors <span class="ml-point5 badge bg-primary text-white">{{count.Total}}</span> </button> -->
       <div class="sponsors">
         {{#each count.Sponsors}}
 
@@ -307,7 +306,7 @@
 
         {{/if}}
       </div>
-      <div data-show="showMyCards" id="my-data-here" class="encloser pt-md-2 pt-1"></div>
+      <div data-show="showMyCards" id="my-data-here" class="encloser pt-md-0 pt-1"></div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
 
@@ -396,9 +395,9 @@
 
     </section>
 
-    <a data-pjax="#all-data-here" class="" id="showAllCards" href=''></a>
-    <a data-pjax="#my-data-here" class="" id="showMyCards" href=''></a>
-    <a data-pjax=".filter-btns" class="" id="showFilterBtns" href=''></a>
+    <a data-pjax="#all-data-here" id="showAllCards" href=''></a>
+    <a data-pjax="#my-data-here" id="showMyCards" href=''></a>
+    <a data-pjax="#filter-btns" id="showFilterBtns" href=''></a>
 
     <script type="text/javascript" src="/javascript.js"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
@@ -443,8 +442,6 @@
 
         {{#each dueIds}}
           console.log(`{{this}}`);
-          // console.log($(`.{{this}}`));
-          // changeCardState($(`#{{this}}`).find('.card-select'));
         {{/each}}
 
       });
@@ -546,6 +543,21 @@
           $('#all-data-here').addClass('d-none').children().remove();
           $('#my-data-here').removeClass('d-none')
           $('#showMyCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
+
+          $.ajax({
+              url: '/getCount?token={{token}}',
+              type: 'get',
+              headers: {
+                  'content-type': 'application/json',
+              }
+            }).done((res) => {
+              console.log(res);
+              $.each(res,(key,val) => {
+                $(`#count-${key}`).html(val);
+              })
+            }).fail((e) => {
+              console.log(e.responseText);
+            });
         }
 
       };

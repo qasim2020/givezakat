@@ -118,6 +118,13 @@ describe('Open pages just fine', () => {
     }).expect(200);
   });
 
+  test('Should get count of people paid and sponsored by me', async() => {
+    await currencySession.get(`/getCount?token=${currencySession.token}`).set('Accept',`${process.env.test_call}`).expect(res => {
+      console.log(res.text);
+      expect(res).not.toBe();
+    }).expect(200);
+  })
+
   test('Should fetch pjax links fine', async() => {
     await currencySession.get(`/peopleBussinessCards?token=${currencySession.token}&type=all&showQty=12&expression=delivered|pending|inprogress`)
     .set('Accept',`${process.env.test_call}`)

@@ -1,9 +1,9 @@
 <div class="d-flex justify-content-start overflow-scroll">
-  <button data-target="all" class="btn btn-primary d-flex align-items-center active" type="button" name="button">Show All <span class="ml-point5 badge bg-primary text-white">{{count.Total}}</span> </button>
-  <button data-target="my" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span class="ml-point5 badge bg-primary text-white">{{0}}</span> </button>
-  <button data-target="delivered" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span class="ml-point5 badge bg-delivered text-white">{{count.delivered}}</span> </button>
-  <button data-target="pending" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span class="ml-point5 badge bg-pending text-white">{{count.pending}}</span> </button>
-  <button data-target="inprogress" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button">In progress <span class="ml-point5 badge bg-inprogress text-white">{{count.inprogress}}</span> </button>
+  <button data-target="all" class="btn btn-primary d-flex align-items-center active" type="button" name="button">Show All <span id="count-Total" class="ml-point5 badge bg-primary text-white">{{count.Total}}</span> </button>
+  <button data-target="my" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">My List <span id="count-myTotal" class="ml-point5 badge bg-primary text-white">{{count.myTotal}}</span> </button>
+  <button data-target="delivered" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Delivered <span id="count-delivered" class="ml-point5 badge bg-delivered text-white">{{count.delivered}}</span> </button>
+  <button data-target="pending" class="btn btn-primary d-flex align-items-center ml-point5" type="button" name="button">Pending <span id="count-pending" class="ml-point5 badge bg-pending text-white">{{count.pending}}</span> </button>
+  <button data-target="inprogress" class="btn btn-primary d-flex align-items-center ml-point5 mr-point5" type="button" name="button">In progress <span id="count-inprogress" class="ml-point5 badge bg-inprogress text-white">{{count.inprogress}}</span> </button>
 </div>
 
 <div class="d-flex justify-content-start border my-point5 search-bar flex-grow-1">

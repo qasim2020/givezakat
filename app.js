@@ -81,7 +81,6 @@ app.get('/hacks',(req,res) => {
 });
 
 app.get('/profile/:token',authenticate,(req,res) => {
-  // get all data updated by me
 
   if (!req.session.token) {
       return res.render('1-redirect.hbs',{
@@ -92,7 +91,6 @@ app.get('/profile/:token',authenticate,(req,res) => {
   };
 
   People.find({addedBy: req.params.user._id}).then((sponsored) => {
-    // get all orders placed by me
     req.sponsored = getEachSalaryText(sponsored,req);
     _.each(sponsored,(val,key) => {
       val.unlocked = true;
@@ -107,7 +105,6 @@ app.get('/profile/:token',authenticate,(req,res) => {
     });
     return People.find({_id:{ $in: ids}});
   }).then((payed) => {
-    // get all suggestions raised by me - FEATURE PENDING
     let stuff = {};
     _.each(payed,(val,key) => {
       stuff = req.orders.filter(obj => {
@@ -234,7 +231,7 @@ app.get('/',(req,res) => {
     _.each(results[0].Sponsors,(val,key) => {
       val.name = val.name.split(' ')[0].trim();
     })
-// console.log(results[0]);
+
     let updatedObjects = updatePeople(req,results[0].people);
 
     let options = {
@@ -411,21 +408,6 @@ app.get('/updateperson', authenticate, (req,res) => {
       page: 'Update Person',
     })
   })
-
-  // if (!(req.session.token)) return res.render('1-signin.hbs',{
-  //   signin: 'active',
-  //   message: 'You need to sign in to add people.',
-  //   call: 'addpeople',
-  // });
-  //
-  // res.render('1-updateperson.hbs',{
-  //   // due: 'active',
-  //   // url: result.data.response.url,
-  //   addpeople: 'active',
-  //   token: req.session.token,
-  //   name: req.session.name,
-  //   call: req.params.call.split('+').join(' '),
-  // });
 });
 
 app.get('/due/:token',authenticate,(req,res) => {
@@ -604,22 +586,17 @@ app.get('/logout/:token', authenticate, (req,res) => {
   let user = req.params.user;
   user.removeToken(req.params.token).then((user) => {
     req.session.destroy();
-    return res.render('1-redirect.hbs',{
+    return res.render( '1-redirect.hbs' , {
       timer: 10,
-      page: 'You have been logged out !',
-      message: 'Redirecting you to home page',
+      page: 'Logged Out',
+      message: 'You have successfully logged out. Thank you for visiting us !',
     });
-    // return req.session.destroy(function(err) {
-    //   req.url = '/';
-    //   return app._router.handle(req, res);
-    // });
   }).catch((e) => {
     console.log(e);
     res.status(404).send(e);
   });
 });
 
-// salarytext
 let getEachSalaryText = function(msg,req) {
   let browserCurrencyRate = 0, thisPersonsCurrencyRate = 0 , mySalaryInBrowsersCurrency = 0;
 
@@ -642,6 +619,82 @@ let getEachSalaryText = function(msg,req) {
   });
   return msg;
 }
+
+app.get('/getCount', authenticate, (req,res) => {
+  let promise1 = new Promise(function(resolve, reject) {
+    return People.aggregate([
+      {
+        $facet: {
+          total: [
+            {$match: {addedBy:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+          pending: [
+            {$match: {cardClass:'pending',addedBy:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+          delivered: [
+            {$match: {cardClass:'delivered',addedBy:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+          inprogress: [
+            {$match: {cardClass:'inprogress',addedBy:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+      }
+    },{
+        $project: {
+          total: {"$arrayElemAt": ["$total.total",0]},
+          pending: {"$arrayElemAt": ["$pending.total",0]},
+          delivered: {"$arrayElemAt": ["$delivered.total",0]},
+          inprogress: {"$arrayElemAt": ["$inprogress.total",0]}
+        }
+      }
+  ]).then(output => resolve(output));
+  });
+
+  let promise2 = new Promise(function(resolve, reject) {
+    return Orders.aggregate([
+      {
+        $facet: {
+          total: [
+            {$match: {paidby:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+          pending: [
+            {$match: {status:'pending',paidby:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+          delivered: [
+            {$match: {status:'delivered',paidby:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+          inprogress: [
+            {$match: {status:'inprogress',paidby:req.params.user._id.toString()}},
+            {$count: 'total'}
+          ],
+      }
+    },{
+      $project: {
+        total: {"$arrayElemAt": ["$total.total",0]},
+        pending: {"$arrayElemAt": ["$pending.total",0]},
+        delivered: {"$arrayElemAt": ["$delivered.total",0]},
+        inprogress: {"$arrayElemAt": ["$inprogress.total",0]}
+      }
+    }
+  ]).then(output => resolve(output));
+  });
+
+  Promise.all([promise1,promise2]).then(msg => {
+    let options = {
+      myTotal: (msg[0][0]['total'] || 0) + (msg[1][0]['total'] || 0),
+      pending: (msg[0][0]['pending'] || 0) + (msg[1][0]['pending'] || 0),
+      delivered: (msg[0][0]['delivered'] || 0) + (msg[1][0]['delivered'] || 0),
+      inprogress: (msg[0][0]['inprogress'] || 0) + (msg[1][0]['inprogress'] || 0),
+    }
+    res.status(200).send(options);
+  }).catch(e => res.status(400).send(e));
+})
 
 app.get('/peopleBussinessCards',(req,res) => {
 
@@ -668,7 +721,7 @@ app.get('/peopleBussinessCards',(req,res) => {
     }).then((msg) => {
       req.paidpeople = msg;
       let values = {};
-      //// TODO:
+
       req.data = req.data.map(function(val) {
 
         val.paidbyme = msg.filter(o => {
@@ -745,19 +798,11 @@ app.get('/peopleBussinessCards',(req,res) => {
       return res.renderPjax('2-peopleMyList.hbs',options);
     }).catch((e) => {
       console.log(e);
-      // if (e.code == 404) return res.renderPjax('2-peopleMyList.hbs',{ data: req.data, query:req.query });
       return res.renderPjax('2-error.hbs',{ msg: e.msg });
     })
   }
 
 });
-
-let createCurrencySession = function(req,currency) {
-  return new Promise(function(resolve, reject) {
-
-
-  });
-};
 
 let testGoogleToken = function(req) {
   return new Promise(function(resolve, reject) {
