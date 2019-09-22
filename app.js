@@ -620,61 +620,28 @@ let getEachSalaryText = function(msg,req) {
   return msg;
 }
 
-app.get('/getCount', authenticate, (req,res) => {
-  let promise1 = new Promise(function(resolve, reject) {
-    return People.aggregate([
-      {
-        $facet: {
-          total: [
-            {$match: {addedBy:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-          pending: [
-            {$match: {cardClass:'pending',addedBy:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-          delivered: [
-            {$match: {cardClass:'delivered',addedBy:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-          inprogress: [
-            {$match: {cardClass:'inprogress',addedBy:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-      }
-    },{
-        $project: {
-          total: {"$arrayElemAt": ["$total.total",0]},
-          pending: {"$arrayElemAt": ["$pending.total",0]},
-          delivered: {"$arrayElemAt": ["$delivered.total",0]},
-          inprogress: {"$arrayElemAt": ["$inprogress.total",0]}
-        }
-      }
-  ]).then(output => resolve(output));
-  });
-
-  let promise2 = new Promise(function(resolve, reject) {
-    return Orders.aggregate([
-      {
-        $facet: {
-          total: [
-            {$match: {paidby:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-          pending: [
-            {$match: {status:'pending',paidby:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-          delivered: [
-            {$match: {status:'delivered',paidby:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-          inprogress: [
-            {$match: {status:'inprogress',paidby:req.params.user._id.toString()}},
-            {$count: 'total'}
-          ],
-      }
-    },{
+let mySponsoredCount = function(req) {
+  return People.aggregate([
+    {
+      $facet: {
+        total: [
+          {$match: {addedBy:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+        pending: [
+          {$match: {cardClass:'pending',addedBy:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+        delivered: [
+          {$match: {cardClass:'delivered',addedBy:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+        inprogress: [
+          {$match: {cardClass:'inprogress',addedBy:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+    }
+  },{
       $project: {
         total: {"$arrayElemAt": ["$total.total",0]},
         pending: {"$arrayElemAt": ["$pending.total",0]},
@@ -682,10 +649,91 @@ app.get('/getCount', authenticate, (req,res) => {
         inprogress: {"$arrayElemAt": ["$inprogress.total",0]}
       }
     }
-  ]).then(output => resolve(output));
-  });
+]);
+}
 
-  Promise.all([promise1,promise2]).then(msg => {
+let myOrdersCount = function(req) {
+  return Orders.aggregate([
+    {
+      $facet: {
+        total: [
+          {$match: {paidby:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+        pending: [
+          {$match: {status:'pending',paidby:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+        delivered: [
+          {$match: {status:'delivered',paidby:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+        inprogress: [
+          {$match: {status:'inprogress',paidby:req.params.user._id.toString()}},
+          {$count: 'total'}
+        ],
+    }
+  },{
+    $project: {
+      total: {"$arrayElemAt": ["$total.total",0]},
+      pending: {"$arrayElemAt": ["$pending.total",0]},
+      delivered: {"$arrayElemAt": ["$delivered.total",0]},
+      inprogress: {"$arrayElemAt": ["$inprogress.total",0]}
+    }
+  }
+]);
+}
+
+let getFullCount = function() {
+  return People.aggregate([
+    {
+      $facet: {
+        total: [
+          {$match: {} },
+          {$count: 'total'}
+        ],
+        pending: [
+          {$match: {cardClass:'pending'}},
+          {$count: 'total'}
+        ],
+        delivered: [
+          {$match: {cardClass:'delivered'}},
+          {$count: 'total'}
+        ],
+        inprogress: [
+          {$match: {cardClass:'inprogress'}},
+          {$count: 'total'}
+        ],
+    }
+  },{
+    $project: {
+      total: {"$arrayElemAt": ["$total.total",0]},
+      pending: {"$arrayElemAt": ["$pending.total",0]},
+      delivered: {"$arrayElemAt": ["$delivered.total",0]},
+      inprogress: {"$arrayElemAt": ["$inprogress.total",0]}
+    }
+  }
+]);
+}
+
+app.get('/getFullCount', (req,res) => {
+
+  getFullCount().then(msg => {
+    console.log(msg);
+    // return res.status(200).send(msg);
+    let options = {
+      Total: (msg[0]['total'] || 0),
+      pending: (msg[0]['pending'] || 0),
+      delivered: (msg[0]['delivered'] || 0),
+      inprogress: (msg[0]['inprogress'] || 0),
+    }
+    res.status(200).send(options);
+  }).catch(e => res.status(400).send(e));
+})
+
+app.get('/getCount', authenticate, (req,res) => {
+
+  Promise.all([mySponsoredCount(req),myOrdersCount(req)]).then(msg => {
     let options = {
       myTotal: (msg[0][0]['total'] || 0) + (msg[1][0]['total'] || 0),
       pending: (msg[0][0]['pending'] || 0) + (msg[1][0]['pending'] || 0),

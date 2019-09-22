@@ -444,6 +444,10 @@
           console.log(`{{this}}`);
         {{/each}}
 
+        {{#if token}}
+
+        {{/if}}
+
       });
 
       let doajax = function(url,type,headers,datastringified) {
@@ -536,6 +540,36 @@
           $('#my-data-here').addClass('d-none').children().remove();
           $('#all-data-here').removeClass('d-none')
           $('#showAllCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
+
+          $.ajax({
+              url: '/getFullCount',
+              type: 'get',
+              headers: {
+                  'content-type': 'application/json',
+              }
+            }).done((res) => {
+              console.log(res);
+              $.each(res,(key,val) => {
+                $(`#count-${key}`).html(val);
+              })
+            }).fail((e) => {
+              console.log(e.responseText);
+            });
+
+            {{#if token}}
+            $.ajax({
+                url: '/getCount?token={{token}}',
+                type: 'get',
+                headers: {
+                    'content-type': 'application/json',
+                }
+              }).done((res) => {
+                $(`#count-myTotal`).html(res.myTotal);
+                console.log(res);
+              }).fail((e) => {
+                console.log(e.responseText);
+              });
+            {{/if}}
           return;
         }
 
