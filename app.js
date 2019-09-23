@@ -136,7 +136,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
   });
 });
 
-let getCount = function () {
+let getCount = function (req) {
   return People.aggregate(
     [
     {$facet :
@@ -163,9 +163,42 @@ let getCount = function () {
         ,
         people: [
           { "$limit": 12 },
-          { "$match": {} }
+          { "$match": {} },
+          {$project: {
+              mob: 1,
+              addedBy: 1,
+              address: 1,
+              cardClass: 1,
+              fMembers: 1,
+              name: 1,
+              occupation: 1,
+              salary: 1,
+              story: 1,
+              currency: 1,
+              browserCurrency: req.session.browserCurrency || "USD"
+              }}
         ]
         ,
+        rates: [
+          {$limit: 1},
+          { "$lookup": {
+        from: 'currencyrates',
+        pipeline: [
+            {$match: {}},
+            {$sort: {timestamp: -1} },
+            {$limit: 1},
+            {$project: {
+                exchangeRate: "$rates",
+                _id: 0
+            }}
+          ],
+            as: 'rates'
+        }},
+        {$project: {
+            exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
+            _id: 0
+        }}
+        ],
         Sponsors : [
                 { $match: {} },
                 { $group: {_id: "$addedBy", people: { $sum: Number(1) } } },
@@ -189,7 +222,9 @@ let getCount = function () {
             delivered: { $arrayElemAt: [ "$Delivered.delivered", 0 ] } ,
             inprogress: { $arrayElemAt: [ "$inprogress.inprogress", 0 ] } ,
             Sponsors: "$Sponsors",
-            people: "$people"
+            people: "$people",
+            rates: "$rates",
+            exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
          }
     }
   ]
@@ -216,22 +251,21 @@ let updatePeople = function(req,o) {
   return updatedObjects;
 }
 
+hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, options) {
+  if (!options.data) return;
+  exchangeRate = JSON.parse(options.data.root.exchangeRate);
+  let mySalaryInBrowsersCurrency = Math.floor(parseInt(exchangeRate[browserCurrency]) / parseInt(exchangeRate[currency]) * parseInt(salary));
+  return `${mySalaryInBrowsersCurrency} ${browserCurrency} per Month`;
+});
+
+hbs.registerHelper("smallName",function(name,options) {
+  return name.split(' ')[0].trim();
+})
+
 app.get('/',(req,res) => {
 
-  getCount().then(results => {
-
-    if (req.session.browserCurrency) {
-      getEachSalaryText(results[0].people,req);
-    } else {
-      _.each(results[0].people,(val,key) => {
-        val.salary = `${val.salary} ${val.currency} per month`;
-      });
-    }
-
-    _.each(results[0].Sponsors,(val,key) => {
-      val.name = val.name.split(' ')[0].trim();
-    })
-
+  getCount(req).then(results => {
+    
     let updatedObjects = updatePeople(req,results[0].people);
 
     let options = {
@@ -245,7 +279,9 @@ app.get('/',(req,res) => {
         inprogress: results[0].inprogress,
         Sponsors: results[0].Sponsors
       },
+      exchangeRate: results[0].exchangeRate
     };
+
     if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
     res.status(200).render('1-home.hbs', options);
   }).catch((e) => {
@@ -745,7 +781,7 @@ app.get('/getCount', authenticate, (req,res) => {
 })
 
 app.get('/peopleBussinessCards',(req,res) => {
-
+  return;
   let regex = new RegExp(req.query.expression,'gi');
 
   if (req.query.type == 'all') {
