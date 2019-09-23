@@ -265,7 +265,7 @@ hbs.registerHelper("smallName",function(name,options) {
 app.get('/',(req,res) => {
 
   getCount(req).then(results => {
-    
+
     let updatedObjects = updatePeople(req,results[0].people);
 
     let options = {
