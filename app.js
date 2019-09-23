@@ -175,7 +175,7 @@ let getCount = function (req) {
               salary: 1,
               story: 1,
               currency: 1,
-              browserCurrency: req.session.browserCurrency || "USD"
+              browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
               }}
         ]
         ,
@@ -254,7 +254,9 @@ let updatePeople = function(req,o) {
 hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, options) {
   if (!options.data) return;
   exchangeRate = JSON.parse(options.data.root.exchangeRate);
+  // console.log(exchangeRate);
   let mySalaryInBrowsersCurrency = Math.floor(parseInt(exchangeRate[browserCurrency]) / parseInt(exchangeRate[currency]) * parseInt(salary));
+  console.log(mySalaryInBrowsersCurrency, salary, currency, browserCurrency);
   return `${mySalaryInBrowsersCurrency} ${browserCurrency} per Month`;
 });
 

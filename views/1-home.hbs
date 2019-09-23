@@ -435,7 +435,7 @@
             return doajax('/signing','post',headers,data);
           }).then((msg) => {
             console.log(msg);
-            // $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+            $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
           }).catch((e) => {
             $('.notification-box').css({opacity:1}).find('p').html('Geo IP Lookup: ' + JSON.parse(e.responseText).error);
             console.log(e);
@@ -445,10 +445,6 @@
         {{#each dueIds}}
           console.log(`{{this}}`);
         {{/each}}
-
-        {{#if token}}
-
-        {{/if}}
 
       });
 
@@ -536,7 +532,7 @@
         });
         var expression = str.slice(0,str.length-1);
         if (expression.length < 1) expression = 'pending|delivered|inprogress';
-        // return ;
+        return ;
         let skip = $('.cards').not('.d-none').length + 12;
         if (type == 'all') {
           $('#my-data-here').addClass('d-none').children().remove();
