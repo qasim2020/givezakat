@@ -51,7 +51,7 @@
 
 
 
-    {{#if unlocked}}
+    {{#if (unlocked paidByMe addedByMe)}}
 
     <span class="font-name" style="color:darkcyan; display:normal; margin-left:0px; float:none">{{name}}</span>
 
@@ -72,7 +72,7 @@
   <!-- change Q to white DONE-->
   <div class="card-hover bg-pending text-white card-inactive" style="width: -webkit-fill-available;">
 
-    {{#if unlocked}}
+    {{#if (unlocked paidByMe addedByMe)}}
     <div class="" style="grid-column:1/-1;align-self:center">
       <svg width="16" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" style="float: left;margin-top: 3px;">
         <g clip-path="url(#clip0)">

@@ -164,18 +164,10 @@ let getBasicData = function (req) {
         people: [
           { "$limit": 12 },
           { "$match": {} },
-          { $project:
+          { $addFields:
             {
-              mob: 1,
-              addedBy: 1,
-              address: 1,
-              cardClass: 1,
-              fMembers: 1,
-              name: 1,
-              occupation: 1,
-              salary: 1,
-              story: 1,
-              currency: 1,
+              paidByMe: false,
+              addedByMe: false,
               browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
             }
           }
@@ -280,29 +272,18 @@ hbs.registerHelper("checkDue", function(value, options) {
 })
 
 hbs.registerHelper("length", function(value, options) {
+  if (!value) return 0;
   return value.length;
 })
 
 hbs.registerHelper("loadMore", function(query, leftBehind, options) {
-  // console.log({data:data.length, query});
-  // check how much are left and tell us
   if (leftBehind > 0) return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More (${leftBehind} left)</button>`;
-  return `<button class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">No more data found</button>`;
+  return `<button class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block" disabled>No more data found</button>`;
+})
 
-  // return People.aggregate([
-  //   {$skip: query.skip},
-  //   {$limit: query.showQty},
-  //   {$match: {cardClass: query.expression}},
-  //   {$count: 'total'}
-  // ]).then(count => {
-  //   console.log({count});
-  //   if (count > 0) return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More ${count}</button>`;
-  //   return `<button class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">No more data found</button>`;
-  //
-  // }).catch(e => {
-  //   return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">${e.responseText}</button>`;
-  // })
-
+hbs.registerHelper("unlocked", function(paid, added, options) {
+  if (paid || added) return true;
+  return false
 })
 
 app.get('/',(req,res) => {
@@ -314,10 +295,10 @@ app.get('/',(req,res) => {
       due: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
       count: {
-        Total: results[0].Total,
-        pending: results[0].pending,
-        delivered: results[0].delivered,
-        inprogress: results[0].inprogress,
+        Total: results[0].Total || 0,
+        pending: results[0].pending || 0,
+        delivered: results[0].delivered || 0,
+        inprogress: results[0].inprogress || 0,
         Sponsors: results[0].Sponsors,
         leftBehind: results[0].leftBehind
       },
@@ -338,76 +319,229 @@ app.get('/',(req,res) => {
   });
 });
 
+let getLoggedInData = function(req) {
+  return People.aggregate([
+    {$facet :
+        {
+        Total : [
+                { $match: {cardClass: /pending|delivered|inprogress/gi} },
+                { $count: "added" }
+                ]
+        ,
+        myTotal: [
+                { $match: {cardClass: /pending|delivered|inprogress/gi ,addedBy: req.params.user._id.toString()} },
+                { $count: "total" }
+                ],
+        Pending: [
+                { $match: {cardClass: "pending"} },
+                { $count: "pending" }
+                ]
+        ,
+        Delivered: [
+                { $match: {cardClass: "delivered"} },
+                { $count: "delivered" }
+                ]
+        ,
+        inprogress: [
+                { "$match" : { cardClass: 'inprogress'}},
+                { "$count": "inprogress" },
+                ]
+        ,
+        people: [
+          { "$limit": 12 },
+          { "$match": {} },
+          {$addFields: {stringId: {$toString: "$_id"} } },
+          {$lookup: {
+            from:  "orders",
+            let: { newId: "$stringId", addedBy: "$addedBy"},
+            pipeline: [
+                { $match:
+                     { $expr:
+                        { $and : [
+                            { $eq: [ "$paidto",  "$$newId" ] },
+                            { $eq: [ "$paidby", req.params.user._id.toString()] }
+                            ]
+                        }
+                     }
+                  },
+                {$count: "total"}
+            ],
+            as: "orders"
+          }},
+          {$addFields: {
+            paidByMe: {
+                $cond: {if: { $eq : [ { "$arrayElemAt": ["$orders.total",0] } ,1 ] },  then: true, else: false}
+            },
+            addedByMe: {
+                $cond: { if: { $eq: [ "$addedBy", req.params.user._id.toString() ] }, then: true, else: false }
+            },
+            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+          }},
+          {$project: { orders: 0 }}
+        ]
+        ,
+        rates: [
+          {$limit: 1},
+          { "$lookup": {
+        from: 'currencyrates',
+        pipeline: [
+            {$match: {}},
+            {$sort: {timestamp: -1} },
+            {$limit: 1},
+            {$project: {
+                exchangeRate: "$rates",
+                _id: 0
+            }}
+          ],
+            as: 'rates'
+        }},
+        {$project: {
+            exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
+            _id: 0
+        }}
+        ],
+        Sponsors : [
+                { $match: {} },
+                { $group: {_id: "$addedBy", people: { $sum: Number(1) } } },
+                { $addFields: { addedBy: { $toObjectId: "$_id" } } },
+                { $lookup: {
+                    from: 'users',
+                    localField: "addedBy",
+                    foreignField: "_id",
+                    as: "users"
+                } },
+                { $project: {
+                    name: { $arrayElemAt: ["$users.name",0] },
+                    sponsored: "$people"
+                    } }
+        ],
+        loadMore: [
+                {$skip: 12},
+                {$match: {cardClass: /pending|delivered|inprogress/gi}},
+                {$count: 'total'}
+              ]
+        }
+    },
+    {$project: {
+            Total: { $arrayElemAt: [ "$Total.added", 0 ] } ,
+            myTotal: { $arrayElemAt: [ "$myTotal.total", 0 ] } ,
+            pending: { $arrayElemAt: [ "$Pending.pending", 0 ] } ,
+            delivered: { $arrayElemAt: [ "$Delivered.delivered", 0 ] } ,
+            inprogress: { $arrayElemAt: [ "$inprogress.inprogress", 0 ] } ,
+            Sponsors: "$Sponsors",
+            people: "$people",
+            rates: "$rates",
+            exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
+            leftBehind: "$loadMore.total"
+         }
+    }
+  ])
+}
+
 app.get('/home/:token', authenticate, (req,res) => {
 
-  let promise1 = new Promise(function(resolve, reject) {
-    return getBasicData().then(msg => {
-      resolve(msg);
-    })
-  });
-  let promise2 = new Promise(function(resolve, reject) {
-    return People.find().limit(12).lean().then(people => {
-      resolve(people);
-    })
-  });
-  let promise3 = new Promise(function(resolve, reject) {
-    return Orders.find({paidby: req.params.user._id}).lean().then(paid => resolve(paid));
-  });
+  getLoggedInData(req).then(results => {
 
-  Promise.all([promise1, promise2, promise3]).then(results => {
-
-    if (req.session.browserCurrency) {
-      getEachSalaryText(results[1],req);
-    } else {
-      _.each(results[1],(val,key) => {
-        val.salary = `${val.salary} ${val.currency} per month`;
-      });
-    }
-    req.results = results;
-    let ids = [];
-    _.each(results[2],(val,key) => {
-      ids.push(val.paidto);
-    });
-
-    return People.find({_id: {$in : ids}}).lean();
-  }).then((msg) => {
-
-    req.paidpeople = msg;
-
-    let values = {};
-
-    let updatedObjects = req.results[1].map(function(val) {
-
-      val.paidbyme = msg.filter(o => {
-                        return o._id.toString() === val._id.toString();
-                      })[0];
-
-      if (val.addedBy == req.params.user._id) val.addedbyme = true;
-      else val.addedbyme = false;
-
-      if (val.addedbyme || val.paidbyme && Object.keys(val.paidbyme).length > 0) {
-        val.unlocked = true;
-      }
-      else val.unlocked = false;
-      return val;
-
-    });
-
-    updatedObjects = updatePeople(req,updatedObjects);
     let options = {
-      data: updatedObjects,
-      token: req.session.token,
       name: req.params.user.name,
-      due: req.session.due && req.session.due.length,
+      token: req.params.token,
+      data: results[0].people,
+      due: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
-      count: req.results[0][0]
+      count: {
+        Total: results[0].Total || 0,
+        myTotal: results[0].myTotal || 0,
+        pending: results[0].pending || 0,
+        delivered: results[0].delivered || 0,
+        inprogress: results[0].inprogress || 0,
+        Sponsors: results[0].Sponsors,
+        leftBehind: results[0].leftBehind
+      },
+      query: {
+        url: 'peopleBussinessCards',
+        type: 'all',
+        token: req.params.token,
+        showQty: results[0].people.length+12,
+        expression: 'pending|delivered|inprogress'
+      },
+      exchangeRate: results[0].exchangeRate
     };
-    if (req.headers.accept == process.env.test_call) res.status(200).send(options);
-    res.status(200).render('1-home.hbs',options);
+
+    if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
+    res.status(200).render('1-home.hbs', options);
   }).catch((e) => {
-    console.log('home page error', e);
-    res.status(404).send(e);
+    console.log(e);
+    res.status(400).send(e);
   });
+
+  // let promise1 = new Promise(function(resolve, reject) {
+  //   return getBasicData().then(msg => {
+  //     resolve(msg);
+  //   })
+  // });
+  // let promise2 = new Promise(function(resolve, reject) {
+  //   return People.find().limit(12).lean().then(people => {
+  //     resolve(people);
+  //   })
+  // });
+  // let promise3 = new Promise(function(resolve, reject) {
+  //   return Orders.find({paidby: req.params.user._id}).lean().then(paid => resolve(paid));
+  // });
+  //
+  // Promise.all([promise1, promise2, promise3]).then(results => {
+  //
+  //   if (req.session.browserCurrency) {
+  //     getEachSalaryText(results[1],req);
+  //   } else {
+  //     _.each(results[1],(val,key) => {
+  //       val.salary = `${val.salary} ${val.currency} per month`;
+  //     });
+  //   }
+  //   req.results = results;
+  //   let ids = [];
+  //   _.each(results[2],(val,key) => {
+  //     ids.push(val.paidto);
+  //   });
+  //
+  //   return People.find({_id: {$in : ids}}).lean();
+  // }).then((msg) => {
+  //
+  //   req.paidpeople = msg;
+  //
+  //   let values = {};
+  //
+  //   let updatedObjects = req.results[1].map(function(val) {
+  //
+  //     val.paidbyme = msg.filter(o => {
+  //                       return o._id.toString() === val._id.toString();
+  //                     })[0];
+  //
+  //     if (val.addedBy == req.params.user._id) val.addedbyme = true;
+  //     else val.addedbyme = false;
+  //
+  //     if (val.addedbyme || val.paidbyme && Object.keys(val.paidbyme).length > 0) {
+  //       val.unlocked = true;
+  //     }
+  //     else val.unlocked = false;
+  //     return val;
+  //
+  //   });
+  //
+  //   updatedObjects = updatePeople(req,updatedObjects);
+  //   let options = {
+  //     data: updatedObjects,
+  //     token: req.session.token,
+  //     name: req.params.user.name,
+  //     due: req.session.due && req.session.due.length,
+  //     currency: req.session.hasOwnProperty('browserCurrency'),
+  //     count: req.results[0][0]
+  //   };
+  //   if (req.headers.accept == process.env.test_call) res.status(200).send(options);
+  //   res.status(200).render('1-home.hbs',options);
+  // }).catch((e) => {
+  //   console.log('home page error', e);
+  //   res.status(404).send(e);
+  // });
 
 });
 
