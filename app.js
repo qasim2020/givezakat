@@ -264,12 +264,9 @@ hbs.registerHelper("smallName",function(name,options) {
 
 hbs.registerHelper("checkDue", function(value, options) {
   console.log(value, options.data.root.due);
-  // if this value is found in due array return card selected else return null
   var found = options.data.root.due.find(function(elem) {
     return value == elem;
   })
-  // console.log(options.data.root.due.indexOf(value));
-  console.log(found);
   if (found) return 'card-selected';
   return '';
 })
@@ -282,11 +279,8 @@ app.get('/',(req,res) => {
 
   getCount(req).then(results => {
 
-    let updatedObjects = updatePeople(req,results[0].people);
-    // req.session.due = ['5d83d2ee4f9c76c49347bb49','5d83d2ee4f9c76c49347bb44'];
-    req.session.due = [];
     let options = {
-      data: updatedObjects,
+      data: results[0].people,
       due: req.session.due,
       currency: req.session.hasOwnProperty('browserCurrency'),
       count: {
