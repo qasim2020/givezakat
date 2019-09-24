@@ -164,7 +164,8 @@ let getCount = function (req) {
         people: [
           { "$limit": 12 },
           { "$match": {} },
-          {$project: {
+          { $project:
+            {
               mob: 1,
               addedBy: 1,
               address: 1,
@@ -176,7 +177,8 @@ let getCount = function (req) {
               story: 1,
               currency: 1,
               browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
-              }}
+            }
+          }
         ]
         ,
         rates: [
@@ -213,7 +215,13 @@ let getCount = function (req) {
                     name: { $arrayElemAt: ["$users.name",0] },
                     sponsored: "$people"
                     } }
-                ]
+        ],
+        loadMore: [
+                {$skip: query.skip},
+                {$limit: query.showQty},
+                {$match: {cardClass: query.expression}},
+                {$count: 'total'}
+              ]
         }
     },
     {$project: {
@@ -225,6 +233,7 @@ let getCount = function (req) {
             people: "$people",
             rates: "$rates",
             exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
+            loadMore: "$loadMore.total"
          }
     }
   ]
@@ -275,6 +284,28 @@ hbs.registerHelper("length", function(value, options) {
   return value.length;
 })
 
+hbs.registerHelper("loadMore", function(data, query, options) {
+  // console.log({data:data.length, query});
+  // check how much are left and tell us
+  if (loadMore > 0) return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More ${count}</button>`;
+  return `<button class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">No more data found</button>`;
+
+  // return People.aggregate([
+  //   {$skip: query.skip},
+  //   {$limit: query.showQty},
+  //   {$match: {cardClass: query.expression}},
+  //   {$count: 'total'}
+  // ]).then(count => {
+  //   console.log({count});
+  //   if (count > 0) return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More ${count}</button>`;
+  //   return `<button class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">No more data found</button>`;
+  //
+  // }).catch(e => {
+  //   return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">${e.responseText}</button>`;
+  // })
+
+})
+
 app.get('/',(req,res) => {
 
   getCount(req).then(results => {
@@ -288,7 +319,13 @@ app.get('/',(req,res) => {
         pending: results[0].pending,
         delivered: results[0].delivered,
         inprogress: results[0].inprogress,
-        Sponsors: results[0].Sponsors
+        Sponsors: results[0].Sponsors,
+      },
+      query: {
+        url: 'peopleBussinessCards',
+        type: 'all',
+        showQty: results[0].people.length+12,
+        expression: 'pending|delivered|inprogress'
       },
       exchangeRate: results[0].exchangeRate
     };
