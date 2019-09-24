@@ -217,9 +217,8 @@ let getBasicData = function (req) {
                     } }
         ],
         loadMore: [
-                {$skip: query.skip},
-                {$limit: query.showQty},
-                {$match: {cardClass: query.expression}},
+                {$skip: 12},
+                {$match: {cardClass: /pending|delivered|inprogress/gi}},
                 {$count: 'total'}
               ]
         }
@@ -233,7 +232,7 @@ let getBasicData = function (req) {
             people: "$people",
             rates: "$rates",
             exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
-            loadMore: "$loadMore.total"
+            leftBehind: "$loadMore.total"
          }
     }
   ]
@@ -284,10 +283,10 @@ hbs.registerHelper("length", function(value, options) {
   return value.length;
 })
 
-hbs.registerHelper("loadMore", function(data, query, options) {
+hbs.registerHelper("loadMore", function(query, leftBehind, options) {
   // console.log({data:data.length, query});
   // check how much are left and tell us
-  if (loadMore > 0) return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More ${count}</button>`;
+  if (leftBehind > 0) return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More (${leftBehind} left)</button>`;
   return `<button class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">No more data found</button>`;
 
   // return People.aggregate([
@@ -320,6 +319,7 @@ app.get('/',(req,res) => {
         delivered: results[0].delivered,
         inprogress: results[0].inprogress,
         Sponsors: results[0].Sponsors,
+        leftBehind: results[0].leftBehind
       },
       query: {
         url: 'peopleBussinessCards',
