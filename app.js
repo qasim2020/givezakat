@@ -136,7 +136,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
   });
 });
 
-let getCount = function (req) {
+let getBasicData = function (req) {
   return People.aggregate(
     [
     {$facet :
@@ -277,7 +277,7 @@ hbs.registerHelper("length", function(value, options) {
 
 app.get('/',(req,res) => {
 
-  getCount(req).then(results => {
+  getBasicData(req).then(results => {
 
     let options = {
       data: results[0].people,
@@ -304,7 +304,7 @@ app.get('/',(req,res) => {
 app.get('/home/:token', authenticate, (req,res) => {
 
   let promise1 = new Promise(function(resolve, reject) {
-    return getCount().then(msg => {
+    return getBasicData().then(msg => {
       resolve(msg);
     })
   });
@@ -766,8 +766,6 @@ let getFullCount = function() {
 app.get('/getFullCount', (req,res) => {
 
   getFullCount().then(msg => {
-    console.log(msg);
-    // return res.status(200).send(msg);
     let options = {
       Total: (msg[0]['total'] || 0),
       pending: (msg[0]['pending'] || 0),
