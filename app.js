@@ -137,6 +137,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
 });
 
 let getBasicData = function (req) {
+  let query = req.query.expression || /pending|delivered|inprogress/gi
   return People.aggregate(
     [
     {$facet :
@@ -162,8 +163,8 @@ let getBasicData = function (req) {
                 ]
         ,
         people: [
+          { "$match": {cardClass: query} },
           { "$limit": 12 },
-          { "$match": {} },
           { $addFields:
             {
               paidByMe: false,
@@ -209,8 +210,8 @@ let getBasicData = function (req) {
                     } }
         ],
         loadMore: [
-                {$skip: 12},
-                {$match: {cardClass: /pending|delivered|inprogress/gi}},
+                {$skip: req.query.skip || 12},
+                {$match: {cardClass: query}}, // this place needs fix TODO:
                 {$count: 'total'}
               ]
         }
@@ -287,7 +288,7 @@ hbs.registerHelper("unlocked", function(paid, added, options) {
 })
 
 app.get('/',(req,res) => {
-
+  req.query.expression = /delivered/gi;
   getBasicData(req).then(results => {
 
     let options = {
