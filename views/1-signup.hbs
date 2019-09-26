@@ -175,7 +175,7 @@
           }
         }).done((token) => {
           console.log('successful: ', token);
-          $('#sign-up').attr('action',`/home/${token}`);
+          $('#sign-up').attr('action',`/home/?token=${token}`);
           $("#sign-up").submit();
         }).fail((e) => {
           $('.error:eq(-1)').removeClass('d-none').html(e.responseText);

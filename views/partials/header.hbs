@@ -6,7 +6,7 @@
     </div>
     <div class="d-md-flex justify-content-around mr-2 d-none">
       {{#if token}}
-        <a href="/home/{{token}}" class="text-light px-point5 align-self-center">Home</a>
+        <a href="/home/?token={{token}}" class="text-light px-point5 align-self-center">Home</a>
         <a class="text-light px-point5 align-self-center {{profile}}" href="/profile/{{token}}">{{name}}</a>
         <a class="text-light px-point5 align-self-center {{signin}}" href="/logout/{{token}}">Sign out</a>
         <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
@@ -31,7 +31,7 @@
 <div class="nav-menu d-flex flex-col align-items-center justify-content-center theme-gradient">
   <img id="nav-close-icon" src="/nav-close-icon.svg" alt="" onclick="closenav()">
   {{#if token}}
-  <a href="/home/{{token}}" class="nav-item my-point5 text-light">Home</a>
+  <a href="/home/?token={{token}}" class="nav-item my-point5 text-light">Home</a>
   <a class="nav-item my-point5 text-light" href="/profile/{{token}}">{{name}}</a>
   <a class="nav-item my-point5 text-light" href="/logout/{{token}}">Sign out</a>
   <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>

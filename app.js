@@ -56,6 +56,7 @@ app.use(function(req, res, next) {
 
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token || req.query.token;
+  console.log(req.query);
   if (!token) return res.status(400).render('1-redirect.hbs', {
     timer: 3,
     message: 'You are not signed in to perform this action',
@@ -456,6 +457,8 @@ let getLoggedInData = function(req) {
 }
 
 let getPjaxMyData = function(req) {
+  let regex = new RegExp(req.query.expression,'gi') || /pending|delivered|inprogress/gi;
+
   return People.aggregate([
     {$facet :
         {
@@ -520,7 +523,7 @@ let getPjaxMyData = function(req) {
           }}
         ],
         loadMoreAddedByMe: [
-          {$match: {cardClass: regex , addedBy: req.user._id.toString()}},
+          {$match: {cardClass: regex , addedBy: req.params.user._id.toString()}},
           {$skip: Number(req.query.showQty) || 8},
           {$count: 'total'}
         ],
@@ -592,70 +595,97 @@ let getPjaxMyData = function(req) {
   ])
 }
 
-app.get('/home/:token', authenticate, (req,res) => {
+app.get('/home', authenticate, (req,res) => {
+
+  console.log('home entered');
 
   if (req.headers['x-pjax'] && req.query.type == 'my') {
     getPjaxMyData(req).then(results => {
-      return res.status(200).render('2-peopleMyList.hbs',{
-        due: req.session.due,
-        exchangeRate: results[0].exchangeRate,
-        people: results[0][req.query.people],
-      })
+      console.log(`showing ${req.query.people} in pjax`);
+      // Show entire page the firrst time
+      if (req.query.people == 'both') {
+        return res.status(200).renderPjax('2-peopleMyList.hbs',{
+          due: req.session.due,
+          exchangeRate: results[0].exchangeRate,
+          addedbyme: results[0].addedbyme,
+          paidbyme: results[0].paidbyme
+        })
+      }
+
+      if (req.query.people == 'addedbyme') {
+        return res.status(200).renderPjax('2-peopleMyList.hbs',{
+          due: req.session.due,
+          exchangeRate: results[0].exchangeRate,
+          addedbyme: results[0].addedbyme,
+        })
+      }
+
+      if (req.query.people == 'paidbyme') {
+        return res.status(200).renderPjax('2-peopleMyList.hbs',{
+          due: req.session.due,
+          exchangeRate: results[0].exchangeRate,
+          paidbyme: results[0].paidbyme
+        })
+      }
+
+      // return Promise.reject('Sorry bad filter choice.')
+
     }).catch(e => {
       console.log(e);
-      return res.status(400).send(e);
+      // return res.status(400).send(e);
+      return res.renderPjax('2-error.hbs',{msg: e});
     })
+  } else {
+    getLoggedInData(req).then(results => {
+
+      if (req.headers['x-pjax'] && req.query.type == 'All') return res.status(200).renderPjax('2-peopleBussinessCards.hbs',{
+        data: results[0].people,
+        due: req.session.due,
+        token: req.query.token,
+        exchangeRate: results[0].exchangeRate,
+        count: {
+          leftBehind: results[0].leftBehind
+        },
+        query: {
+          url: '/',
+          type: req.query.type,
+          showQty: results[0].people.length+12,
+          expression: req.query.expression
+        }
+      })
+
+      let options = {
+        name: req.params.user.name,
+        token: req.query.token,
+        data: results[0].people,
+        due: req.session.due,
+        currency: req.session.hasOwnProperty('browserCurrency'),
+        count: {
+          Total: results[0].Total || 0,
+          myTotal: results[0].myTotal || 0,
+          pending: results[0].pending || 0,
+          delivered: results[0].delivered || 0,
+          inprogress: results[0].inprogress || 0,
+          Sponsors: results[0].Sponsors,
+          leftBehind: results[0].leftBehind
+        },
+        query: {
+          url: '/',
+          type: 'All',
+          showQty: results[0].people.length+12,
+          expression: req.query.expression || 'delivered|inprogress|pending',
+          token: req.query.token,
+        },
+        exchangeRate: results[0].exchangeRate
+      };
+
+      if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
+      res.status(200).render('1-home.hbs', options);
+    }).catch((e) => {
+      console.log(e);
+      res.status(400).send(e);
+    });
   }
-
-  getLoggedInData(req).then(results => {
-
-    if (req.headers['x-pjax'] && req.query.type == 'All') return res.status(200).render('2-peopleBussinessCards.hbs',{
-      data: results[0].people,
-      due: req.session.due,
-      token: req.params.token,
-      exchangeRate: results[0].exchangeRate,
-      count: {
-        leftBehind: results[0].leftBehind
-      },
-      query: {
-        url: '/',
-        type: req.query.type,
-        showQty: results[0].people.length+12,
-        expression: req.query.expression
-      }
-    })
-
-    let options = {
-      name: req.params.user.name,
-      token: req.params.token,
-      data: results[0].people,
-      due: req.session.due,
-      currency: req.session.hasOwnProperty('browserCurrency'),
-      count: {
-        Total: results[0].Total || 0,
-        myTotal: results[0].myTotal || 0,
-        pending: results[0].pending || 0,
-        delivered: results[0].delivered || 0,
-        inprogress: results[0].inprogress || 0,
-        Sponsors: results[0].Sponsors,
-        leftBehind: results[0].leftBehind
-      },
-      query: {
-        url: '/',
-        type: 'All',
-        showQty: results[0].people.length+12,
-        expression: req.query.expression || 'delivered|inprogress|pending',
-        token: req.params.token,
-      },
-      exchangeRate: results[0].exchangeRate
-    };
-
-    if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
-    res.status(200).render('1-home.hbs', options);
-  }).catch((e) => {
-    console.log(e);
-    res.status(400).send(e);
-  });
 
 });
 

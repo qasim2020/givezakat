@@ -79,7 +79,7 @@
           {{#if call}}
           window.location.assign(`/{{call}}/${token}`);
           {{else}}
-          window.location.assign(`/home/${token}`);
+          window.location.assign(`/home/?token=${token}`);
           {{/if}}
         }).fail((e) => {
           console.log(e);
@@ -175,7 +175,7 @@
         {{#if call}}
         window.location.assign(`/{{call}}/${token}`);
         {{else}}
-        window.location.assign(`/home/${token}`);
+        window.location.assign(`/home/?token=${token}`);
         {{/if}}
       }).fail((e) => {
         console.log(e.responseText);

@@ -538,7 +538,11 @@
         if (type == 'all') {
           $('#my-data-here').addClass('d-none').children().remove();
           $('#all-data-here').removeClass('d-none')
-          $('#showAllCards').attr({href:`/?token={{token}}&showQty=${skip}&expression=${expression}`}).trigger('click');
+          if ('{{token}}'.length > 2) {
+            $('#showAllCards').attr({href:`/home/?type=All&token={{token}}&showQty=${skip}&expression=${expression}`}).trigger('click');
+          } else {
+            $('#showAllCards').attr({href:`/?showQty=${skip}&expression=${expression}`}).trigger('click');
+          }
 
           $.ajax({
               url: '/getFullCount',
@@ -575,7 +579,8 @@
         if (type == 'my') {
           $('#all-data-here').addClass('d-none').children().remove();
           $('#my-data-here').removeClass('d-none')
-          $('#showMyCards').attr({href:`/home?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
+          $('#showMyCards').attr({href:`/home/?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}&people=both`}).trigger('click');
+          console.log({href: $('#showMyCards').attr('href')});
 
           $.ajax({
               url: '/getCount?token={{token}}',

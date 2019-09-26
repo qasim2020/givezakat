@@ -55,7 +55,7 @@
       $('.timer').html({{timer}} - timer);
       timer++;
       if ({{timer}} - timer == 0) {
-        if (`{{token}}`.length > 0) return window.location.replace(`/home/{{token}}`);
+        if (`{{token}}`.length > 0) return window.location.replace(`/home/?token={{token}}`);
         window.location.replace(`/`);
       };
       return setTimeout(() => running(timer),1000);
