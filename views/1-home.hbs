@@ -298,19 +298,16 @@
 
         {{#each data}}
 
-        <!-- {{salarytext salary currency browserCurrency ../exchangeRate}} -->
-
           {{>cards}}
 
         {{/each}}
 
-
         </div>
-
 
         {{{loadMore query count.leftBehind}}}
 
       </div>
+
       <div data-show="showMyCards" id="my-data-here" class="encloser pt-md-0 pt-1"></div>
 
       <div class="subscription my-2 d-flex align-items-center flex-col">
@@ -422,7 +419,7 @@
       $(document).ready(function() {
 
         {{#if currency}}
-          $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+          // $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
         {{else}}
           console.log('performing request to get local currency');
           doajax('https://json.geoiplookup.io/','get').then((res) => {
@@ -438,7 +435,7 @@
             return doajax('/signing','post',headers,data);
           }).then((msg) => {
             console.log(msg);
-            $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+            // $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
           }).catch((e) => {
             $('.notification-box').css({opacity:1}).find('p').html('Geo IP Lookup: ' + JSON.parse(e.responseText).error);
             console.log(e);
@@ -469,7 +466,7 @@
       $('a[data-pjax]').pjax();
       $.pjax.defaults.timeout = 10000000;
       $.pjax.defaults.scrollTo = false;
-      $.pjax.defaults.push = false;
+      // $.pjax.defaults.push = false;
 
       function deleteMe(elem,id) {
 
@@ -509,6 +506,7 @@
       }
 
       $('.filter-btns .btn').on('click',function() {
+        console.log('filter btn clicked');
         let filter = $(this).attr('data-target');
         if (filter == 'my') {$(this).addClass('active'); $('[data-target=all]').removeClass('active');}
         if (filter == 'all') {$(this).addClass('active'); $('[data-target=my]').removeClass('active');}
@@ -535,12 +533,12 @@
         });
         var expression = str.slice(0,str.length-1);
         if (expression.length < 1) expression = 'pending|delivered|inprogress';
-        return ;
+        // return ;
         let skip = $('.cards').not('.d-none').length + 12;
         if (type == 'all') {
           $('#my-data-here').addClass('d-none').children().remove();
           $('#all-data-here').removeClass('d-none')
-          $('#showAllCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
+          $('#showAllCards').attr({href:`/?token={{token}}&showQty=${skip}&expression=${expression}`}).trigger('click');
 
           $.ajax({
               url: '/getFullCount',
@@ -577,7 +575,7 @@
         if (type == 'my') {
           $('#all-data-here').addClass('d-none').children().remove();
           $('#my-data-here').removeClass('d-none')
-          $('#showMyCards').attr({href:`/peopleBussinessCards?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
+          $('#showMyCards').attr({href:`/home?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}`}).trigger('click');
 
           $.ajax({
               url: '/getCount?token={{token}}',
@@ -647,14 +645,9 @@
       })
 
       $(document).on('click','.load-more',function() {
-        let idoflink = $(this).closest('.encloser').attr('data-show');
-        let my = {
-          type: $(this).attr('type'),
-          expression: $(this).attr('expression'),
-        };
-        let visiblecards = $('.card').not('.d-none').length;
-        $(`#${idoflink}`).attr({href:`/peopleBussinessCards?token={{token}}&type=${my.type}&showQty=${visiblecards+12}&expression=${my.expression}`}).trigger('click');
-
+        let idoflink = $(this).attr('encloser');
+        let pjaxlink = $(this).attr('my_href');
+        $(`#${idoflink}`).attr({href: pjaxlink}).trigger('click');
       });
 
       function createcards(data) {

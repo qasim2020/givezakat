@@ -177,7 +177,7 @@ let getBasicData = function (req) {
 
         loadMore: [
                 {$match: {cardClass: regex}},
-                {$skip: Number(req.query.skip) || 12},
+                {$skip: Number(req.query.showQty) || 12},
                 {$count: 'total'}
               ]
         ,
@@ -266,7 +266,6 @@ hbs.registerHelper("smallName",function(name,options) {
 })
 
 hbs.registerHelper("checkDue", function(value, options) {
-  console.log(value, options.data.root.due);
   var found = options.data.root.due.find(function(elem) {
     return value == elem;
   })
@@ -280,8 +279,8 @@ hbs.registerHelper("length", function(value, options) {
 })
 
 hbs.registerHelper("loadMore", function(query, leftBehind, options) {
-  if (leftBehind > 0) return `<a href="${query.url}?showQty=${query.showQty}&expression=${query.expression}&skip=${query.skip}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</a>`;
-  return `<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>`;
+  if (leftBehind > 0) return `<button encloser="show${query.type}Cards" my_href="${query.url}?showQty=${query.showQty}&expression=${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</button>`;
+  return `<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it. ${leftBehind}</a>`;
 })
 
 hbs.registerHelper("unlocked", function(paid, added, options) {
@@ -290,16 +289,20 @@ hbs.registerHelper("unlocked", function(paid, added, options) {
 })
 
 app.get('/',(req,res) => {
-  // req.query.expression = 'inprogress'
   getBasicData(req).then(results => {
 
-    if (req.headers['X-PJAX']) return res.status(200).render('2-peopleBussinessCards.hbs',{
+    if (req.headers['x-pjax']) return res.status(200).render('2-peopleBussinessCards.hbs',{
       data: results[0].people,
+      due: req.session.due,
+      exchangeRate: results[0].exchangeRate,
+      count: {
+        leftBehind: results[0].leftBehind
+      },
       query: {
         url: '/',
+        type: 'All',
         showQty: results[0].people.length+12,
-        expression: req.query.expression,
-        skip: results[0].people.length
+        expression: req.query.expression
       }
     })
 
@@ -317,14 +320,15 @@ app.get('/',(req,res) => {
       },
       query: {
         url: '/',
+        type: 'All',
         showQty: results[0].people.length+12,
-        expression: req.query.expression || 'delivered|inprogress|pending',
-        skip: results[0].people.length
+        expression: req.query.expression || 'delivered|inprogress|pending'
       },
       exchangeRate: results[0].exchangeRate
     };
 
     if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
+
     res.status(200).render('1-home.hbs', options);
   }).catch((e) => {
     console.log(e);
@@ -455,6 +459,38 @@ app.get('/home/:token', authenticate, (req,res) => {
 
   getLoggedInData(req).then(results => {
 
+    if (req.headers['x-pjax'] && req.query.type == 'All') return res.status(200).render('2-peopleBussinessCards.hbs',{
+      data: results[0].people,
+      due: req.session.due,
+      exchangeRate: results[0].exchangeRate,
+      count: {
+        leftBehind: results[0].leftBehind
+      },
+      query: {
+        url: '/',
+        type: req.query.type,
+        showQty: results[0].people.length+12,
+        expression: req.query.expression
+      }
+    })
+
+    if (req.headers['x-pjax'] && req.query.type == 'my') return res.status(200).render('2-peopleMyList.hbs',{
+      // data: results[0].people,
+      due: req.session.due,
+      exchangeRate: results[0].exchangeRate,
+      count: {
+        leftBehind: results[0].leftBehind
+      },
+      query: {
+        url: '/',
+        type: req.query.type,
+        showQty: results[0].people.length+12,
+        expression: req.query.expression
+      },
+      paidbyme: req.paidbyme,
+      addedbyme: req.addedbyme,
+    })
+
     let options = {
       name: req.params.user.name,
       token: req.params.token,
@@ -471,11 +507,11 @@ app.get('/home/:token', authenticate, (req,res) => {
         leftBehind: results[0].leftBehind
       },
       query: {
-        url: 'peopleBussinessCards',
-        type: 'all',
-        token: req.params.token,
+        url: '/',
+        type: 'All',
         showQty: results[0].people.length+12,
-        expression: 'pending|delivered|inprogress'
+        expression: req.query.expression || 'delivered|inprogress|pending',
+        token: req.params.token,
       },
       exchangeRate: results[0].exchangeRate
     };
@@ -486,75 +522,6 @@ app.get('/home/:token', authenticate, (req,res) => {
     console.log(e);
     res.status(400).send(e);
   });
-
-  // let promise1 = new Promise(function(resolve, reject) {
-  //   return getBasicData().then(msg => {
-  //     resolve(msg);
-  //   })
-  // });
-  // let promise2 = new Promise(function(resolve, reject) {
-  //   return People.find().limit(12).lean().then(people => {
-  //     resolve(people);
-  //   })
-  // });
-  // let promise3 = new Promise(function(resolve, reject) {
-  //   return Orders.find({paidby: req.params.user._id}).lean().then(paid => resolve(paid));
-  // });
-  //
-  // Promise.all([promise1, promise2, promise3]).then(results => {
-  //
-  //   if (req.session.browserCurrency) {
-  //     getEachSalaryText(results[1],req);
-  //   } else {
-  //     _.each(results[1],(val,key) => {
-  //       val.salary = `${val.salary} ${val.currency} per month`;
-  //     });
-  //   }
-  //   req.results = results;
-  //   let ids = [];
-  //   _.each(results[2],(val,key) => {
-  //     ids.push(val.paidto);
-  //   });
-  //
-  //   return People.find({_id: {$in : ids}}).lean();
-  // }).then((msg) => {
-  //
-  //   req.paidpeople = msg;
-  //
-  //   let values = {};
-  //
-  //   let updatedObjects = req.results[1].map(function(val) {
-  //
-  //     val.paidbyme = msg.filter(o => {
-  //                       return o._id.toString() === val._id.toString();
-  //                     })[0];
-  //
-  //     if (val.addedBy == req.params.user._id) val.addedbyme = true;
-  //     else val.addedbyme = false;
-  //
-  //     if (val.addedbyme || val.paidbyme && Object.keys(val.paidbyme).length > 0) {
-  //       val.unlocked = true;
-  //     }
-  //     else val.unlocked = false;
-  //     return val;
-  //
-  //   });
-  //
-  //   updatedObjects = updatePeople(req,updatedObjects);
-  //   let options = {
-  //     data: updatedObjects,
-  //     token: req.session.token,
-  //     name: req.params.user.name,
-  //     due: req.session.due && req.session.due.length,
-  //     currency: req.session.hasOwnProperty('browserCurrency'),
-  //     count: req.results[0][0]
-  //   };
-  //   if (req.headers.accept == process.env.test_call) res.status(200).send(options);
-  //   res.status(200).render('1-home.hbs',options);
-  // }).catch((e) => {
-  //   console.log('home page error', e);
-  //   res.status(404).send(e);
-  // });
 
 });
 
