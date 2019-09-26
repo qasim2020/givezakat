@@ -455,13 +455,164 @@ let getLoggedInData = function(req) {
   ])
 }
 
+let getPjaxMyData = function(req) {
+  return People.aggregate([
+    {$facet :
+        {
+        paidbyme: [
+          { "$limit": 8 },
+          { "$match": {cardClass: regex} },
+          {$addFields: {stringId: {$toString: "$_id"} } },
+          {$lookup: {
+            from:  "orders",
+            let: { newId: "$stringId", addedBy: "$addedBy"},
+            pipeline: [
+                { $match:
+                     { $expr:
+                        { $and : [
+                            { $eq: [ "$paidto",  "$$newId" ] },
+                            { $eq: [ "$paidby", req.params.user._id.toString()] }
+                            ]
+                        }
+                     }
+                  },
+                {$count: "total"}
+            ],
+            as: "orders"
+          }},
+          {$addFields: {
+            paidByMe: {
+                $cond: {if: { $eq : [ { "$arrayElemAt": ["$orders.total",0] } ,1 ] },  then: true, else: false}
+            },
+            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+          }},
+          {$project: { orders: 0 }},
+          {$match: { paidByMe : true }}
+        ]
+        ,
+        addedbyme: [
+          { "$limit": 8 },
+          { "$match": {cardClass: regex, addedBy: req.params.user._id.toString()} },
+          {$addFields: {
+            addedByMe: true,
+            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+          }}
+        ]
+        ,
+        rates: [
+          {$limit: 1},
+          { "$lookup": {
+          from: 'currencyrates',
+          pipeline: [
+              {$match: {}},
+              {$sort: {timestamp: -1} },
+              {$limit: 1},
+              {$project: {
+                  exchangeRate: "$rates",
+                  _id: 0
+              }}
+            ],
+              as: 'rates'
+          }},
+          {$project: {
+              exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
+              _id: 0
+          }}
+        ],
+        loadMoreAddedByMe: [
+          {$match: {cardClass: regex , addedBy: req.user._id.toString()}},
+          {$skip: Number(req.query.showQty) || 8},
+          {$count: 'total'}
+        ],
+        loadMorePaidByMe: [
+          { "$match": {cardClass: regex} },
+          {$addFields: {stringId: {$toString: "$_id"} } },
+          {$lookup: {
+            from:  "orders",
+            let: { newId: "$stringId", addedBy: "$addedBy"},
+            pipeline: [
+                { $match:
+                     { $expr:
+                        { $and : [
+                            { $eq: [ "$paidto",  "$$newId" ] },
+                            { $eq: [ "$paidby", req.params.user._id.toString()] }
+                            ]
+                        }
+                     }
+                  },
+                {$count: "total"}
+            ],
+            as: "orders"
+          }},
+          {$addFields: {
+            paidByMe: {
+                $cond: {if: { $eq : [ { "$arrayElemAt": ["$orders.total",0] } ,1 ] },  then: true, else: false}
+            },
+            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+          }},
+          {$project: { orders: 0 }},
+          {$match: { paidByMe : true }},
+          {$skip: Number(req.query.showQty) || 8},
+          {$count: 'total'}
+        ]
+        }
+    },
+    {$project: {
+            addedbyme: {
+              people: "$addedbyme",
+              leftBehind: "$loadMoreAddedByMe.total",
+              query: {
+                url: '/home',
+                type: 'my',
+                people: 'addedbyme',
+                token: req.params.token,
+                type: req.query.type,
+                showQty: req.query.showQty+8,
+                expression: req.query.expression
+              },
+            },
+            paidbyme: {
+              people: "$paidbyme",
+              leftBehind: "loadMorePaidByMe.total",
+              query: {
+                url: '/home',
+                type: 'my',
+                people: 'paidbyme',
+                token: req.params.token,
+                type: req.query.type,
+                showQty: req.query.showQty+8,
+                expression: req.query.expression
+              },
+            },
+            rates: "$rates",
+            exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
+            leftBehind: "$loadMore.total"
+         }
+    }
+  ])
+}
+
 app.get('/home/:token', authenticate, (req,res) => {
+
+  if (req.headers['x-pjax'] && req.query.type == 'my') {
+    getPjaxMyData(req).then(results => {
+      return res.status(200).render('2-peopleMyList.hbs',{
+        due: req.session.due,
+        exchangeRate: results[0].exchangeRate,
+        people: results[0][req.query.people],
+      })
+    }).catch(e => {
+      console.log(e);
+      return res.status(400).send(e);
+    })
+  }
 
   getLoggedInData(req).then(results => {
 
     if (req.headers['x-pjax'] && req.query.type == 'All') return res.status(200).render('2-peopleBussinessCards.hbs',{
       data: results[0].people,
       due: req.session.due,
+      token: req.params.token,
       exchangeRate: results[0].exchangeRate,
       count: {
         leftBehind: results[0].leftBehind
@@ -472,23 +623,6 @@ app.get('/home/:token', authenticate, (req,res) => {
         showQty: results[0].people.length+12,
         expression: req.query.expression
       }
-    })
-
-    if (req.headers['x-pjax'] && req.query.type == 'my') return res.status(200).render('2-peopleMyList.hbs',{
-      // data: results[0].people,
-      due: req.session.due,
-      exchangeRate: results[0].exchangeRate,
-      count: {
-        leftBehind: results[0].leftBehind
-      },
-      query: {
-        url: '/',
-        type: req.query.type,
-        showQty: results[0].people.length+12,
-        expression: req.query.expression
-      },
-      paidbyme: req.paidbyme,
-      addedbyme: req.addedbyme,
     })
 
     let options = {

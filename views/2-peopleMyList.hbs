@@ -1,6 +1,6 @@
 <h3 style="font-size:100%;color:darkcyan;">People added by me</h3>
 
-<div class="content-grid pt-md-2 pt-1">
+<div class="addedbyme content-grid pt-md-2 pt-1">
 
   {{#unless addedbyme}}
   <h2 class="w-100 text-center" style="
@@ -20,14 +20,21 @@
 
 </div>
 
-{{#if addedbyme}}
+{{#if addedbyme.leftBehind}}
 
-  <button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button>
+  <button encloser="addedbyme" my_href="{{people.query.url}}?token={{token}}&showQty={{people.query.showQty}}&expression={{people.query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More ({{people.leftBehind}} left)</button>
+
+  <!-- <button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button> -->
+
+{{else}}
+
+<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it. {{people.leftBehind}}</a>
+
 {{/if}}
 
 <h3 style="font-size:100%;color:darkcyan;">People given zakat by me</h3>
 
-<div class="content-grid pt-md-2 pt-1">
+<div class="paidbeme content-grid pt-md-2 pt-1">
 
   {{#unless paidbyme}}
   <h2 class="w-100 text-center" style="
@@ -46,6 +53,10 @@
 
 </div>
 
-{{#if paidbyme}}
-<button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button>
+{{#if paidbyme.leftBehind}}
+
+<!-- <button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button> -->
+
+<button encloser="addedbyme" my_href="{{people.query.url}}?token={{token}}&showQty={{people.query.showQty}}&expression={{people.query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More ({{people.leftBehind}} left)</button>
+
 {{/if}}
