@@ -137,7 +137,7 @@ app.get('/profile/:token',authenticate,(req,res) => {
 });
 
 let getBasicData = function (req) {
-  let query = req.query.expression || /pending|delivered|inprogress/gi
+  let regex = new RegExp(req.query.expression,'gi') || /pending|delivered|inprogress/gi;
   return People.aggregate(
     [
     {$facet :
@@ -163,8 +163,8 @@ let getBasicData = function (req) {
                 ]
         ,
         people: [
-          { "$match": {cardClass: query} },
-          { "$limit": 12 },
+          { "$match": {cardClass: regex} },
+          { "$limit": Number(req.query.showQty) || 12 },
           { $addFields:
             {
               paidByMe: false,
@@ -173,6 +173,13 @@ let getBasicData = function (req) {
             }
           }
         ]
+        ,
+
+        loadMore: [
+                {$match: {cardClass: regex}},
+                {$skip: Number(req.query.skip) || 12},
+                {$count: 'total'}
+              ]
         ,
         rates: [
           {$limit: 1},
@@ -208,12 +215,7 @@ let getBasicData = function (req) {
                     name: { $arrayElemAt: ["$users.name",0] },
                     sponsored: "$people"
                     } }
-        ],
-        loadMore: [
-                {$skip: req.query.skip || 12},
-                {$match: {cardClass: query}}, // this place needs fix TODO:
-                {$count: 'total'}
-              ]
+        ]
         }
     },
     {$project: {
@@ -278,8 +280,8 @@ hbs.registerHelper("length", function(value, options) {
 })
 
 hbs.registerHelper("loadMore", function(query, leftBehind, options) {
-  if (leftBehind > 0) return `<button type="${query.type}" expression="${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More (${leftBehind} left)</button>`;
-  return `<button class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block" disabled>No more data found</button>`;
+  if (leftBehind > 0) return `<a href="${query.url}?showQty=${query.showQty}&expression=${query.expression}&skip=${query.skip}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</a>`;
+  return `<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>`;
 })
 
 hbs.registerHelper("unlocked", function(paid, added, options) {
@@ -288,8 +290,18 @@ hbs.registerHelper("unlocked", function(paid, added, options) {
 })
 
 app.get('/',(req,res) => {
-  req.query.expression = /delivered/gi;
+  // req.query.expression = 'inprogress'
   getBasicData(req).then(results => {
+
+    if (req.headers['X-PJAX']) return res.status(200).render('2-peopleBussinessCards.hbs',{
+      data: results[0].people,
+      query: {
+        url: '/',
+        showQty: results[0].people.length+12,
+        expression: req.query.expression,
+        skip: results[0].people.length
+      }
+    })
 
     let options = {
       data: results[0].people,
@@ -304,10 +316,10 @@ app.get('/',(req,res) => {
         leftBehind: results[0].leftBehind
       },
       query: {
-        url: 'peopleBussinessCards',
-        type: 'all',
+        url: '/',
         showQty: results[0].people.length+12,
-        expression: 'pending|delivered|inprogress'
+        expression: req.query.expression || 'delivered|inprogress|pending',
+        skip: results[0].people.length
       },
       exchangeRate: results[0].exchangeRate
     };
