@@ -20,7 +20,7 @@
 
 </div>
 
-{{#if addedbyme.leftBehind}}
+{{#if (checkloadMore addedbyme.leftBehind)}}
 
   <button encloser="addedbyme" my_href="{{addedbyme.query.url}}?token={{token}}&showQty={{addedbyme.query.showQty}}&expression={{addedbyme.query.expression}}&people=addedbyme" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More ({{addedbyme.leftBehind}} left)</button>
 
@@ -28,7 +28,7 @@
 
 {{else}}
 
-<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it. {{addedbyme.leftBehind}}</a>
+<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>
 
 {{/if}}
 
@@ -53,14 +53,14 @@
 
 </div>
 
-{{#if paidbyme.leftBehind}}
+{{#if (checkloadMore paidbyme.leftBehind)}}
 
 <!-- <button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button> -->
 
-<button encloser="addedbyme" my_href="{{paidbyme.query.url}}?token={{token}}&showQty={{paidbyme.query.showQty}}&expression={{paidbyme.query.expression}}&people=paidbyme" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More ({{paidbyme.leftBehind}} left)</button>
+<button encloser="paidbyme" my_href="{{paidbyme.query.url}}?token={{token}}&showQty={{paidbyme.query.showQty}}&expression={{paidbyme.query.expression}}&people=paidbyme" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More ({{paidbyme.leftBehind}} left)</button>
 
 {{else}}
 
-<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it. {{addedbyme.leftBehind}}</a>
+<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>
 
 {{/if}}

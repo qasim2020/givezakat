@@ -175,7 +175,6 @@ let getBasicData = function (req) {
           }
         ]
         ,
-
         loadMore: [
                 {$match: {cardClass: regex}},
                 {$skip: Number(req.query.showQty) || 12},
@@ -236,24 +235,24 @@ let getBasicData = function (req) {
 
 };
 
-let updatePeople = function(req,o) {
-
-  if (!req.session.due) return o;
-
-  let updatedObjects = o.map(function(val) {
-
-    findPeople = req.session.due.filter(o => {
-      return o == val._id.toString();
-    });
-
-    if (findPeople.length > 0) val.dueIds = 'card-selected';
-
-    return val;
-
-  })
-
-  return updatedObjects;
-}
+// let updatePeople = function(req,o) {
+//
+//   if (!req.session.due) return o;
+//
+//   let updatedObjects = o.map(function(val) {
+//
+//     findPeople = req.session.due.filter(o => {
+//       return o == val._id.toString();
+//     });
+//
+//     if (findPeople.length > 0) val.dueIds = 'card-selected';
+//
+//     return val;
+//
+//   })
+//
+//   return updatedObjects;
+// }
 
 hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, options) {
   if (!options.data) return;
@@ -281,12 +280,17 @@ hbs.registerHelper("length", function(value, options) {
 
 hbs.registerHelper("loadMore", function(query, leftBehind, options) {
   if (leftBehind > 0) return `<button encloser="show${query.type}Cards" my_href="${query.url}?showQty=${query.showQty}&expression=${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</button>`;
-  return `<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it. ${leftBehind}</a>`;
+  return `<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>`;
 })
 
 hbs.registerHelper("unlocked", function(paid, added, options) {
   if (paid || added) return true;
   return false
+})
+
+hbs.registerHelper("checkloadMore", function(value) {
+  if (value > 0) return true;
+  return false;
 })
 
 app.get('/',(req,res) => {
@@ -338,6 +342,7 @@ app.get('/',(req,res) => {
 });
 
 let getLoggedInData = function(req) {
+  let regex = new RegExp(req.query.expression,'gi') || /pending|delivered|inprogress/gi;
   return People.aggregate([
     {$facet :
         {
@@ -366,8 +371,8 @@ let getLoggedInData = function(req) {
                 ]
         ,
         people: [
-          { "$limit": 12 },
-          { "$match": {} },
+          { "$match": {cardClass: regex} },
+          { "$limit": Number(req.query.showQty) || 12 },
           {$addFields: {stringId: {$toString: "$_id"} } },
           {$lookup: {
             from:  "orders",
