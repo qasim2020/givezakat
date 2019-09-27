@@ -601,34 +601,32 @@ app.get('/home', authenticate, (req,res) => {
 
   if (req.headers['x-pjax'] && req.query.type == 'my') {
     getPjaxMyData(req).then(results => {
-      console.log(`showing ${req.query.people} in pjax`);
-      // Show entire page the firrst time
       if (req.query.people == 'both') {
+        console.log({people: results[0].addedbyme});
+        console.log(`showing ${req.query.people} in pjax`);
+        return res.status(200).renderPjax('2-peopleMyList.hbs',{
+          due: req.session.due,
+          exchangeRate: results[0].exchangeRate,
+          addedbyme: results[0].addedbyme[0],
+          paidbyme: results[0].paidbyme[0]
+        })
+      } else if (req.query.people == 'addedbyme') {
+        console.log(`showing ${req.query.people} in pjax`);
         return res.status(200).renderPjax('2-peopleMyList.hbs',{
           due: req.session.due,
           exchangeRate: results[0].exchangeRate,
           addedbyme: results[0].addedbyme,
-          paidbyme: results[0].paidbyme
         })
-      }
-
-      if (req.query.people == 'addedbyme') {
-        return res.status(200).renderPjax('2-peopleMyList.hbs',{
-          due: req.session.due,
-          exchangeRate: results[0].exchangeRate,
-          addedbyme: results[0].addedbyme,
-        })
-      }
-
-      if (req.query.people == 'paidbyme') {
+      } else if (req.query.people == 'paidbyme') {
+        console.log(`showing ${req.query.people} in pjax`);
         return res.status(200).renderPjax('2-peopleMyList.hbs',{
           due: req.session.due,
           exchangeRate: results[0].exchangeRate,
           paidbyme: results[0].paidbyme
         })
+      } else {
+        return Promise.reject('Sorry bad filter choice.')
       }
-
-      // return Promise.reject('Sorry bad filter choice.')
 
     }).catch(e => {
       console.log(e);
