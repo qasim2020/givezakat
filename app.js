@@ -234,25 +234,6 @@ let getBasicData = function (req) {
 
 };
 
-// let updatePeople = function(req,o) {
-//
-//   if (!req.session.due) return o;
-//
-//   let updatedObjects = o.map(function(val) {
-//
-//     findPeople = req.session.due.filter(o => {
-//       return o == val._id.toString();
-//     });
-//
-//     if (findPeople.length > 0) val.dueIds = 'card-selected';
-//
-//     return val;
-//
-//   })
-//
-//   return updatedObjects;
-// }
-
 hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, options) {
   if (!options.data) return;
   exchangeRate = JSON.parse(options.data.root.exchangeRate);

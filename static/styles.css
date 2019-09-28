@@ -563,6 +563,10 @@
         flex-grow: 1;
       }
 
+      #content {
+        min-height: 100vh;
+      }
+
       #content .overflow-scroll::-webkit-scrollbar {
           display: none;
       }
