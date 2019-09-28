@@ -56,7 +56,6 @@ app.use(function(req, res, next) {
 
 let authenticate = (req,res,next) => {
   let token = req.params.token || req.body.token || req.query.token;
-  console.log(req.query);
   if (!token) return res.status(400).render('1-redirect.hbs', {
     timer: 3,
     message: 'You are not signed in to perform this action',
@@ -296,20 +295,25 @@ hbs.registerHelper("checkloadMore", function(value) {
 app.get('/',(req,res) => {
   getBasicData(req).then(results => {
 
-    if (req.headers['x-pjax']) return res.status(200).render('2-peopleBussinessCards.hbs',{
-      data: results[0].people,
-      due: req.session.due,
-      exchangeRate: results[0].exchangeRate,
-      count: {
-        leftBehind: results[0].leftBehind
-      },
-      query: {
-        url: '/',
-        type: 'All',
-        showQty: results[0].people.length+12,
-        expression: req.query.expression
-      }
-    })
+    if (req.headers['x-pjax']) {
+      let options = {
+        data: results[0].people,
+        due: req.session.due,
+        exchangeRate: results[0].exchangeRate,
+        count: {
+          leftBehind: results[0].leftBehind
+        },
+        query: {
+          url: '/',
+          type: 'All',
+          showQty: results[0].people.length+12,
+          expression: req.query.expression
+        }
+      };
+      if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
+      return res.status(200).render('2-peopleBussinessCards.hbs',options);
+
+    }
 
     let options = {
       data: results[0].people,
@@ -468,8 +472,8 @@ let getPjaxMyData = function(req) {
     {$facet :
         {
         paidbyme: [
-          { "$limit": 8 },
           { "$match": {cardClass: regex} },
+          { "$limit": parseInt(req.query.showQty) || 8 },
           {$addFields: {stringId: {$toString: "$_id"} } },
           {$lookup: {
             from:  "orders",
@@ -499,8 +503,8 @@ let getPjaxMyData = function(req) {
         ]
         ,
         addedbyme: [
-          { "$limit": 8 },
           { "$match": {cardClass: regex, addedBy: req.params.user._id.toString()} },
+          { "$limit": parseInt(req.query.showQty) || 8 },
           {$addFields: {
             addedByMe: true,
             browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
@@ -573,28 +577,27 @@ let getPjaxMyData = function(req) {
                 url: '/home',
                 type: 'my',
                 people: 'addedbyme',
-                token: req.params.token,
+                token: req.query.token,
                 type: req.query.type,
-                showQty: req.query.showQty+8,
+                showQty: {$add : [Number(req.query.showQty), 8]},
                 expression: req.query.expression
               },
             },
             paidbyme: {
               people: "$paidbyme",
-              leftBehind: "loadMorePaidByMe.total",
+              leftBehind: "$loadMorePaidByMe.total",
               query: {
                 url: '/home',
                 type: 'my',
                 people: 'paidbyme',
-                token: req.params.token,
+                token: req.query.token,
                 type: req.query.type,
-                showQty: req.query.showQty+8,
+                showQty: {$add : [Number(req.query.showQty), 8]},
                 expression: req.query.expression
               },
             },
             rates: "$rates",
             exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
-            leftBehind: "$loadMore.total"
          }
     }
   ])
@@ -602,62 +605,69 @@ let getPjaxMyData = function(req) {
 
 app.get('/home', authenticate, (req,res) => {
 
-  console.log('home entered');
+  console.log({home_query: req.query});
+
+  let options = {};
 
   if (req.headers['x-pjax'] && req.query.type == 'my') {
     getPjaxMyData(req).then(results => {
       if (req.query.people == 'both') {
-        console.log({people: results[0].addedbyme});
         console.log(`showing ${req.query.people} in pjax`);
-        return res.status(200).renderPjax('2-peopleMyList.hbs',{
+        console.log(results[0].paidbyme[0]);
+        options = {
           due: req.session.due,
           exchangeRate: results[0].exchangeRate,
           addedbyme: results[0].addedbyme[0],
           paidbyme: results[0].paidbyme[0]
-        })
+        };
       } else if (req.query.people == 'addedbyme') {
         console.log(`showing ${req.query.people} in pjax`);
-        return res.status(200).renderPjax('2-peopleMyList.hbs',{
+        options = {
           due: req.session.due,
           exchangeRate: results[0].exchangeRate,
-          addedbyme: results[0].addedbyme,
-        })
+          addedbyme: results[0].addedbyme[0],
+        }
       } else if (req.query.people == 'paidbyme') {
         console.log(`showing ${req.query.people} in pjax`);
-        return res.status(200).renderPjax('2-peopleMyList.hbs',{
+        options = {
           due: req.session.due,
           exchangeRate: results[0].exchangeRate,
-          paidbyme: results[0].paidbyme
-        })
-      } else {
-        return Promise.reject('Sorry bad filter choice.')
+          paidbyme: results[0].paidbyme[0]
+        }
       }
+
+      if (options && req.headers.accept == process.env.test_call) return res.status(200).send(options);
+      else if (options) return res.status(200).renderPjax('2-peopleMyList.hbs',options)
+      else Promise.reject('Sorry bad filter on pjax request');
 
     }).catch(e => {
       console.log(e);
-      // return res.status(400).send(e);
       return res.renderPjax('2-error.hbs',{msg: e});
     })
   } else {
     getLoggedInData(req).then(results => {
 
-      if (req.headers['x-pjax'] && req.query.type == 'All') return res.status(200).renderPjax('2-peopleBussinessCards.hbs',{
-        data: results[0].people,
-        due: req.session.due,
-        token: req.query.token,
-        exchangeRate: results[0].exchangeRate,
-        count: {
-          leftBehind: results[0].leftBehind
-        },
-        query: {
-          url: '/',
-          type: req.query.type,
-          showQty: results[0].people.length+12,
-          expression: req.query.expression
-        }
-      })
+      if (req.headers['x-pjax'] && req.query.type == 'All') {
+        options = {
+          data: results[0].people,
+          due: req.session.due,
+          token: req.query.token,
+          exchangeRate: results[0].exchangeRate,
+          count: {
+            leftBehind: results[0].leftBehind
+          },
+          query: {
+            url: '/home',
+            type: req.query.type,
+            showQty: results[0].people.length+12,
+            expression: req.query.expression
+          }
+        };
+        if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
+        return res.status(200).renderPjax('2-peopleBussinessCards.hbs',options);
+      }
 
-      let options = {
+      options = {
         name: req.params.user.name,
         token: req.query.token,
         data: results[0].people,
@@ -673,7 +683,7 @@ app.get('/home', authenticate, (req,res) => {
           leftBehind: results[0].leftBehind
         },
         query: {
-          url: '/',
+          url: '/home',
           type: 'All',
           showQty: results[0].people.length+12,
           expression: req.query.expression || 'delivered|inprogress|pending',
@@ -869,6 +879,7 @@ app.get("/charge", authenticate, (req, res) => {
   //       description: 'Comfortable cotton t-shirt',
   //       attributes: ['size', 'gender']
   // }).then((msg) => {
+  console.log('making stripe request');
   stripe.customers.create({
       email: req.query.email,
       source: req.query.stripeToken

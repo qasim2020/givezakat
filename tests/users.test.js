@@ -30,9 +30,10 @@ describe('Open pages just fine', () => {
           expect(val.sponsored).not.toBe();
           sum = sum + val.sponsored;;
         })
-        expect(res.body.data[0].dueIds).toContain('card-selected');
+        // expect(res.body.data[0].dueIds).toContain('card-selected');
         expect(res.body.data.length).toBe(12);
-        expect(res.body.due).toBe(1);
+        expect(res.body.due).not.toBe();
+        expect(res.body.count.Sponsors).not.toBe();
         expect(res.body.currency).toBeFalsy();
         expect(res.body.count.Total).toBe(sum);
         expect(res.body.count.pending).toBe(10);
@@ -69,18 +70,6 @@ describe('Open pages just fine', () => {
     }).expect(200);
   })
 
-  test('Should open home page after conversion to local currency', async () => {
-    await currencySession.get('/')
-      .set('Accept', `${process.env.test_call}`)
-      .expect((res) => {
-        expect(res.body).not.toBeNull();
-        _.each(res.body.data, (val,key) => {
-          expect(val.salary).toContain('NOK');
-        })
-      })
-      .expect(200)
-  })
-
   test('Should place an order successfully', async() => {
     jest.setTimeout(30000);
     let array = [];
@@ -107,9 +96,9 @@ describe('Open pages just fine', () => {
   })
 
   test('Should show people paid by me', async() => {
-    await currencySession.get(`/home/${currencySession.token}`).set('Accept',`${process.env.test_call}`).expect(res => {
+    await currencySession.get(`/home/?token=${currencySession.token}`).set('Accept',`${process.env.test_call}`).expect(res => {
       expect(res.body.data.length).toBe(12);
-      expect(res.body.due).toBe(0);
+      expect(res.body.due).not.toBe();
       _.each(res.body.data,(val,key) => {
         if (val.paidbyme) expect(val.unlocked).toBeTruthy();
         if (val.addedbyme) expect(val.unlocked).toBeTruthy();
@@ -125,23 +114,130 @@ describe('Open pages just fine', () => {
     }).expect(200);
   })
 
-  test('Should fetch pjax links fine', async() => {
-    await currencySession.get(`/peopleBussinessCards?token=${currencySession.token}&type=all&showQty=12&expression=delivered|pending|inprogress`)
-    .set('Accept',`${process.env.test_call}`)
+  test('PJAX > type ALL + Logged Out', async() => {
+    await currencySession.get(`/?showQty=12&expression=delivered|pending|inprogress`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
     .expect(res => {
+      expect(res.body.query.expression).toBe('delivered|pending|inprogress');
+      expect(res.body.query.url).toBe('/');
+      expect(res.body.query.showQty).toBe(24);
       expect(res.body.data.length).toBe(12);
-      _.each(res.body.data,(val,key) => {
-        if (val.paidbyme) expect(val.unlocked).toBeTruthy();
-        if (val.addedbyme) expect(val.unlocked).toBeTruthy();
-        if (!val.addedbyme && !val.paidbyme) expect(val.unlocked).toBeFalsy();
-      })
-    }).expect(200)
-    await currencySession.get(`/peopleBussinessCards?token=${currencySession.token}&type=my&showQty=4&expression=delivered|pending|inprogress`)
-    .set('Accept',`${process.env.test_call}`)
+      expect(res.body.count.leftBehind[0]).toBe(2);
+      expect(res.body.exchangeRate).not.toBe();
+    })
+    .expect(200)
+  })
+
+  test('PJAX > type ALL', async() => {
+    await currencySession.get(`/home/?token=${currencySession.token}&type=All&showQty=12&expression=delivered|pending|inprogress`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
     .expect(res => {
-      expect(res.body.addedbyme.length).toBe(4);
-      expect(res.body.paidbyme.length).toBe(2);
-    }).expect(200)
+      expect(res.body.query.expression).toBe('delivered|pending|inprogress');
+      expect(res.body.query.url).toBe('/home');
+      expect(res.body.query.showQty).toBe(24);
+      expect(res.body.query.type).toBe('All');
+      expect(res.body.data.length).toBe(12);
+      expect(res.body.count.leftBehind[0]).toBe(2);
+      expect(res.body.exchangeRate).not.toBe();
+    })
+    .expect(200)
+  })
+
+  test('PJAX > type ALL + delivered|pending', async() => {
+    await currencySession.get(`/home/?token=${currencySession.token}&type=All&showQty=12&expression=delivered|pending`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
+    .expect(res => {
+      expect(res.body.query.expression).toBe('delivered|pending');
+      expect(res.body.query.url).toBe('/home');
+      expect(res.body.query.showQty).toBe(24);
+      expect(res.body.query.type).toBe('All');
+      expect(res.body.data.length).toBe(12);
+      expect(res.body.count.leftBehind[0]).toBe(2);
+      expect(res.body.exchangeRate).not.toBe();
+    })
+    .expect(200)
+  })
+
+  test('PJAX > type My List + both', async() => {
+    await currencySession.get(`/home/?token=${currencySession.token}&type=my&showQty=8&expression=delivered|pending|inprogress&people=both`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
+    .expect(res => {
+      expect(res.body.addedbyme.query).toMatchObject(
+        {
+          url: '/home',
+          type: 'my',
+          people: 'addedbyme',
+          token: currencySession.token,
+          type: 'my',
+          showQty: 16,
+          expression: 'delivered|pending|inprogress'
+        }
+      );
+      expect(res.body.addedbyme.people.length).toBe(8);
+      expect(res.body.addedbyme.leftBehind[0]).toBe(3);
+
+      expect(res.body.paidbyme.query).toMatchObject(
+        {
+          url: '/home',
+          type: 'my',
+          people: 'paidbyme',
+          token: currencySession.token,
+          type: 'my',
+          showQty: 16,
+          expression: 'delivered|pending|inprogress'
+        }
+      );
+      expect(res.body.paidbyme.people.length).toBe(2);
+      expect(res.body.paidbyme.leftBehind[0]).toBeFalsy();
+
+      expect(res.body.exchangeRate).not.toBe();
+    })
+    .expect(200)
+  })
+
+  test('PJAX > type My List + addedbyme', async() => {
+    await currencySession.get(`/home/?token=${currencySession.token}&type=my&showQty=8&expression=delivered|pending|inprogress&people=addedbyme`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
+    .expect(res => {
+      expect(res.body.addedbyme.query).toMatchObject(
+        {
+          url: '/home',
+          type: 'my',
+          people: 'addedbyme',
+          token: currencySession.token,
+          type: 'my',
+          showQty: 16,
+          expression: 'delivered|pending|inprogress'
+        }
+      );
+      expect(res.body.addedbyme.people.length).toBe(8);
+      expect(res.body.addedbyme.leftBehind[0]).toBe(3);
+      expect(res.body.exchangeRate).not.toBe();
+    })
+    .expect(200)
+  })
+
+  test('PJAX > type My List + paidbyme', async() => {
+    await currencySession.get(`/home/?token=${currencySession.token}&type=my&showQty=8&expression=delivered|pending|inprogress&people=paidbyme`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
+    .expect(res => {
+      expect(res.body.paidbyme.query).toMatchObject(
+        {
+          url: '/home',
+          type: 'my',
+          people: 'paidbyme',
+          token: currencySession.token,
+          type: 'my',
+          showQty: 16,
+          expression: 'delivered|pending|inprogress'
+        }
+      );
+      expect(res.body.paidbyme.people.length).toBe(2);
+      expect(res.body.paidbyme.leftBehind[0]).toBeFalsy();
+
+      expect(res.body.exchangeRate).not.toBe();
+    })
+    .expect(200)
   })
 
 })
