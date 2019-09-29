@@ -90,42 +90,22 @@ app.get('/profile/:token',authenticate,(req,res) => {
     });
   };
 
-  People.find({addedBy: req.params.user._id}).then((sponsored) => {
-    req.sponsored = getEachSalaryText(sponsored,req);
-    _.each(sponsored,(val,key) => {
-      val.unlocked = true;
-    })
-    req.sponsored = sponsored;
-    return Orders.find({paidby: req.params.user._id});
-  }).then((orders) => {
-    req.orders = orders;
-    let ids = [];
-    _.each(orders,(val,key) => {
-      ids.push(mongoose.Types.ObjectId(val.paidto));
-    });
-    return People.find({_id:{ $in: ids}});
-  }).then((payed) => {
-    let stuff = {};
-    _.each(payed,(val,key) => {
-      stuff = req.orders.filter(obj => {
-        return val._id == obj.paidto;
-      })[0];
-      val.amount = stuff.amount + ' ' + stuff.currency;
-      val.status = stuff.status;
-      val.receipt = stuff.receipt;
-    });
+  req.query.showQty = 1000;
 
+  getPjaxMyData(req).then(results => {
+    console.log(results[0].addedbyme[0]);
     res.status(200).render('1-profile.hbs',{
       token: req.params.token,
       name: req.params.user.name,
       email: req.params.user.email,
       phone: req.params.user.phone,
       profile: 'active',
-      data: req.sponsored,
-      dueIds: req.session.due,
-      payed: payed,
+      data: results[0].addedbyme[0],
+      due: req.session.due,
+      payed: results[0].paidbyme[0],
+      exchangeRate: results[0].exchangeRate
     });
-  }).catch((e) => {
+  }).catch(e => {
     console.log(e);
     res.render('1-redirect.hbs',{
       timer: 6,
@@ -133,7 +113,54 @@ app.get('/profile/:token',authenticate,(req,res) => {
       message: e,
       token: req.session.token,
     });
-  });
+  })
+
+
+
+  // People.find({addedBy: req.params.user._id}).then((sponsored) => {
+  //   req.sponsored = getEachSalaryText(sponsored,req);
+  //   _.each(sponsored,(val,key) => {
+  //     val.unlocked = true;
+  //   })
+  //   req.sponsored = sponsored;
+  //   return Orders.find({paidby: req.params.user._id});
+  // }).then((orders) => {
+  //   req.orders = orders;
+  //   let ids = [];
+  //   _.each(orders,(val,key) => {
+  //     ids.push(mongoose.Types.ObjectId(val.paidto));
+  //   });
+  //   return People.find({_id:{ $in: ids}});
+  // }).then((payed) => {
+  //   let stuff = {};
+  //   _.each(payed,(val,key) => {
+  //     stuff = req.orders.filter(obj => {
+  //       return val._id == obj.paidto;
+  //     })[0];
+  //     val.amount = stuff.amount + ' ' + stuff.currency;
+  //     val.status = stuff.status;
+  //     val.receipt = stuff.receipt;
+  //   });
+  //
+  //   res.status(200).render('1-profile.hbs',{
+  //     token: req.params.token,
+  //     name: req.params.user.name,
+  //     email: req.params.user.email,
+  //     phone: req.params.user.phone,
+  //     profile: 'active',
+  //     data: req.sponsored,
+  //     due: req.session.due,
+  //     payed: payed,
+  //   });
+  // }).catch((e) => {
+  //   console.log(e);
+  //   res.render('1-redirect.hbs',{
+  //     timer: 6,
+  //     page: 'No Session Found !',
+  //     message: e,
+  //     token: req.session.token,
+  //   });
+  // });
 });
 
 let getBasicData = function (req) {
@@ -425,7 +452,7 @@ let getLoggedInData = function(req) {
         ],
         loadMore: [
                 {$match: {cardClass: regex}},
-                {$skip: 12},
+                {$skip: Number(req.query.showQty) || 12},
                 {$count: 'total'}
               ]
         }
@@ -454,7 +481,6 @@ let getPjaxMyData = function(req) {
         {
         paidbyme: [
           { "$match": {cardClass: regex} },
-          { "$limit": parseInt(req.query.showQty) || 8 },
           {$addFields: {stringId: {$toString: "$_id"} } },
           {$lookup: {
             from:  "orders",
@@ -480,7 +506,8 @@ let getPjaxMyData = function(req) {
             browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
           }},
           {$project: { orders: 0 }},
-          {$match: { paidByMe : true }}
+          {$match: { paidByMe : true }},
+          // { "$limit": parseInt(req.query.showQty) || 8 },
         ]
         ,
         addedbyme: [
@@ -511,76 +538,19 @@ let getPjaxMyData = function(req) {
               exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
               _id: 0
           }}
-        ],
-        loadMoreAddedByMe: [
-          {$match: {cardClass: regex , addedBy: req.params.user._id.toString()}},
-          {$skip: Number(req.query.showQty) || 8},
-          {$count: 'total'}
-        ],
-        loadMorePaidByMe: [
-          { "$match": {cardClass: regex} },
-          {$addFields: {stringId: {$toString: "$_id"} } },
-          {$lookup: {
-            from:  "orders",
-            let: { newId: "$stringId", addedBy: "$addedBy"},
-            pipeline: [
-                { $match:
-                     { $expr:
-                        { $and : [
-                            { $eq: [ "$paidto",  "$$newId" ] },
-                            { $eq: [ "$paidby", req.params.user._id.toString()] }
-                            ]
-                        }
-                     }
-                  },
-                {$count: "total"}
-            ],
-            as: "orders"
-          }},
-          {$addFields: {
-            paidByMe: {
-                $cond: {if: { $eq : [ { "$arrayElemAt": ["$orders.total",0] } ,1 ] },  then: true, else: false}
-            },
-            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
-          }},
-          {$project: { orders: 0 }},
-          {$match: { paidByMe : true }},
-          {$skip: Number(req.query.showQty) || 8},
-          {$count: 'total'}
         ]
-        }
-    },
+      }},
     {$project: {
             addedbyme: {
               people: "$addedbyme",
-              leftBehind: "$loadMoreAddedByMe.total",
-              query: {
-                url: '/home',
-                type: 'my',
-                people: 'addedbyme',
-                token: req.query.token,
-                type: req.query.type,
-                showQty: {$add : [Number(req.query.showQty), 8]},
-                expression: req.query.expression
-              },
             },
             paidbyme: {
               people: "$paidbyme",
-              leftBehind: "$loadMorePaidByMe.total",
-              query: {
-                url: '/home',
-                type: 'my',
-                people: 'paidbyme',
-                token: req.query.token,
-                type: req.query.type,
-                showQty: {$add : [Number(req.query.showQty), 8]},
-                expression: req.query.expression
-              },
             },
             rates: "$rates",
             exchangeRate: {$arrayElemAt: ["$rates.exchangeRate",0]},
          }
-    }
+       }
   ])
 }
 
@@ -594,27 +564,12 @@ app.get('/home', authenticate, (req,res) => {
     getPjaxMyData(req).then(results => {
       if (req.query.people == 'both') {
         console.log(`showing ${req.query.people} in pjax`);
-        console.log(results[0].paidbyme[0]);
         options = {
           due: req.session.due,
           exchangeRate: results[0].exchangeRate,
           addedbyme: results[0].addedbyme[0],
           paidbyme: results[0].paidbyme[0]
         };
-      } else if (req.query.people == 'addedbyme') {
-        console.log(`showing ${req.query.people} in pjax`);
-        options = {
-          due: req.session.due,
-          exchangeRate: results[0].exchangeRate,
-          addedbyme: results[0].addedbyme[0],
-        }
-      } else if (req.query.people == 'paidbyme') {
-        console.log(`showing ${req.query.people} in pjax`);
-        options = {
-          due: req.session.due,
-          exchangeRate: results[0].exchangeRate,
-          paidbyme: results[0].paidbyme[0]
-        }
       }
 
       if (options && req.headers.accept == process.env.test_call) return res.status(200).send(options);
@@ -1090,6 +1045,7 @@ app.get('/getFullCount', (req,res) => {
 app.get('/getCount', authenticate, (req,res) => {
 
   Promise.all([mySponsoredCount(req),myOrdersCount(req)]).then(msg => {
+    console.log({sponsored: msg[0][0], paid: msg[1][0]});
     let options = {
       myTotal: (msg[0][0]['total'] || 0) + (msg[1][0]['total'] || 0),
       pending: (msg[0][0]['pending'] || 0) + (msg[1][0]['pending'] || 0),

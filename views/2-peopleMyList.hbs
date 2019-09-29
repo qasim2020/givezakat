@@ -1,6 +1,6 @@
 <h3 style="font-size:100%;color:darkcyan;">People added by me</h3>
 
-<div class="addedbyme content-grid pt-md-2 pt-1">
+<div data-show="addedByMe" id="added-by-me" class="addedbyme content-grid pt-md-2 pt-1">
 
   {{#unless addedbyme}}
   <h2 class="w-100 text-center" style="
@@ -20,19 +20,7 @@
 
 </div>
 
-{{#if (checkloadMore addedbyme.leftBehind)}}
-
-  <button encloser="addedbyme" my_href="{{addedbyme.query.url}}?token={{token}}&showQty={{addedbyme.query.showQty}}&expression={{addedbyme.query.expression}}&people=addedbyme" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More ({{addedbyme.leftBehind}} left)</button>
-
-  <!-- <button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button> -->
-
-{{else}}
-
-<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>
-
-{{/if}}
-
-<h3 style="font-size:100%;color:darkcyan;">People given zakat by me</h3>
+<h3 class="pt-md-2 pt-1" style="font-size:100%;color:darkcyan;">People given zakat by me</h3>
 
 <div class="paidbeme content-grid pt-md-2 pt-1">
 
@@ -52,15 +40,3 @@
   {{/each}}
 
 </div>
-
-{{#if (checkloadMore paidbyme.leftBehind)}}
-
-<!-- <button type="{{query.type}}" expression="{{query.expression}}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block">Load More</button> -->
-
-<button encloser="paidbyme" my_href="{{paidbyme.query.url}}?token={{token}}&showQty={{paidbyme.query.showQty}}&expression={{paidbyme.query.expression}}&people=paidbyme" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More ({{paidbyme.leftBehind}} left)</button>
-
-{{else}}
-
-<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>
-
-{{/if}}
