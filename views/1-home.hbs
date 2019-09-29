@@ -294,12 +294,14 @@
 
 
       <div data-show="showAllCards" id="all-data-here" class="encloser pt-md-0 pt-1">
-        {{#unless data}}
+
+
+        <!-- {{#unless data}}
         <h2 class="w-100 text-center" style="
             font-size: 91%;
             color: brown;
         ">{{message}}</h2>
-        {{/unless}}
+        {{/unless}} -->
 
         <div class="content-grid">
 
@@ -513,15 +515,32 @@
       }
 
       $('.filter-btns .btn').on('click',function() {
+
         console.log('filter btn clicked');
         let filter = $(this).attr('data-target');
         if (filter == 'my') {$(this).addClass('active'); $('[data-target=all]').removeClass('active');}
         if (filter == 'all') {$(this).addClass('active'); $('[data-target=my]').removeClass('active');}
         $(this).not('[data-target=all],[data-target=my]').toggleClass('active');
+
         let allFilters = '';
         $.each($('.filter-btns .active'),(key,val) => {
           allFilters += $(val).attr('data-target') + ' ';
         })
+
+        console.log(allFilters, );
+
+        {{#unless token}}
+        if (allFilters.indexOf('my') != -1) {
+          let html = `<h2 class="w-100 text-center" style="
+              font-size: 91%;
+              color: brown;
+          ">You are not signed in. Please sign in to make this request.</h2>`
+
+          $('#all-data-here').html(html);
+          return console.log('not signed in');
+        }
+        {{/unless}}
+
         filterfn(allFilters);
       })
 
