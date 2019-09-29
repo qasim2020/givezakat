@@ -259,7 +259,7 @@ hbs.registerHelper("length", function(value, options) {
 })
 
 hbs.registerHelper("loadMore", function(query, leftBehind, options) {
-  if (leftBehind > 0) return `<button encloser="show${query.type}Cards" my_href="${query.url}?showQty=${query.showQty}&expression=${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</button>`;
+  if (leftBehind > 0) return `<button encloser="show${query.type}Cards" my_href="${query.url}?token=${query.token}&type=${query.type}&showQty=${query.showQty}&expression=${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</button>`;
   return `<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>`;
 })
 
@@ -424,8 +424,8 @@ let getLoggedInData = function(req) {
                     } }
         ],
         loadMore: [
+                {$match: {cardClass: regex}},
                 {$skip: 12},
-                {$match: {cardClass: /pending|delivered|inprogress/gi}},
                 {$count: 'total'}
               ]
         }
@@ -641,7 +641,8 @@ app.get('/home', authenticate, (req,res) => {
             url: '/home',
             type: req.query.type,
             showQty: results[0].people.length+12,
-            expression: req.query.expression
+            expression: req.query.expression,
+            token: req.query.token
           }
         };
         if (req.headers.accept == process.env.test_call) return res.status(200).send(options);

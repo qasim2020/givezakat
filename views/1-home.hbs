@@ -185,15 +185,26 @@
 
       <style media="screen">
 
+        @media (max-width: 700px) {
+          .sponsors {
+            padding: 8px 0px 8px 8px;
+            margin-left: -13px;
+          }
+        }
+
         .sponsors {
           display: flex;
+          padding: 8px 0px 8px 8px;
+          margin-left: -8px;
+          margin-right: 13px;
+          overflow: scroll;
         }
 
         .s_card {
           padding: 24px 18px 26px 21px;
-          margin-top: 10px;
-          margin-right: 10px;
+          min-width: fit-content;
           border-radius: 2px;
+          margin-right: 8px;
 
           background: #FFFFFF;
           box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
