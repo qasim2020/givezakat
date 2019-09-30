@@ -114,63 +114,15 @@ app.get('/profile/:token',authenticate,(req,res) => {
       token: req.session.token,
     });
   })
-
-
-
-  // People.find({addedBy: req.params.user._id}).then((sponsored) => {
-  //   req.sponsored = getEachSalaryText(sponsored,req);
-  //   _.each(sponsored,(val,key) => {
-  //     val.unlocked = true;
-  //   })
-  //   req.sponsored = sponsored;
-  //   return Orders.find({paidby: req.params.user._id});
-  // }).then((orders) => {
-  //   req.orders = orders;
-  //   let ids = [];
-  //   _.each(orders,(val,key) => {
-  //     ids.push(mongoose.Types.ObjectId(val.paidto));
-  //   });
-  //   return People.find({_id:{ $in: ids}});
-  // }).then((payed) => {
-  //   let stuff = {};
-  //   _.each(payed,(val,key) => {
-  //     stuff = req.orders.filter(obj => {
-  //       return val._id == obj.paidto;
-  //     })[0];
-  //     val.amount = stuff.amount + ' ' + stuff.currency;
-  //     val.status = stuff.status;
-  //     val.receipt = stuff.receipt;
-  //   });
-  //
-  //   res.status(200).render('1-profile.hbs',{
-  //     token: req.params.token,
-  //     name: req.params.user.name,
-  //     email: req.params.user.email,
-  //     phone: req.params.user.phone,
-  //     profile: 'active',
-  //     data: req.sponsored,
-  //     due: req.session.due,
-  //     payed: payed,
-  //   });
-  // }).catch((e) => {
-  //   console.log(e);
-  //   res.render('1-redirect.hbs',{
-  //     timer: 6,
-  //     page: 'No Session Found !',
-  //     message: e,
-  //     token: req.session.token,
-  //   });
-  // });
 });
 
 let getBasicData = function (req) {
-  let regex = new RegExp(req.query.expression,'gi') || /pending|delivered|inprogress/gi;
   return People.aggregate(
     [
     {$facet :
         {
         Total : [
-                { $match: {} },
+                { $match: {}},
                 { $count: "added" }
                 ]
         ,
@@ -190,7 +142,7 @@ let getBasicData = function (req) {
                 ]
         ,
         people: [
-          { "$match": {cardClass: regex} },
+          { "$match": req.match },
           { "$limit": Number(req.query.showQty) || 12 },
           { $addFields:
             {
@@ -202,7 +154,7 @@ let getBasicData = function (req) {
         ]
         ,
         loadMore: [
-                {$match: {cardClass: regex}},
+                {$match: req.match},
                 {$skip: Number(req.query.showQty) || 12},
                 {$count: 'total'}
               ]
@@ -303,6 +255,16 @@ hbs.registerHelper("checkloadMore", function(value) {
 })
 
 app.get('/',(req,res) => {
+
+  let regex = req.query.expression || "pending|delivered|inprogress";
+
+  req.match = {
+    cardClass: new RegExp(regex,'gi'),
+    addedBy: req.query.user || {$exists: true}
+  }
+
+  console.log(req.match);
+
   getBasicData(req).then(results => {
 
     if (req.headers['x-pjax']) {
@@ -316,7 +278,7 @@ app.get('/',(req,res) => {
         query: {
           url: '/',
           type: 'All',
-          showQty: results[0].people.length+12,
+          showQty: parseInt(req.query.showQty)+12,
           expression: req.query.expression
         }
       };
@@ -1186,7 +1148,6 @@ let testGoogleToken = function(req) {
   });
 }
 
-
 app.post('/signing',(req,res) => {
 
   if (req.body.query === 'create-currency-session') {
@@ -1220,7 +1181,7 @@ app.post('/signing',(req,res) => {
         "name":req.body.name,
         "password": 'fake_password',
         "phoneCode": process.env.phoneCode,
-        "SigninType": 'Manual'
+        "username": req.body.username
       }}, {new: true, upsert: true});
     }).then((returned) => {
       if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
@@ -1236,7 +1197,7 @@ app.post('/signing',(req,res) => {
 
   if (req.body.query === 'Google_ID') {
     testGoogleToken(req).then((res) => {
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google'}}, {new: true, upsert: true});
+      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google', "username": req.body.username}}, {new: true, upsert: true});
     }).then((returned) => {
       if (!returned) return Promise.reject('Invalid Request');
       return returned.generateAuthToken(req);
@@ -1349,6 +1310,24 @@ app.post('/signing',(req,res) => {
   }
 
 });
+
+app.get('/:username',(req,res, next) => {
+  Users.findOne({username: req.params.username}).then(result => {
+    console.log(result);
+    if (!result) return Promise.reject(`We do not have any sponsor in our list with username: "${req.params.username}". Redirecting you to home page.`);
+    else id = result._id.toString();
+
+    req.url = `/?user=${id}&showQty=12&expression=delivered|pending|inprogress`;
+    app._router.handle(req, res, next);
+  }).catch(e => {
+    console.log(e);
+    return res.render( '1-redirect.hbs' , {
+      timer: 10,
+      page: 'No Sponsor Found',
+      message: e
+    });
+  })
+})
 
 serverRunning();
 

@@ -30,7 +30,6 @@ describe('Open pages just fine', () => {
           expect(val.sponsored).not.toBe();
           sum = sum + val.sponsored;;
         })
-        // expect(res.body.data[0].dueIds).toContain('card-selected');
         expect(res.body.data.length).toBe(12);
         expect(res.body.due).not.toBe();
         expect(res.body.count.Sponsors).not.toBe();
@@ -114,6 +113,20 @@ describe('Open pages just fine', () => {
     }).expect(200);
   })
 
+  test('/ > type All + @user', async() => {
+    await currencySession.get(`/?user=5d4c207f9e028a3d6a373f65&showQty=12&expression=delivered|pending|inprogress`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
+    .expect(res => {
+      console.log(res.body);
+      expect(res.body.query.expression).toBe('delivered|pending|inprogress');
+      expect(res.body.query.url).toBe('/');
+      expect(res.body.query.showQty).toBe(24);
+      expect(res.body.data.length).toBe(11);
+      expect(res.body.exchangeRate).not.toBe();
+    })
+    .expect(200)
+  })
+
   test('PJAX > type ALL + Logged Out', async() => {
     await currencySession.get(`/?showQty=12&expression=delivered|pending|inprogress`)
     .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
@@ -165,10 +178,8 @@ describe('Open pages just fine', () => {
       // console.log(res.body);
 
       expect(res.body.addedbyme.people.length).toBe(11);
-      // expect(res.body.addedbyme.leftBehind[0]).toBe(3);
 
       expect(res.body.paidbyme.people.length).toBe(2);
-      // expect(res.body.paidbyme.leftBehind[0]).toBeFalsy();
 
       expect(res.body.exchangeRate).not.toBe();
     })
