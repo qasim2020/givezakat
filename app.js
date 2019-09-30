@@ -563,6 +563,7 @@ app.get('/home', authenticate, (req,res) => {
   let options = {};
 
   if (req.headers['x-pjax'] && req.query.type == 'my') {
+    req.query.showQty = 1000;
     getPjaxMyData(req).then(results => {
       if (req.query.people == 'both') {
         console.log(`showing ${req.query.people} in pjax`);

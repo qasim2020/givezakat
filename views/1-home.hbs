@@ -35,6 +35,27 @@
 
     <link rel="stylesheet" href="/styles.css">
     <style media="screen">
+
+      /* width */
+      ::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: white;
+      }
+
+      /* Handle */
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+      }
+
+      /* Handle on hover */
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+
       .modal-loading {
         position: absolute;
         width: 100vw;
@@ -197,7 +218,7 @@
           padding: 8px 0px 8px 8px;
           margin-left: -8px;
           margin-right: 13px;
-          overflow: scroll;
+          overflow-x: scroll;
         }
 
         .s_card {
@@ -446,7 +467,7 @@
             return doajax('/signing','post',headers,data);
           }).then((msg) => {
             console.log(msg);
-            // $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+            $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
           }).catch((e) => {
             $('.notification-box').css({opacity:1}).find('p').html('Geo IP Lookup: ' + JSON.parse(e.responseText).error);
             console.log(e);
