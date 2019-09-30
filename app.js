@@ -256,6 +256,8 @@ hbs.registerHelper("checkloadMore", function(value) {
 
 app.get('/',(req,res) => {
 
+  console.log(req.query, req.url, req.route);
+
   let regex = req.query.expression || "pending|delivered|inprogress";
 
   req.match = {
@@ -1315,7 +1317,8 @@ app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
     console.log(result);
     if (!result) return Promise.reject(`We do not have any sponsor in our list with username: "${req.params.username}". Redirecting you to home page.`);
-    else id = result._id.toString();
+
+    id = result._id.toString();
 
     req.url = `/?user=${id}&showQty=12&expression=delivered|pending|inprogress`;
     app._router.handle(req, res, next);
