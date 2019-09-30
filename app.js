@@ -269,6 +269,8 @@ hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, opt
 });
 
 hbs.registerHelper("smallName",function(name,options) {
+  console.log(name);
+  if (!name) return 'Unknown';
   return name.split(' ')[0].trim();
 })
 
