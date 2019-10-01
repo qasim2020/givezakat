@@ -256,7 +256,7 @@ hbs.registerHelper("checkloadMore", function(value) {
 
 app.get('/',(req,res) => {
 
-  console.log(req.query, req.url, req.route);
+  // console.log(req.query, req.url, req.route);
 
   let regex = req.query.expression || "pending|delivered|inprogress";
 
@@ -1320,7 +1320,12 @@ app.get('/:username',(req,res, next) => {
 
     id = result._id.toString();
 
-    req.url = `/?user=${id}&showQty=12&expression=delivered|pending|inprogress`;
+    req.url = `/`;
+    req.query = {
+      user: id,
+      showQty: 12,
+      expression: 'delivered|pending|inprogress'
+    };
     app._router.handle(req, res, next);
   }).catch(e => {
     console.log(e);
