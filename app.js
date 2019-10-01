@@ -50,7 +50,7 @@ hbs.registerHelper("inc", function(value, options) {
 });
 app.use(function(req, res, next) {
   if (!req.session.due) req.session.due = [];
-  if (req.headers.accept != process.env.test_call) console.log('SESSION STATE', Object.keys(req.session));
+  if (req.headers.accept != process.env.test_call) // console.log('SESSION STATE', Object.keys(req.session));
   next();
 });
 
@@ -189,10 +189,20 @@ let getBasicData = function (req) {
                     foreignField: "_id",
                     as: "users"
                 } },
-                { $project: {
+                {
+                  $project: {
                     name: { $arrayElemAt: ["$users.name",0] },
-                    sponsored: "$people"
-                    } }
+                    sponsored: "$people",
+                    caller: req.query.user || '',
+                    // class: {
+                    //   $cond: {
+                    //     if: {$eq : ["$addedBy",req.query.user] },
+                    //     then: 'active',
+                    //     else: 'false'
+                    //   }
+                    // }
+                  }
+                }
         ]
         }
     },
@@ -213,6 +223,11 @@ let getBasicData = function (req) {
 
 };
 
+hbs.registerHelper("matchWithCaller", function(value1,value2,options) {
+  if (value1 == value2) return 'active';
+  return '';
+})
+
 hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, options) {
   if (!options.data) return;
   exchangeRate = JSON.parse(options.data.root.exchangeRate);
@@ -221,7 +236,7 @@ hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, opt
 });
 
 hbs.registerHelper("smallName",function(name,options) {
-  console.log(name);
+  // console.log(name);
   if (!name) return 'Unknown';
   return name.split(' ')[0].trim();
 })
@@ -257,6 +272,7 @@ hbs.registerHelper("checkloadMore", function(value) {
 app.get('/',(req,res) => {
 
   // console.log(req.query, req.url, req.route);
+  console.log({user: req.query.user, url: req.url});
 
   let regex = req.query.expression || "pending|delivered|inprogress";
 
@@ -264,8 +280,6 @@ app.get('/',(req,res) => {
     cardClass: new RegExp(regex,'gi'),
     addedBy: req.query.user || {$exists: true}
   }
-
-  console.log(req.match);
 
   getBasicData(req).then(results => {
 
@@ -1315,7 +1329,7 @@ app.post('/signing',(req,res) => {
 
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
-    console.log(result);
+    // console.log(result);
     if (!result) return Promise.reject(`We do not have any sponsor in our list with username: "${req.params.username}". Redirecting you to home page.`);
 
     id = result._id.toString();

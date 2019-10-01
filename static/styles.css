@@ -13,7 +13,7 @@
         color: ghostwhite;
         font-size: 12px;
         font-weight: bold;
-        border-radius: 3px;
+        /* border-radius: 3px; */
       }
 
       .filter-badges span{
@@ -517,10 +517,11 @@
         outline: none;
       }
 
-      .filter-btns .active, .btn.active {
+      .filter-btns .active, .btn.active, .s_card.active {
         outline: none;
-        background: darkcyan;
+        background: #173627;
         color: #FFFFFF;
+        /* border: 1px solid #173627; */
       }
 
       .btn-primary {

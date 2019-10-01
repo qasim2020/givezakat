@@ -280,8 +280,9 @@
 
       <div class="sponsors">
         {{#each count.Sponsors}}
+        <!-- <button data-target="all" class="btn btn-primary d-flex align-items-center active" type="button" name="button">Show All <span id="count-Total" class="ml-point5 badge bg-primary text-white">{{count.Total}}</span> </button> -->
 
-        <div class="s_card">
+        <div class="s_card {{matchWithCaller caller _id}}" data-target="{{_id}}">
           <p>
             {{smallName name}}
             <svg width="17" height="21" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -322,6 +323,14 @@
         <p linked-data="delivered" id="delivered-badge" class="d-none">Delivered <span>x</span> </p>
         <p linked-data="pending" id="pending-badge" class="d-none">Pending <span>x</span> </p>
         <p linked-data="inprogress" id="inprogress-badge" class="d-none">In progress <span>x</span> </p>
+        <p style="
+            background: white;
+            color: darkcyan;
+            display: block !important;
+        ">by</p>
+        {{#each count.Sponsors}}
+        <p linked-data="{{_id}}" id="{{_id}}-badge" class="">{{smallName name}}<span>x</span> </p>
+        {{/each}}
       </div>
 
 
@@ -537,7 +546,11 @@
           });
       }
 
-      $('.filter-btns .btn').on('click',function() {
+      // $('.s_card').on('click', () => {
+      //   // $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
+      // })
+
+      $('.filter-btns .btn, .s_card').on('click',function() {
 
         console.log('filter btn clicked');
         let filter = $(this).attr('data-target');
@@ -546,11 +559,11 @@
         $(this).not('[data-target=all],[data-target=my]').toggleClass('active');
 
         let allFilters = '';
-        $.each($('.filter-btns .active'),(key,val) => {
+        $.each($('.filter-btns .active, .s_card.active'),(key,val) => {
           allFilters += $(val).attr('data-target') + ' ';
         })
 
-        console.log(allFilters, );
+        console.log(allFilters);
 
         {{#unless token}}
         if (allFilters.indexOf('my') != -1) {
@@ -573,7 +586,7 @@
         order = order.trim().split(' ');
         let type = order[0];
         $.each(order,(key,val) => {
-          $(`#${val}-badge`).removeClass('d-none');
+          $(`#${val}-badge`).removeClass('d-none'); //TODO: make badges for each sponsor
         });
         let str = '';
         order.shift();
@@ -582,7 +595,8 @@
         });
         var expression = str.slice(0,str.length-1);
         if (expression.length < 1) expression = 'pending|delivered|inprogress';
-        // return ;
+
+        return ;
         let skip = $('.cards').not('.d-none').length + 12;
         if (type == 'all') {
           $('#my-data-here').addClass('d-none').children().remove();
