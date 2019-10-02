@@ -329,7 +329,11 @@
             display: block !important;
         ">by</p>
         {{#each count.Sponsors}}
-        <p linked-data="{{_id}}" id="{{_id}}-badge" class="">{{smallName name}}<span>x</span> </p>
+          {{#if (matchWithCaller caller _id)}}
+            <p linked-data="{{_id}}" id="{{_id}}-badge" class="">{{smallName name}}<span>x</span> </p>
+          {{else}}
+            <p linked-data="{{_id}}" id="{{_id}}-badge" class="d-none">{{smallName name}}<span>x</span> </p>
+          {{/if}}
         {{/each}}
       </div>
 
@@ -591,6 +595,13 @@
         let str = '';
         order.shift();
         $.each(order,(key,val) => {
+          switch (val) {
+            case expression:
+
+              break;
+            default:
+
+          }
           str += val + '|';
         });
         var expression = str.slice(0,str.length-1);
