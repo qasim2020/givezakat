@@ -193,14 +193,7 @@ let getBasicData = function (req) {
                   $project: {
                     name: { $arrayElemAt: ["$users.name",0] },
                     sponsored: "$people",
-                    caller: req.query.user || '',
-                    // class: {
-                    //   $cond: {
-                    //     if: {$eq : ["$addedBy",req.query.user] },
-                    //     then: 'active',
-                    //     else: 'false'
-                    //   }
-                    // }
+                    caller: req.query.user.split(',')[0] || '',
                   }
                 }
         ]
@@ -271,14 +264,20 @@ hbs.registerHelper("checkloadMore", function(value) {
 
 app.get('/',(req,res) => {
 
-  // console.log(req.query, req.url, req.route);
   console.log({user: req.query.user, url: req.url});
+  let user = req.query.user || '';
+  if (user.indexOf(',') != -1) {
+    user = user.split(',');
+    user = {$in : user}
+  } else {
+    user = {$exists: true}
+  }
 
   let regex = req.query.expression || "pending|delivered|inprogress";
 
   req.match = {
     cardClass: new RegExp(regex,'gi'),
-    addedBy: req.query.user || {$exists: true}
+    addedBy: user
   }
 
   getBasicData(req).then(results => {
@@ -1332,7 +1331,7 @@ app.get('/:username',(req,res, next) => {
     // console.log(result);
     if (!result) return Promise.reject(`We do not have any sponsor in our list with username: "${req.params.username}". Redirecting you to home page.`);
 
-    id = result._id.toString();
+    id = result._id.toString() + ',';
 
     req.url = `/`;
     req.query = {

@@ -587,35 +587,39 @@
       function filterfn(order) {
 
         $('.filter-badges').children().addClass('d-none');
+
         order = order.trim().split(' ');
-        let type = order[0];
+
         $.each(order,(key,val) => {
           $(`#${val}-badge`).removeClass('d-none'); //TODO: make badges for each sponsor
         });
-        let str = '';
-        order.shift();
-        $.each(order,(key,val) => {
-          switch (val) {
-            case expression:
 
-              break;
-            default:
+        let type = order.shift();
 
-          }
-          str += val + '|';
-        });
+        let str = order.reduce((total,val,key,arr) => {
+          if (val.length < 15) return total += val + '|';
+          return total += '';
+        },'');
+
+        let user = order.filter((val,index,arr) => {
+          return val.length > 15;
+        }).reduce((total, val) => {
+          return total += val + ',';
+        },'');
+
+
         var expression = str.slice(0,str.length-1);
         if (expression.length < 1) expression = 'pending|delivered|inprogress';
 
-        return ;
         let skip = $('.cards').not('.d-none').length + 12;
+
         if (type == 'all') {
           $('#my-data-here').addClass('d-none').children().remove();
           $('#all-data-here').removeClass('d-none')
           if ('{{token}}'.length > 2) {
-            $('#showAllCards').attr({href:`/home/?type=All&token={{token}}&showQty=${skip}&expression=${expression}`}).trigger('click');
+            $('#showAllCards').attr({href:`/home/?type=All&token={{token}}&showQty=${skip}&expression=${expression}&user=${user}`}).trigger('click');
           } else {
-            $('#showAllCards').attr({href:`/?showQty=${skip}&expression=${expression}`}).trigger('click');
+            $('#showAllCards').attr({href:`/?showQty=${skip}&expression=${expression}&user=${user}`}).trigger('click');
           }
 
           $.ajax({
