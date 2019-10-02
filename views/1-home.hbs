@@ -614,6 +614,7 @@
         let skip = $('.cards').not('.d-none').length + 12;
 
         if (type == 'all') {
+          $('.sponsors').removeClass('d-none');
           $('#my-data-here').addClass('d-none').children().remove();
           $('#all-data-here').removeClass('d-none')
           if ('{{token}}'.length > 2) {
@@ -655,6 +656,7 @@
         }
 
         if (type == 'my') {
+          $('.sponsors').addClass('d-none');
           $('#all-data-here').addClass('d-none').children().remove();
           $('#my-data-here').removeClass('d-none')
           $('#showMyCards').attr({href:`/home/?token={{token}}&type=${type}&showQty=${skip}&expression=${expression}&people=both`}).trigger('click');
