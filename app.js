@@ -50,11 +50,12 @@ hbs.registerHelper("inc", function(value, options) {
 });
 app.use(function(req, res, next) {
   if (!req.session.due) req.session.due = [];
-  if (req.headers.accept != process.env.test_call) // console.log('SESSION STATE', Object.keys(req.session));
+  if (req.headers.accept != process.env.test_call) console.log('SESSION STATE', Object.keys(req.session));
   next();
 });
 
 let authenticate = (req,res,next) => {
+  console.log(req.query);
   let token = req.params.token || req.body.token || req.query.token;
   if (!token) return res.status(400).render('1-redirect.hbs', {
     timer: 3,
@@ -193,7 +194,7 @@ let getBasicData = function (req) {
                   $project: {
                     name: { $arrayElemAt: ["$users.name",0] },
                     sponsored: "$people",
-                    caller: req.query.user.split(',')[0] || '',
+                    caller: req.query.user && req.query.user.split(',')[0] || '',
                   }
                 }
         ]
@@ -219,6 +220,11 @@ let getBasicData = function (req) {
 hbs.registerHelper("matchWithCaller", function(value1,value2,options) {
   if (value1 == value2) return 'active';
   return '';
+})
+
+hbs.registerHelper("checkActiveSponsor", function(sponsors) {
+  if (sponsors._id == sponsors.caller) return '';
+  return 'd-none';
 })
 
 hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, options) {
@@ -248,7 +254,7 @@ hbs.registerHelper("length", function(value, options) {
 })
 
 hbs.registerHelper("loadMore", function(query, leftBehind, options) {
-  if (leftBehind > 0) return `<button encloser="show${query.type}Cards" my_href="${query.url}?token=${query.token}&type=${query.type}&showQty=${query.showQty}&expression=${query.expression}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</button>`;
+  if (leftBehind > 0) return `<button encloser="show${query.type}Cards" my_href="${query.url}?token=${query.token}&type=${query.type}&showQty=${query.showQty}&expression=${query.expression}&user=${query.username}" class="load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Load More (${leftBehind} left)</button>`;
   return `<a class="disabled load-more btn btn-primary d-flex align-items-center" type="button" name="button" style="margin:2rem auto; display: block; width: fit-content;">Thats it.</a>`;
 })
 
@@ -265,6 +271,7 @@ hbs.registerHelper("checkloadMore", function(value) {
 app.get('/',(req,res) => {
 
   console.log({user: req.query.user, url: req.url});
+
   let user = req.query.user || '';
   if (user.indexOf(',') != -1) {
     user = user.split(',');
@@ -291,6 +298,7 @@ app.get('/',(req,res) => {
           leftBehind: results[0].leftBehind
         },
         query: {
+          username: req.query.user || ',',
           url: '/',
           type: 'All',
           showQty: parseInt(req.query.showQty)+12,
@@ -315,6 +323,7 @@ app.get('/',(req,res) => {
         leftBehind: results[0].leftBehind
       },
       query: {
+        username: req.query.user || ',',
         url: '/',
         type: 'All',
         showQty: results[0].people.length+12,
@@ -333,7 +342,7 @@ app.get('/',(req,res) => {
 });
 
 let getLoggedInData = function(req) {
-  let regex = new RegExp(req.query.expression,'gi') || /pending|delivered|inprogress/gi;
+
   return People.aggregate([
     {$facet :
         {
@@ -362,7 +371,7 @@ let getLoggedInData = function(req) {
                 ]
         ,
         people: [
-          { "$match": {cardClass: regex} },
+          { "$match": req.match },
           { "$limit": Number(req.query.showQty) || 12 },
           {$addFields: {stringId: {$toString: "$_id"} } },
           {$lookup: {
@@ -426,11 +435,13 @@ let getLoggedInData = function(req) {
                 } },
                 { $project: {
                     name: { $arrayElemAt: ["$users.name",0] },
-                    sponsored: "$people"
-                    } }
+                    sponsored: "$people",
+                    caller: req.query.user && req.query.user.split(',')[0] || '',
+                    }
+                }
         ],
         loadMore: [
-                {$match: {cardClass: regex}},
+                {$match: req.match},
                 {$skip: Number(req.query.showQty) || 12},
                 {$count: 'total'}
               ]
@@ -537,6 +548,21 @@ app.get('/home', authenticate, (req,res) => {
 
   console.log({home_query: req.query});
 
+  let user = req.query.user || '';
+  if (user.indexOf(',') != -1) {
+    user = user.split(',');
+    user = {$in : user}
+  } else {
+    user = {$exists: true}
+  }
+
+  let regex = req.query.expression || "pending|delivered|inprogress";
+
+  req.match = {
+    cardClass: new RegExp(regex,'gi'),
+    addedBy: user
+  }
+
   let options = {};
 
   if (req.headers['x-pjax'] && req.query.type == 'my') {
@@ -573,6 +599,7 @@ app.get('/home', authenticate, (req,res) => {
             leftBehind: results[0].leftBehind
           },
           query: {
+            username: req.query.user || '',
             url: '/home',
             type: req.query.type,
             showQty: results[0].people.length+12,
@@ -600,6 +627,7 @@ app.get('/home', authenticate, (req,res) => {
           leftBehind: results[0].leftBehind
         },
         query: {
+          username: req.query.user || '',
           url: '/home',
           type: 'All',
           showQty: results[0].people.length+12,
@@ -1328,7 +1356,7 @@ app.post('/signing',(req,res) => {
 
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
-    // console.log(result);
+
     if (!result) return Promise.reject(`We do not have any sponsor in our list with username: "${req.params.username}". Redirecting you to home page.`);
 
     id = result._id.toString() + ',';

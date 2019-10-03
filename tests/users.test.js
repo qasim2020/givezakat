@@ -1,5 +1,9 @@
 require('../config/config');
- 
+
+test('run a test',() => {
+
+})
+
 const express = require('express');
 const request = require('supertest');
 const session = require('supertest-session');
@@ -7,7 +11,7 @@ const _ = require('lodash');
 const {app,mongoose,People,Orders,CurrencyRates,Users,axios} = require('../app.js');
 const {zeroiseDB} = require('./zeroiseDB');
 const {getStripeToken} = require('./getStripeToken');
-
+//
 describe('Open pages just fine', () => {
 
   var currencySession = session(app);
@@ -20,6 +24,7 @@ describe('Open pages just fine', () => {
       due: "5d477e1b006cfdef99932bbe",
     }).expect(200)
   })
+
 
   test('Should open home page with basic data', async () => {
     await currencySession.get('/')
@@ -108,16 +113,14 @@ describe('Open pages just fine', () => {
 
   test('Should get count of people paid and sponsored by me', async() => {
     await currencySession.get(`/getCount?token=${currencySession.token}`).set('Accept',`${process.env.test_call}`).expect(res => {
-      console.log(res.text);
       expect(res).not.toBe();
     }).expect(200);
   })
 
   test('/ > type All + @user', async() => {
-    await currencySession.get(`/?user=5d4c207f9e028a3d6a373f65&showQty=12&expression=delivered|pending|inprogress`)
+    await currencySession.get(`/?user=5d4c207f9e028a3d6a373f65,&showQty=12&expression=delivered|pending|inprogress`)
     .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
     .expect(res => {
-      console.log(res.body);
       expect(res.body.query.expression).toBe('delivered|pending|inprogress');
       expect(res.body.query.url).toBe('/');
       expect(res.body.query.showQty).toBe(24);
@@ -172,22 +175,18 @@ describe('Open pages just fine', () => {
   })
 
   test('PJAX > type My List + both', async() => {
-    await currencySession.get(`/home/?token=${currencySession.token}&type=my&showQty=8&expression=delivered|pending|inprogress&people=both`)
+    await currencySession.get(`/home/?token=${currencySession.token}&type=my&expression=delivered|pending|inprogress&people=both`)
     .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
     .expect(res => {
-      // console.log(res.body);
-
       expect(res.body.addedbyme.people.length).toBe(11);
-
       expect(res.body.paidbyme.people.length).toBe(2);
-
       expect(res.body.exchangeRate).not.toBe();
     })
     .expect(200)
   })
 
 })
-
+//
 describe('Sign In related tests', () => {
 
   beforeEach(() => {
@@ -211,7 +210,7 @@ describe('Sign In related tests', () => {
   })
 
   test('Should manually sign up a user', async() => {
-    let phoneCode;
+    let phoneCode, token;
     await request(app).post('/signing').set('Accept',process.env.test_call).send({
       query: 'Email_Verify',
       registerNew: true,
@@ -235,7 +234,9 @@ describe('Sign In related tests', () => {
     })
     .expect((res) => {
       expect(res.text.length).toBe(171);
+     token = res.text;
     })
+    await request(app).get(`/home/?token=${token}`).set('Accept',process.env.test_call)
     .expect(200)
   })
 

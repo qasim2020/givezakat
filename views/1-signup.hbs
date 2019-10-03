@@ -32,7 +32,7 @@
     <div class="container form-placement">
       <h4>Sign up</h4>
       <hr>
-      <form class="" id="sign-up" action="" method="">
+      <form class="" id="sign-up" action="" method="get">
 
 
         <div class="d-flex justify-content-start border my-point5 flex-grow-1">
@@ -50,6 +50,7 @@
           <input id="user-code" class="form-control flex-grow-1" type="text" name="user-code" value="" placeholder="Email Verification Code" disabled>
           <p class="success-msg d-none px-8px">Verified !</p>
         </div>
+        <input id="user-token" type="text" name="token" value="" class="d-none">
         <p class="error px-8px d-none">Wrong attempt 1. 4 attempts left !</p>
         <button id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button" disabled style="opacity: 0.3">Sign Up</button>
 

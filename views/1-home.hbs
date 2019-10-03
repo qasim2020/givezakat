@@ -276,6 +276,10 @@
           margin-left: -6px;
         }
 
+        .d-none {
+          /* display: none; */
+        }
+
       </style>
 
       <div class="sponsors">
@@ -323,11 +327,10 @@
         <p linked-data="delivered" id="delivered-badge" class="d-none">Delivered <span>x</span> </p>
         <p linked-data="pending" id="pending-badge" class="d-none">Pending <span>x</span> </p>
         <p linked-data="inprogress" id="inprogress-badge" class="d-none">In progress <span>x</span> </p>
-        <p style="
+        <p id="active_sponsor" style="
             background: white;
             color: darkcyan;
-            display: block !important;
-        ">by</p>
+        " class="{{checkActiveSponsor count.Sponsors.[0]}}">by</p>
         {{#each count.Sponsors}}
           {{#if (matchWithCaller caller _id)}}
             <p linked-data="{{_id}}" id="{{_id}}-badge" class="">{{smallName name}}<span>x</span> </p>
@@ -606,6 +609,8 @@
         }).reduce((total, val) => {
           return total += val + ',';
         },'');
+
+        if (user.length > 1) $('#active_sponsor').removeClass('d-none');
 
 
         var expression = str.slice(0,str.length-1);
