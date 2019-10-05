@@ -13,16 +13,24 @@ $('.info-circle').on('mouseenter mouseleave', function() {
 
   if ((posn.left + $('.popover').width()/2) > $(window).width()) {
     console.log('cond 1');
-    $('.popover').css({
+    return $('.popover').css({
       right: 20,
       top: posn.top - $('.popover').height() - $(this).height() - 20,
     });
-  } else {
-    $('.popover').css({
-      left: posn.left - ($('.popover').width()/2),
+  }
+
+  if ((posn.left < $('.popover').width()/2)) {
+    console.log('cond 2');
+    return $('.popover').css({
+      left: posn.left,
       top: posn.top - $('.popover').height() - $(this).height() - 20,
     });
   }
+
+  $('.popover').css({
+    left: posn.left - ($('.popover').width()/2),
+    top: posn.top - $('.popover').height() - $(this).height() - 20,
+  });
 
 });
 
