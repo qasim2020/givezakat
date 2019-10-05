@@ -1,3 +1,31 @@
+$('.info-circle').on('mouseenter mouseleave', function() {
+
+  let posn = {
+    left: $(this).offset().left,
+    top: $(this).offset().top,
+    right: $(this).offset().right,
+    bottom: $(this).offset().bottom
+  };
+  let data = $(this).attr('my-data');
+  $('.popover').html(data);
+  $(this).toggleClass('hovered');
+  $('.popover').toggleClass('opacity-1');
+
+  if ((posn.left + $('.popover').width()/2) > $(window).width()) {
+    console.log('cond 1');
+    $('.popover').css({
+      right: 20,
+      top: posn.top - $('.popover').height() - $(this).height() - 20,
+    });
+  } else {
+    $('.popover').css({
+      left: posn.left - ($('.popover').width()/2),
+      top: posn.top - $('.popover').height() - $(this).height() - 20,
+    });
+  }
+
+});
+
 $(document).on('hover','.card-select',function(e) {
   $(this).closest('.card').toggleClass('active');
 })

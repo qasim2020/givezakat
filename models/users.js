@@ -23,6 +23,13 @@ var UsersSchema = new mongoose.Schema({
   SigninType: {
     type: String,
   },
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  flag: {
+    type: String,
+  },
   tokens: [{
     access: {
       type: String,

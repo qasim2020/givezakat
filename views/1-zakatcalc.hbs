@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
   <head>
     {{>googleAnalytics}}
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel=icon href=/favicon.png>
@@ -22,7 +22,7 @@
       <h4>Zakat Calculator</h4>
       <div class="d-flex justify-content-between">
         <p>+ Zakat Elegible Assets</p>
-        <p class="info-circle" my-data="This is the first step in figuring out how much zakat you'll pay. You exclude the assets you use for everyday life. For example, your primary residence, car, clothes and business equipment are not used in you zakat asset calculations. It is  based on what is left after you take care of you and your family's living expenses.">!</p>
+        <p class="info-circle info-calculator" my-data="This is the first step in figuring out how much zakat you'll pay. You exclude the assets you use for everyday life. For example, your primary residence, car, clothes and business equipment are not used in you zakat asset calculations. It is  based on what is left after you take care of you and your family's living expenses.">!</p>
       </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1 add" type="number" name="" value="" placeholder="Stocks in $ USD">
@@ -44,7 +44,7 @@
       </div>
       <div class="d-flex justify-content-between">
         <p>- Zakat Liabilities</p>
-        <p class="info-circle" my-data="Debt from credit cards, college or other loans subtracts from your personal net worth. These outstanding debts are deducted from your total zakat-eligible assets.">!</p>
+        <p class="info-circle info-calculator" my-data="Debt from credit cards, college or other loans subtracts from your personal net worth. These outstanding debts are deducted from your total zakat-eligible assets.">!</p>
       </div>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1 sub" type="number" name="" value="" placeholder="Credit Cards Payments in $ USD">
@@ -57,7 +57,7 @@
           <p class=""> Nisab</p>
           <div class="d-flex">
             <p class="nisab-text">315.00 USD</p>
-            <p class="info-circle" my-data="For example, your zakat net worth is $4,000. Each ounce of silver is currently worth $15, so the nisab using the silver calculation is $315 ($15 X 21 ounces = $315). You have more than the nisab so you owe zakat.">!</p>
+            <p class="info-circle info-calculator" my-data="For example, your zakat net worth is $4,000. Each ounce of silver is currently worth $15, so the nisab using the silver calculation is $315 ($15 X 21 ounces = $315). You have more than the nisab so you owe zakat.">!</p>
           </div>
 
         </div>
@@ -66,7 +66,7 @@
 
           <div class="d-flex">
             <p class="total-zakat">0.00 USD</p>
-            <p class="info-circle" my-data="Western calendar uses 2.557% of your net worth. Hijri calendar uses 2.5% of your net worth. We are using Western calendar cycle of <b>2.557%</b> to calculate your zakat.">!</p>
+            <p class="info-circle info-calculator" my-data="Western calendar uses 2.557% of your net worth. Hijri calendar uses 2.5% of your net worth. We are using Western calendar cycle of <b>2.557%</b> to calculate your zakat.">!</p>
           </div>
         </div>
         <button id="give-zakat" class="my-point5 mt-1 ml-auto btn btn-primary d-flex align-items-center" type="button" name="button" disabled>Give Zakat</button>
@@ -80,33 +80,6 @@
 
     <script type="text/javascript" src="/javascript.js"></script>
     <script type="text/javascript">
-      $('.info-circle').on('mouseenter mouseleave', function() {
-
-        let posn = {
-          left: $(this).offset().left,
-          top: $(this).offset().top,
-          right: $(this).offset().right,
-          bottom: $(this).offset().bottom
-        };
-        let data = $(this).attr('my-data');
-        $('.popover').html(data);
-        $(this).toggleClass('shadow');
-        $('.popover').toggleClass('opacity-1');
-
-        if ((posn.left + $('.popover').width()/2) > $(window).width()) {
-          console.log('cond 1');
-          $('.popover').css({
-            right: 20,
-            top: posn.top - $('.popover').height() - $(this).height() - 20,
-          });
-        } else {
-          $('.popover').css({
-            left: posn.left - ($('.popover').width()/2),
-            top: posn.top - $('.popover').height() - $(this).height() - 20,
-          });
-        }
-
-      });
 
       $('#zakat-calc-form').click(function(e) {
 

@@ -193,6 +193,8 @@ let getBasicData = function (req) {
                 {
                   $project: {
                     name: { $arrayElemAt: ["$users.name",0] },
+                    flag: { $arrayElemAt: ["$users.flag",0] },
+                    verified: { $arrayElemAt: ["$users.verified",0] },
                     sponsored: "$people",
                     caller: req.query.user && req.query.user.split(',')[0] || '',
                   }
