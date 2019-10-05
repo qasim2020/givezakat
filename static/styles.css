@@ -565,6 +565,8 @@
 
       #content {
         min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
 
       #content .overflow-scroll::-webkit-scrollbar {
@@ -1270,6 +1272,10 @@
       .card-hover .font-name {
         font-size: 15px;
         font-weight: bold;
+      }
+
+      .encloser {
+        flex-grow: 1;
       }
 
 /* red red red red red red red red red */

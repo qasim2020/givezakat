@@ -176,8 +176,9 @@
           }
         }).done((token) => {
           console.log('successful: ', token);
-          $('#sign-up').attr('action',`/home/?token=${token}`);
-          $("#sign-up").submit();
+          // $('#sign-up').attr('action',`/home/?token=${token}`);
+          window.location.assign(`/home/?token=${token}`);
+          // $("#sign-up").submit();
         }).fail((e) => {
           $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
           console.log('error here', e);
