@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
   <head>
     {{>googleAnalytics}}
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel=icon href=/favicon.png>
@@ -56,9 +56,9 @@
       <h4>Add people</h4>
       <p class="input-heading">Add people in your neighbourhood who are rightfully Elegible for zakat. </p>
       {{#if token}}
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/updateperson/Add+1+Person'">Add 1 Person</button>
+      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/addOnePerson/?token={{token}}'">Add 1 Person</button>
       {{else}}
-      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/signin/updateperson'">Add 1 Person</button>
+      <button class="my-point5 btn btn-primary d-flex align-items-center" type="button" name="button" onclick="window.location.href = '/signin/addOnePerson'">Add 1 Person</button>
       {{/if}}
       <span class="d-block divider-text">OR</span>
       <p class="input-heading mt-2">Add multiple people by uploading excel file.</p>
@@ -175,7 +175,7 @@
         data = JSON.stringify(uploadedData);
         console.log(data);
         $.ajax({
-            url: '/excelData',
+            url: '/excelData/?token={{token}}',
             type: 'post',
             data: data,
             headers: {

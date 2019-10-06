@@ -1239,6 +1239,7 @@
         font-size: 15px;
         color: red;
         margin-top: 0.6rem;
+        display: block;
       }
 
       .modal {

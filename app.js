@@ -401,9 +401,10 @@ let getLoggedInData = function(req) {
             addedByMe: {
                 $cond: { if: { $eq: [ "$addedBy", req.params.user._id.toString() ] }, then: true, else: false }
             },
-            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD",
+            token: req.query.token
           }},
-          {$project: { orders: 0 }}
+          {$project: { orders: 0 }},
         ]
         ,
         rates: [
@@ -436,11 +437,14 @@ let getLoggedInData = function(req) {
                     foreignField: "_id",
                     as: "users"
                 } },
-                { $project: {
+                {
+                  $project: {
                     name: { $arrayElemAt: ["$users.name",0] },
+                    flag: { $arrayElemAt: ["$users.flag",0] },
+                    verified: { $arrayElemAt: ["$users.verified",0] },
                     sponsored: "$people",
                     caller: req.query.user && req.query.user.split(',')[0] || '',
-                    }
+                  }
                 }
         ],
         loadMore: [
@@ -496,7 +500,8 @@ let getPjaxMyData = function(req) {
             paidByMe: {
                 $cond: {if: { $eq : [ { "$arrayElemAt": ["$orders.total",0] } ,1 ] },  then: true, else: false}
             },
-            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD",
+            token: req.query.token
           }},
           {$project: { orders: 0 }},
           {$match: { paidByMe : true }},
@@ -508,7 +513,8 @@ let getPjaxMyData = function(req) {
           { "$limit": parseInt(req.query.showQty) || 8 },
           {$addFields: {
             addedByMe: true,
-            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+            browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD",
+            token: req.query.token
           }}
         ]
         ,
@@ -577,7 +583,7 @@ app.get('/home', authenticate, (req,res) => {
           due: req.session.due,
           exchangeRate: results[0].exchangeRate,
           addedbyme: results[0].addedbyme[0],
-          paidbyme: results[0].paidbyme[0]
+          paidbyme: results[0].paidbyme[0],
         };
       }
 
@@ -608,7 +614,7 @@ app.get('/home', authenticate, (req,res) => {
             showQty: results[0].people.length+12,
             expression: req.query.expression,
             token: req.query.token
-          }
+          },
         };
         if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
         return res.status(200).renderPjax('2-peopleBussinessCards.hbs',options);
@@ -700,13 +706,13 @@ app.get('/forgotpw',(req,res) => {
   });
 });
 
-app.get('/addpeople/:token',authenticate,(req,res) => {
+app.get('/addpeople',authenticate,(req,res) => {
 
   readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
     res.render('1-addpeople.hbs',{
       addpeople: 'active',
       sampleRows: rows[0],
-      token: req.session.token,
+      token: req.query.token,
       name: req.session.name,
       due: req.session.due && req.session.due.length,
     });
@@ -717,18 +723,32 @@ app.get('/addpeople/:token',authenticate,(req,res) => {
 
 });
 
+app.get('/addOnePerson', authenticate, (req,res) => {
+  return res.status(200).render('1-updateperson.hbs',{call: 'Add 1 Person'});
+})
+
 app.get('/updateperson', authenticate, (req,res) => {
 
   console.log(req.query);
 
   People.findOne({_id:req.query.id, addedBy: req.params.user._id}).lean().then(msg => {
     if (!msg) return Promise.reject('This person was not added by you. You can update only people added by you !');
-    return res.status(200).render('1-updateperson.hbs',msg);
+    let options = {
+      data: msg,
+      name: req.params.user.name,
+      token: req.query.token,
+      due: req.session.due,
+      currency: req.session.hasOwnProperty('browserCurrency'),
+    }
+    if (req.headers.accept == process.env.test_call) return res.status(200).send(options);
+    return res.status(200).render('1-updateperson.hbs',options);
   }).catch(e => {
     res.status(400).render('1-redirect.hbs',{
       message: e,
       token: req.params.token,
       page: 'Update Person',
+      timer: 6,
+      token: req.session.token
     })
   })
 });
@@ -873,12 +893,39 @@ app.post('/data',(req,res) => {
 
 });
 
-app.post('/excelData',(req,res) => {
+app.post('/updateOneinExcel', authenticate, (req,res) => {
+  console.log(req.body);
+  People.updateOne({_id: req.body.id}, {
+    $set: {
+      name: req.body.name,
+      mob: req.body.mob,
+      occupation: req.body.occupation,
+      salary: req.body.salary,
+      fMembers: req.body.fMembers,
+      story: req.body.story,
+      address: req.body.address
+    }
+  }, {upsert: true}).then(msg => {
+    console.log(msg);
+    res.status(200).send(msg);
+  }).catch(e => {
+    console.log(e);
+    res.status(400).send(e);
+  })
+})
+
+app.post('/excelData', authenticate, (req,res) => {
   var body = [];
   _.each(req.body,(val,key)=> {
-    val.addedBy = req.session.myid;
+    val.addedBy = req.params.user._id.toString();
     val.cardClass = 'pending';
-    body[key] = _.pick(val,['name','mob','salary','fMembers','story','address','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN','package','packageCost','packageQty','orderDate','deliveryDate','pteInfo','nearestCSD','cardClass','addedBy']);
+    val.sponsorName = req.params.user.name;
+    val.sponsorMob = req.params.user.mob;
+    val.sponsorAccountTitle = req.params.user.accountTitle;
+    val.sponsorAccountNo = req.params.user.accountNo;
+    val.sponsorAccountIBAN = req.params.user.IBAN;
+    body[key] = _.pick(val,['name','mob','occupation','salary','fMembers','story','address','addedBy','sponsorName','sponsorMob','sponsorAccountTitle','sponsorAccountNo','sponsorAccountIBAN']);
+    // Name	Mobile No	Earning per month	Occupation	Currency	Family Members	Address	Story
   });
 
   var bulk = People.collection.initializeUnorderedBulkOp();
@@ -887,6 +934,7 @@ app.post('/excelData',(req,res) => {
   })
 
   bulk.execute().then((msg) => {
+    console.log(msg);
     res.status(200).send(msg.result);
   }).catch((e) => {
     let errors = [];
