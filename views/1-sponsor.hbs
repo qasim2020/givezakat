@@ -34,6 +34,21 @@
       background: transparent;
       margin-top: 0;
     }
+
+    .update-person-form .fixedLabel {
+      color: #173627;
+      font-weight: bold;
+      font-size: 18px;
+      margin: 0px;
+      margin-left: 1rem;
+      padding-top: 1px;
+      font-weight: normal;
+    }
+
+    .update-person-form .fixedLabelInput {
+      padding: 0.6rem 0;
+      width: 6%;
+    }
     </style>
 
   </head>
@@ -53,43 +68,45 @@
       <hr>
 
       <p>Full Name</p>
-      <div style="" class="{{hasError data.name}} d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.name}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="myname" id="myname" value="{{data.name}}" placeholder="Enter your full name here">
       </div>
       <p>Email</p>
-      <div style="" class="{{hasError data.email}} d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.email}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="email" id="email" value="{{data.email}}" placeholder="yourname@email.com">
       </div>
       <p>Username</p>
-      <div style="" class="{{hasError data.username}} d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="username" id="username" value="{{data.username}}" placeholder="letters only with no space">
+      <div style="" class="{{hasError data.username}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
+        <p class="fixedLabel">https://zakatlists.com/</p>
+        <input class="form-control flex-grow-1 fixedLabelInput" type="text" name="username" id="username" value="{{data.username}}" placeholder="letters only with no space">
+      </div>
+      <p>Your Country</p>
+      <div style="" class="{{hasError data.flag}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="flag" id="flag" value="{{data.flag}}" placeholder="Pakistan">
       </div>
       <p>Mobile Number</p>
-      <div style="" class="{{hasError data.mob}} d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="mob" id="mob" value="{{data.mob}}" placeholder="+923235168635">
+      <div style="" class="{{hasError data.mob}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
+        <p class="fixedLabel">+92</p>
+        <input class="form-control flex-grow-1 fixedLabelInput" type="text" name="mob" id="mob" value="{{data.mob}}" placeholder="3235168635">
       </div>
       <p>Account Title</p>
-      <div style="" class="{{hasError data.sponsorAccountTitle}} d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountTitle}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountTitle" id="sponsorAccountTitle" value="{{data.sponsorAccountTitle}}" placeholder="Hashim Ali">
       </div>
       <p>Name of Bank</p>
-      <div style="" class="{{hasError data.sponsorAccountBank}} d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountBank}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountBank" id="sponsorAccountBank" value="{{data.sponsorAccountBank}}" placeholder="Metro Politan Bank Malir Karachi">
       </div>
       <p>Local Bank Account Number</p>
-      <div style="" class="{{hasError data.sponsorAccountNo}} d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountNo}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountNo" id="sponsorAccountNo" value="{{data.sponsorAccountNo}}" placeholder="00470125856896">
       </div>
       <p>International Bank Account Number (IBAN)</p>
-      <div style="" class="{{hasError data.sponsorAccountIBAN}} d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountIBAN}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountIBAN" id="sponsorAccountIBAN" value="{{data.sponsorAccountIBAN}}" placeholder="PK009898612341234">
       </div>
-      <p>Your Country</p>
-      <div style="" class="{{hasError data.flag}} d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="flag" id="flag" value="{{data.flag}}" placeholder="Pakistan">
-      </div>
       <p>Special Note</p>
-      <div style="" class="{{hasError data.specialNote}} d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.specialNote}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <textarea wrap="" rows="4" class="form-control flex-grow-1" type="text" id="specialNote" name="specialNote" placeholder="Any details to help paying person know this person more.">{{data.specialNote}}</textarea>
       </div>
       <div class="">
@@ -161,8 +178,8 @@
     }, "Username can not have spaced.");
 
     jQuery.validator.addMethod("mobileNumber", function(value, element) {
-      return this.optional(element) || (/^\+[0-9]*$/.test(value));
-    }, "Wrong format. Please write in a format that is accessible internationally e.g. +923135182738");
+      return this.optional(element) || (/^[0-9]*$/.test(value));
+    }, "Wrong format. Please write in a format that is accessible internationally e.g. 3135182738");
 
     $("#person-form").validate({
 

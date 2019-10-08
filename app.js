@@ -726,7 +726,7 @@ app.post('/updateUser',authenticate,(req,res) => {
   }, {
     $set: {
       name: req.body.name,
-      email: req.body.email,
+      email: req.params.user.email,
       username: req.body.username,
       mob: req.body.mob,
       sponsorAccountTitle: req.body.sponsorAccountTitle,
