@@ -1032,6 +1032,12 @@
         color: #173627;
         font-weight: bold;
         font-size: 18px;
+        background: transparent;
+      }
+
+      .form-placement > .hasError {
+        border: 1px solid red;
+        background: #ffe0e0;
       }
 
       .form-placement hr {

@@ -8,26 +8,44 @@ var UsersSchema = new mongoose.Schema({
     type: String,
     minlength: 3
   },
-  username: {
-    type: String,
-  },
   email: {
     type: String,
     required: true,
     minlength: 3,
     unique: true
   },
-  password: {
+  username: {
     type: String,
   },
-  SigninType: {
+  mob: {
+    type: String,
+  },
+  sponsorAccountTitle: {
+    type: String,
+  },
+  sponsorAccountBank: {
+    type: String,
+  },
+  sponsorAccountNo: {
+    type: String,
+  },
+  sponsorAccountIBAN: {
+    type: String,
+  },
+  specialNote: {
+    type: String,
+  },
+  flag: {
     type: String,
   },
   verified: {
     type: Boolean,
     default: false,
   },
-  flag: {
+  password: {
+    type: String,
+  },
+  SigninType: {
     type: String,
   },
   tokens: [{

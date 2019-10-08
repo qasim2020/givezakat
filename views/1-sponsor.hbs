@@ -31,6 +31,8 @@
       font-weight: bold;
       font-size: 18px;
       white-space: pre-line;
+      background: transparent;
+      margin-top: 0;
     }
     </style>
 
@@ -51,39 +53,39 @@
       <hr>
 
       <p>Full Name</p>
-      <div style="{{borderRedIfExists data.name}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.name}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="myname" id="myname" value="{{data.name}}" placeholder="Enter your full name here">
       </div>
       <p>Email</p>
-      <div style="{{borderRedIfExists data.email}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.email}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="email" id="email" value="{{data.email}}" placeholder="+923135182738">
       </div>
       <p>Username</p>
-      <div style="{{borderRedIfExists data.username}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.username}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="username" id="username" value="{{data.username}}" placeholder="+923135182738">
       </div>
       <p>Mobile Number</p>
-      <div style="{{borderRedIfExists data.mob}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.mob}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="mob" id="mob" value="{{data.mob}}" placeholder="labour at some factory">
       </div>
       <p>Account Title</p>
-      <div style="{{borderRedIfExists data.sponsorAccountTitle}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountTitle}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountTitle" id="sponsorAccountTitle" value="{{data.sponsorAccountTitle}}" placeholder="a number in USD e.g 220">
       </div>
       <p>Name of Bank</p>
-      <div style="{{borderRedIfExists data.sponsorAccountBank}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountBank}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountBank" id="sponsorAccountBank" value="{{data.sponsorAccountBank}}" placeholder="a number in USD e.g 220">
       </div>
       <p>Local Bank Account Number</p>
-      <div style="{{borderRedIfExists data.sponsorAccountNo}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountNo}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountNo" id="sponsorAccountNo" value="{{data.sponsorAccountNo}}" placeholder="a number e.g 9">
       </div>
       <p>International Bank Account Number (IBAN)</p>
-      <div style="{{borderRedIfExists data.sponsorAccountIBAN}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.sponsorAccountIBAN}} d-flex justify-content-start border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="sponsorAccountIBAN" id="sponsorAccountIBAN" value="{{data.sponsorAccountIBAN}}" placeholder="Postal address to send a card to recepient">
       </div>
       <p>Special Note</p>
-      <div style="{{borderRedIfExists data.specialNote}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.specialNote}} d-flex justify-content-start border my-point5 flex-grow-1">
         <textarea wrap="" rows="4" class="form-control flex-grow-1" type="text" id="specialNote" name="specialNote" placeholder="Any details to help paying person know this person more.">{{data.specialNote}}</textarea>
       </div>
       <div class="">
@@ -107,7 +109,8 @@
       if (!($("#person-form").valid()))	return console.log('invalid email');
 
       let data = {
-        "myname": $('#myname').val(),
+        "name": $('#myname').val(),
+        "username": $('#username').val(),
         "email": $('#email').val(),
         "mob": $('#mob').val(),
         "sponsorAccountTitle": $('#sponsorAccountTitle').val(),
@@ -118,11 +121,12 @@
       };
 
       // Name	, Mobile No,	Earning per month,	Occupation	, Currency,	Family Members,	Address,	Story
-      return console.log(data);
+      // return console.log(data);
+      console.log(data);
       data = JSON.stringify(data);
 
       $.ajax({
-          url: '/updateOneinExcel/?token={{token}}',
+          url: '/updateUser/?token={{token}}',
           type: 'post',
           data,
           headers: {
@@ -130,6 +134,7 @@
           }
         }).done((res) => {
           console.log(res);
+          // window.location.assign(`{{route}}/?token={{token}}`);
           // if (res.n == 0) return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('Did not find this person in database.');
           // if (res.nModified == 0) return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('No changes added by you.');
           // return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('Succesfully updated this person.');
@@ -146,6 +151,10 @@
       return this.optional(element) || /^[a-z ,.'-]+$/i.test(value);
     }, "Letters only please");
 
+    jQuery.validator.addMethod("noSpaces", function(value, element) {
+      return this.optional(element) || /^[a-z,0-9,.'-]+$/i.test(value);
+    }, "Username can not have spaced.");
+
     jQuery.validator.addMethod("mobileNumber", function(value, element) {
       return this.optional(element) || (/^\+[0-9]*$/.test(value));
     }, "Wrong format. Please write in a format that is accessible internationally e.g. +923135182738");
@@ -161,6 +170,10 @@
           required: true,
           email: true,
         },
+        username: {
+          required: true,
+          noSpaces: true,
+        },
         mob : {
           required: true,
           mobileNumber: true,
@@ -174,11 +187,11 @@
         },
         sponsorAccountNo : {
           required: true,
-          number: true,
+          noSpaces: true,
         },
         sponsorAccountIBAN : {
           required: true,
-          number: true,
+          noSpaces: true,
         },
         specialNote : {
           required: true,
@@ -216,6 +229,12 @@
       },
       errorPlacement: function(error, element) {
         $(element).closest('div').after(error);
+      },
+      highlight: function(element,errorClass,validClass){
+        $(element).closest('div').addClass('hasError');
+      },
+      unhighlight: function(element) {
+        $(element).closest('div').removeClass('hasError');
       },
 
     });

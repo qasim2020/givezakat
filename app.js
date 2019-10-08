@@ -706,8 +706,8 @@ app.get('/forgotpw',(req,res) => {
   });
 });
 
-hbs.registerHelper('borderRedIfExists',(value,options) => {
-  if (!value)return 'border: 2px solid red';
+hbs.registerHelper('hasError',(value,options) => {
+  if (!value)return 'hasError';
   return '';
   // try {
   //   if (value.length > 0) return 'border: 1px solid red';
@@ -720,9 +720,37 @@ hbs.registerHelper('borderRedIfExists',(value,options) => {
   // return '';
 })
 
+app.post('/updateUser',authenticate,(req,res) => {
+  Users.updateOne({
+    _id: req.params.user._id,
+  }, {
+    $set: {
+      name: req.body.name,
+      email: req.body.email,
+      username: req.body.username,
+      mob: req.body.mob,
+      sponsorAccountTitle: req.body.sponsorAccountTitle,
+      sponsorAccountBank: req.body.sponsorAccountBank,
+      sponsorAccountNo: req.body.sponsorAccountNo,
+      sponsorAccountIBAN: req.body.sponsorAccountIBAN,
+      specialNote: req.body.specialNote,
+      flag: req.body.flag
+    }
+    },{
+      upsert: false
+    }
+  ).then(msg => {
+    res.status(200).send(msg)
+  }).catch(e => {
+    console.log(e);
+    res.status(400).send(e);
+  });
+})
+
 app.get('/addpeople',authenticate,(req,res) => {
 
   let reqKeys = [
+    'flag',
     'sponsorMob',
     'sponsorAccountTitle',
     'sponsorAccountNo',
@@ -735,7 +763,7 @@ app.get('/addpeople',authenticate,(req,res) => {
 
   console.log(validUser, req.params.user);
 
-  if (!validUser) return res.status(300).render('1-sponsor.hbs', {data: req.params.user});
+  if (!validUser) return res.status(300).render('1-sponsor.hbs', {data: req.params.user, token: req.query.token, route: '/addpeople'});
 
   readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
     res.render('1-addpeople.hbs',{
