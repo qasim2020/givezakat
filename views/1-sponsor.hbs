@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {{>googleAnalytics}}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel=icon href=/favicon.png>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/styles.css">
+
+    <title>Zakat Lists</title>
+
+    <style media="screen">
+    .update-person-form p{
+      margin-bottom:-6px;
+    }
+
+    .update-person-form p:not(:first-child){
+      margin-top: 30px;
+    }
+
+    .update-person-form span{
+      font-weight: bolder;
+    }
+
+    .update-person-form textarea {
+      color: #173627;
+      font-weight: bold;
+      font-size: 18px;
+      white-space: pre-line;
+    }
+    </style>
+
+  </head>
+  <body>
+    {{>header}}
+
+
+    <form id="person-form" class="container form-placement update-person-form">
+
+      <h4>Some details required</h4>
+      <p style="
+    padding: 30px 0;
+    text-align: center;
+    margin-top: -57px;
+      ">I need these details to let you sponsor people. It is required to route payments to you for your sponsors. After you submit you will be routed to the page where you will be able to add people.</p>
+
+      <hr>
+
+      <p>Full Name</p>
+      <div style="{{borderRedIfExists data.name}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="myname" id="myname" value="{{data.name}}" placeholder="Enter your full name here">
+      </div>
+      <p>Email</p>
+      <div style="{{borderRedIfExists data.email}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="email" id="email" value="{{data.email}}" placeholder="+923135182738">
+      </div>
+      <p>Username</p>
+      <div style="{{borderRedIfExists data.username}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="username" id="username" value="{{data.username}}" placeholder="+923135182738">
+      </div>
+      <p>Mobile Number</p>
+      <div style="{{borderRedIfExists data.mob}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="mob" id="mob" value="{{data.mob}}" placeholder="labour at some factory">
+      </div>
+      <p>Account Title</p>
+      <div style="{{borderRedIfExists data.sponsorAccountTitle}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="sponsorAccountTitle" id="sponsorAccountTitle" value="{{data.sponsorAccountTitle}}" placeholder="a number in USD e.g 220">
+      </div>
+      <p>Name of Bank</p>
+      <div style="{{borderRedIfExists data.sponsorAccountBank}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="sponsorAccountBank" id="sponsorAccountBank" value="{{data.sponsorAccountBank}}" placeholder="a number in USD e.g 220">
+      </div>
+      <p>Local Bank Account Number</p>
+      <div style="{{borderRedIfExists data.sponsorAccountNo}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="sponsorAccountNo" id="sponsorAccountNo" value="{{data.sponsorAccountNo}}" placeholder="a number e.g 9">
+      </div>
+      <p>International Bank Account Number (IBAN)</p>
+      <div style="{{borderRedIfExists data.sponsorAccountIBAN}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="sponsorAccountIBAN" id="sponsorAccountIBAN" value="{{data.sponsorAccountIBAN}}" placeholder="Postal address to send a card to recepient">
+      </div>
+      <p>Special Note</p>
+      <div style="{{borderRedIfExists data.specialNote}}" class="d-flex justify-content-start border my-point5 flex-grow-1">
+        <textarea wrap="" rows="4" class="form-control flex-grow-1" type="text" id="specialNote" name="specialNote" placeholder="Any details to help paying person know this person more.">{{data.specialNote}}</textarea>
+      </div>
+      <div class="">
+        <button id="click-submit" class="btn btn-primary" type="button" name="button">Go to Sponsor page</button>
+      </div>
+      <div class="success d-none"></div>
+      <div class="error d-none"></div>
+
+
+    </form>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/javascript.js"></script>
+
+    <script type="text/javascript">
+    $('#click-submit').click(function(e) {
+
+      if (!($("#person-form").valid()))	return console.log('invalid email');
+
+      let data = {
+        "myname": $('#myname').val(),
+        "email": $('#email').val(),
+        "mob": $('#mob').val(),
+        "sponsorAccountTitle": $('#sponsorAccountTitle').val(),
+        "sponsorAccountBank": $('#sponsorAccountBank').val(),
+        "sponsorAccountNo": $('#sponsorAccountNo').val(),
+        "sponsorAccountIBAN": $('#sponsorAccountIBAN').val(),
+        "specialNote": $('#specialNote').val(),
+      };
+
+      // Name	, Mobile No,	Earning per month,	Occupation	, Currency,	Family Members,	Address,	Story
+      return console.log(data);
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/updateOneinExcel/?token={{token}}',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((res) => {
+          console.log(res);
+          // if (res.n == 0) return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('Did not find this person in database.');
+          // if (res.nModified == 0) return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('No changes added by you.');
+          // return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('Succesfully updated this person.');
+
+        }).fail((e) => {
+          console.log('error here', e);
+          // let errors = { story: e.responseText };
+          // $("#person-form").validate().showErrors(errors);
+        });
+
+    });
+
+    jQuery.validator.addMethod("lettersonly", function(value, element) {
+      return this.optional(element) || /^[a-z ,.'-]+$/i.test(value);
+    }, "Letters only please");
+
+    jQuery.validator.addMethod("mobileNumber", function(value, element) {
+      return this.optional(element) || (/^\+[0-9]*$/.test(value));
+    }, "Wrong format. Please write in a format that is accessible internationally e.g. +923135182738");
+
+    $("#person-form").validate({
+
+      rules: {
+        myname : {
+          required: true,
+          lettersonly: true,
+        },
+        email : {
+          required: true,
+          email: true,
+        },
+        mob : {
+          required: true,
+          mobileNumber: true,
+        },
+        sponsorAccountTitle : {
+          required: true,
+          lettersonly: true,
+        },
+        sponsorAccountBank : {
+          required: true,
+        },
+        sponsorAccountNo : {
+          required: true,
+          number: true,
+        },
+        sponsorAccountIBAN : {
+          required: true,
+          number: true,
+        },
+        specialNote : {
+          required: true,
+        }
+      },
+      messages: {
+        myname : {
+          required: 'This field is required.',
+          lettersonly: 'In valid name. Please write a valid name.',
+        },
+        email : {
+          required: 'This field is required.',
+        },
+        mob : {
+          required: 'This field is required.',
+        },
+        sponsorAccountTitle : {
+          required: 'This field is required.',
+          lettersonly: 'In valid name. Please write a valid name.',
+        },
+        sponsorAccountBank : {
+          required: 'This field is required.',
+        },
+        sponsorAccountNo : {
+          required: 'This field is required.',
+          number: 'Only numbers. Avoid writing dashes or characters.',
+        },
+        sponsorAccountIBAN : {
+          required: 'This field is required.',
+          number: 'Only numbers. Avoid writing dashes or characters.',
+        },
+        specialNote : {
+          required: 'This field is required.',
+        }
+      },
+      errorPlacement: function(error, element) {
+        $(element).closest('div').after(error);
+      },
+
+    });
+    </script>
+  </body>
+</html>

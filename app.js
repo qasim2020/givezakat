@@ -706,7 +706,36 @@ app.get('/forgotpw',(req,res) => {
   });
 });
 
+hbs.registerHelper('borderRedIfExists',(value,options) => {
+  if (!value)return 'border: 2px solid red';
+  return '';
+  // try {
+  //   if (value.length > 0) return 'border: 1px solid red';
+  // }
+  // catch (e) {
+  //   return 'border: 1px solid red'
+  // }
+  // return '';
+  // if (value.length > 0) return 'border: 1px solid red';
+  // return '';
+})
+
 app.get('/addpeople',authenticate,(req,res) => {
+
+  let reqKeys = [
+    'sponsorMob',
+    'sponsorAccountTitle',
+    'sponsorAccountNo',
+    'sponsorAccountIBAN'
+  ];
+
+  let validUser = reqKeys.every((value,index,arr) => {
+    return req.params.user.hasOwnProperty(value)
+  })
+
+  console.log(validUser, req.params.user);
+
+  if (!validUser) return res.status(300).render('1-sponsor.hbs', {data: req.params.user});
 
   readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
     res.render('1-addpeople.hbs',{

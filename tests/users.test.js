@@ -185,6 +185,16 @@ describe('Open pages just fine', () => {
     .expect(200)
   })
 
+  test('check sponsor credentials > get sponsor page', async() => {
+    await currencySession.get(`/addpeople/?token=${currencySession.token}`)
+    .set({'Accept':`${process.env.test_call}`,'x-pjax': true})
+    .expect(res => {
+      // console.log('*****',res.text);
+      expect(res.text).not.toBe();
+    })
+    .expect(300)
+  })
+
 })
 //
 describe('Sign In related tests', () => {
