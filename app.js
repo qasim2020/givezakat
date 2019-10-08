@@ -750,11 +750,13 @@ app.post('/updateUser',authenticate,(req,res) => {
 app.get('/addpeople',authenticate,(req,res) => {
 
   let reqKeys = [
-    'flag',
-    'sponsorMob',
+    'mob',
     'sponsorAccountTitle',
+    'sponsorAccountBank',
     'sponsorAccountNo',
-    'sponsorAccountIBAN'
+    'sponsorAccountIBAN',
+    'specialNote',
+    'flag',
   ];
 
   let validUser = reqKeys.every((value,index,arr) => {
