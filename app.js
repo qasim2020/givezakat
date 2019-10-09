@@ -755,7 +755,10 @@ app.get('/addpeople',authenticate,(req,res) => {
 
   console.log(validUser, req.params.user);
 
-  if (!validUser) return res.status(300).render('1-sponsor.hbs', {data: req.params.user, token: req.query.token, route: '/addpeople'});
+  if (!validUser) {
+    
+    return res.status(300).render('1-sponsor.hbs', {data: req.params.user, token: req.query.token, route: '/addpeople'});
+  }
 
   readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
     res.render('1-addpeople.hbs',{
