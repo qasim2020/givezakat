@@ -25,7 +25,6 @@ const {sendmail} = require('./js/sendmail');
 const {serverRunning,checkCurrencyExists} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
 
-
 var app = express();
 var port = process.env.PORT || 3000;
 app.use(pjax());
@@ -709,15 +708,6 @@ app.get('/forgotpw',(req,res) => {
 hbs.registerHelper('hasError',(value,options) => {
   if (!value)return 'hasError';
   return '';
-  // try {
-  //   if (value.length > 0) return 'border: 1px solid red';
-  // }
-  // catch (e) {
-  //   return 'border: 1px solid red'
-  // }
-  // return '';
-  // if (value.length > 0) return 'border: 1px solid red';
-  // return '';
 })
 
 app.post('/updateUser',authenticate,(req,res) => {

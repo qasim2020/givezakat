@@ -49,6 +49,25 @@
       padding: 0.6rem 0;
       width: 6%;
     }
+
+    .form-placement ul {
+      list-style-type: none;
+      position: absolute;
+      top: 100%;
+      width: 100%;
+      background: white;
+      top: 102%;
+      border: 1px solid darkcyan;
+      box-sizing: border-box;
+    }
+
+    .form-placement li {
+      padding: 0.6rem 1rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+
     </style>
 
   </head>
@@ -78,11 +97,17 @@
       <p>Username</p>
       <div style="" class="{{hasError data.username}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <p class="fixedLabel">https://zakatlists.com/</p>
-        <input class="form-control flex-grow-1 fixedLabelInput" type="text" name="username" id="username" value="{{data.username}}" placeholder="letters only with no space">
+        <input class="form-control flex-grow-1 fixedLabelInput" type="text" name="username" id="username" value="{{data.username}}" placeholder="anything">
       </div>
       <p>Your Country</p>
-      <div style="" class="{{hasError data.flag}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
+      <div style="" class="{{hasError data.flag}} position-relative d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="flag" id="flag" value="{{data.flag}}" placeholder="Pakistan">
+        <ul>
+          <li>
+            <p style="margin:0px;">Pakistan</p>
+            <div class="flag" style='background-image: url(/flag/{{flag}}.svg)'>
+          </li>
+        </ul>
       </div>
       <p>Mobile Number</p>
       <div style="" class="{{hasError data.mob}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
