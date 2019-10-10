@@ -24,6 +24,7 @@ const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
 const {serverRunning,checkCurrencyExists} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
+const {CountryInfo} = require('./models/countryinfo');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -756,8 +757,27 @@ app.get('/addpeople',authenticate,(req,res) => {
   console.log(validUser, req.params.user);
 
   if (!validUser) {
-    
-    return res.status(300).render('1-sponsor.hbs', {data: req.params.user, token: req.query.token, route: '/addpeople'});
+    return CountryInfo.aggregate([
+    { $match: {} },
+    { $project: {
+        name: "$name",
+        callingCodes: {$arrayElemAt: ["$callingCodes",0]},
+        currency: {$arrayElemAt: ["$currencies.code",0]},
+        alpha2Code: "$alpha2Code"
+        }}
+    ]).then(msg => {
+      console.log(msg);
+      return res.status(300).render('1-sponsor.hbs', {countryinfo: msg, data: req.params.user, token: req.query.token, route: '/addpeople'});
+    }).catch(e => {
+      console.log(e);
+      return res.status(400).render('1-redirect.hbs',{
+        message: e,
+        token: req.params.token,
+        page: 'Add people',
+        timer: 6,
+        token: req.session.token
+      })
+    })
   }
 
   readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
@@ -770,7 +790,13 @@ app.get('/addpeople',authenticate,(req,res) => {
     });
   }).catch((e) => {
     console.log(e);
-    res.render('1-404');
+    res.status(400).render('1-redirect.hbs',{
+      message: e,
+      token: req.params.token,
+      page: 'Add people',
+      timer: 6,
+      token: req.session.token
+    })
   })
 
 });

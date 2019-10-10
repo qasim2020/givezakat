@@ -59,6 +59,8 @@
       top: 102%;
       border: 1px solid darkcyan;
       box-sizing: border-box;
+      max-height: 40vh;
+      overflow: scroll;
     }
 
     .form-placement li {
@@ -106,12 +108,13 @@
       <p>Your Country</p>
       <div style="" class="{{hasError data.flag}} position-relative d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="flag" id="flag" value="{{data.flag}}" placeholder="Pakistan">
-        <ul>
+        <ul class="d-none">
+          {{#each countryinfo}}
           <li>
-            <p style="margin:0px;">Pakistan</p>
-            <div class="flag" style='background-image: url(/flag/pk.svg)'>
-            <!-- <div class="flag" style='background-image: url(/flag/{{flag}}.svg)'> -->
+            <p style="margin:0px;">{{this.name}}</p>
+            <div checkRule="{{name}} {{alpha2Code}} {{currency}} {{callingCodes}}" class="flag" style='background-image: url(/flag/{{this.alpha2Code}}.svg)'>
           </li>
+          {{/each}}
         </ul>
       </div>
       <p>Mobile Number</p>

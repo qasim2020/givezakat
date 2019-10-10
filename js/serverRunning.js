@@ -1,4 +1,5 @@
 const {Users} = require('../models/users');
+const {CountryInfo} = require('../models/countryinfo');
 const {CurrencyRates} = require('../models/currencyrates');
 const axios = require('axios');
 
@@ -20,9 +21,26 @@ var serverRunning = () => {
   });
 
   checkCurrencyExists().catch(e => console.log(e));
+  // console.log('server running');
+  CountryInfo.find().then(msg => {
+    if (!msg.length) return getCountryInfo();
+    // console.log('country Info is already saved !');
+  });
 
-  return setTimeout(() => serverRunning(),1000*5);
+  return setTimeout(() => serverRunning(),1000*3);
 
+}
+
+let getCountryInfo = function() {
+  // console.log('get rates');
+  axios.get(`https://restcountries.eu/rest/v2/all`).then((reply) => {
+    // console.log('recieved list of countries');
+    return CountryInfo.insertMany(reply.data);
+  }).then((reply) => {
+    console.log('Fetch CountryInfo from countrys api !');
+  }).catch((e) => {
+    console.log(e);
+  });
 }
 
 let checkCurrencyExists = function() {
