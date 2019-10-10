@@ -766,7 +766,6 @@ app.get('/addpeople',authenticate,(req,res) => {
         alpha2Code: "$alpha2Code"
         }}
     ]).then(msg => {
-      console.log(msg);
       return res.status(300).render('1-sponsor.hbs', {countryinfo: msg, data: req.params.user, token: req.query.token, route: '/addpeople'});
     }).catch(e => {
       console.log(e);
@@ -1369,7 +1368,7 @@ app.post('/signing',(req,res) => {
 
   if (req.body.query === 'Google_ID') {
     testGoogleToken(req).then((res) => {
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google', "username": req.body.username}}, {new: true, upsert: true});
+      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google'}}, {new: true, upsert: true});
     }).then((returned) => {
       if (!returned) return Promise.reject('Invalid Request');
       return returned.generateAuthToken(req);
