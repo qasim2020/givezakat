@@ -152,7 +152,7 @@
         <a class="nav-item my-point5 text-light" href="/logout/{{token}}">Sign out</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
         <a class="nav-item my-point5 text-light" href="/addpeople/?token={{token}}">Add people</a>
-        <a href="/due/{{token}}" class="nav-item my-point5 text-light">Due</a>
+        <a href="/due/?token={{token}}" class="nav-item my-point5 text-light">Due</a>
         {{else}}
         <a class="nav-item my-point5 text-light" href="/signin/home">Sign in</a>
         <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
@@ -178,7 +178,7 @@
           <a class="text-light px-point5 align-self-center" href="/logout/{{token}}" >Sign out</a>
           <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
           <a class="text-light px-point5 align-self-center" href="/addpeople/?token={{token}}">Add people</a>
-          <a href="/due/{{token}}" class="text-light px-point5 align-self-center {{length due}}">Due</a>
+          <a href="/due/?token={{token}}" class="text-light px-point5 align-self-center {{length due}}">Due</a>
           {{else}}
           <a class="text-light px-point5 align-self-center" href="/signin/home">Sign in</a>
           <a class="text-light px-point5 align-self-center" href="#explore">Explore</a>

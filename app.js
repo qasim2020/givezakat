@@ -830,7 +830,7 @@ app.get('/updateperson', authenticate, (req,res) => {
   })
 });
 
-app.get('/due/:token',authenticate,(req,res) => {
+app.get('/due',authenticate,(req,res) => {
 
   console.log('****Due Page*****');
 

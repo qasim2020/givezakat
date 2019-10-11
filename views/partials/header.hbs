@@ -11,7 +11,7 @@
         <a class="text-light px-point5 align-self-center {{signin}}" href="/logout/{{token}}">Sign out</a>
         <a href="/zakatcalc" class="text-light px-point5 align-self-center {{zakatcalc}}">Calculate Zakat</a>
         <a href="/addpeople/?token={{token}}" class="text-light px-point5 align-self-center {{addpeople}}">Add People</a>
-        <a href="/due/{{token}}" class="text-light px-point5 align-self-center {{dueStatus}}">Due</a>
+        <a href="/due/?token={{token}}" class="text-light px-point5 align-self-center {{dueStatus}}">Due</a>
       {{else}}
         <a href="/" class="text-light px-point5 align-self-center">Home</a>
         <a href="/signin/home" class="text-light px-point5 align-self-center {{signin}}">Sign in</a>
@@ -36,7 +36,7 @@
   <a class="nav-item my-point5 text-light" href="/logout/{{token}}">Sign out</a>
   <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
   <a class="nav-item my-point5 text-light" href="/addpeople/?token={{token}}">Add people</a>
-  <a href="/due/{{token}}" class="nav-item my-point5 text-light">Due</a>
+  <a href="/due/?token={{token}}" class="nav-item my-point5 text-light">Due</a>
   {{else}}
   <a href="/" class="nav-item my-point5 text-light">Home</a>
   <a class="nav-item my-point5 text-light" href="/signin/home">Sign in</a>
