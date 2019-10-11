@@ -865,7 +865,9 @@ app.get('/due',authenticate,(req,res) => {
         token: req.session.token,
         name: req.session.name,
         email: req.params.user.email,
-        localCurrency: req.session.browserCurrency.currency_code
+        localCurrency: req.session.browserCurrency.currency_code,
+        publishableKey: process.env.stripePublishableKey
+
       });
     }).catch((error) => {
       console.log(error);
