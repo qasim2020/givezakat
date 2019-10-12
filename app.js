@@ -748,13 +748,15 @@ app.get('/addpeople',authenticate,(req,res) => {
     'sponsorAccountIBAN',
     'specialNote',
     'flag',
+    'username'
   ];
 
   let validUser = reqKeys.every((value,index,arr) => {
-    return req.params.user.hasOwnProperty(value)
+    // console.log({value, status: req.params.user[value].length > 0});
+    return req.params.user[value].length > 0;
   })
 
-  console.log(validUser, req.params.user);
+  // console.log(validUser, req.params.user);
 
   if (!validUser) {
     return CountryInfo.aggregate([
@@ -780,6 +782,7 @@ app.get('/addpeople',authenticate,(req,res) => {
   }
 
   readXlsxFile(__dirname+'/static/sample.xlsx').then((rows) => {
+    // console.log(rows[0]);
     res.render('1-addpeople.hbs',{
       addpeople: 'active',
       sampleRows: rows[0],
