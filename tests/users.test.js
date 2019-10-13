@@ -92,6 +92,7 @@ describe('Open pages just fine', () => {
     .get(`/charge?email=register@gmail.com&token=${currencySession.token}&amount=${99000}&stripeToken=tok_visa&paymentDetails=${peoplePaid}`)
     .set('Accept',`${process.env.test_call}`)
     .expect(res => {
+      console.log(res.body);
       expect(res.body.name).toBe('registeredName');
       expect(res.body.receipt).not.toBe();
       expect(res.body.payed[0]._id).toBe('5d477e1b006cfdef99932bbe');

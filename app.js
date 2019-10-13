@@ -163,15 +163,15 @@ let getBasicData = function (req) {
         rates: [
           {$limit: 1},
           { "$lookup": {
-        from: 'currencyrates',
-        pipeline: [
-            {$match: {}},
-            {$sort: {timestamp: -1} },
-            {$limit: 1},
-            {$project: {
-                exchangeRate: "$rates",
-                _id: 0
-            }}
+            from: 'currencyrates',
+            pipeline: [
+                {$match: {}},
+                {$sort: {timestamp: -1} },
+                {$limit: 1},
+                {$project: {
+                    exchangeRate: "$rates",
+                    _id: 0
+                }}
           ],
             as: 'rates'
         }},
@@ -753,7 +753,7 @@ app.get('/addpeople',authenticate,(req,res) => {
 
   let validUser = reqKeys.every((value,index,arr) => {
     // console.log({value, status: req.params.user[value].length > 0});
-    return req.params.user[value].length > 0;
+    return req.params.user[value] && req.params.user[value].length > 0;
   })
 
   // console.log(validUser, req.params.user);
@@ -887,30 +887,55 @@ function updateOrders(req,res) {
 
   return new Promise(function(resolve, reject) {
     let paymentDetails = JSON.parse(req.query.paymentDetails);
-    let objectIdArray = paymentDetails.map(s => s.id);
-    People.find({'_id' : {$in : objectIdArray}}).then((msg) => {
-      req.people = msg;
-      return Users.findByToken(req.query.token);
-    }).then((user) => {
-      if (!user) return Promise.reject('User has not logged in because no token is associated to this request !');
-      let array = [];
-      let values = {};
-      _.each(req.people,(val,key) => {
-        values = {};
-        values.paidby = user._id.toString();
-        values.paidto = val._id.toString();
-        values.amount = paymentDetails.filter(obj => {
-                            return obj.id === val._id.toString();
-                        })[0].amount;
-        values.status = 'pending';
-        values.currency = req.session.browserCurrency.currency_code.toLowerCase();
-        values.customer = req.charge.customer;
-        values.receipt = req.charge.receipt_url;
-        array.push(values);
+    let objectIdArray = paymentDetails.map(s => mongoose.Types.ObjectId(s.id));
+    People.aggregate([
+      {   $match: {"_id": { $in: objectIdArray }} },
+      {   $addFields: { addedBy: { $toObjectId: "$addedBy" } } },
+      {   $lookup: {
+            from: 'users',
+            localField: "addedBy",
+            foreignField: "_id",
+            as: "users"
+          }
+      },
+      {   $project: {
+              status: "$cardClass",
+              name: 1,
+              address: 1,
+              mob: 1,
+              sponsorName: {$arrayElemAt: ["$users.name", 0] },
+              sponsorAddress: {$arrayElemAt: ["$users.address", 0] },
+              sponsorMob: {$arrayElemAt: ["$users.mob", 0] },
+              paidby: req.params.user._id.toString(),
+              paidto: "$_id"
+        }
+      }
+    ]).then((msg) => {
+      // console.log(msg);
+      // Object.assign(msg, {})
+      req.people = msg.map(val => {
+        let amount = paymentDetails.find(value => {
+          return value.id == val._id.toString();
+        }).amount;
+        return {...val,...{
+          amount_text: `${amount} ${req.session.browserCurrency.currency_code}`,
+          amount: amount
+        } };
+      })
 
-        val.status = 'pending';
-        val.amount = `${values.amount} ${values.currency}`;
+      let array = req.people.map(val => {
+        return {
+          paidby: val.paidby,
+          paidto: val.paidto,
+          amount: val.amount,
+          status: 'in progress',
+          currency: req.session.browserCurrency.currency_code,
+          customer: req.charge.customer,
+          receipt: req.charge.receipt_url
+        }
       });
+
+      console.log(req.people);
       return Orders.create(array,{new:true});
     }).then((order) => {
       return resolve(order);
