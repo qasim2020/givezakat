@@ -748,7 +748,8 @@ app.get('/addpeople',authenticate,(req,res) => {
     'sponsorAccountIBAN',
     'specialNote',
     'flag',
-    'username'
+    'username',
+    'sponsorAddress'
   ];
 
   let validUser = reqKeys.every((value,index,arr) => {
@@ -904,15 +905,13 @@ function updateOrders(req,res) {
               address: 1,
               mob: 1,
               sponsorName: {$arrayElemAt: ["$users.name", 0] },
-              sponsorAddress: {$arrayElemAt: ["$users.address", 0] },
+              sponsorAddress: {$arrayElemAt: ["$users.address", 0] }, // TODO: add sponsor address in add people form
               sponsorMob: {$arrayElemAt: ["$users.mob", 0] },
               paidby: req.params.user._id.toString(),
-              paidto: "$_id"
+              paidto: "$_id",
         }
       }
     ]).then((msg) => {
-      // console.log(msg);
-      // Object.assign(msg, {})
       req.people = msg.map(val => {
         let amount = paymentDetails.find(value => {
           return value.id == val._id.toString();
@@ -935,7 +934,7 @@ function updateOrders(req,res) {
         }
       });
 
-      console.log(req.people);
+      // console.log(req.people);
       return Orders.create(array,{new:true});
     }).then((order) => {
       return resolve(order);
