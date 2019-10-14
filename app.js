@@ -719,6 +719,7 @@ app.post('/updateUser',authenticate,(req,res) => {
       name: req.body.name,
       email: req.params.user.email,
       username: req.body.username,
+      sponsorAddress: req.body.sponsorAddress,
       mob: req.body.mob,
       sponsorAccountTitle: req.body.sponsorAccountTitle,
       sponsorAccountBank: req.body.sponsorAccountBank,
@@ -726,7 +727,7 @@ app.post('/updateUser',authenticate,(req,res) => {
       sponsorAccountIBAN: req.body.sponsorAccountIBAN,
       specialNote: req.body.specialNote,
       flag: req.body.flag
-    }
+      }
     },{
       upsert: false
     }
@@ -757,7 +758,7 @@ app.get('/addpeople',authenticate,(req,res) => {
     return req.params.user[value] && req.params.user[value].length > 0;
   })
 
-  // console.log(validUser, req.params.user);
+  console.log(validUser, req.params.user);
 
   if (!validUser) {
     return CountryInfo.aggregate([
@@ -905,7 +906,7 @@ function updateOrders(req,res) {
               address: 1,
               mob: 1,
               sponsorName: {$arrayElemAt: ["$users.name", 0] },
-              sponsorAddress: {$arrayElemAt: ["$users.address", 0] }, // TODO: add sponsor address in add people form
+              sponsorAddress: {$arrayElemAt: ["$users.sponsorAddress", 0] },
               sponsorMob: {$arrayElemAt: ["$users.mob", 0] },
               paidby: req.params.user._id.toString(),
               paidto: "$_id",

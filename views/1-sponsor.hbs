@@ -105,6 +105,10 @@
         <p class="fixedLabel">https://zakatlists.com/</p>
         <input class="form-control flex-grow-1 fixedLabelInput" type="text" name="username" id="username" value="{{data.username}}" placeholder="anything">
       </div>
+      <p>Address</p>
+      <div style="" class="{{hasError data.address}} d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
+        <input class="form-control flex-grow-1" type="text" name="sponsorAddress" id="sponsorAddress" value="{{data.sponsorAddress}}" placeholder="House No, Street No, Town..">
+      </div>
       <p>Your Country</p>
       <div style="" class="{{hasError data.flag}} position-relative d-flex justify-content-start align-items-center border my-point5 flex-grow-1">
         <input class="form-control flex-grow-1" type="text" name="flag" id="flag" value="{{data.flag}}" placeholder="Pakistan">
@@ -165,6 +169,7 @@
       let data = {
         "name": $('#myname').val(),
         "username": $('#username').val(),
+        "sponsorAddress": $('#sponsorAddress').val(),
         "email": $('#email').val(),
         "mob": $('#mob').val(),
         "sponsorAccountTitle": $('#sponsorAccountTitle').val(),
@@ -228,6 +233,9 @@
         username: {
           required: true,
           noSpaces: true,
+        },
+        sponsorAddress: {
+          required: true,
         },
         mob : {
           required: true,

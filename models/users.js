@@ -17,6 +17,9 @@ var UsersSchema = new mongoose.Schema({
   username: {
     type: String,
   },
+  sponsorAddress: {
+    type: String,
+  },
   mob: {
     type: String,
   },
