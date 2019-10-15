@@ -113,14 +113,14 @@
 
   <div class="card-browser alpha60 d-none">
     <div class="d-flex align-items-end flex-col">
+      <a class="text-blue view-details" type="button" name="button">View Details</a>
+      <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
       <a href="/updateperson/?token={{token}}&id={{this._id}}" class="text-blue" type="button" name="button">Edit</a>
       <a class="text-blue" type="button" name="button" onclick="deleteMe(this,'{{this._id}}')" >Delete</a>
-      <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
-      <a class="text-blue report-an-issue" type="button" name="button">Report an issue</a>
     </div>
   </div>
 
-  <div class="card-specialNote">
+  <div class="card-specialNote d-none">
 
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g opacity="0.38">
@@ -133,9 +133,12 @@
     <h6>Sponsored By</h6>
     <p>{{this.sponsorName}}</p>
     <p>{{this.sponsorEmail}}</p>
+    {{#if (unlocked paidByMe addedByMe)}}
     <p>{{this.sponsorMob}}</p>
     <p>{{this.sponsorAddress}}</p>
-    <h6></h6>
+    {{/if}}
+    <h6>Added On</h6>
+    <p>{{getTimeFromId this._id}}</p>
   </div>
 
 </div>

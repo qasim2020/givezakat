@@ -235,6 +235,10 @@ let getBasicData = function (req) {
 
 };
 
+hbs.registerHelper("getTimeFromId", function(value) {
+  return mongoose.Types.ObjectId(value).getTimestamp()
+})
+
 hbs.registerHelper("matchWithCaller", function(value1,value2,options) {
   if (value1 == value2) return 'active';
   return '';

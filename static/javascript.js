@@ -79,7 +79,7 @@ $(document).on('click','.card-browser',function(e){
 })
 
 $(document).on('click','.card',function(e) {
-  if ($(e.target).closest('.card-browser').length || e.target.nodeName == 'IMG' || e.target.nodeName == 'BUTTON' || $(e.target).closest('.check-box').hasClass('check-box')) return;
+  if ($(e.target).closest('.card-specialNote').length || $(e.target).closest('.card-browser').length || e.target.nodeName == 'IMG' || e.target.nodeName == 'BUTTON' || $(e.target).closest('.check-box').hasClass('check-box')) return;
   $('.place-2 > svg').removeClass('active');
   $('.card').not(this).find('.card-hover').removeClass('card-active').addClass('card-inactive');
   $(this).find('.card-hover').toggleClass('card-active card-inactive');
@@ -135,3 +135,11 @@ $('.heart-icon').on('mouseenter mouseleave',function(){
   }
   $(this).find('path').attr({fill: '#afafaf'});
 });
+
+$('.card-specialNote > svg:nth-child(1)').on('click', function() {
+  $(this).closest('.card-specialNote').addClass('d-none');
+})
+
+$('.view-details').on('click', function() {
+  $(this).closest('.card').find('.card-specialNote').removeClass('d-none');
+})
