@@ -136,10 +136,10 @@ $('.heart-icon').on('mouseenter mouseleave',function(){
   $(this).find('path').attr({fill: '#afafaf'});
 });
 
-$('.card-specialNote > svg:nth-child(1)').on('click', function() {
+$(document).on('click', '.card-specialNote > svg:nth-child(1)', function() {
   $(this).closest('.card-specialNote').addClass('d-none');
 })
 
-$('.view-details').on('click', function() {
+$(document).on('click', '.view-details', function() {
   $(this).closest('.card').find('.card-specialNote').removeClass('d-none');
 })

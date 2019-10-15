@@ -313,6 +313,7 @@ app.get('/',(req,res) => {
   getBasicData(req).then(results => {
 
     if (req.headers['x-pjax']) {
+      
       let options = {
         data: results[0].people,
         due: req.session.due,
