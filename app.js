@@ -149,9 +149,25 @@ let getBasicData = function (req) {
             {
               paidByMe: false,
               addedByMe: false,
-              browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD"
+              browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD",
+              addedBy: { $toObjectId: "$addedBy" }
             }
-          }
+          },
+          { $lookup: {
+              from: 'users',
+              localField: "addedBy",
+              foreignField: "_id",
+              as: "users"
+          } },
+          { $addFields: {
+              sponsorName: {$arrayElemAt: ["$users.name",0]},
+              sponsorEmail:{$arrayElemAt: ["$users.email",0]},
+              sponsorMob: {$arrayElemAt: ["$users.mob",0]},
+              sponsorAddress: {$arrayElemAt: ["$users.sponsorAddress",0]},
+          }},
+          { $project: {
+            users: 0
+          }}
         ]
         ,
         loadMore: [
@@ -402,9 +418,25 @@ let getLoggedInData = function(req) {
                 $cond: { if: { $eq: [ "$addedBy", req.params.user._id.toString() ] }, then: true, else: false }
             },
             browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD",
-            token: req.query.token
+            token: req.query.token,
+            addedBy: {$toObjectId: "$addedBy"}
           }},
           {$project: { orders: 0 }},
+          { $lookup: {
+              from: 'users',
+              localField: "addedBy",
+              foreignField: "_id",
+              as: "users"
+          } },
+          { $addFields: {
+              sponsorName: {$arrayElemAt: ["$users.name",0]},
+              sponsorEmail:{$arrayElemAt: ["$users.email",0]},
+              sponsorMob: {$arrayElemAt: ["$users.mob",0]},
+              sponsorAddress: {$arrayElemAt: ["$users.sponsorAddress",0]},
+          }},
+          { $project: {
+            users: 0
+          }}
         ]
         ,
         rates: [
@@ -501,20 +533,39 @@ let getPjaxMyData = function(req) {
                 $cond: {if: { $eq : [ { "$arrayElemAt": ["$orders.total",0] } ,1 ] },  then: true, else: false}
             },
             browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD",
-            token: req.query.token
+            token: req.query.token,
+            addedBy: {$toObjectId: "$addedBy"}
           }},
           {$project: { orders: 0 }},
           {$match: { paidByMe : true }},
+          { $lookup: {
+              from: 'users',
+              localField: "addedBy",
+              foreignField: "_id",
+              as: "users"
+          } },
+          { $addFields: {
+              sponsorName: {$arrayElemAt: ["$users.name",0]},
+              sponsorEmail:{$arrayElemAt: ["$users.email",0]},
+              sponsorMob: {$arrayElemAt: ["$users.mob",0]},
+              sponsorAddress: {$arrayElemAt: ["$users.sponsorAddress",0]},
+          }},
+          { $project: {
+            users: 0
+          }}
           // { "$limit": parseInt(req.query.showQty) || 8 },
         ]
         ,
         addedbyme: [
           { "$match": {cardClass: regex, addedBy: req.params.user._id.toString()} },
-          { "$limit": parseInt(req.query.showQty) || 8 },
           {$addFields: {
             addedByMe: true,
             browserCurrency: req.session.browserCurrency && req.session.browserCurrency.currency_code || "USD",
-            token: req.query.token
+            token: req.query.token,
+            sponsorName: req.params.user.name,
+            sponsorEmail:req.params.user.email,
+            sponsorMob: req.params.user.mob,
+            sponsorAddress: req.params.user.sponsorAddress,
           }}
         ]
         ,
