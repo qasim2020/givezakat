@@ -78,9 +78,9 @@
   </head>
   <body>
 
-      <div class="corner-box">
       <div class="popover shadow"></div>
 
+      <div class="corner-box">
 
       <div class="notification-box shadow my-point5">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -119,7 +119,7 @@
         </div>
         <div class="item-2">
           <img src="/quotes.svg" width="116.67px" alt="">
-          <p class="text-light">We deliver your charities transparently to people around the world.
+          <p class="text-light">We deliver your zakat transparently to people around the world.
             <!-- <br><br>- zakatlists -->
           </p>
         </div>
@@ -468,7 +468,7 @@
             console.log(msg);
             $('.filter-btns .btn:eq(0)').addClass('active').trigger('click');
           }).catch((e) => {
-            $('.notification-box').css({opacity:1}).find('p').html('Geo IP Lookup: ' + JSON.parse(e.responseText).error);
+            // $('.notification-box').css({opacity:1}).find('p').html('Geo IP Lookup: ' + JSON.parse(e.responseText).error);
             console.log(e);
           });
         {{/if}}
