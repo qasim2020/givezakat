@@ -689,7 +689,7 @@
         grid-template-columns: repeat(2,1fr);
       }
 
-      .content-grid > .card {
+      .card {
         position: relative;
         box-shadow: 0px 0px 17px darkcyan;
         padding: 1rem;

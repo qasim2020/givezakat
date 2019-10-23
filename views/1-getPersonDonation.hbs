@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {{>googleAnalytics}}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id" content="133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com">
+    <link rel=icon href=/favicon.png>
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/sassstyles.css">
+
+
+    <title>Zakat Lists</title>
+
+  </head>
+  <body id="getPersonDonation">
+
+    <div class="blobs">
+      <svg width="1262" height="900" viewBox="0 0 1262 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g opacity="0.4">
+      <path opacity="0.8" d="M457.601 202.944C434.798 218.259 385.864 202.258 347.803 189.875C309.741 177.493 282.68 168.676 248.517 161.027C214.261 153.347 172.938 146.75 155.522 125.778C137.977 104.859 144.467 69.5114 164.413 45.4191C184.265 21.2957 217.574 8.4275 234.456 -19.0707C251.338 -46.5689 251.629 -88.5607 267.194 -93.401C282.852 -98.2102 313.655 -65.8154 348.489 -56.7022C383.357 -47.6728 422.257 -61.9251 450.975 -55.0384C479.728 -48.2356 498.358 -20.1789 500.487 8.30242C502.486 36.8364 488.02 65.711 482.484 103.38C477.008 141.165 480.37 187.713 457.601 202.944Z" fill="#6FCF97"/>
+      <path opacity="0.724" d="M1227.25 241.853C1251.25 255.627 1251.55 302.229 1251.85 338.455C1252.15 374.681 1252.35 400.442 1256.25 431.748C1260.15 463.144 1267.65 500.086 1251.75 522C1235.95 544.004 1196.65 550.891 1164.45 542.573C1132.25 534.344 1107.15 510.909 1072.45 506.347C1037.75 501.785 993.648 516.186 983.148 504.826C972.648 493.377 995.848 456.257 993.248 423.877C990.548 391.497 962.048 363.858 959.248 337.382C956.348 310.906 979.248 285.503 1008.35 273.785C1037.55 262.157 1072.85 264.214 1114.25 255.717C1155.75 247.13 1203.35 228.078 1227.25 241.853Z" fill="#F2994A"/>
+      <path opacity="0.8" d="M25.3101 806.653C38.5888 756.128 122.627 725.367 187.922 701.338C253.217 677.31 299.656 660.246 354.323 633.173C409.152 606.041 472.259 569.073 519.534 582.402C566.923 595.5 598.367 659.126 598.91 720.318C599.614 781.452 569.416 840.151 577.954 903.237C586.492 966.323 633.83 1033.39 618.387 1058.96C602.781 1084.58 524.508 1068.47 467.273 1093.99C410.086 1119.68 373.938 1187 327.464 1209.03C281.039 1231.24 224.077 1208.04 188.839 1165.22C153.714 1122.17 140.362 1059.67 104.994 993.453C69.4157 927.118 11.983 857.004 25.3101 806.653Z" fill="#F2C94C"/>
+      </g>
+      </svg>
+    </div>
+
+    <div class="logo-area">
+      <!-- <img class="nav-bar-logo" src="/logo5small.png" width="35px" height="35px" alt="">
+      <p class="ml-1 align-self-center">Ask 4 Donation</p> -->
+      <p><</p>
+    </div>
+
+    <div class="content">
+      <div class="card-location">
+        {{> cards}}
+      </div>
+
+      <div class="card-description">
+        <h6>Special Note</h6>
+        <p>{{this.story}}</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <h6>Sponsored By</h6>
+        <p>Qasim Ali</p>
+        <p>qasimali24@gmail.com</p>
+        <p>{{this.sponsorName}}</p>
+        <p>{{this.sponsorEmail}}</p>
+        {{#if (unlocked paidByMe addedByMe)}}
+        <p>{{this.sponsorMob}}</p>
+        <p>{{this.sponsorAddress}}</p>
+        {{/if}}
+        <h6>Added On</h6>
+        <p>{{getTimeFromId this._id}}</p>
+        <button class="donate-btn" type="button" name="button">Donate through Credit Card</button>
+        <button class="donate-btn" type="button" name="button">Donate using iNet Banking</button>
+        <button class="donate-btn" type="button" name="button">Donate using Jazz Cash / Easy Paisa</button>
+      </div>
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="/javascript.js"></script>
+    <script type="text/javascript" src="https://apis.google.com/js/platform.js?onload=renderButton" defer async>
+
+    </script>
+
+    <script type="text/javascript">
+
+
+
+    </script>
+  </body>
+</html>

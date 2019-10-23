@@ -251,6 +251,7 @@ hbs.registerHelper("checkActiveSponsor", function(sponsors) {
 
 hbs.registerHelper("salarytext", function(salary, currency, browserCurrency, options) {
   if (!options.data) return;
+  if (options.data.root.exchangeRate == '') return `${salary} ${currency} per Month`;
   exchangeRate = JSON.parse(options.data.root.exchangeRate);
   let mySalaryInBrowsersCurrency = Math.floor(parseInt(exchangeRate[browserCurrency]) / parseInt(exchangeRate[currency]) * parseInt(salary));
   return `${mySalaryInBrowsersCurrency} ${browserCurrency} per Month`;
@@ -313,7 +314,7 @@ app.get('/',(req,res) => {
   getBasicData(req).then(results => {
 
     if (req.headers['x-pjax']) {
-      
+
       let options = {
         data: results[0].people,
         due: req.session.due,
@@ -1567,6 +1568,23 @@ app.post('/signing',(req,res) => {
   }
 
 });
+
+app.get('/donate/:id',(req,res,next) => {
+  People.findOne({_id: mongoose.Types.ObjectId(req.params.id)}).then(person => {
+    if (!person) return Promise.reject('Sorry. The link has been resolved. Redirecting you to home page.')
+    return res.status(200).render('1-getPersonDonation',{
+      data: person,
+      due: req.session.due,
+      exchangeRate: ''
+    });
+  }).catch(e => res.status(400).render( '1-redirect.hbs' , {
+    timer: 10,
+    page: 'Link resolved',
+    message: e
+  }))
+
+
+})
 
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
