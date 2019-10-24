@@ -1569,13 +1569,18 @@ app.post('/signing',(req,res) => {
 
 });
 
+
+
 app.get('/donate/:id',(req,res,next) => {
-  People.findOne({_id: mongoose.Types.ObjectId(req.params.id)}).then(person => {
+  req.match = {_id: mongoose.Types.ObjectId(req.params.id)};
+  getBasicData(req).then(person => {
+    console.log(person);
+  // People.findOne({_id: mongoose.Types.ObjectId(req.params.id)}).then(person => {
     if (!person) return Promise.reject('Sorry. The link has been resolved. Redirecting you to home page.')
     return res.status(200).render('1-getPersonDonation',{
-      data: person,
+      data: person[0].people[0],
       due: req.session.due,
-      exchangeRate: ''
+      exchangeRate: person[0].exchangeRate,
     });
   }).catch(e => res.status(400).render( '1-redirect.hbs' , {
     timer: 10,
@@ -1589,7 +1594,7 @@ app.get('/donate/:id',(req,res,next) => {
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
 
-    if (!result) return Promise.reject(`We do not have any sponsor in our list with username: "${req.params.username}". Redirecting you to home page.`);
+    if (!result) return Promise.reject(`Invalid url: zakatlists.com/${req.params.username}, Redirecting you to home page.`);
 
     id = result._id.toString() + ',';
 

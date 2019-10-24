@@ -30,35 +30,43 @@
     </div>
 
     <div class="logo-area">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#E0E0E0"/>
+      </svg>
+      <!-- <p>Home</p> -->
+
       <!-- <img class="nav-bar-logo" src="/logo5small.png" width="35px" height="35px" alt="">
       <p class="ml-1 align-self-center">Ask 4 Donation</p> -->
-      <p><</p>
     </div>
 
     <div class="content">
       <div class="card-location">
-        {{> cards}}
+        {{> cards data}}
       </div>
 
       <div class="card-description">
-        <h6>Special Note</h6>
-        <p>{{this.story}}</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <h6>Note</h6>
+        <p>{{data.story}}</p>
+        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->
+        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->
         <h6>Sponsored By</h6>
-        <p>Qasim Ali</p>
-        <p>qasimali24@gmail.com</p>
-        <p>{{this.sponsorName}}</p>
-        <p>{{this.sponsorEmail}}</p>
+        <p>{{data.sponsorName}}</p>
+        <p>{{data.sponsorEmail}}</p>
         {{#if (unlocked paidByMe addedByMe)}}
-        <p>{{this.sponsorMob}}</p>
-        <p>{{this.sponsorAddress}}</p>
+        <p>{{data.sponsorMob}}</p>
+        <p>{{data.sponsorAddress}}</p>
         {{/if}}
         <h6>Added On</h6>
-        <p>{{getTimeFromId this._id}}</p>
+        <p>{{getTimeFromId data._id}}</p>
+        <h6>iNet Banking Details</h6>
+        <p>Title: {{data.sponsorName}}</p>
+        <p>Bank: {{data.sponsorAccountBank}}</p>
+        <p>Account No: {{data.sponsorAccountNo}}</p>
+        <h6>Other Services</h6>
+        <p>Jazz Cash: 12341323213</p>
+        <p>Easy Paisa: 12341323213</p>
+        <h6>or</h6>
         <button class="donate-btn" type="button" name="button">Donate through Credit Card</button>
-        <button class="donate-btn" type="button" name="button">Donate using iNet Banking</button>
-        <button class="donate-btn" type="button" name="button">Donate using Jazz Cash / Easy Paisa</button>
       </div>
     </div>
 
