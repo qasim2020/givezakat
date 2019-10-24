@@ -79,10 +79,15 @@ $(document).on('click','.card-browser',function(e){
 })
 
 $(document).on('click','.card',function(e) {
+  // {{#if token}}
+  // {{else}}
+  // window.location.assign(`/home/?token=${token}`);
+  // {{/if}}
   if ($(e.target).closest('.card-specialNote').length || $(e.target).closest('.card-browser').length || e.target.nodeName == 'IMG' || e.target.nodeName == 'BUTTON' || $(e.target).closest('.check-box').hasClass('check-box')) return;
-  $('.place-2 > svg').removeClass('active');
-  $('.card').not(this).find('.card-hover').removeClass('card-active').addClass('card-inactive');
-  $(this).find('.card-hover').toggleClass('card-active card-inactive');
+  window.location.assign(`/donate/${$(this).attr('id')}`);
+  // $('.place-2 > svg').removeClass('active');
+  // $('.card').not(this).find('.card-hover').removeClass('card-active').addClass('card-inactive');
+  // $(this).find('.card-hover').toggleClass('card-active card-inactive');
 })
 
 function opennav() {

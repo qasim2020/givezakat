@@ -19,12 +19,13 @@ body {
   }
 
   .logo-area {
-    margin-left: 1rem;
-    margin-top: 0.7rem;
+    max-width: 1080px;
+    margin: auto;
+    padding: 0.7rem 1rem;
     display: flex;
     color: white;
-    display: inline-flex;
-    align-items: center;
+    display: flex;
+    justify-content: space-between;
     opacity: 0.6;
     border-bottom: 1px solid transparent;
     cursor: pointer;
@@ -32,7 +33,7 @@ body {
 
   .logo-area:hover {
     // background: lightgreen;
-    border-bottom: 1px solid white;
+    // border-bottom: 1px solid white;
     opacity: 1;
   }
 
@@ -59,8 +60,12 @@ body {
     width: 332px;
     padding: 1rem;
     box-sizing: border-box;
-    background: white;
+    // background: white;
     box-shadow: 0px 0px 17px black;
+  }
+
+  .card:not(.card-selected) {
+    background: white;
   }
 
   .card-browser, .card-specialNote {
@@ -95,21 +100,23 @@ body {
 
   .donate-btn {
     padding: 11px 8px;
-    background: white;
-    color: darkcyan;
+    background: #173526;
+    color: white;
     display: block;
     margin: 17px 0px;
-    border: 1px solid white;
+    border: 1px solid black;
     border-radius: 2px;
     font-size: 15px;
     font-weight: bold;
     box-shadow: 0px 0px 5px black;
+    width: fit-content;
+    transition: background 0.15s ease-in-out, color 0.25s ease-in-out;
   }
 
   .donate-btn:hover, .donate-btn:active, .donate-btn:focus {
-    background: greenyellow;
-    border: 1px solid black;
-    color: black;
+    background: #C0C1C5;
+    border: 1px solid #C0C1C5;
+    color: #173526;
     cursor: pointer;
     outline: none;
   }

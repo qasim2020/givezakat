@@ -129,12 +129,12 @@
             <a class="nav-item my-1 text-light" href="/profile/{{token}}">{{name}}</a>
             <a class="nav-item my-1 text-light" href="/logout/{{token}}" >Sign out</a>
             <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
-            <a class="nav-item my-1 text-light" href="/addpeople/?token={{token}}">Add people</a>
+            <a class="nav-item my-1 text-light" href="/addpeople/?token={{token}}">Ask 4 Donation</a>
             {{else}}
             <a class="nav-item my-1 text-light" href="/signin/home">Sign in</a>
             <a class="nav-item my-1 text-light" href="#explore">Explore</a>
             <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
-            <a class="nav-item my-1 text-light" href="/signin/addpeople">Add people</a>
+            <a class="nav-item my-1 text-light" href="/signin/addpeople">Ask 4 Donation</a>
             {{/if}}
           </div>
           <p class="text-brand text-light">Zakat Lists</p>
@@ -154,13 +154,13 @@
         <a class="nav-item my-point5 text-light" href="/profile/{{token}}">{{name}}</a>
         <a class="nav-item my-point5 text-light" href="/logout/{{token}}">Sign out</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
-        <a class="nav-item my-point5 text-light" href="/addpeople/?token={{token}}">Add people</a>
+        <a class="nav-item my-point5 text-light" href="/addpeople/?token={{token}}">Ask 4 Donation</a>
         <a href="/due/?token={{token}}" class="nav-item my-point5 text-light">Due</a>
         {{else}}
         <a class="nav-item my-point5 text-light" href="/signin/home">Sign in</a>
         <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
-        <a class="nav-item my-point5 text-light" href="/signin/addpeople">Add people</a>
+        <a class="nav-item my-point5 text-light" href="/signin/addpeople">Ask 4 Donation</a>
         <a href="/signin/due" class="nav-item my-point5 text-light">Due</a>
         {{/if}}
         <span class="due-circle" style="margin-top: -37px;margin-right: -60px;">{{length due}}</span>
@@ -180,13 +180,13 @@
           <a class="text-light px-point5 align-self-center" href="/profile/{{token}}">{{name}}</a>
           <a class="text-light px-point5 align-self-center" href="/logout/{{token}}" >Sign out</a>
           <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
-          <a class="text-light px-point5 align-self-center" href="/addpeople/?token={{token}}">Add people</a>
+          <a class="text-light px-point5 align-self-center" href="/addpeople/?token={{token}}">Ask 4 Donation</a>
           <a href="/due/?token={{token}}" class="text-light px-point5 align-self-center {{length due}}">Due</a>
           {{else}}
           <a class="text-light px-point5 align-self-center" href="/signin/home">Sign in</a>
           <a class="text-light px-point5 align-self-center" href="#explore">Explore</a>
           <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
-          <a class="text-light px-point5 align-self-center" href="/signin/addpeople">Add people</a>
+          <a class="text-light px-point5 align-self-center" href="/signin/addpeople">Ask 4 Donation</a>
           <a href="/signin/due" class="text-light px-point5 align-self-center {{length due}}">Due</a>
           {{/if}}
           <span class="due-circle">{{length due}}</span>
@@ -408,7 +408,7 @@
           <div class="footer-btns d-flex flex-grow-1 flex-grow-md-0">
             <a href="/signin">Sign in</a>
             <a href="/zakatcalc">Calculate</a>
-            <a href="/addpeople">Add People</a>
+            <a href="/addpeople">Ask 4 Donation</a>
             <a id="mailto" class="d-md-block d-none" href="mailto:contact@zakatlists.com">Contact</a>
           </div>
       </div>
