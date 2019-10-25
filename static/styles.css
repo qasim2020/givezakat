@@ -968,6 +968,20 @@
         color: white;
       }
 
+      .btn-danger {
+        font-weight: bold;
+        border: 1px solid indianred;
+        color: white;
+        background: indianred;
+        cursor: pointer;
+      }
+
+      .btn-danger:hover {
+        background: indianred;
+        border: 1px solid indianred;
+        color: lightskyblue;
+      }
+
       .subscription  input, .subscription  input::placeholder {
         width: 100%;
         font-size: 18px;

@@ -58,7 +58,7 @@
       </div>
       <p>Occupation</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
-        <input class="form-control flex-grow-1" type="text" name="mob" id="occupation" value="{{data.occupation}}" placeholder="labour at some factory">
+        <input class="form-control flex-grow-1" type="text" name="occupation" id="occupation" value="{{data.occupation}}" placeholder="labour at some factory">
       </div>
       <p>Earning per month - {{currency}}</p>
       <div class="d-flex justify-content-start border my-point5 flex-grow-1">
@@ -77,8 +77,9 @@
         <textarea wrap="" rows="4" class="form-control flex-grow-1" type="text" id="story" name="story" placeholder="Precise trouble this person is facing.">{{data.story}}</textarea>
       </div>
       <div class="">
-        <button id="click-submit" class="btn btn-primary" type="button" name="button">Update</button>
-        <button class="btn btn-secondary" type="button" name="button">Cancel</button>
+        <button id="click-submit" class="btn btn-primary" type="button" name="button" onclick="">Save</button>
+        <button class="btn btn-danger" type="button" name="button" onclick="window.location.href = '/'">Cancel</button>
+        <button id="after-saved" class="d-none btn btn-secondary" type="button" name="button" onclick="window.location.href = '/donate/{{data._id}}'">Check Details</button>
       </div>
       <div class="success d-none"></div>
       <div class="error d-none"></div>
@@ -122,11 +123,13 @@
           }
         }).done((res) => {
           console.log(res);
+          $('#after-saved').removeClass('d-none');
           if (res.n == 0) return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('Did not find this person in database.');
           if (res.nModified == 0) return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('No changes added by you.');
           return $(this).closest('div').nextAll('.success:first').removeClass('d-none').html('Succesfully updated this person.');
 
         }).fail((e) => {
+          $('#after-saved').addClass('d-none');
           console.log('error here', e);
           let errors = { story: e.responseText };
           $("#person-form").validate().showErrors(errors);

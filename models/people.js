@@ -11,6 +11,9 @@ var PeopleSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  occupation: {
+    type: String
+  },
   salary: {
     type: String,
   },
