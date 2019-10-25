@@ -1578,7 +1578,6 @@ app.post('/signing',(req,res) => {
 app.get('/donate/:id',(req,res,next) => {
   req.match = {_id: mongoose.Types.ObjectId(req.params.id)};
   getBasicData(req).then(person => {
-    console.log(person[0].people[0]);
     if (!person) return Promise.reject('Sorry. The link has been resolved. Redirecting you to home page.')
     if (!req.session.due) req.session.due = req.params.id;
     else req.session.due.push(req.params.id);
