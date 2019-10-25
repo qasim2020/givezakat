@@ -115,7 +115,12 @@
     <div class="d-flex align-items-end flex-col">
       <a class="text-blue view-details" type="button" name="button">View Details</a>
       <a class="text-blue select-to-pay" type="button" name="button">Select to Pay Zakat</a>
+      {{#if token}}
       <a href="/updateperson/?token={{token}}&id={{this._id}}" class="text-blue" type="button" name="button">Edit</a>
+      {{else}}
+      <a href="/signin/updateperson/?token=${token}&id={{this._id}}" class="text-blue" type="button" name="button">Edit</a>
+      {{/if}}
+
       <a class="text-blue" type="button" name="button" onclick="deleteMe(this,'{{this._id}}')" >Delete</a>
     </div>
   </div>

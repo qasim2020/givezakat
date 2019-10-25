@@ -736,12 +736,13 @@ app.get('/zakatcalc',(req,res) => {
 });
 
 app.get('/signin/:call',(req,res) => {
-  console.log(req.params.call);
+  console.log(req.params.call, req.query);
   let options = {};
   if (req.params.call != 'home') {
     options = {
       signin: 'active',
       call: `${req.params.call}`,
+      query: `${req.query.id}`,
       due: req.session.due && req.session.due.length,
     };
   } else {

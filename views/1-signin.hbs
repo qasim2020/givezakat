@@ -77,7 +77,7 @@
         }).done((token) => {
           console.log('successful login: ', token);
           {{#if call}}
-          window.location.assign(`/{{call}}/?token=${token}`);
+          window.location.assign(`/{{call}}/?token=${token}&id={{query}}`);
           {{else}}
           window.location.assign(`/home/?token=${token}`);
           {{/if}}
@@ -172,9 +172,9 @@
         }
       }).done((token) => {
         // return console.log('successful: ', token);
-        console.log({token: token, call: '{{call}}'});
+        // return console.log(`/{{call}}/?token=${token}&id={{query}}`);
         {{#if call}}
-        window.location.assign(`/{{call}}/?token=${token}`);
+        window.location.assign(`/{{call}}/?token=${token}&id={{query}}`);
         {{else}}
         window.location.assign(`/home/?token=${token}`);
         {{/if}}
