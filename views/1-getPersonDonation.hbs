@@ -64,26 +64,26 @@
         <p style="">{{data.story}}</p>
         <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->
         <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->
-        <h6>Requested By</h6>
+        <h6>My Details</h6>
         <p>{{data.sponsorName}}</p>
         <p>{{data.sponsorEmail}}</p>
-        {{#if (unlocked paidByMe addedByMe)}}
         <p>{{data.sponsorMob}}</p>
+        {{#if (unlocked paidByMe addedByMe)}}
         <p>{{data.sponsorAddress}}</p>
         {{/if}}
-        <h6>Flagged on</h6>
-        <p>{{getTimeFromId data._id}}</p>
         <h6>iNet Banking Details</h6>
         <p>Title: {{data.sponsorName}}</p>
         <p>Bank: {{data.sponsorAccountBank}}</p>
         <p>Account No: {{data.sponsorAccountNo}}</p>
-        {{#if data.otherMeans}}
+        {{#if data.sponsorOtherMeans}}
         <h6>Other Means of cash delivery</h6>
         <p>Jazz Cash: </p>
         <p>Easy Paisa: 12341323213</p>
         {{/if}}
         <h6>or</h6>
         <a class="donate-btn" type="button" name="button" href="/signin/due">Donate through Credit Card</a>
+        <h6>Added at</h6>
+        <p>{{getTimeFromId data._id}}</p>
       </div>
     </div>
 

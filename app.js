@@ -164,6 +164,9 @@ let getBasicData = function (req) {
               sponsorEmail:{$arrayElemAt: ["$users.email",0]},
               sponsorMob: {$arrayElemAt: ["$users.mob",0]},
               sponsorAddress: {$arrayElemAt: ["$users.sponsorAddress",0]},
+              sponsorAccountBank: {$arrayElemAt: ["$users.sponsorAccountBank",0]},
+              sponsorAccountNo: {$arrayElemAt: ["$users.sponsorAccountNo",0]},
+              sponsorOtherMeans: {$arrayElemAt: ["$users.sponsorOtherMeans",0]}
           }},
           { $project: {
             users: 0
@@ -1575,7 +1578,7 @@ app.post('/signing',(req,res) => {
 app.get('/donate/:id',(req,res,next) => {
   req.match = {_id: mongoose.Types.ObjectId(req.params.id)};
   getBasicData(req).then(person => {
-    console.log(person);
+    console.log(person[0].people[0]);
     if (!person) return Promise.reject('Sorry. The link has been resolved. Redirecting you to home page.')
     if (!req.session.due) req.session.due = req.params.id;
     else req.session.due.push(req.params.id);
