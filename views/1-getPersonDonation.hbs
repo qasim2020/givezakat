@@ -91,7 +91,11 @@
         <p>Easy Paisa: 12341323213</p>
         {{/if}}
         <h6>or</h6>
+        {{#if token}}
+        <a class="donate-btn" type="button" name="button" href="/due/?token={{token}}">Donate through Credit Card</a>
+        {{else}}
         <a class="donate-btn" type="button" name="button" href="/signin/due">Donate through Credit Card</a>
+        {{/if}}
         <h6>Added at</h6>
         <p>{{getTimeFromId data._id}}</p>
       </div>

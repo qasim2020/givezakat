@@ -1579,12 +1579,13 @@ app.get('/donate/:id',(req,res,next) => {
   req.match = {_id: mongoose.Types.ObjectId(req.params.id)};
   getBasicData(req).then(person => {
     if (!person) return Promise.reject('Sorry. The link has been resolved. Redirecting you to home page.')
-    if (!req.session.due) req.session.due = req.params.id;
+    if (!req.session.due) req.session.due = [req.params.id];
     else req.session.due.push(req.params.id);
-    return res.status(200).render('1-getPersonDonation',{
+    return res.status(200).set('Test',req.session.due).render('1-getPersonDonation',{
       data: person[0].people[0],
       due: req.session.due,
       exchangeRate: person[0].exchangeRate,
+      token: req.session.token
     });
   }).catch(e => res.status(400).render( '1-redirect.hbs' , {
     timer: 10,
