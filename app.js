@@ -1626,6 +1626,10 @@ app.get('/quranDaily', (req,res) => {
   // })
 })
 
+app.get('/blogpost', (req,res) => {
+  res.render('1-blogpost.hbs',{});
+})
+
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
 
