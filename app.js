@@ -1597,33 +1597,33 @@ app.get('/donate/:id',(req,res,next) => {
 })
 
 app.get('/quranDaily', (req,res) => {
-  readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
-    let sorted = rows.map((val) =>
-      val.reduce((total,inner,index) => {
-
-        if (inner) Object.assign(total,{
-          [rows[0][index]]: inner
-        })
-        return total;
-      },{})
-    ).filter((val,index) => index != 0);
-
-    sorted = sorted.map(val => {
-      val.Content = val.Content.split('\r\n').map(val => {
-        return {
-          type: val.split(': ')[0],
-          msg: val.split(': ')[1]
-        }
-      });
-      return val;
-    })
-
-    console.log(JSON.stringify(sorted, 0, 2));
+  // readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+  //   let sorted = rows.map((val) =>
+  //     val.reduce((total,inner,index) => {
+  //
+  //       if (inner) Object.assign(total,{
+  //         [rows[0][index]]: inner
+  //       })
+  //       return total;
+  //     },{})
+  //   ).filter((val,index) => index != 0);
+  //
+  //   sorted = sorted.map(val => {
+  //     val.Content = val.Content.split('\r\n').map(val => {
+  //       return {
+  //         type: val.split(': ')[0],
+  //         msg: val.split(': ')[1]
+  //       }
+  //     });
+  //     return val;
+  //   })
+  //
+  //   console.log(JSON.stringify(sorted, 0, 2));
 
     res.status(200).render('1-quranDaily.hbs', {
-      data: sorted[0],
+      // data: sorted[0],
     });
-  })
+  // })
 })
 
 app.get('/:username',(req,res, next) => {
