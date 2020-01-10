@@ -1627,7 +1627,38 @@ app.get('/quranDaily', (req,res) => {
 })
 
 app.get('/blogpost', (req,res) => {
-  res.render('1-blogpost.hbs',{});
+  console.log(req.query.serialNo);
+  readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
+
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0 && val.Ser == req.query.serialNo);
+
+    sorted = sorted.map(val => {
+      if (!val.Content) return;
+      val.Content = val.Content.split('\r\n').map(val => {
+        console.log(val);
+        return {
+          type: val.split(':')[0].trim(),
+          msg: val.split(':')[1].trim()
+        }
+      });
+      return val;
+    })
+
+    console.log(JSON.stringify(sorted, 0, 2));
+    res.render('1-blogpost.hbs',{data: sorted[0]});
+  })
+})
+
+hbs.registerHelper('match', function(val1,val2) {
+  console.log(val1,val2);
+  return val1 == val2 ? true : false;
 })
 
 app.get('/:username',(req,res, next) => {

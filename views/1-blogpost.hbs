@@ -99,6 +99,19 @@
         /* Gray 2 */
         color: #4F4F4F;
       }
+
+      p {
+
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 22px;
+        line-height: 184.9%;
+        /* display: flex; */
+        align-items: center;
+        color: #696969;
+
+      }
     </style>
   </head>
   <body>
@@ -111,9 +124,19 @@
     </nav>
 
     <section id="blog">
-      <p class="date">1 Jan 2020</p>
-      <h1>What I grasped from Surah Fatiha?</h1>
-      <p class="note">I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran.</p>
+      <p class="date">{{data.Date}}</p>
+      {{#each data.Content}}
+      {{#if (match 'h1' type)}}
+      <h1>{{{msg}}}</h1>
+      {{/if}}
+      {{#if (match 'p' type)}}
+      <p>{{{msg}}}</p>
+      {{/if}}
+      {{#if (match 'h3' type)}}
+      <h3>{{{msg}}}</h3>
+      {{/if}}
+
+      <!-- <p class="note">I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran.</p>
       <p class="quote">
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M49.9993 141.667H74.9993L91.666 108.333V58.3333H41.666V108.333H66.666L49.9993 141.667ZM116.666 141.667H141.666L158.333 108.333V58.3333H108.333V108.333H133.333L116.666 141.667Z" fill="#F2F2F2"/>
@@ -121,7 +144,8 @@
 
         “If anyone observes prayer in which he does not recite Umm al-Qur'an, it is deficient [he said this three times] and not complete.” <br> - Sahih Muslim 4:773
       </p>
-      <h3>Ok lets start...</h3>
+      <h3>Ok lets start...</h3> -->
+      {{/each}}
 
     </section>
   </body>
