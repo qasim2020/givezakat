@@ -2,7 +2,27 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <title>{{data.Ayats}}</title>
+
+    <meta name="title" content="{{data.Ayats}}">
+    <meta name="description" content="{{data.Content.0.msg}}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://zakatlists.com/blogpost?serialNo={{data.Ser}}">
+    <meta property="og:title" content="{{data.Ayats}}">
+    <meta property="og:description" content="{{data.Content.0.msg}}">
+    <meta property="og:image" content="https://zakatlists.com/quranDailyImages/{{data.Ser}}.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://zakatlists.com/blogpost?serialNo={{data.Ser}}">
+    <meta property="twitter:title" content="{{data.Ayats}}">
+    <meta property="twitter:description" content="{{data.Content.0.msg}}">
+    <meta property="twitter:image" content="https://zakatlists.com/quranDailyImages/{{data.Ser}}.png">
+
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:300,400,400i,700,900&display=swap" rel="stylesheet">
     <style media="screen" type="text/css">
       body > * {
@@ -112,18 +132,62 @@
         color: #696969;
 
       }
+
+      @media (max-width: 799px) {
+        h1 {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 45px;
+          line-height: 123%;
+          display: flex;
+          align-items: center;
+          color: #4F4F4F;
+        }
+
+        h3 {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: bold;
+          font-size: 22px;
+          line-height: 157.9%;
+          display: flex;
+          align-items: center;
+          color: #4F4F4F;
+        }
+
+        p {
+          font-family: Roboto;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 18px;
+          line-height: 184.9%;
+          /* display: flex; */
+          align-items: center;
+          color: #696969;
+        }
+
+        nav {
+          margin-left: 0px;
+        }
+
+        nav > p {
+          padding-left: 0px;
+        }
+      }
     </style>
   </head>
   <body>
     <nav>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#333333"/>
-      </svg>
+      </svg> -->
 
       <p>Quran Daily</p>
     </nav>
 
     <section id="blog">
+      <p class="date">Day {{data.Ser}}, {{data.Ayats}}</p>
       <p class="date">{{data.Date}}</p>
       {{#each data.Content}}
       {{#if (match 'h1' type)}}

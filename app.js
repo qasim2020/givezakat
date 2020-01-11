@@ -1644,8 +1644,8 @@ app.get('/blogpost', (req,res) => {
       val.Content = val.Content.split('\r\n').map(val => {
         console.log(val);
         return {
-          type: val.split(':')[0].trim(),
-          msg: val.split(':')[1].trim()
+          type: val.split(': ')[0].trim(),
+          msg: val.split(': ')[1].trim()
         }
       });
       return val;
