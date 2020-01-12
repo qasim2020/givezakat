@@ -23,7 +23,7 @@
     <meta property="twitter:description" content="{{data.Content.0.msg}}">
     <meta property="twitter:image" content="https://www.zakatlists.com/quranDailyImages/{{data.Ser}}.png">
 
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:300,400,400i,700,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:100,300i,400,400i,700,900&display=swap" rel="stylesheet">
     <style media="screen" type="text/css">
       body > * {
         max-width: 900px;
@@ -61,16 +61,9 @@
 
       .date {
         font-family: Roboto;
-        font-style: normal;
-        font-weight: bold;
+        font-weight: 400;
         font-size: 18px;
-        line-height: 157.9%;
-        /* or 28px */
-        display: flex;
-        align-items: center;
-
-        /* Gray 2 */
-        color: #4F4F4F;
+        color: #828282;
       }
 
       h1 {
@@ -85,32 +78,31 @@
 
         /* Gray 2 */
         color: #4F4F4F;
+        margin: 0px;
       }
 
       .note {
         font-family: Roboto;
         font-style: italic;
-        font-weight: normal;
-        font-size: 26px;
-        line-height: 157.9%;
-        /* or 41px */
-        display: flex;
-        align-items: center;
-
-        /* Gray 3 */
+        font-weight: 300;
+        font-size: 22px;
         color: #828282;
       }
 
       .quote {
+        position: relative;
         font-family: Roboto;
         font-style: normal;
-        font-weight: normal;
-        font-size: 26px;
-        line-height: 157.9%;
-        /* or 41px */
-        display: flex;
-        align-items: center;
-        color: #787878;
+        font-weight: bold;
+        font-size: 22px;
+        color: #828282;
+      }
+
+      .quote > svg {
+        position: absolute;
+        z-index: -10;
+        top: -71px;
+        left: -67px;
       }
 
       h3 {
@@ -136,8 +128,31 @@
         line-height: 184.9%;
         /* display: flex; */
         align-items: center;
-        color: #696969;
+        color: #828282;
 
+      }
+
+      a {
+        text-decoration: none;
+        color: black;
+      }
+
+      .tags > span {
+        background: #4f4f4f;
+        font-size: 14px;
+        color: #e6e6e6;
+        padding: 3px 5px;
+        white-space: nowrap;
+      }
+
+      .font-normal {
+        font-weight: normal;
+      }
+
+
+      .b-left {
+        padding-left: 28px;
+        border-left: 10px solid lightgrey;
       }
 
       @media (max-width: 799px) {
@@ -171,15 +186,25 @@
           line-height: 184.9%;
           /* display: flex; */
           align-items: center;
-          color: #696969;
+          color: #828282;
         }
 
-        nav {
+        .note, .quote {
+          font-size: 18px;
+        }
+
+        .logo-area {
           margin-left: 0px;
+          padding: 0px;
         }
 
-        nav > p {
-          padding-left: 0px;
+        .logo-area > p {
+          padding-left: 10px;
+        }
+
+        .b-left {
+          padding-left: 10px;
+          border-left: 5px solid lightgrey;
         }
       }
     </style>
@@ -194,28 +219,32 @@
     </div>
 
     <section id="blog">
-      <p class="date">Day {{data.Ser}}, {{data.Ayats}}</p>
-      <p class="date">{{data.Date}}</p>
+      <p class="date">Day {{data.Ser}}, {{data.Ayats}} <br> {{data.Date}}</p>
       {{#each data.Content}}
       {{#if (match 'h1' type)}}
-      <h1>{{{msg}}}</h1>
+      <h1 class="{{{class}}}">{{{msg}}}</h1>
+      <p class="tags">
+      {{#each ../tags}}
+        <span>{{this}}</span>
+      {{/each}}
+      </p>
       {{/if}}
       {{#if (match 'p' type)}}
-      <p>{{{msg}}}</p>
+      <p class="{{{class}}}">
+        {{{msg}}}
+      </p>
       {{/if}}
       {{#if (match 'h3' type)}}
-      <h3>{{{msg}}}</h3>
+      <h3 class="{{{class}}}">{{{msg}}}</h3>
       {{/if}}
-
-      <!-- <p class="note">I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran.</p>
-      <p class="quote">
+      {{#if (match 'quote' type)}}
+      <p class="quote {{{class}}}">
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M49.9993 141.667H74.9993L91.666 108.333V58.3333H41.666V108.333H66.666L49.9993 141.667ZM116.666 141.667H141.666L158.333 108.333V58.3333H108.333V108.333H133.333L116.666 141.667Z" fill="#F2F2F2"/>
         </svg>
-
-        “If anyone observes prayer in which he does not recite Umm al-Qur'an, it is deficient [he said this three times] and not complete.” <br> - Sahih Muslim 4:773
+        {{{msg}}}
       </p>
-      <h3>Ok lets start...</h3> -->
+      {{/if}}
       {{/each}}
 
     </section>

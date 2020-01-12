@@ -1612,17 +1612,18 @@ app.get('/quranDaily', (req,res) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val);
+        console.log(val, val.split(': ')[0].indexOf('.'));
         return {
-          type: val.split(': ')[0],
-          msg: val.split(': ')[1].trim()
+          type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+          msg: val.split(': ')[1].trim(),
+          class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[1] : ''
         }
       });
       return val;
     })
     let days = [];
     for (var i = 1; i <= sorted.length; i++) {
-      console.log(sorted[0]);
+      // console.log(sorted[0]);
       days.push({
         index: i,
         data: sorted[i-1] != undefined ? 'active' : 'inactive'
@@ -1631,7 +1632,7 @@ app.get('/quranDaily', (req,res) => {
 
     console.log(sorted);
 
-    res.status(200).render('1-quranDaily.hbs', {
+    res.status(200).render('1-qurandaily.hbs', {
       data: sorted,
       days
     });
@@ -1639,7 +1640,6 @@ app.get('/quranDaily', (req,res) => {
 })
 
 app.get('/blogpost', (req,res) => {
-  console.log(req.query.serialNo);
   readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
     let sorted = rows.map((val) =>
       val.reduce((total,inner,index) => {
@@ -1656,15 +1656,20 @@ app.get('/blogpost', (req,res) => {
       val.Content = val.Content.split('\r\n').map(val => {
         console.log(val);
         return {
-          type: val.split(': ')[0].trim(),
-          msg: val.split(': ')[1].trim()
+          type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+          msg: val.split(': ')[1].trim(),
+          class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.').slice(1,4).join(' ') : ''
         }
       });
+      val.Date = val.Date.toString().split(' ').slice(1,4).join('-')
       return val;
     })
 
     console.log(JSON.stringify(sorted, 0, 2));
-    res.render('1-blogpost.hbs',{data: sorted[0]});
+    res.render('1-blogpost.hbs',{
+      data: sorted[0],
+      tags: sorted[0].Tags.split(',')
+    });
   })
 })
 
