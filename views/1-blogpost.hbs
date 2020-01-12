@@ -30,17 +30,26 @@
         margin: auto;
       }
 
-      nav {
+      .logo-area {
         display: flex;
+        height: 44px;
         align-items: center;
-        margin-left: 6rem;
+        padding: 0 20px;
+        cursor: pointer;
       }
 
-      nav > p {
+      .logo-area > p:hover {
+        color: black;
+      }
+
+      .logo-area > p {
+        padding-left: 10px;
+        /* Quran Daily */
+
         font-family: Montserrat;
         font-style: normal;
         font-weight: bold;
-        font-size: 20px;
+        font-size: 14px;
         line-height: 157.9%;
         /* identical to box height, or 32px */
         display: flex;
@@ -48,8 +57,6 @@
 
         /* Gray 2 */
         color: #4F4F4F;
-
-        padding-left: 10px;
       }
 
       .date {
@@ -178,13 +185,13 @@
     </style>
   </head>
   <body>
-    <nav>
-      <!-- <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#333333"/>
-      </svg> -->
+    <div class="logo-area" onclick="window.location.href = '/quranDaily'">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#4F4F4F"/>
+      </svg>
 
       <p>Quran Daily</p>
-    </nav>
+    </div>
 
     <section id="blog">
       <p class="date">Day {{data.Ser}}, {{data.Ayats}}</p>
