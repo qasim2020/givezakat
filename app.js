@@ -1674,8 +1674,8 @@ app.get('/blogpost', (req,res) => {
 })
 
 hbs.registerHelper('match', function(val1,val2) {
-  console.log(val1,val2);
-  return val1 == val2 ? true : false;
+  // console.log(val1,val2);
+  return val1.toUpperCase() == val2.toUpperCase() ? true : false;
 })
 
 app.get('/:username',(req,res, next) => {

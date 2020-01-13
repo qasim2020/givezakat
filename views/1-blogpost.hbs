@@ -155,6 +155,15 @@
         border-left: 10px solid lightgrey;
       }
 
+      img {
+        max-width: 100%;
+        /* text-align: center; */
+        margin: auto;
+        /* left: 50%; */
+        border: 1px solid lavender;
+        display: block;
+      }
+
       @media (max-width: 799px) {
         h1 {
           font-family: Roboto;
@@ -244,6 +253,9 @@
         </svg>
         {{{msg}}}
       </p>
+      {{/if}}
+      {{#if (match 'img' type)}}
+        <img src="/quranDailyImages/{{msg}}" alt="">
       {{/if}}
       {{/each}}
 
