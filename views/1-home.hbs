@@ -4,30 +4,32 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     {{>googleAnalytics}}
 
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Primary Meta Tags -->
-    <title>Zakat Lists - Give, Calculate, Manage and Sponsor Zakats</title>
-    <meta name="title" content="Zakat Lists - Give, Calculate, Manage and Sponsor Zakats">
-    <meta name="description" content="Zakatlists is a platform that lets you raise money for people around you. Just enter the person's details through an easy to use interface and send link to your friends and relatives. You receive payments in your Bank Account.">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://www.zakatlists.com/">
-    <meta property="twitter:title" content="Zakat Lists - Give, Calculate, Manage and Sponsor Zakats">
-    <meta property="twitter:description" content="Zakatlists is a platform that lets you raise money for people around you. Just enter the person's details through an easy to use interface and send link to your friends and relatives. You receive payments in your Bank Account.">
-    <meta property="twitter:image" content="https://www.zakatlists.com/meta-img.png">
-    <meta property="twitter:image:alt" content="A well designed effort to help muslims across the globe.">
-    <meta property="twitter:site" content="@zakatlists">
-    <meta property="twitter:creator" content="@punch__lines">
-    <!-- Open Graph / Facebook -->
+    <!-- HTML Meta Tags -->
+    <title>Zakat Lists - Give, Calculate, Manage and Sponsor Zakats</title>
+    <meta name="description" content="Zakat lists is a platform that lets you raise money for people in need of help around you. ">
+
+    <!-- Google / Search Engine Tags -->
+    <meta itemprop="name" content="Zakat Lists - Give, Calculate, Manage and Sponsor Zakats">
+    <meta itemprop="description" content="Zakat lists is a platform that lets you raise money for people in need of help around you. ">
+    <meta itemprop="image" content="https://www.zakatlists.com/meta-img.png">
+
+    <!-- Facebook Meta Tags -->
+    <meta property="og:url" content="https://www.zakatlists.com">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://www.zakatlists.com/">
     <meta property="og:title" content="Zakat Lists - Give, Calculate, Manage and Sponsor Zakats">
-    <meta property="og:description" content="Zakatlists is a platform that lets you raise money for people around you. Just enter the person's details through an easy to use interface and send link to your friends and relatives. You receive payments in your Bank Account.">
+    <meta property="og:description" content="Zakat lists is a platform that lets you raise money for people in need of help around you. ">
     <meta property="og:image" content="https://www.zakatlists.com/meta-img.png">
 
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Zakat Lists - Give, Calculate, Manage and Sponsor Zakats">
+    <meta name="twitter:description" content="Zakat lists is a platform that lets you raise money for people in need of help around you. ">
+    <meta name="twitter:image" content="https://www.zakatlists.com/meta-img.png">
+
+    <!-- Meta Tags Generated via http://heymeta.com -->
 
     <link rel=icon href=/favicon.png>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
@@ -74,7 +76,6 @@
       }
     </style>
 
-    <title>Zakat Lists</title>
   </head>
   <body>
 
@@ -119,7 +120,7 @@
         </div>
         <div class="item-2">
           <img src="/quotes.svg" width="116.67px" alt="">
-          <p class="text-light">Raise money for your communities. Let us handle payments for you.
+          <p class="text-light">We raise funds for communities, causes and welfare projects.
             <!-- <br><br>- zakatlists -->
           </p>
         </div>
@@ -127,11 +128,13 @@
           <div class="d-md-flex d-none flex-col justify-content-start">
             {{#if token}}
             <a class="nav-item my-1 text-light" href="/profile/{{token}}">{{name}}</a>
-            <a class="nav-item my-1 text-light" href="/logout/{{token}}" >Sign out</a>
+            <a class="nav-item my-1 text-light" href="/quranDaily">Quran Daily</a>
             <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
             <a class="nav-item my-1 text-light" href="/addpeople/?token={{token}}">Ask 4 Donation</a>
+            <a class="nav-item my-1 text-light" href="/logout/{{token}}" >Sign out</a>
             {{else}}
             <a class="nav-item my-1 text-light" href="/signin/home">Sign in</a>
+            <a class="nav-item my-1 text-light" href="/quranDaily">Quran Daily</a>
             <a class="nav-item my-1 text-light" href="#explore">Explore</a>
             <a class="nav-item my-1 text-light" href="/zakatcalc">Calculate zakat</a>
             <a class="nav-item my-1 text-light" href="/signin/addpeople">Ask 4 Donation</a>
@@ -153,12 +156,14 @@
         {{#if token}}
         <a class="nav-item my-point5 text-light" href="/profile/{{token}}">{{name}}</a>
         <a class="nav-item my-point5 text-light" href="/logout/{{token}}">Sign out</a>
+        <a class="nav-item my-point5 text-light" href="/quranDaily">Quran Daily</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
         <a class="nav-item my-point5 text-light" href="/addpeople/?token={{token}}">Ask 4 Donation</a>
         <a href="/due/?token={{token}}" class="nav-item my-point5 text-light">Due</a>
         {{else}}
         <a class="nav-item my-point5 text-light" href="/signin/home">Sign in</a>
         <a class="nav-item my-point5 text-light" href="#explore">Explore</a>
+        <a class="nav-item my-point5 text-light" href="/quranDaily">Quran Daily</a>
         <a class="nav-item my-point5 text-light" href="/zakatcalc">Calculate zakat</a>
         <a class="nav-item my-point5 text-light" href="/signin/addpeople">Ask 4 Donation</a>
         <a href="/signin/due" class="nav-item my-point5 text-light">Due</a>
@@ -180,10 +185,12 @@
           <a class="text-light px-point5 align-self-center" href="/profile/{{token}}">{{name}}</a>
           <a class="text-light px-point5 align-self-center" href="/logout/{{token}}" >Sign out</a>
           <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
+          <a class="text-light px-point5 align-self-center" href="/quranDaily">Quran Daily</a>
           <a class="text-light px-point5 align-self-center" href="/addpeople/?token={{token}}">Ask 4 Donation</a>
           <a href="/due/?token={{token}}" class="text-light px-point5 align-self-center {{length due}}">Due</a>
           {{else}}
           <a class="text-light px-point5 align-self-center" href="/signin/home">Sign in</a>
+          <a class="text-light px-point5 align-self-center" href="/quranDaily">Quran Daily</a>
           <a class="text-light px-point5 align-self-center" href="#explore">Explore</a>
           <a class="text-light px-point5 align-self-center" href="/zakatcalc">Calculate zakat</a>
           <a class="text-light px-point5 align-self-center" href="/signin/addpeople">Ask 4 Donation</a>

@@ -375,3 +375,15 @@ describe('Sign In related tests', () => {
             .expect(200)
   });
 })
+
+describe('ask 4 donation tests', () => {
+    var donationSession = session(app);
+
+    test('Should access due page fine',async() => {
+      // console.log(process.env.test_call);
+      await zeroiseDB();
+      await donationSession.get('/donate/5d477e1b006cfdef99932bbe')
+      .expect((res) => expect(res.headers.test).toBe("5d477e1b006cfdef99932bbe"))
+      .expect(200)
+    })
+})

@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {{>googleAnalytics}}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel=icon href=/favicon.png>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700,900&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/styles.css">
+
+    <style media="screen">
+    /* font-family: 'Merriweather', serif; */
+    /* font-family: 'Playfair Display', serif; */
+    /* font-family: 'Roboto', sans-serif; */
+
+    .container {
+      /* margin-top: -200px; */
+    }
+
+    .container > h1 {
+      font-family: 'Merriweather', serif;
+    }
+
+    p {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .logo-area {
+      display: flex;
+      height: 44px;
+      align-items: center;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    .logo-area > p:hover {
+      color: black;
+    }
+
+    .logo-area > p {
+      padding-left: 10px;
+      /* Quran Daily */
+
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 157.9%;
+      /* identical to box height, or 32px */
+      display: flex;
+      align-items: center;
+
+      /* Gray 2 */
+      color: #4F4F4F;
+    }
+
+    .container {
+      padding: 0 20px;
+      display: flex;
+      /* min-height: 90vh; */
+    }
+
+    .left-part {
+      padding: 0 34px;
+    }
+
+    .left-part > * {
+      max-width: 258px;
+    }
+
+    .left-part > svg {
+      position: absolute;
+      z-index: -10;
+    }
+
+    .left-part > p:nth-child(2) {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 157.9%;
+      /* or 32px */
+      display: flex;
+      align-items: center;
+
+      /* Gray 2 */
+      color: #4F4F4F;
+      padding: 20px 0 40px 0;
+    }
+
+    .muted {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 20px;
+      line-height: 157.9%;
+      /* or 32px */
+      display: flex;
+      align-items: center;
+
+      /* Gray 3 */
+      color: #828282;
+
+    }
+
+    .right-part {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0 20px;
+      height: fit-content;
+
+      display: grid;
+      /* grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); */
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      grid-template-rows: repeat(auto,100px);
+    }
+
+    .right-part > span {
+      /* Gray 6 */
+      background: #F2F2F2;
+      /* Gray 5 */
+      border: 1px solid #E0E0E0;
+      height: 100px;
+
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 40px;
+      line-height: 157.9%;
+      /* or 63px */
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      /* Gray 4 */
+      color: #BDBDBD;
+
+
+    }
+
+    .right-part > span.active {
+
+      /* Green 1 */
+      background: #219653;
+      color: white;
+      /* Gray 5 */
+      border: 1px solid #E0E0E0;
+      cursor: pointer;
+    }
+
+    .right-part > span.active:hover {
+      background: green;
+    }
+
+    @media (max-width:799px) {
+      .container {
+        /* padding: 0 20px; */
+        display: block;
+        /* min-height: 90vh; */
+      }
+
+      .left-part {
+        padding: 0;
+        width: 100%;
+      }
+
+      .right-part {
+        padding: 0;
+        width: auto;
+
+      }
+
+      iframe {
+        display: none;
+      }
+    }
+
+
+
+    </style>
+
+    <title>Quran Daily @ zakatlists</title>
+
+  </head>
+  <body>
+    <div class="logo-area" onclick="window.location.href = '/'">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#4F4F4F"/>
+      </svg>
+
+      <p>Quran Daily</p>
+    </div>
+
+    <div class="container">
+      <div class="left-part">
+        <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M49.9993 141.667H74.9993L91.666 108.333V58.3333H41.666V108.333H66.666L49.9993 141.667ZM116.666 141.667H141.666L158.333 108.333V58.3333H108.333V108.333H133.333L116.666 141.667Z" fill="#F2F2F2"/>
+        </svg>
+
+        <p>This year I am committing to read Quran daily and write a post about the experience here.</p>
+        <iframe src="" width="" height="">Video lies here</iframe>
+        <p class="muted">This is a project by zakatlists.com where I have listed people who are in need of help. Contribute to build lives.</p>
+      </div>
+
+      <div class="right-part">
+        {{#each days}}
+          <span class="{{this.data}}">{{this.index}}</span>
+        {{/each}}
+      </div>
+    </div>
+
+    <div class="popover shadow"></div>
+
+
+
+    <script type="text/javascript" src="/javascript.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript">
+      $('span.active').on('click',function() {
+        console.log('hoell');
+        window.location.href = `/blogpost?serialNo=${$(this).html()}`
+      })
+    </script>
+  </body>
+</html>

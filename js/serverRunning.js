@@ -67,6 +67,7 @@ let checkCurrencyExists = function() {
 }
 
 let updateCurrencyRate = function(today) {
+  return today;
   return new Promise(function(resolve, reject) {
     axios.get(`http://data.fixer.io/api/latest?access_key=5fbf8634befbe136512317f6d897f822`).then((reply) => {
       let currency = new CurrencyRates({

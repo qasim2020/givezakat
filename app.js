@@ -1578,14 +1578,14 @@ app.post('/signing',(req,res) => {
 app.get('/donate/:id',(req,res,next) => {
   req.match = {_id: mongoose.Types.ObjectId(req.params.id)};
   getBasicData(req).then(person => {
-    console.log(person[0].people[0]);
     if (!person) return Promise.reject('Sorry. The link has been resolved. Redirecting you to home page.')
-    if (!req.session.due) req.session.due = req.params.id;
+    if (!req.session.due) req.session.due = [req.params.id];
     else req.session.due.push(req.params.id);
-    return res.status(200).render('1-getPersonDonation',{
+    return res.status(200).set('Test',req.session.due).render('1-getPersonDonation',{
       data: person[0].people[0],
       due: req.session.due,
       exchangeRate: person[0].exchangeRate,
+      token: req.session.token
     });
   }).catch(e => res.status(400).render( '1-redirect.hbs' , {
     timer: 10,
@@ -1594,6 +1594,88 @@ app.get('/donate/:id',(req,res,next) => {
   }))
 
 
+})
+
+app.get('/quranDaily', (req,res) => {
+
+  readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
+
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0);
+
+    sorted = sorted.map(val => {
+      if (!val.Content) return;
+      val.Content = val.Content.split('\r\n').map(val => {
+        console.log(val, val.split(': ')[0].indexOf('.'));
+        return {
+          type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+          msg: val.split(': ')[1].trim(),
+          class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[1] : ''
+        }
+      });
+      return val;
+    })
+    let days = [];
+    for (var i = 1; i <= sorted.length; i++) {
+      // console.log(sorted[0]);
+      days.push({
+        index: i,
+        data: sorted[i-1] != undefined ? 'active' : 'inactive'
+      })
+    };
+
+    console.log(sorted);
+
+    res.status(200).render('1-qurandaily.hbs', {
+      data: sorted,
+      days
+    });
+  })
+})
+
+app.get('/blogpost', (req,res) => {
+  readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
+
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0 && val.Ser == req.query.serialNo);
+
+    sorted = sorted.map(val => {
+      if (!val.Content) return;
+      val.Content = val.Content.split('\r\n').map(val => {
+        console.log(val);
+        return {
+          type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+          msg: val.split(': ')[1].trim(),
+          class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.').slice(1,4).join(' ') : ''
+        }
+      });
+      val.Date = val.Date.toString().split(' ').slice(1,4).join('-')
+      return val;
+    })
+
+    console.log(JSON.stringify(sorted, 0, 2));
+    res.render('1-blogpost.hbs',{
+      data: sorted[0],
+      tags: sorted[0].Tags.split(',')
+    });
+  })
+})
+
+hbs.registerHelper('match', function(val1,val2) {
+  // console.log(val1,val2);
+  return val1.toUpperCase() == val2.toUpperCase() ? true : false;
 })
 
 app.get('/:username',(req,res, next) => {
