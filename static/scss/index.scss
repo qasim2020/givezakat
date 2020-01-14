@@ -40,6 +40,7 @@ body {
   .content {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     margin-top: -13px;
   }
 
@@ -119,5 +120,29 @@ body {
     color: #173526;
     cursor: pointer;
     outline: none;
+  }
+}
+
+
+@media (max-width:1080px) {
+  .card-location {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    // width: 50vw;
+    height: 80vh;
+    // border-right: 1px dotted #C0C1C5;
+    box-sizing: border-box;
+  }
+
+  .card-description {
+    width: 100%;
+    padding: 60px 110px 60px 30px;
+    height: 95vh;
+    box-sizing: border-box;
+    color: white;
+    opacity: 0.9;
+    overflow: scroll;
   }
 }
