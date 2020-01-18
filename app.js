@@ -1678,6 +1678,13 @@ hbs.registerHelper('match', function(val1,val2) {
   return val1.toUpperCase() == val2.toUpperCase() ? true : false;
 })
 
+
+
+app.get('/ticket',(req,res) => {
+  res.status(200).render('raiseticket.hbs');
+})
+
+
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
 
