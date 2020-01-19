@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
-    
+
     {{>googleAnalytics}}
 
     <meta charset="utf-8">
@@ -236,8 +236,10 @@
     </div>
 
     <section id="blog">
+      
       <p class="date">Day {{data.Ser}}, {{data.Ayats}} <br> {{data.Date}}</p>
       {{#each data.Content}}
+
       {{#if (match 'h1' type)}}
       <h1 class="{{{class}}}">{{{msg}}}</h1>
       <p class="tags">
@@ -246,14 +248,17 @@
       {{/each}}
       </p>
       {{/if}}
+
       {{#if (match 'p' type)}}
       <p class="{{{class}}}">
         {{{msg}}}
       </p>
       {{/if}}
+
       {{#if (match 'h3' type)}}
       <h3 class="{{{class}}}">{{{msg}}}</h3>
       {{/if}}
+
       {{#if (match 'quote' type)}}
       <p class="quote {{{class}}}">
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -262,9 +267,11 @@
         {{{msg}}}
       </p>
       {{/if}}
+
       {{#if (match 'img' type)}}
         <img src="/quranDailyImages/{{msg}}" alt="">
       {{/if}}
+
       {{/each}}
 
     </section>
