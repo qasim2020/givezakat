@@ -172,6 +172,10 @@
         display: block;
       }
 
+      .width-half {
+        width: 50%;
+      }
+
       @media (max-width: 799px) {
         h1 {
           font-family: Roboto;
@@ -236,7 +240,7 @@
     </div>
 
     <section id="blog">
-      
+
       <p class="date">Day {{data.Ser}}, {{data.Ayats}} <br> {{data.Date}}</p>
       {{#each data.Content}}
 
@@ -269,7 +273,7 @@
       {{/if}}
 
       {{#if (match 'img' type)}}
-        <img src="/quranDailyImages/{{msg}}" alt="">
+        <img class="{{{class}}}" src="/quranDailyImages/{{msg}}" alt="">
       {{/if}}
 
       {{/each}}
