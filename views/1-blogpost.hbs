@@ -176,6 +176,17 @@
         width: 50%;
       }
 
+      h6 {
+        font-family: Roboto;
+        font-style: normal;
+        font-size: 22px;
+        line-height: 184.9%;
+        align-items: center;
+        color: #4f4f4f;
+        font-weight: bold;
+        margin-bottom: -19px;
+      }
+
       @media (max-width: 799px) {
         h1 {
           font-family: Roboto;
@@ -274,6 +285,10 @@
 
       {{#if (match 'img' type)}}
         <img class="{{{class}}}" src="/quranDailyImages/{{msg}}" alt="">
+      {{/if}}
+
+      {{#if (match 'h6' type)}}
+        <h6 class="{{{class}}}">{{{msg}}}</h6>
       {{/if}}
 
       {{/each}}
