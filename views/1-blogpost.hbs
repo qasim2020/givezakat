@@ -142,7 +142,8 @@
 
       a {
         text-decoration: none;
-        color: #009688;
+        color: black;
+        font-style: italic;
       }
 
       .tags > span {
@@ -180,6 +181,14 @@
         width: 50%;
       }
 
+      .width-m-half {
+        width: 50%;
+      }
+
+      .width-m-75 {
+        width: 75%;
+      }
+
       h6 {
         font-family: Roboto;
         font-style: normal;
@@ -193,6 +202,21 @@
 
       h6 > span, h6 > i {
         color: #828282;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      .caption {
+        font-family: Roboto;
+        font-weight: 300;
+        font-size: 17px;
+        color: #000000;
+      }
+
+      .caption > a {
+        font-style: normal;
       }
 
       @media (max-width: 799px) {
@@ -249,6 +273,10 @@
         .b-left {
           padding-left: 10px;
           border-left: 5px solid lightgrey;
+        }
+
+        .width-m-half, .width-m-75 {
+          width: 100%;
         }
       }
     </style>
