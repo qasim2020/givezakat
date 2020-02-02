@@ -633,7 +633,33 @@
       color: #4F4F4F;
     }
 
+    .modal {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      background: #26ae60;
+      border: 1px solid lavenderblush;
+      padding: 13px 18px;
+      color: white;
+    }
+
+    .modal > p {
+      line-height: 176%;
+    }
+
+    .modal > button {
+      background: whitesmoke;
+      padding: 8px 13px;
+      margin-top: 8px;
+    }
+
     @media (max-width: 700px) {
+
+      .modal {
+        width: 80%;
+        box-sizing: border-box;
+      }
 
       .logo-area {
         padding: 0 8px;
@@ -674,6 +700,7 @@
       .content {
         padding: 0 10px;
         width: 100%;
+        margin-top: -4rem;
       }
 
       .disc-block {
@@ -735,7 +762,7 @@
     <div class="container">
 
       <div class="sticky-nav">
-        <h2>Subjects</h2>
+        <h2>Courses</h2>
         <div class="subj-card {{sre}}" onClick="window.location = '/?pagerequest=sre';">
           <p>01</p>
           <p>Software Requirements Engineering</p>
@@ -1062,7 +1089,7 @@
             font-family: Roboto;
             font-style: normal;
             font-weight: 300;
-            font-size: 32px;
+            font-size: 29px;
             line-height: 157.9%;
             align-items: center;
             color: #828282;
@@ -1083,6 +1110,17 @@
 
           }
 
+          .intro > input {
+            display: block;
+            padding: 13px 13px;
+            background: #26ae602b;
+            border: 0px;
+            margin: 1rem 0;
+            font-size: 19px;
+            font-weight: 300;
+            width: 42%;
+          }
+
           .intro > button.primary {
             background: #27AE60;
             color: #F2F2F2;
@@ -1096,6 +1134,42 @@
           body {
             padding-bottom: 0px;
           }
+
+          @media (max-width:700px) {
+            .intro > input {
+              width: 100%;
+              box-sizing: border-box;
+            }
+
+            .intro > svg.first {
+              position: absolute;
+              z-index: -10;
+              left: -2rem;
+              top: 1rem;
+            }
+
+            .intro > h1 {
+              font-size: 44px;
+            }
+
+            .intro > p {
+              font-size: 22px;
+            }
+
+            .sticky-nav.mobile {
+              display: none;
+            }
+
+            svg.background {
+              opacity: 0.2;
+            }
+
+            .sticky-nav {
+              order: 1;
+              margin-top: 2rem;
+            }
+
+          }
         </style>
         <div class="intro">
           <svg class="first" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1104,8 +1178,10 @@
           <h1>Welcome to zakatlists school. </h1>
           <p>For now only students from <b>Abasyn university</b> can get benefit from it.</p>
           <p>Sign in to access course curriculum.</p>
-          <button class="secondary" type="button" name="button" onclick="window.location = '/signin/school';">Sign In</button>
-          <button class="primary" type="button" name="button" onclick="window.location = '/signup';">Sign Up for Rs 300 / Month</button>
+          <input type="email" name="" value="" placeholder="Your email address">
+          <input type="password" name="" value="" placeholder="Your password">
+          <button class="secondary" type="button" name="button">Sign In</button>
+          <button class="primary" type="button" name="button" onclick="$('.modal').removeClass('d-none')">Sign Up for Rs 300 / Month</button>
         </div>
         {{/unless}}
       </div>
@@ -1116,7 +1192,15 @@
         </div>
       </div>
 
-
+      <div class="modal d-none">
+        <p>Please deposit Rs 300 to following account and whatsapp me the deposit slip on my cell number listed below.</p>
+        <p><b>Amount</b>. Rs 300</p>
+        <p><b>Account Title</b>. Qasim Ali</p>
+        <p><b>Account No</b>. 00 47 0210109039‬</p>
+        <p><b>Bank</b>. Askari Bank Haider Road Rawalpindi</p>
+        <p><b>WhatsApp no</b>. +92 323 5168638</p>
+        <button type="button" name="button" onclick="$('.modal').addClass('d-none')">Close</button>
+      </div>
 
     </div>
 
@@ -1142,7 +1226,6 @@
 
 
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
-  <script> (function() { var qs,js,q,s,d=document, gi=d.getElementById, ce=d.createElement, gt=d.getElementsByTagName, id="typef_orm_share", b="https://embed.typeform.com/"; if(!gi.call(d,id)){ js=ce.call(d,"script"); js.id=id; js.src=b+"embed.js"; q=gt.call(d,"script")[0]; q.parentNode.insertBefore(js,q) } })() </script>
   <script type="text/javascript">
 
     $(document).ready(() => {

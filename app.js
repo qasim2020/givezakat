@@ -1809,6 +1809,23 @@ app.get('/school',(req,res) => {
 
 });
 
+app.get('/signinschool',(req,res) => {
+  readXlsxFile(__dirname+'/static/users.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
+
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0 && val.email == req.query.email && val.password == req.query.password);
+
+    if (sorted.length > 0) res.status(200).send(sorted);
+    else res.status(400).send(sorted);
+  })
+})
+
 
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
