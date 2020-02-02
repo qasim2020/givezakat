@@ -36,7 +36,7 @@ var sendmail = (toEmail,code,subject) => {
         // send mail with defined transport object
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-              // console.log(error);
+              console.log(error);
               return reject(error);
             }
             // console.log('Message sent: %s', info.messageId);

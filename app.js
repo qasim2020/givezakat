@@ -12,6 +12,8 @@ const _ = require('lodash');
 const readXlsxFile = require('read-excel-file/node');
 const axios = require('axios');
 const {OAuth2Client} = require('google-auth-library');
+const moment = require('moment');
+
 
 const stripe = require('stripe')(process.env.stripePrivate);
 
@@ -1683,6 +1685,129 @@ hbs.registerHelper('match', function(val1,val2) {
 app.get('/ticket',(req,res) => {
   res.status(200).render('raiseticket.hbs');
 })
+
+hbs.registerHelper("ifTopic",function (data, compareTo) {
+  return Object.keys(data).some(key => key == compareTo);
+})
+
+hbs.registerHelper("matchValues", function(page, val) {
+  try {
+    if (page == val) return true;
+    let object = page[Object.keys(page)[0]].split(',').reduce((total,value) => {
+      Object.assign(total,{
+        [value.split('- ')[0].trim()]: value.split('- ')[1].trim()
+      });
+      return total;
+    },{})
+    // console.log({val,value: object[val], length: object[val].length});
+    if (object[val].length > 0) return true;
+    return false;
+  } catch (e) {
+    return false;
+  }
+})
+
+hbs.registerHelper("checkValueExists", function(data, position) {
+  try {
+    let value = Object.keys(data)[0];
+    return data[value].split(',')[position].split('- ')[1].length > 0
+  }
+  catch(e) {
+    return false;
+  }
+
+})
+
+hbs.registerHelper("getObjectValue", (data,position) => {
+  // console.log(data);
+  for (var key in data) {
+    if (data.hasOwnProperty(key)) {
+      return data[key].split(',')[position].split('- ')[1];
+    }
+  }
+})
+
+hbs.registerHelper("getTopicsListed", (data, key) => {
+  return data[key].split(',').reduce((total,val) => {
+    if (val.indexOf('Chapter') != -1) return total += `<li class="section">${val}</li>`;
+    return total += `<li>${val}</li>`;
+  },'');
+})
+
+hbs.registerHelper("getObjectUsingKey", (data, key) => {
+  // let value = Object.keys(data)[0];
+  let object = data[Object.keys(data)[0]].split(',').reduce((total,value) => {
+    Object.assign(total,{
+      [value.split('- ')[0].trim()]: value.split('- ')[1].trim()
+    });
+    return total;
+  },{});
+  return object[key];
+})
+
+app.get('/school',(req,res) => {
+
+  console.log('herere', req.query);
+
+  // if paid the price then let him use the app
+
+  let dateToday = moment().format('YYYY-MM-DD');
+
+  readXlsxFile(__dirname+'/static/life.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
+
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0);
+
+    sorted.map(val => {
+      Object.keys(val).forEach(key => {
+        if (key == 'Date') return;
+        let arr = val[key].replace('/\r/\n','').trim().split(';');
+        let values = arr.reduce((total,nVal) => {
+          if (!nVal) return total;
+          total.push(
+            {[nVal.split(': ')[0].replace('\r\n','')]: nVal.split(': ')[1].trim()}
+          );
+          return total;
+        },[])
+        val[key] = values;
+      });
+      return val;
+    });
+
+    let askedPage = req.query.pagerequest && req.query.pagerequest.toUpperCase() || 'SRE';
+
+    sorted = sorted.map((val,index) => {
+      return val[askedPage.toUpperCase()];
+    })
+
+    // console.log({pagerequest: req.query.pagerequest,sorted});
+
+    sorted[0] = {
+      Subject: sorted[0][0].Subject,
+      Instructor: sorted[0][1].Instructor,
+      ClassSenior: sorted[0][2].ClassSenior,
+      Note: sorted[0][3].Note,
+      CreditHours: sorted[0][4].CreditHours,
+    }
+
+    // console.log(sorted);
+
+    console.log(askedPage.toUpperCase());
+
+    res.render('abasyn.hbs',{
+        sorted,
+        [askedPage.toLowerCase()]: 'active',
+        pagerequest: askedPage.toUpperCase()
+      });
+  });
+
+});
 
 
 app.get('/:username',(req,res, next) => {

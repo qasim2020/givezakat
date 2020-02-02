@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-143060089-4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-143060089-4');
+    </script>
+
+    <meta charset="utf-8">
+    <title>Abasyn - MCSC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Primary Meta Tags -->
+    <title>abasyn.herokuapp.com MCSC Fall 2019 Course Outline</title>
+    <meta name="title" content="abasyn.herokuapp.com MCSC Fall 2019 Course Outline">
+    <meta name="description" content="Course outline with all lectures, assignments, quizes, summary of lectures and books at one place.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://abasyn.herokuapp.com">
+    <meta property="og:title" content="abasyn.herokuapp.com MCSC Fall 2019 Course Outline">
+    <meta property="og:description" content="Course outline with all lectures, assignments, quizes, summary of lectures and books at one place.">
+    <meta property="og:image" content="/meta-abasyn.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://abasyn.herokuapp.com">
+    <meta property="twitter:title" content="abasyn.herokuapp.com MCSC Fall 2019 Course Outline">
+    <meta property="twitter:description" content="Course outline with all lectures, assignments, quizes, summary of lectures and books at one place.">
+    <meta property="twitter:image" content="/meta-abasyn.png">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700,900&display=swap" rel="stylesheet">
+
+    <style media="screen">
+    /* http://meyerweb.com/eric/tools/css/reset/
+       v2.0 | 20110126
+       License: none (public domain)
+    */
+
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+    	margin: 0;
+    	padding: 0;
+    	border: 0;
+    	font-size: 100%;
+    	font: inherit;
+    	vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section {
+    	display: block;
+    }
+    body {
+    	line-height: 1;
+    }
+    ol, ul {
+    	list-style: none;
+    }
+    blockquote, q {
+    	quotes: none;
+    }
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+    	content: '';
+    	content: none;
+    }
+    table {
+    	border-collapse: collapse;
+    	border-spacing: 0;
+    }
+
+    body{
+      font-family: 'Montserrat', sans-serif;
+      padding-bottom: 30vh;
+    }
+
+    .container, .logo-area {
+      width: 100vw;
+      max-width: 1251px;
+      padding-left: 1.5rem;
+      margin: 0 auto;
+      /* border: 1px solid red; */
+      display: flex;
+      box-sizing: border-box;
+    }
+
+    .content {
+      width: 70%;
+      max-width: 933px;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    .sticky-nav {
+      width: 30%;
+      box-sizing: border-box;
+      order: 1;
+    }
+
+    h2{
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 24px;
+
+      /* Green 1 */
+      color: #219653;
+      margin-top: 45px;
+      margin-bottom: 22px;
+    }
+
+    .disc-block {
+      display: grid;
+      grid-template-rows: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
+      /* Gray 6 */
+      background: #F2F2F2;
+      /* Gray 6 */
+      border: 1px solid #F2F2F2;
+      box-sizing: border-box;
+      padding: 14px 34px;
+
+      font-family: Montserrat;
+      font-style: normal;
+      font-size: 15px;
+      line-height: 27px;
+
+      /* Gray 1 */
+      color: #333333;
+
+    }
+
+    .disc-block>div:nth-last-child(2) {
+      grid-column: 2/3;
+      grid-row: 1/3;
+    }
+
+    .disc-block>div:nth-last-child(2) div {
+      border: 1px dashed darkseagreen;
+      border-radius: 5px;
+    }
+
+    .disc-block>div:nth-last-child(1) {
+      grid-column: 2/3;
+      grid-row: 3/4;
+    }
+
+
+
+    .disc-block>div {
+      display: grid;
+      grid-template-columns: 27px 1fr;
+      grid-template-rows: auto;
+    }
+
+    .disc-block>div svg {
+      grid-column: 1/2;
+    }
+
+    .disc-block>div div{
+      grid-column: 2/3;
+      padding: 0 10px;
+      margin-top: -1px;
+    }
+
+    .disc-block > * {
+      margin: 10px 0;
+    }
+
+    .para-h {
+      font-weight: bold;
+    }
+
+    .para-d {
+      font-weight: normal;
+    }
+
+    .title-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      /* Gray 6 */
+      color: #F2F2F2;
+      font-weight: bold;
+      /* Green 1 */
+      background: #219653;
+      cursor: pointer;
+    }
+
+    .title-bar:not(:nth-child(1)) {
+      margin-top: 10px;
+    }
+
+    .title-bar > div {
+      display: flex;
+      align-items: center;
+    }
+
+    .title-bar > div > p, .lower-bar > p, .lower-bar > ol {
+      display: inline-block;
+      padding-left: 11px;
+      padding-right: 11px;
+      line-height: 22px;
+      margin-left: initial !important;
+    }
+
+    .title-bar, .lower-bar {
+      padding: 0 34px;
+      min-height: 56px;
+    }
+
+    .lower-bar {
+      display: flex;
+      align-items: center;
+      background: #F2F2F2;
+      border: 1px solid #E0E0E0;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    .lower-bar > *:nth-last-child(1) {
+      margin-left: auto;
+    }
+
+    .lower-bar.topic, .lower-bar.important {
+      align-items: start;
+      padding-top: 17px;
+      padding-bottom: 14px;
+    }
+
+    .lower-bar.video {
+      /* font-weight: bold; */
+      /* opacity: 0.8; */
+    }
+
+    .video > p:nth-last-child(1) {
+      padding: 2px 11px;
+      border: 1px solid #219653;
+      background: transparent;
+      color: #219653;
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    .subj-card {
+      width: 100%;
+      max-width: 243px;
+      height: auto;
+      background: #F2F2F2;
+      color: #219653;
+      opacity: 0.8;
+
+      margin-bottom: 20px;
+      border-radius: 2px;
+      padding: 16px;
+      box-sizing: border-box;
+      border: 1px solid transparent;
+    }
+
+    .subj-card:hover {
+      opacity: 1;
+      cursor: pointer;
+      border:1px dashed #219653;
+    }
+
+    .subj-card.active {
+      background: #27AE60;
+      color: #F2F2F2;
+      opacity: 1;
+    }
+
+    .subj-card > p:nth-child(1) {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 33px;
+      line-height: 178.4%;
+    }
+
+    .subj-card > p:nth-child(2) {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 15px;
+      line-height: 27px;
+    }
+
+    .sticky-nav > * {
+      max-width: 243px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .sticky-nav > *:not(:nth-child(1)) {
+      margin-bottom: 10px;
+    }
+
+    .partition {
+      height: 10px;
+    }
+
+    .topics_list {
+      line-height: 30px;
+      padding-left: 11px;
+      margin-top: 0px;
+      width: fit-content;
+      margin-left: 0 !important;
+    }
+
+    .topics_list > *:not(:nth-child(1)) {
+      display: inline-flex;
+      background: yellowgreen;
+      padding: 0px 12px;
+      margin: 2px;
+      color: black;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .topics_list > *:nth-child(1) {
+      display: block;
+      background: none;
+      color: black;
+      padding: 0;
+      margin-bottom: 6px;
+      font-weight: normal;
+    }
+
+    .imp_list, .questions_list {
+      line-height: 30px;
+      padding-left: 9px;
+      margin-top: -3px;
+      width: fit-content;
+      margin-left: 0 !important;
+    }
+
+    .imp_list > *:not(:nth-child(1)) {
+      display: inline-flex;
+      background: lightcoral;
+      padding: 0px 12px;
+      margin: 2px;
+      color: white;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .imp_list > *:nth-child(1), .questions_list > *:nth-child(1) {
+      display: block;
+      background: none;
+      color: black;
+      padding: 0;
+      padding-left: 3px;
+      margin-bottom: 6px;
+      font-weight: normal;
+    }
+
+    .questions_list > *:not(:nth-child(1)) {
+      align-content: normal;
+      display: inline-flex;
+      padding: 2px 12px;
+      margin: 3px;
+      color: white;
+      font-weight: normal;
+      font-size: 15px;
+      background: #219653;
+      width: fit-content;
+      display: block;
+    }
+
+    button, a {
+      padding: 2px 11px;
+      border: 1px solid #219653;
+      background: transparent;
+      color: #219653;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      font-family: system-ui;
+      white-space: nowrap;
+    }
+
+    button:hover, a:hover {
+      background: #219653;
+      cursor: pointer;
+      color: white;
+    }
+
+    .overlay {
+      height: 100vh;
+      width: 100vw;
+      position: fixed;
+      display: none;
+    }
+
+    .overlay.show {
+      display: block;
+      background: black;
+      z-index: 10;
+    }
+
+    .overlay > iframe {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+
+    .overlay > button {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      z-index: 100;
+    }
+
+    .overlay > h6 {
+      position: absolute;
+      top: 1.3rem;
+      left: 6rem;
+      z-index: 100;
+      color: #219653;
+      font-weight: bold;
+    }
+
+    .overlay > img {
+      object-fit: contain;
+      width: 100%;
+      max-width: 1080px;
+      max-height: 90vh;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+    }
+
+    .overlay > p {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%);
+      color: #219653;
+      max-width: 600px;
+      width: 100vw;
+    }
+
+    .overlay > svg {
+      position: absolute;
+      top: 50%;
+      cursor: pointer;
+      opacity: 0.5;
+      background: black;
+    }
+
+    .overlay > svg:nth-last-child(1) {
+      left: 1rem;
+    }
+
+    .overlay > svg:nth-last-child(2) {
+      right: 1rem;
+    }
+
+    .title-bar.not-collapsed .closed {
+      display: none;
+    }
+
+    .title-bar:not(.not-collapsed) .opened {
+      display: none;
+    }
+
+    .collapse_all {
+      margin-left: auto;
+      position: absolute;
+      right: 0;
+      top: -46px;
+      margin-right: 34px;
+    }
+
+    .content-block svg {
+      min-width: fit-content;
+      width: auto;
+    }
+
+    .d-none {
+      display: none;
+    }
+
+    .error {
+      text-align: center;
+      font-weight: bold;
+      color: red;
+    }
+
+    .section {
+      background: lightcoral !important;
+    }
+
+    .my-sticker {
+      width: 100%;
+      max-width: 243px;
+      height: auto;
+      background: #F2F2F2;
+      color: #219653;
+      opacity: 1;
+
+      margin-bottom: 20px;
+      border-radius: 2px;
+      padding: 16px;
+      box-sizing: border-box;
+      border: 1px solid transparent;
+    }
+
+    .my-sticker > p {
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 15px;
+      line-height: 27px;
+    }
+
+    .my-sticker > button {
+      padding: 6px 8px;
+      border: 1px solid transparent;
+      font-family: Montserrat;
+      color: #F2F2F2;
+      background-color: #219653;
+      margin: 10px 0px;
+      font-weight: normal;
+    }
+
+    .my-sticker > a {
+      text-decoration: none;
+      background-color: #27AE60;
+      color: #F2F2F2;
+      cursor: pointer;
+      font-family: Montserrat;
+      font-size: 15px;
+      text-align: center;
+      margin: 0;
+      padding: 10px 8px;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: bold;
+      -webkit-font-smoothing: antialiased;
+      border-radius: 2px;
+      border: 1px solid transparent;
+      margin-top: 10px;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    .my-sticker > a:not(.d-none) {
+      display: inline-block;
+    }
+
+    small {
+      font-size: 12px;
+    }
+
+    .my-sticker > textarea {
+      width: 100%;
+      border: 1px solid #27AE60;
+      margin-top: 10px;
+      font-family: Montserrat;
+      font-size: 15px;
+      line-height: 27px;
+      padding: 10px;
+      box-sizing: border-box;
+      color: darkgreen;
+      font-weight: bold;
+    }
+
+    .my-sticker > textarea::placeholder {
+      opacity: 0.5;
+    }
+
+    .mobile {
+      display: none;
+    }
+
+    .desktop {
+      display: block;
+    }
+
+    b {
+      font-weight: bold;
+    }
+
+    .logo-area {
+      display: flex;
+      height: 44px;
+      align-items: center;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    .logo-area > p:hover {
+      color: black;
+    }
+
+    .logo-area > p {
+      padding-left: 10px;
+      /* Quran Daily */
+
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 157.9%;
+      /* identical to box height, or 32px */
+      display: flex;
+      align-items: center;
+
+      /* Gray 2 */
+      color: #4F4F4F;
+    }
+
+    @media (max-width: 700px) {
+
+      .logo-area {
+        padding: 0 8px;
+      }
+
+
+      .mobile {
+        display: block;
+      }
+
+      .sticky-nav.mobile {
+        margin-top: 10px;
+      }
+
+      .desktop {
+        display: none;
+      }
+
+      h2 {
+        margin-top: 10px;
+      }
+
+      .container {
+        flex-wrap: wrap;
+        padding-left: 0rem;
+      }
+
+      .sticky-nav {
+        width: 100%;
+        order: 0;
+        padding: 0 10px;
+      }
+
+      .sticky-nav > * {
+        max-width: 100%;
+      }
+
+      .content {
+        padding: 0 10px;
+        width: 100%;
+      }
+
+      .disc-block {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        padding: 0px;
+        width: 100%;
+      }
+
+      .disc-block>div:nth-last-child(2), .disc-block>div:nth-last-child(1) {
+        grid-column: auto;
+        grid-row: auto;
+      }
+
+      .title-bar, .lower-bar {
+        padding: 0px 2px;
+      }
+
+      .collapse_all {
+        margin-right: 0px;
+      }
+
+      .overlay>p {
+        text-align: center;
+      }
+
+      .subj-card > p:nth-child(1), .my-sticker > p:nth-child(1) {
+        display: none;
+      }
+
+      .title-bar > div > p, .lower-bar > p, .lower-bar > ol {
+        padding-left: 4px;
+        padding-right: 4px;
+        word-break: break-word;
+        margin-left: initial !important;
+      }
+    }
+
+    </style>
+  </head>
+  <body>
+    <div class="logo-area" onclick="window.location.href = '/'">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#4F4F4F"/>
+      </svg>
+
+      <p>Zakatlists</p>
+    </div>
+
+    <div class="overlay">
+      <h6></h6>
+      <img src="" alt="">
+      <iframe src="" width="100%" height="100%"></iframe>
+      <p></p>
+      <button type="button" name="button">Close</button>
+      <svg class="next" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" fill="white"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+      <svg class="prev" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z" fill="white"/><path d="M0 0h24v24H0z" fill="none"/></svg>
+    </div>
+    <div class="container">
+
+      <div class="sticky-nav">
+        <h2>Subjects</h2>
+        <div class="subj-card {{sre}}" onClick="window.location = '/?pagerequest=sre';">
+          <p>01</p>
+          <p>Software Requirements Engineering</p>
+        </div>
+
+        <div class="subj-card {{tpl}}" onClick="window.location = '/?pagerequest=tpl';">
+          <p>02</p>
+          <p>Theory of Programming Languages</p>
+        </div>
+
+        <div class="subj-card {{algo}}" onClick="window.location = '/?pagerequest=algo';">
+          <p>03</p>
+          <p>Advanced Theory and Design of Algorithums</p>
+        </div>
+
+        <div class="subj-card {{is}}" onClick="window.location = '/?pagerequest=is';">
+          <p>04</p>
+          <p>Information Security</p>
+        </div>
+
+        <!-- <div class="my-sticker desktop">
+          <p>
+            <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="22" cy="22" r="22" fill="#27AE60"/>
+            <path d="M30 12H14C12.9 12 12.01 12.9 12.01 14L12 32L16 28H30C31.1 28 32 27.1 32 26V14C32 12.9 31.1 12 30 12ZM23 24H21V22H23V24ZM23 20H21V16H23V20Z" fill="#F2F2F2"/>
+            </svg>
+          </p>
+          <p>I have prepared a short questionare to improve this project. Please spare some time to answer few questions by clicking below.</p>
+          <a class="toggle typeform-share button" href="https://qasimali598741.typeform.com/to/xKW2KW" data-mode="popup" style="" target="_blank">Give Feedback</a>
+        </div> -->
+
+      </div>
+
+      <div class="content">
+        {{#if token}}
+        <h2>Subject Details</h2>
+        <div class="disc-block">
+          <div class="">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.54">
+            <path d="M18 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V4C20 2.9 19.1 2 18 2ZM6 4H11V12L8.5 10.5L6 12V4Z" fill="black"/>
+            </g>
+            </svg>
+            <div class="">
+              <p class="para-h">Subject</p>
+              <p class="para-d">{{sorted.[0].Subject}}</p>
+            </div>
+          </div>
+          <div class="">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.54">
+            <path d="M12 5.9C13.16 5.9 14.1 6.84 14.1 8C14.1 9.16 13.16 10.1 12 10.1C10.84 10.1 9.9 9.16 9.9 8C9.9 6.84 10.84 5.9 12 5.9ZM12 14.9C14.97 14.9 18.1 16.36 18.1 17V18.1H5.9V17C5.9 16.36 9.03 14.9 12 14.9ZM12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4ZM12 13C9.33 13 4 14.34 4 17V20H20V17C20 14.34 14.67 13 12 13Z" fill="black"/>
+            </g>
+            </svg>
+            <div class="">
+              <p class="para-h">Instructor</p>
+              <p class="para-d">{{sorted.[0].Instructor}}</p>
+            </div>
+          </div>
+          <div class="">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.54">
+            <path d="M9 11.75C8.31 11.75 7.75 12.31 7.75 13C7.75 13.69 8.31 14.25 9 14.25C9.69 14.25 10.25 13.69 10.25 13C10.25 12.31 9.69 11.75 9 11.75ZM15 11.75C14.31 11.75 13.75 12.31 13.75 13C13.75 13.69 14.31 14.25 15 14.25C15.69 14.25 16.25 13.69 16.25 13C16.25 12.31 15.69 11.75 15 11.75ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 11.71 4.02 11.42 4.05 11.14C6.41 10.09 8.28 8.16 9.26 5.77C11.07 8.33 14.05 10 17.42 10C18.2 10 18.95 9.91 19.67 9.74C19.88 10.45 20 11.21 20 12C20 16.41 16.41 20 12 20Z" fill="black"/>
+            </g>
+            </svg>
+            <div class="">
+              <p class="para-h">Class Senior</p>
+              <p class="para-d">{{sorted.[0].ClassSenior}}</p>
+            </div>
+          </div>
+          <div class="">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.54">
+            <path d="M17 3H7C5.9 3 5.01 3.9 5.01 5L5 21L12 18L19 21V5C19 3.9 18.1 3 17 3Z" fill="black"/>
+            </g>
+            </svg>
+            <div class="">
+              <p class="para-h">Special Note</p>
+              <p class="para-d">{{sorted.[0].Note}}</p>
+            </div>
+          </div>
+          <div class="">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g opacity="0.54">
+            <path d="M11.99 2C6.47 2 2 6.48 2 12C2 17.52 6.47 22 11.99 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 11.99 2ZM12 20C7.58 20 4 16.42 4 12C4 7.58 7.58 4 12 4C16.42 4 20 7.58 20 12C20 16.42 16.42 20 12 20Z" fill="black"/>
+            <path d="M12.5 7H11V13L16.25 16.15L17 14.92L12.5 12.25V7Z" fill="black"/>
+            </g>
+            </svg>
+            <div class="">
+              <p class="para-h">Credit Hours</p>
+              <p class="para-d">{{sorted.[0].CreditHours}}</p>
+            </div>
+
+          </div>
+        </div>
+
+        <h2>Course Content</h2>
+        <div class="content-block" style="position:relative">
+
+          <button type="button" name="button" class="collapse_all">Show All</button>
+
+          {{#each sorted as |sorted indexNo|}}
+          {{#each this}}
+            {{#if (ifTopic this 'Topic')}}
+            <div data-target="week{{@indexNo}}" class="title-bar" style="">
+
+              <div class="">
+                <svg class="opened" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 13H5V11H19V13Z" fill="#F2C94C"/>
+                </svg>
+
+                <svg class="closed" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M19 13H13V19H11V13H5V11H11V5H13V11H19V13Z" fill="#F2C94C"/>
+                </svg>
+
+                <p>{{getObjectValue this 0}}</p>
+              </div>
+
+              <div class="">
+                <p>{{getObjectValue this 1}}</p>
+                <p>{{getObjectValue this 2}} hrs</p>
+              </div>
+
+            </div>
+            {{/if}}
+            {{#if (ifTopic this 'Video')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none video">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M10 16.5L16 12L10 7.5V16.5ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20Z" fill="black"/>
+              </g>
+              </svg>
+              <p>{{getObjectValue this 1}}</p>
+              {{#if (checkValueExists this 0)}}
+              <button link="{{getObjectValue this 0}}">{{getObjectValue this 2}} hrs</button>
+              {{else}}
+              <button link="{{getObjectValue this 0}}" style="color:red;border-color:red;">{{getObjectValue this 2}} hrs</button>
+              {{/if}}
+            </div>
+            {{/if}}
+            {{#if (ifTopic this 'Slides')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none slides">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M16.5 6V17.5C16.5 19.71 14.71 21.5 12.5 21.5C10.29 21.5 8.5 19.71 8.5 17.5V5C8.5 3.62 9.62 2.5 11 2.5C12.38 2.5 13.5 3.62 13.5 5V15.5C13.5 16.05 13.05 16.5 12.5 16.5C11.95 16.5 11.5 16.05 11.5 15.5V6H10V15.5C10 16.88 11.12 18 12.5 18C13.88 18 15 16.88 15 15.5V5C15 2.79 13.21 1 11 1C8.79 1 7 2.79 7 5V17.5C7 20.54 9.46 23 12.5 23C15.54 23 18 20.54 18 17.5V6H16.5Z" fill="black"/>
+              </g>
+              </svg>
+
+              <p>{{getObjectValue this 0}}</p>
+              <a href="/{{../../pagerequest}}/{{getObjectValue this 0}}" download>Download</a>
+            </div>
+            {{/if}}
+            {{#if (ifTopic this 'Books')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none book">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M21 5C19.89 4.65 18.67 4.5 17.5 4.5C15.55 4.5 13.45 4.9 12 6C10.55 4.9 8.45 4.5 6.5 4.5C4.55 4.5 2.45 4.9 1 6V20.65C1 20.9 1.25 21.15 1.5 21.15C1.6 21.15 1.65 21.1 1.75 21.1C3.1 20.45 5.05 20 6.5 20C8.45 20 10.55 20.4 12 21.5C13.35 20.65 15.8 20 17.5 20C19.15 20 20.85 20.3 22.25 21.05C22.35 21.1 22.4 21.1 22.5 21.1C22.75 21.1 23 20.85 23 20.6V6C22.4 5.55 21.75 5.25 21 5ZM21 18.5C19.9 18.15 18.7 18 17.5 18C15.8 18 13.35 18.65 12 19.5V8C13.35 7.15 15.8 6.5 17.5 6.5C18.7 6.5 19.9 6.65 21 7V18.5Z" fill="black"/>
+              <path d="M17.5 10.5C18.38 10.5 19.23 10.59 20 10.76V9.24C19.21 9.09 18.36 9 17.5 9C15.8 9 14.26 9.29 13 9.83V11.49C14.13 10.85 15.7 10.5 17.5 10.5Z" fill="black"/>
+              <path d="M13 12.49V14.15C14.13 13.51 15.7 13.16 17.5 13.16C18.38 13.16 19.23 13.25 20 13.42V11.9C19.21 11.75 18.36 11.66 17.5 11.66C15.8 11.66 14.26 11.96 13 12.49Z" fill="black"/>
+              <path d="M17.5 14.33C15.8 14.33 14.26 14.62 13 15.16V16.82C14.13 16.18 15.7 15.83 17.5 15.83C18.38 15.83 19.23 15.92 20 16.09V14.57C19.21 14.41 18.36 14.33 17.5 14.33Z" fill="black"/>
+              </g>
+              </svg>
+              <p>{{getObjectValue this 0}}</p>
+              {{#if (checkValueExists this 1)}}
+              <a href="/{{../../pagerequest}}/{{getObjectValue this 1}}" download>Download</a>
+              {{else}}
+              <button type="button" name="button" msg="Sorry not uploaded yet. If you have please share it with us on whatsapp. Thanks" style="color:red;border-color:red;">Not Aval</button>
+              {{/if}}
+            </div>
+            {{/if}}
+            {{#if (ifTopic this 'Topics')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none topic">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M6 17H9L11 13V7H5V13H8L6 17ZM14 17H17L19 13V7H13V13H16L14 17Z" fill="black"/>
+              </g>
+              </svg>
+              <ol class="topics_list">
+                <p>Topics</p>
+                {{{getTopicsListed this 'Topics'}}}
+              </ol>
+              <!-- <button type="button" name="button">Hide</button> -->
+            </div>
+            {{/if}}
+            {{#if (ifTopic this 'Quiz')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none quiz">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M12 2.02C6.49002 2.02 2.02002 6.49 2.02002 12C2.02002 17.51 6.49002 21.98 12 21.98C17.51 21.98 21.98 17.51 21.98 12C21.98 6.49 17.51 2.02 12 2.02ZM12 19.98C7.60002 19.98 4.02002 16.4 4.02002 12C4.02002 7.6 7.60002 4.02 12 4.02C16.4 4.02 19.98 7.6 19.98 12C19.98 16.4 16.4 19.98 12 19.98ZM12.75 5L8.25002 13.5H11.39V19L15.75 10.5H12.75V5Z" fill="black"/>
+              </g>
+              </svg>
+
+              <p>{{getObjectValue this 0}}</p>
+              {{#if (checkValueExists this 1)}}
+              <button type="button" name="button" img="{{getObjectValue this 1}}">View</button>
+              {{else}}
+              <button type="button" name="button" msg="Sorry quiz pictures are not available. If you have please share." style="color:red;border-color:red;">Not Aval</button>
+              {{/if}}
+            </div>
+            {{/if}}
+
+            {{#if (ifTopic this 'Important')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none important">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M12 2.02C6.49002 2.02 2.02002 6.49 2.02002 12C2.02002 17.51 6.49002 21.98 12 21.98C17.51 21.98 21.98 17.51 21.98 12C21.98 6.49 17.51 2.02 12 2.02ZM12 19.98C7.60002 19.98 4.02002 16.4 4.02002 12C4.02002 7.6 7.60002 4.02 12 4.02C16.4 4.02 19.98 7.6 19.98 12C19.98 16.4 16.4 19.98 12 19.98ZM12.75 5L8.25002 13.5H11.39V19L15.75 10.5H12.75V5Z" fill="black"/>
+              </g>
+              </svg>
+
+              <ol class="imp_list">
+                <p>Important Points</p>
+                {{{getTopicsListed this 'Important'}}}
+              </ol>
+            </div>
+            {{/if}}
+
+            {{#if (ifTopic this 'Questions')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none important">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M12 2.02C6.49002 2.02 2.02002 6.49 2.02002 12C2.02002 17.51 6.49002 21.98 12 21.98C17.51 21.98 21.98 17.51 21.98 12C21.98 6.49 17.51 2.02 12 2.02ZM12 19.98C7.60002 19.98 4.02002 16.4 4.02002 12C4.02002 7.6 7.60002 4.02 12 4.02C16.4 4.02 19.98 7.6 19.98 12C19.98 16.4 16.4 19.98 12 19.98ZM12.75 5L8.25002 13.5H11.39V19L15.75 10.5H12.75V5Z" fill="black"/>
+              </g>
+              </svg>
+
+              <ol class="questions_list">
+                <p>Important Questions for Revision before paper</p>
+                {{{getTopicsListed this 'Questions'}}}
+              </ol>
+            </div>
+            {{/if}}
+
+            {{#if (ifTopic this 'Note')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none important">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" opacity="0.56">
+                <path d="M0 0h24v24H0z" fill="none"/>
+                <path d="M17 10H7v2h10v-2zm2-7h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zm-5-5H7v2h7v-2z"/>
+              </svg>
+
+              <ol class="" style="">
+                <b>{{getObjectUsingKey this 'heading'}}</b>
+                <p>{{{getObjectUsingKey this 'text'}}}</p>
+              </ol>
+            </div>
+            {{/if}}
+
+            {{#if (ifTopic this 'Assignment')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none assignment">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M14 6V4H10V6H14ZM4 8V19H20V8H4ZM20 6C21.11 6 22 6.89 22 8V19C22 20.11 21.11 21 20 21H4C2.89 21 2 20.11 2 19L2.01 8C2.01 6.89 2.89 6 4 6H8V4C8 2.89 8.89 2 10 2H14C15.11 2 16 2.89 16 4V6H20Z" fill="black"/>
+              </g>
+              </svg>
+
+              <p>{{getObjectValue this 0}}</p>
+              {{#if (checkValueExists this 1)}}
+              {{#if (matchValues this 'img')}}
+              <button type="button" name="button" img="{{getObjectValue this 1}}">View</button>
+              {{/if}}
+              {{#if (matchValues this 'link')}}
+              <a href="/{{../../pagerequest}}/{{getObjectValue this 1}}" download>Download</a>
+              {{/if}}
+              {{else}}
+              <button type="button" name="button" msg="Sorry assignment pictures are not available. If you have please share." style="color:red;border-color:red;">Not Aval</button>
+              {{/if}}
+            </div>
+            {{/if}}
+
+            {{#if (ifTopic this 'Attachment')}}
+            <div data-show="week{{@indexNo}}" class="lower-bar d-none attachment">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g opacity="0.56">
+              <path d="M12 2.02C6.49002 2.02 2.02002 6.49 2.02002 12C2.02002 17.51 6.49002 21.98 12 21.98C17.51 21.98 21.98 17.51 21.98 12C21.98 6.49 17.51 2.02 12 2.02ZM12 19.98C7.60002 19.98 4.02002 16.4 4.02002 12C4.02002 7.6 7.60002 4.02 12 4.02C16.4 4.02 19.98 7.6 19.98 12C19.98 16.4 16.4 19.98 12 19.98ZM12.75 5L8.25002 13.5H11.39V19L15.75 10.5H12.75V5Z" fill="black"/>
+              </g>
+              </svg>
+
+              <p>{{getObjectUsingKey this name}}</p>
+              {{#if (checkValueExists this 1)}}
+              <button type="button" name="button" img="{{getObjectValue this 1}}">View</button>
+              {{else}}
+              <button type="button" name="button" msg="Sorry assignment pictures are not available. If you have please share." style="color:red;border-color:red;">Not Aval</button>
+              {{/if}}
+            </div>
+            {{/if}}
+          {{/each}}
+
+          {{/each}}
+
+        </div>
+        {{/if}}
+        {{#unless token}}
+        <style media="screen">
+          svg.background {
+            position: fixed;
+            bottom: 11px;
+            left: 50%;
+            transform: translate(-50%);
+            z-index: -10;
+          }
+          .intro > svg.first {
+            position: absolute;
+            z-index: -10;
+            left: -4rem;
+            top: 1rem;
+          }
+
+          .intro > svg.background {
+            position: absolute;
+            bottom: -4rem;
+          }
+
+          .intro > h1 {
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 59px;
+            line-height: 133.9%;
+            display: flex;
+            align-items: center;
+            color: #27AE60;
+            margin-top: 5rem;
+          }
+
+          .intro > p {
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: 300;
+            font-size: 32px;
+            line-height: 157.9%;
+            align-items: center;
+            color: #828282;
+            padding: 1rem 0;
+          }
+
+          .intro > button {
+            padding: 14px 13px;
+
+            font-family: Montserrat;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 15px;
+            line-height: 18px;
+            border: 0px;
+
+            /* Gray 6 */
+
+          }
+
+          .intro > button.primary {
+            background: #27AE60;
+            color: #F2F2F2;
+          }
+
+          .intro > button.secondary {
+            background: #F2F2F2;
+            color: #27AE60;
+          }
+
+          body {
+            padding-bottom: 0px;
+          }
+        </style>
+        <div class="intro">
+          <svg class="first" width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50.0013 141.667H75.0013L91.668 108.333V58.3333H41.668V108.333H66.668L50.0013 141.667ZM116.668 141.667H141.668L158.335 108.333V58.3333H108.335V108.333H133.335L116.668 141.667Z" fill="#F2F2F2"/>
+          </svg>
+          <h1>Welcome to zakatlists school. </h1>
+          <p>For now only students from <b>Abasyn university</b> can get benefit from it.</p>
+          <p>Sign in to access course curriculum.</p>
+          <button class="secondary" type="button" name="button" onclick="window.location = '/signin/school';">Sign In</button>
+          <button class="primary" type="button" name="button" onclick="window.location = '/signup';">Sign Up for Rs 300 / Month</button>
+        </div>
+        {{/unless}}
+      </div>
+
+      <div class="sticky-nav mobile">
+        <div class="my-sticker mobile">
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+    {{#unless token}}
+    <svg class="background" width="362" height="299" viewBox="0 0 362 299" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M7.93827 15.8718C6.36823 15.8718 4.83345 15.4063 3.52801 14.5343C2.22257 13.6623 1.20509 12.4229 0.604264 10.9728C0.00343502 9.52272 -0.153763 7.92708 0.152536 6.38767C0.458835 4.84826 1.21488 3.43422 2.32507 2.32437C3.43525 1.21452 4.84971 0.458699 6.38958 0.152491C7.92946 -0.153717 9.52558 0.0034353 10.9761 0.604083C12.4266 1.20473 13.6664 2.2219 14.5387 3.52694C15.411 4.83199 15.8765 6.36631 15.8765 7.93588C15.8741 10.0399 15.037 12.057 13.5488 13.5447C12.0606 15.0325 10.0429 15.8693 7.93827 15.8718V15.8718ZM7.93827 1.32265C6.62991 1.32265 5.35092 1.71051 4.26305 2.43718C3.17518 3.16386 2.32731 4.19669 1.82662 5.4051C1.32593 6.61351 1.19492 7.94321 1.45017 9.22605C1.70542 10.5089 2.33546 11.6873 3.26062 12.6121C4.18577 13.537 5.36449 14.1669 6.64772 14.422C7.93094 14.6772 9.26104 14.5462 10.4698 14.0457C11.6786 13.5452 12.7117 12.6975 13.4386 11.61C14.1655 10.5225 14.5535 9.24385 14.5535 7.93588C14.5515 6.18254 13.8539 4.50158 12.6138 3.26178C11.3736 2.02198 9.69214 1.3246 7.93827 1.32265V1.32265Z" fill="#3F3D56"/>
+      <path d="M361.075 221.735H348.016V208.68H361.075V221.735ZM349.02 220.731H360.07V209.684H349.02L349.02 220.731Z" fill="#3F3D56"/>
+      <path d="M348.281 298.712C333.976 296.474 320.223 294.569 307.02 293L312.104 282.835C310.34 282.247 302.692 288.127 302.692 288.127L309.163 258.724C300.34 259.9 296.222 289.891 296.222 289.891L286.222 279.894L291.144 291.213C250.744 286.969 215.882 285.645 186.577 285.948L190.928 277.248C189.163 276.66 181.516 282.541 181.516 282.541L187.987 253.138C179.163 254.314 175.046 284.305 175.046 284.305L165.046 274.308L170.26 286.296C150.186 286.879 130.155 288.492 110.247 291.127C114.589 277.604 129.752 264.605 129.752 264.605C118.093 268.231 112.027 274.139 108.888 279.615C108.253 251.833 112.528 224.157 121.517 197.86C121.517 197.86 97.9873 250.786 101.517 286.069L101.964 292.337C81.4943 295.529 71.2227 298.712 71.2227 298.712H348.281Z" fill="#3F3D56"/>
+      <path opacity="0.3" d="M203.221 227.63C254.004 227.63 295.173 186.475 295.173 135.706C295.173 84.9382 254.004 43.7825 203.221 43.7825C152.438 43.7825 111.27 84.9382 111.27 135.706C111.27 186.475 152.438 227.63 203.221 227.63Z" fill="#27AE60"/>
+      <path d="M165.458 18.7613L104.234 93.0231L194.845 199.928L255.252 128.931L165.458 18.7613Z" fill="#27AE60"/>
+      <path opacity="0.1" d="M165.458 18.7613L104.234 93.0231L194.845 199.928L255.252 128.931L165.458 18.7613Z" fill="black"/>
+      <path d="M106.684 93.8395C108.038 91.4026 109.717 89.161 111.675 87.1764L167.907 30.1861C167.907 30.1861 187.499 26.9218 191.58 36.7146L119.745 95.4716L106.684 93.8395Z" fill="#F2F2F2"/>
+      <path d="M103.828 92.6154L187.092 219.922C187.092 219.922 195.255 225.635 203.419 222.37L288.723 164.838L198.112 27.7379L116.481 91.3913L103.828 92.6154Z" fill="#27AE60"/>
+      <path d="M187.932 47.6054L135.684 85.1388L136.456 86.2128L188.704 48.6794L187.932 47.6054Z" fill="#3F3D56"/>
+      <path d="M134.99 99.1871L133.887 99.9167L202.457 203.558L203.561 202.828L134.99 99.1871Z" fill="#3F3D56"/>
+      <path d="M266.286 165.113L210.789 205.932L211.573 206.998L267.07 166.178L266.286 165.113Z" fill="#3F3D56"/>
+      <path d="M197.839 49.3942L196.754 50.1495L267.773 152.158L268.859 151.403L197.839 49.3942Z" fill="#3F3D56"/>
+      <path d="M175.903 29.3771L111.309 88.6426L111.86 89.2435L176.455 29.978L175.903 29.3771Z" fill="#3F3D56"/>
+      <path d="M181.283 29.8852L113.773 89.4659L114.314 90.0779L181.824 30.4972L181.283 29.8852Z" fill="#3F3D56"/>
+      <path d="M185.507 31.0726L115.426 89.4711L115.949 90.0983L186.03 31.6998L185.507 31.0726Z" fill="#3F3D56"/>
+    </svg>
+    {{/unless}}
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+  <script> (function() { var qs,js,q,s,d=document, gi=d.getElementById, ce=d.createElement, gt=d.getElementsByTagName, id="typef_orm_share", b="https://embed.typeform.com/"; if(!gi.call(d,id)){ js=ce.call(d,"script"); js.id=id; js.src=b+"embed.js"; q=gt.call(d,"script")[0]; q.parentNode.insertBefore(js,q) } })() </script>
+  <script type="text/javascript">
+
+    $(document).ready(() => {
+      $('.title-bar:eq(-1)').trigger('click');
+
+      if ($(window).width() < 700) $('.my-sticker.desktop > *').clone().appendTo('.my-sticker.mobile');
+
+    })
+
+    $('.video button, .quiz button, .book button').on('click',function() {
+      $('.overlay').find('h6').html('');
+      $('.overlay').find('svg').addClass('d-none');
+      $('.overlay').addClass('show').find('p').html('');
+      $('.overlay').addClass('show').find('iframe').attr({src:''});
+      $('.overlay').addClass('show').find('img').attr({src:''});
+      if ($(this).attr('link')) {
+        $('.overlay').find('h6').html(`${$(this).closest('div').find('p:eq(0)').html()}`);
+        return $('.overlay').addClass('show').find('iframe').attr({src:$(this).attr('link')});
+      }
+      return $('.overlay').addClass('show').find('p').html($(this).attr('msg'));
+    })
+
+    $('.assignment button').on('click',function() {
+      $('.overlay').addClass('show').find('p').html('');
+      $('.overlay').find('svg').removeClass('d-none');
+      $('.overlay').find('h6').html('');
+      $('.overlay').addClass('show').find('iframe').attr({src:''});
+      $('.overlay').addClass('show').find('img').attr({src:''});
+      if ($(this).attr('img')) {
+        let imgs = $(this).attr('img').split('*');
+        console.log(imgs.length);
+        $('.overlay').data({imgs,currentValue: 0});
+        let currentimgtag = $('.overlay').find('img').attr({src: imgs[0]});
+        $('.overlay').find('h6').html(`${$('.overlay').data().currentValue + 1} / ${$('.overlay').data().imgs.length} image(s)`);
+        return $('.overlay').addClass('show')
+      }
+      return $('.overlay').addClass('show').find('p').html($(this).attr('msg'));
+    })
+
+    $('.next,.prev').on('click',function() {
+      if ($(this).attr('class') == 'prev' && $('.overlay').data().currentValue > 0) $('.overlay').data().currentValue = $('.overlay').data().currentValue - 1;
+      if ($(this).attr('class') == 'next' && $('.overlay').data().currentValue + 1 < $('.overlay').data().imgs.length) $('.overlay').data().currentValue = $('.overlay').data().currentValue + 1;
+
+      let index = $('.overlay').data().currentValue;
+      console.log({currentValue:$('.overlay').data().currentValue, imgs: $('.overlay').data().imgs,length:$('.overlay').data().imgs.length});
+      $('.overlay').find('img').attr({src: $('.overlay').data().imgs[index]});
+      $('.overlay').find('h6').html(`${$('.overlay').data().currentValue + 1} / ${$('.overlay').data().imgs.length} image(s)`);
+    })
+
+    $('.overlay>button').on('click',function() {
+      console.log('hello');
+      $(this).closest('.overlay').removeClass('show');
+    })
+
+    $('.collapse_all').on('click',function() {
+      let collapsedCheck = $('.lower-bar.d-none').length > 0;
+      if (collapsedCheck) {
+        $('.lower-bar').removeClass('d-none');
+        $('.title-bar').addClass('not-collapsed');
+        return $(this).html('Collapse All');
+      }
+      $('.lower-bar').addClass('d-none');
+      $('.title-bar').removeClass('not-collapsed');
+      $(this).html('Show All');
+    })
+
+    $('.title-bar').on('click',function() {
+      let target = $(this).attr('data-target');
+      $(`[data-show=${target}]`).toggleClass('d-none');
+      $(this).toggleClass('not-collapsed');
+      if ($('.lower-bar.d-none').length > 0) $('.collapse_all').html('Show All');
+      else $('.collapse_all').html('Collapse All');
+    })
+
+    $(document).on('click','.submit-feedback',function() {
+      console.log('her');
+      $(this).siblings('.error').addClass('d-none').siblings('.success').addClass('d-none');
+      if ($(this).siblings('textarea').val() < 1) return $(this).siblings('.error').removeClass('d-none').html('Please fill above field.');
+      let data = {val: $('textarea').val()};
+      data = JSON.stringify(data);
+      console.log(data);
+      $.ajax({
+          url: '/sendmail',
+          type: 'post',
+          data: data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((res) => {
+          console.log(res);
+          $(this).siblings('.success').removeClass('d-none').html(res);
+        }).fail((e) => {
+          console.log(e.responseText);
+          $(this).siblings('.error').removeClass('d-none').html(e.responseText);
+        });
+    })
+
+    $(document).on('click','.toggler',function() {
+      console.log('asdfas');
+      let target = $(this).attr('target-class');
+      $(`.${target}`).toggleClass('d-none');
+      console.log($(`.${target}.d-none`).length);
+      if ($(`.${target}.d-none`).length > 0) return $(this).html('Support');
+      $(this).html('x Close')
+    })
+  </script>
+
+  </body>
+</html>
