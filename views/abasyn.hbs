@@ -168,6 +168,7 @@
 
     .disc-block>div svg {
       grid-column: 1/2;
+      opacity: 0.9;
     }
 
     .disc-block>div div{
@@ -182,10 +183,12 @@
 
     .para-h {
       font-weight: bold;
+      color: #656d66;
     }
 
     .para-d {
       font-weight: normal;
+      color: #545453;
     }
 
     .title-bar {
@@ -229,6 +232,7 @@
       border: 1px solid #E0E0E0;
       font-size: 15px;
       box-sizing: border-box;
+      color: #333333;
     }
 
     .lower-bar > *:nth-last-child(1) {
@@ -402,6 +406,7 @@
       height: 100vh;
       width: 100vw;
       position: fixed;
+      top: 0;
       display: none;
     }
 
@@ -527,6 +532,7 @@
       font-weight: normal;
       font-size: 15px;
       line-height: 27px;
+      color: #333333;
     }
 
     .my-sticker > button {
@@ -602,8 +608,11 @@
       display: flex;
       height: 44px;
       align-items: center;
-      padding: 0 20px;
+      padding: 0 31px 0 20px;
       cursor: pointer;
+      position: fixed;
+      background: white;
+      z-index: 100;
     }
 
     .logo-area > p:hover {
@@ -612,6 +621,7 @@
 
     .logo-area > p {
       padding-left: 10px;
+
       /* Quran Daily */
 
       font-family: Montserrat;
@@ -625,6 +635,14 @@
 
       /* Gray 2 */
       color: #4F4F4F;
+    }
+
+    .logo-area > p:nth-child(2) {
+      opacity: 0;
+    }
+
+    .logo-area > p:nth-child(3) {
+      margin-left: auto;
     }
 
     .modal {
@@ -720,7 +738,7 @@
         text-align: center;
       }
 
-      .subj-card > p:nth-child(1), .my-sticker > p:nth-child(1) {
+      .subj-card > p:nth-child(1) {
         display: none;
       }
 
@@ -741,6 +759,7 @@
       </svg>
 
       <p>Zakatlists</p>
+      <p>zakatlists School</p>
     </div>
 
     <div class="overlay">
@@ -778,16 +797,16 @@
           <p>Information Security</p>
         </div> -->
 
-        <!-- <div class="my-sticker desktop">
+        <div class="my-sticker desktop">
           <p>
             <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="22" cy="22" r="22" fill="#27AE60"/>
+            <circle cx="22" cy="22" r="22" fill="#333333"/>
             <path d="M30 12H14C12.9 12 12.01 12.9 12.01 14L12 32L16 28H30C31.1 28 32 27.1 32 26V14C32 12.9 31.1 12 30 12ZM23 24H21V22H23V24ZM23 20H21V16H23V20Z" fill="#F2F2F2"/>
             </svg>
           </p>
-          <p>I have prepared a short questionare to improve this project. Please spare some time to answer few questions by clicking below.</p>
-          <a class="toggle typeform-share button" href="https://qasimali598741.typeform.com/to/xKW2KW" data-mode="popup" style="" target="_blank">Give Feedback</a>
-        </div> -->
+          <p>This website is going premium in 3 to 4 days. Only paid subscribers will be able to access course portal. <b>One time payment for entire course portal for the duration of Spring 2020 is Rs 1400.</b> Register with Qasim.</p>
+          <!-- <a class="toggle typeform-share button" href="https://qasimali598741.typeform.com/to/xKW2KW" data-mode="popup" style="" target="_blank">Give Feedback</a> -->
+        </div>
 
       </div>
 
@@ -1186,11 +1205,11 @@
         {{/unless}}
       </div>
 
-      <!-- <div class="sticky-nav mobile">
+      <div class="sticky-nav mobile">
         <div class="my-sticker mobile">
 
         </div>
-      </div> -->
+      </div>
 
       <div class="modal d-none">
         <p>Please deposit Rs 300 to following account and whatsapp me the deposit slip on my cell number listed below.</p>
