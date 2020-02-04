@@ -318,6 +318,7 @@
         grid-row: 3/4;
         padding: 0 0 2rem 2rem;
         align-self: end;
+        margin-top: -9rem;
       }
 
       .item-3 > .text-brand {

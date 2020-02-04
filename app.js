@@ -1687,6 +1687,7 @@ app.get('/ticket',(req,res) => {
 })
 
 hbs.registerHelper("ifTopic",function (data, compareTo) {
+  console.log(data,compareTo);
   return Object.keys(data).some(key => key == compareTo);
 })
 
@@ -1747,9 +1748,11 @@ hbs.registerHelper("getObjectUsingKey", (data, key) => {
 
 app.get('/school',(req,res) => {
 
-  console.log('herere', req.query);
+  // console.log('herere', req.query);
 
   // if paid the price then let him use the app
+
+  req.query.pagerequest = req.query.pagerequest || 'ATOC';
 
   let dateToday = moment().format('YYYY-MM-DD');
 
@@ -1780,13 +1783,23 @@ app.get('/school',(req,res) => {
       return val;
     });
 
-    let askedPage = req.query.pagerequest && req.query.pagerequest.toUpperCase() || 'SRE';
+    let courses = Object.keys(sorted[0]);
+    courses = courses.map((val,key) => {
+      return {
+        course: val,
+        name: sorted[0][val][0].Subject,
+        active: req.query.pagerequest && req.query.pagerequest.toUpperCase() == val,
+        index: key
+      }
+    }).filter((val,key) => key != 0).sort((a,b) => b.index - a.index);
+
+    let askedPage = req.query.pagerequest && req.query.pagerequest.toUpperCase() || 'ATOC';
 
     sorted = sorted.map((val,index) => {
       return val[askedPage.toUpperCase()];
     })
 
-    // console.log({pagerequest: req.query.pagerequest,sorted});
+    console.log(courses);
 
     sorted[0] = {
       Subject: sorted[0][0].Subject,
@@ -1796,14 +1809,14 @@ app.get('/school',(req,res) => {
       CreditHours: sorted[0][4].CreditHours,
     }
 
-    // console.log(sorted);
-
     console.log(askedPage.toUpperCase());
 
     res.render('abasyn.hbs',{
         sorted,
         [askedPage.toLowerCase()]: 'active',
-        pagerequest: askedPage.toUpperCase()
+        pagerequest: askedPage.toUpperCase(),
+        token: '123',
+        courses: courses
       });
   });
 

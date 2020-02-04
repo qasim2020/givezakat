@@ -2,14 +2,8 @@
 <html lang="en" dir="ltr">
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-143060089-4"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'UA-143060089-4');
-    </script>
+    {{>googleAnalytics}}
+    
 
     <meta charset="utf-8">
     <title>Abasyn - MCSC</title>
@@ -123,7 +117,7 @@
       line-height: 24px;
 
       /* Green 1 */
-      color: #219653;
+      color: #27AE60;
       margin-top: 45px;
       margin-bottom: 22px;
     }
@@ -202,7 +196,7 @@
       color: #F2F2F2;
       font-weight: bold;
       /* Green 1 */
-      background: #219653;
+      background: #27AE60;
       cursor: pointer;
     }
 
@@ -254,9 +248,9 @@
 
     .video > p:nth-last-child(1) {
       padding: 2px 11px;
-      border: 1px solid #219653;
+      border: 1px solid #27AE60;
       background: transparent;
-      color: #219653;
+      color: #27AE60;
       font-size: 15px;
       font-weight: bold;
     }
@@ -266,7 +260,7 @@
       max-width: 243px;
       height: auto;
       background: #F2F2F2;
-      color: #219653;
+      color: #27AE60;
       opacity: 0.8;
 
       margin-bottom: 20px;
@@ -279,10 +273,10 @@
     .subj-card:hover {
       opacity: 1;
       cursor: pointer;
-      border:1px dashed #219653;
+      border:1px dashed #27AE60;
     }
 
-    .subj-card.active {
+    .subj-card.true {
       background: #27AE60;
       color: #F2F2F2;
       opacity: 1;
@@ -381,16 +375,16 @@
       color: white;
       font-weight: normal;
       font-size: 15px;
-      background: #219653;
+      background: #27AE60;
       width: fit-content;
       display: block;
     }
 
     button, a {
       padding: 2px 11px;
-      border: 1px solid #219653;
+      border: 1px solid #27AE60;
       background: transparent;
-      color: #219653;
+      color: #27AE60;
       font-size: 15px;
       font-weight: bold;
       text-decoration: none;
@@ -399,7 +393,7 @@
     }
 
     button:hover, a:hover {
-      background: #219653;
+      background: #27AE60;
       cursor: pointer;
       color: white;
     }
@@ -436,7 +430,7 @@
       top: 1.3rem;
       left: 6rem;
       z-index: 100;
-      color: #219653;
+      color: #27AE60;
       font-weight: bold;
     }
 
@@ -456,7 +450,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%);
-      color: #219653;
+      color: #27AE60;
       max-width: 600px;
       width: 100vw;
     }
@@ -517,7 +511,7 @@
       max-width: 243px;
       height: auto;
       background: #F2F2F2;
-      color: #219653;
+      color: #27AE60;
       opacity: 1;
 
       margin-bottom: 20px;
@@ -540,7 +534,7 @@
       border: 1px solid transparent;
       font-family: Montserrat;
       color: #F2F2F2;
-      background-color: #219653;
+      background-color: #27AE60;
       margin: 10px 0px;
       font-weight: normal;
     }
@@ -700,7 +694,6 @@
       .content {
         padding: 0 10px;
         width: 100%;
-        margin-top: -4rem;
       }
 
       .disc-block {
@@ -763,11 +756,13 @@
 
       <div class="sticky-nav">
         <h2>Courses</h2>
-        <div class="subj-card {{sre}}" onClick="window.location = '/?pagerequest=sre';">
-          <p>01</p>
-          <p>Software Requirements Engineering</p>
+        {{#each courses}}
+        <div class="subj-card {{active}}" onClick="window.location = '/school/?pagerequest={{course}}';">
+          <p></p>
+          <p>{{name}}</p>
         </div>
-
+        {{/each}}
+<!--
         <div class="subj-card {{tpl}}" onClick="window.location = '/?pagerequest=tpl';">
           <p>02</p>
           <p>Theory of Programming Languages</p>
@@ -781,7 +776,7 @@
         <div class="subj-card {{is}}" onClick="window.location = '/?pagerequest=is';">
           <p>04</p>
           <p>Information Security</p>
-        </div>
+        </div> -->
 
         <!-- <div class="my-sticker desktop">
           <p>
@@ -1054,6 +1049,11 @@
         {{/if}}
         {{#unless token}}
         <style media="screen">
+
+          .content {
+            margin-top: -4rem;
+          }
+
           svg.background {
             position: fixed;
             bottom: 11px;
