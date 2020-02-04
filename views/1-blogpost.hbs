@@ -33,6 +33,10 @@
         color: brown;
       }
 
+      body {
+        padding-bottom: 8rem;
+      }
+
       body > * {
         max-width: 900px;
         margin: auto;
@@ -220,6 +224,60 @@
         color: darkcyan;
       }
 
+      .subscribe > input {
+        box-sizing: border-box;
+        height: 3rem;
+        font-family: Roboto;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 22px;
+        color: #828282;
+        border: 1px solid #d4d4d4;
+        padding: 0 26px;
+      }
+
+      .subscribe > input::placeholder {
+        box-sizing: border-box;
+        height: 3rem;
+        color: #828282;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 22px;
+      }
+
+      .subscribe > button {
+        display: block;
+        height: 3rem;
+        background: #f7f7f7;
+        border: 0px solid transparent;
+        box-sizing: border-box;
+        padding: 8px 27px;
+        font-family: Roboto;
+        font-style: italic;
+        font-weight: 300;
+        font-size: 20px;
+        color: #717171;
+        margin-top: 1rem;
+      }
+
+      .subscribe > .success {
+        font-weight: normal;
+        font-size: 17px;
+        font-style: italic;
+        color: darkcyan;
+      }
+
+      .subscribe > .error {
+        font-weight: normal;
+        font-size: 17px;
+        font-style: italic;
+        color: darkred;
+      }
+
+      .d-none {
+        display: none;
+      }
+
       @media (max-width: 799px) {
         h1 {
           font-family: Roboto;
@@ -334,6 +392,72 @@
 
       {{/each}}
 
+      <form class="subscribe">
+        <input class="width-m-half" type="email" id="subscribe-input" name="email" value="" placeholder="youremail@email.com">
+        <button type="button" name="button">Subscribe</button>
+        <p class="success d-none">Hooray ! You have subscribed to zakatlists. Thanks</p>
+        <p class="error d-none"></p>
+      </form>
+
     </section>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+
+    <script type="text/javascript">
+      $(document).on('click','.subscribe>button',function() {
+        $('.subscribe>.success').addClass('d-none');
+        $('.subscribe>.error:not(input)').addClass('d-none');
+        if (!($(".subscribe").valid())) {
+
+          return;
+
+        }
+
+        let data = {
+          "query": 'subscription',
+          "email": $('#subscribe-input').val(),
+        };
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log(msg);
+          $('.subscribe>.success').removeClass('d-none');
+          // $('button').attr('disabled',true);
+        }).fail((e) => {
+          $('.error').removeClass('d-none').html(e.responseText);
+          console.log(e.responseText);
+        });
+      })
+
+      $(".subscribe").validate({
+
+        rules: {
+          'email' : {
+            required: true,
+            email: true
+          }
+        },
+        messages: {
+          'email' : {
+            required: `Email is required before you press this button.`,
+            email: `Email is invalid`,
+          },
+        },
+        errorPlacement: function(error, element) {
+          $('.error').removeClass('d-none').html(error);
+        },
+
+      });
+
+    </script>
   </body>
 </html>
