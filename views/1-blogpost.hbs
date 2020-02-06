@@ -29,6 +29,14 @@
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:100,300i,400,400i,700,900&display=swap" rel="stylesheet">
     <style media="screen" type="text/css">
 
+      .d-flex {
+        display: flex;
+      }
+
+      .m-auto {
+        margin: auto;
+      }
+
       .lavendar {
         color: brown;
       }
@@ -193,6 +201,16 @@
         width: 75%;
       }
 
+      h5 {
+        font-family: Roboto;
+        font-style: normal;
+        font-size: 22px;
+        line-height: 184.9%;
+        align-items: center;
+        color: #4f4f4f;
+        font-weight: bold;
+      }
+
       h6 {
         font-family: Roboto;
         font-style: normal;
@@ -338,7 +356,7 @@
           color: #4F4F4F;
         }
 
-        h6 {
+        h6, h5 {
           font-size: 20px;
         }
 
@@ -423,8 +441,16 @@
         <img class="{{{class}}}" src="/quranDailyImages/{{msg}}" alt="">
       {{/if}}
 
+      {{#if (match 'h5' type)}}
+      <h5 class="{{{class}}}">{{{msg}}}</h5>
+      {{/if}}
+
       {{#if (match 'h6' type)}}
         <h6 class="{{{class}}}">{{{msg}}}</h6>
+      {{/if}}
+
+      {{#if (match 'iframe' type)}}
+        <iframe class="{{{class}}}" width="560" height="315" src="{{{msg}}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       {{/if}}
 
       {{/each}}
