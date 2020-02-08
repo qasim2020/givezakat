@@ -469,13 +469,15 @@
 
     <script type="text/javascript">
       $(document).on('click','.subscribe>button',function() {
-        $('.subscribe>.success').addClass('d-none');
-        $('.subscribe>.error:not(input)').addClass('d-none');
+
         if (!($(".subscribe").valid())) {
 
           return;
 
         }
+
+        $('.subscribe>.success').addClass('d-none');
+        $('.subscribe>.error:not(input)').addClass('d-none');
 
         let data = {
           "query": 'subscription',
@@ -516,7 +518,8 @@
           },
         },
         errorPlacement: function(error, element) {
-          $('.error').removeClass('d-none').html(error);
+          console.log(error,element);
+          $(element).siblings('.error').removeClass('d-none').html(error);
         },
 
       });
