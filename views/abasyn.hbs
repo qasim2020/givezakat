@@ -413,7 +413,7 @@
     .overlay.show {
       display: block;
       background: black;
-      z-index: 10;
+      z-index: 100;
     }
 
     .overlay > iframe {
@@ -1297,8 +1297,8 @@
     })
 
     $('.overlay>button').on('click',function() {
-      console.log('hello');
       $(this).closest('.overlay').removeClass('show');
+      $('.overlay').find('iframe').attr({src:''});
     })
 
     $('.collapse_all').on('click',function() {
