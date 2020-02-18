@@ -78,9 +78,23 @@ let authenticate = (req,res,next) => {
   });
 };
 
-
 app.get('/hacks',(req,res) => {
-  res.render('1-fp.hbs');
+  res.render('1-home_new.hbs',{data: [
+    {type:'person',msg:[
+      {type: 'img', msg: 'pic1.png'},
+      {type: 'facebook', msg: 'facebook.com/zakatlists'},
+      {type: 'twitter', msg: 'twitter.com/zakatlists'},
+      {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
+      {type: 'intro', msg: 'He is a good boy, working hard to make zakatlists work. 💪'},
+      {type: 'url', msg: 'https://www.zakatlists.com'},
+    ]},
+    {type:'blog',msg:'blog'},
+    {type:'course',msg:'course'},
+    {type:'signin',msg:'signin'},
+    {type:'meetup',msg:'meetup'},
+    {type:'subscribe',msg:'subscribe'},
+    {type:'footer',msg:'footer'}
+  ]});
 });
 
 app.get('/profile/:token',authenticate,(req,res) => {

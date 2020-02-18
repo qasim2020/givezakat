@@ -1,0 +1,27 @@
+{{#each msg}}
+
+{{#if (match 'img' type)}}
+  <img src="{{msg}}" alt="">
+{{/if}}
+
+{{#if (match 'facebook' type)}}
+  <a href="{{msg}}">{{msg}}</a>
+{{/if}}
+
+{{#if (match 'twitter' type)}}
+  <a href="{{msg}}">{{msg}}</a>
+{{/if}}
+
+{{#if (match 'makerlog' type)}}
+  <a href="{{msg}}">{{msg}}</a>
+{{/if}}
+
+{{#if (match 'intro' type)}}
+  <p>{{msg}}</p>
+{{/if}}
+
+{{#if (match 'url' type)}}
+  <p>{{msg}}</p>
+{{/if}}
+
+{{/each}}
