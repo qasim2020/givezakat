@@ -1,1 +1,56 @@
-<p>meetup</p>
+<style media="screen">
+  .meetup_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+  }
+
+  .meetup_{{@index}} > button {
+    float: left;
+    color: white;
+  }
+
+  .meetup_{{@index}} > .box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+</style>
+
+<div class="meetup_{{@index}}">
+{{#each msg}}
+
+{{#if (match 'h3' type)}}
+  <p class="{{class}}">{{msg}}</p>
+{{/if}}
+
+{{#if (match 'button' type)}}
+  <button type="button" name="button" class="{{class}}">{{msg}}</button>
+{{/if}}
+
+{{#if (match 'date' type)}}
+  <div class="box">
+    <p class="figures">
+      <span class="big">12</span><br>
+      <span class="small">Days</span>
+    </p>
+    <p class="separators">:</p>
+    <p class="figures">
+      <span class="big">22</span><br>
+      <span class="small">Hours</span>
+    </p>
+    <p class="separators">:</p>
+    <p class="figures">
+      <span class="big">12</span><br>
+      <span class="small">Minutes</span>
+    </p>
+    <p class="separators">:</p>
+    <p class="figures">
+      <span class="big">12</span><br>
+      <span class="small">Seconds</span>
+    </p>
+  </div>
+{{/if}}
+
+{{/each}}
+</div>

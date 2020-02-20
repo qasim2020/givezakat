@@ -1,1 +1,29 @@
-<p>signin</p>
+<style media="screen">
+  .signin_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+  }
+
+  .signin_{{@index}} > button {
+    float: left;
+    color: white;
+  }
+</style>
+
+<div class="signin_{{@index}}">
+{{#each msg}}
+
+{{#if (match 'h3' type)}}
+  <p class="{{class}}">{{msg}}</p>
+{{/if}}
+
+{{#if (match 'button' type)}}
+  <button type="button" name="button" class="{{class}}">{{msg}}</button>
+{{/if}}
+
+{{#if (match 'p' type)}}
+  <p class="{{class}}">{{msg}}</p>
+{{/if}}
+
+{{/each}}
+</div>

@@ -3,6 +3,28 @@
   <head>
     <meta charset="utf-8">
     <title>Zakatlists - Home</title>
+    <style media="screen">
+      html {
+        background: #333333;
+        color: white;
+      }
+
+      nav {
+        max-width: 1440px;
+        margin: auto;
+      }
+
+      .container {
+        max-width: 1440px;
+        margin: auto;
+
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        grid-auto-rows: minmax(125px, auto);
+
+        grid-gap: 10px;
+      }
+    </style>
   </head>
   <body>
     <nav>
@@ -38,6 +60,7 @@
         </p>
     </nav>
 
+    <div class="container">
 
     {{#each data}}
 
@@ -70,5 +93,7 @@
     {{/if}}
 
     {{/each}}
+
+    </div>
   </body>
 </html>

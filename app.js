@@ -80,7 +80,7 @@ let authenticate = (req,res,next) => {
 
 app.get('/hacks',(req,res) => {
   res.render('1-home_new.hbs',{data: [
-    {type:'person',msg:[
+    {type:'person',width:2, height:1, msg:[
       {type: 'img', msg: 'pic1.png'},
       {type: 'facebook', msg: 'facebook.com/zakatlists'},
       {type: 'twitter', msg: 'twitter.com/zakatlists'},
@@ -88,12 +88,40 @@ app.get('/hacks',(req,res) => {
       {type: 'intro', msg: 'He is a good boy, working hard to make zakatlists work. 💪'},
       {type: 'url', msg: 'https://www.zakatlists.com'},
     ]},
-    {type:'blog',msg:'blog'},
-    {type:'course',msg:'course'},
-    {type:'signin',msg:'signin'},
-    {type:'meetup',msg:'meetup'},
-    {type:'subscribe',msg:'subscribe'},
-    {type:'footer',msg:'footer'}
+    {type:'blog', width:2, height:1, msg:[
+      {type: 'h3', msg: 'What I grasped from Surah Fatiha?'},
+      {type: 'p', msg: "I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran."},
+      {type: 'date', msg: '1 Jan 2020'},
+      {type: 'author', msg: 'Qasim'}
+    ]},
+    {type:'course', width:2, height:2, courses:[
+      {course: "STQA", active: true, name: "Software Testing and Quality Assurance"},
+      {course: "ATOC", active: false, name: "Advanced Theory of Computation"},
+      {course: "AOS", active: false, name: "Advanced Operating Systems"},
+    ]},
+    {type:'signin', width:2, height:1, msg:[
+      {type: 'h3', msg: 'Sign up to get unlimited access to the entire content of zakatlists'},
+      {type: 'button', msg: 'Sign In'},
+      {type: 'button', msg: 'Sign Up for Rs 300 / Month'},
+    ]},
+    {type:'meetup', width:2, height:1, msg:[
+      {type: 'h3', msg: "Meetup coming in"},
+      {type: 'date', msg: "1 Mar 2020"},
+      {type: 'button', msg: 'Speak'},
+      {type: 'button', msg: 'Attend'},
+      {type: 'button', msg: 'Details'},
+    ]},
+    {type:'subscribe', width:2, height:1, msg:[
+      {type: 'h6', msg: "Subscribe to stay tuned to zakatlists"},
+      {type: 'input', msg: "enter your email here"},
+      {type: 'button', msg: "Submit"},
+    ]},
+    {type:'footer', width:6, height:1, msg:[
+      {type: 'p', msg: "Eat from their fruits, and give the due alms on the day of harvest. <br> - Al Quran 6:141", class: "small"},
+      {type: 'facebook', msg: 'facebook.com/zakatlists'},
+      {type: 'twitter', msg: 'twitter.com/zakatlists'},
+      {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
+    ]}
   ]});
 });
 

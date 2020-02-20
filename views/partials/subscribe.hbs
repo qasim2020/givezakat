@@ -1,1 +1,31 @@
-<p>subscribe</p>
+<style media="screen">
+  .subscribe_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+  }
+
+  .subscribe_{{@index}} > button {
+    color: white;
+    display: block;
+  }
+</style>
+
+<div class="subscribe_{{@index}}">
+{{#each msg}}
+
+{{#if (match 'h6' type)}}
+  <p class="{{class}}">{{msg}}</p>
+{{/if}}
+
+{{#if (match 'input' type)}}
+  <input type="text" name="" value="" placeholder="{{msg}}">
+{{/if}}
+
+
+
+{{#if (match 'button' type)}}
+  <button type="button" name="button" class="{{class}}">{{msg}}</button>
+{{/if}}
+
+{{/each}}
+</div>

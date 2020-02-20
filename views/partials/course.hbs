@@ -1,1 +1,47 @@
-<p>course here</p>
+<style media="screen">
+
+  .course_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+  }
+
+  .sticky-nav > *:not(:nth-child(1)) {
+    margin-bottom: 10px;
+  }
+
+  .subj-card.true {
+    background: #27AE60;
+    color: #F2F2F2;
+    opacity: 1;
+  }
+
+  .sticky-nav > * {
+    max-width: 243px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .subj-card {
+    width: 100%;
+    max-width: 243px;
+    height: auto;
+    background: #F2F2F2;
+    color: #27AE60;
+    opacity: 0.8;
+    margin-bottom: 20px;
+    border-radius: 2px;
+    padding: 16px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+  }
+</style>
+
+<div class="course_{{@index}} sticky-nav">
+  <h3>Featured Courses</h3>
+  {{#each courses}}
+  <div class="subj-card {{active}}" onClick="window.location = '/school/?pagerequest={{course}}';">
+    <p></p>
+    <p>{{name}}</p>
+  </div>
+  {{/each}}
+</div>

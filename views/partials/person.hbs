@@ -1,3 +1,11 @@
+<style media="screen">
+  .person_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+  }
+</style>
+
+<div class="person_{{@index}}">
 {{#each msg}}
 
 {{#if (match 'img' type)}}
@@ -25,3 +33,4 @@
 {{/if}}
 
 {{/each}}
+</div>
