@@ -2,12 +2,35 @@
   .blog_{{@index}} {
     grid-column: span {{width}};
     grid-row: span {{height}};
+    color: #828282;
+    padding: 0 31px;
   }
 
   .blog_{{@index}} > .foot {
     display: flex;
     float: left;
     align-items: center;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 157.9%;
+  }
+
+  .blog_{{@index}} > .foot > p {
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+
+  .blog_{{@index}} > p {
+    font-family: Roboto;
+    font-style: italic;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 157.9%;
+
+    /* Gray 3 */
   }
 </style>
 

@@ -5,8 +5,25 @@
     grid-row: span {{height}};
   }
 
-  .sticky-nav > *:not(:nth-child(1)) {
-    margin-bottom: 10px;
+  .subj-card {
+    width: 100%;
+    max-width: 243px;
+    height: auto;
+    background: #F2F2F2;
+    color: #27AE60;
+    opacity: 0.8;
+
+    margin-bottom: 20px;
+    border-radius: 2px;
+    padding: 16px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+  }
+
+  .subj-card:hover {
+    opacity: 1;
+    cursor: pointer;
+    border:1px dashed #27AE60;
   }
 
   .subj-card.true {
@@ -15,24 +32,32 @@
     opacity: 1;
   }
 
+  .subj-card > p:nth-child(1) {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 33px;
+    line-height: 178.4%;
+    margin: 0;
+  }
+
+  .subj-card > p:nth-child(2) {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    line-height: 27px;
+    margin: 0;
+  }
+
   .sticky-nav > * {
     max-width: 243px;
     margin-right: auto;
     margin-left: auto;
   }
 
-  .subj-card {
-    width: 100%;
-    max-width: 243px;
-    height: auto;
-    background: #F2F2F2;
-    color: #27AE60;
-    opacity: 0.8;
-    margin-bottom: 20px;
-    border-radius: 2px;
-    padding: 16px;
-    box-sizing: border-box;
-    border: 1px solid transparent;
+  .sticky-nav > *:not(:nth-child(1)) {
+    margin-bottom: 10px;
   }
 </style>
 
@@ -40,7 +65,7 @@
   <h3>Featured Courses</h3>
   {{#each courses}}
   <div class="subj-card {{active}}" onClick="window.location = '/school/?pagerequest={{course}}';">
-    <p></p>
+    <p>0{{@index}}</p>
     <p>{{name}}</p>
   </div>
   {{/each}}

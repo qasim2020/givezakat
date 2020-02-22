@@ -79,9 +79,35 @@ let authenticate = (req,res,next) => {
 };
 
 app.get('/hacks',(req,res) => {
-  res.render('1-home_new.hbs',{data: [
+  readXlsxFile(__dirname+'/static/dashboard.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
+
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0);
+
+    console.log(sorted);
+    sorted = sorted.map(val => {
+      if (!val.type) return;
+      val.Content = val.Content.split('\r\n').map(val => {
+        console.log(val, val.split(': ')[0].indexOf('.'));
+        return {
+          type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+          msg: val.split(': ')[1].trim(),
+          class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[1] : ''
+        }
+      });
+      return val;
+    })
+
+    console.log(sorted);
+    res.render('1-home_new.hbs',{data: [
     {type:'person',width:2, height:1, msg:[
-      {type: 'img', msg: 'pic1.png'},
+      {type: 'img', msg: 'magazine/person.png'},
       {type: 'facebook', msg: 'facebook.com/zakatlists'},
       {type: 'twitter', msg: 'twitter.com/zakatlists'},
       {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
@@ -100,21 +126,21 @@ app.get('/hacks',(req,res) => {
       {course: "AOS", active: false, name: "Advanced Operating Systems"},
     ]},
     {type:'signin', width:2, height:1, msg:[
-      {type: 'h3', msg: 'Sign up to get unlimited access to the entire content of zakatlists'},
-      {type: 'button', msg: 'Sign In'},
-      {type: 'button', msg: 'Sign Up for Rs 300 / Month'},
+      {type: 'h3', msg: 'Sign up to get unlimited access to the entire content of zakatlists', class:"width-half"},
+      {type: 'button', msg: 'Sign In', class: 'primary'},
+      {type: 'button', msg: 'Sign Up for Rs 300 / Month', class:'secondary'},
     ]},
     {type:'meetup', width:2, height:1, msg:[
       {type: 'h3', msg: "Meetup coming in"},
       {type: 'date', msg: "1 Mar 2020"},
-      {type: 'button', msg: 'Speak'},
-      {type: 'button', msg: 'Attend'},
-      {type: 'button', msg: 'Details'},
+      {type: 'button', msg: 'Speak', class: "default"},
+      {type: 'button', msg: 'Attend', class: "default"},
+      {type: 'button', msg: 'Details', class: "default"},
     ]},
     {type:'subscribe', width:2, height:1, msg:[
       {type: 'h6', msg: "Subscribe to stay tuned to zakatlists"},
       {type: 'input', msg: "enter your email here"},
-      {type: 'button', msg: "Submit"},
+      {type: 'button', msg: "Submit", class: "default"},
     ]},
     {type:'footer', width:6, height:1, msg:[
       {type: 'p', msg: "Eat from their fruits, and give the due alms on the day of harvest. <br> - Al Quran 6:141", class: "small"},
@@ -123,6 +149,7 @@ app.get('/hacks',(req,res) => {
       {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
     ]}
   ]});
+}).catch(e => res.status(400).send(e));
 });
 
 app.get('/profile/:token',authenticate,(req,res) => {

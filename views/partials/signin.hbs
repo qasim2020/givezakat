@@ -6,7 +6,6 @@
 
   .signin_{{@index}} > button {
     float: left;
-    color: white;
   }
 </style>
 
@@ -14,7 +13,7 @@
 {{#each msg}}
 
 {{#if (match 'h3' type)}}
-  <p class="{{class}}">{{msg}}</p>
+  <h3 class="{{class}}">{{msg}}</h3>
 {{/if}}
 
 {{#if (match 'button' type)}}

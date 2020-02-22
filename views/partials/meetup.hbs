@@ -2,11 +2,11 @@
   .meetup_{{@index}} {
     grid-column: span {{width}};
     grid-row: span {{height}};
+    text-align: center;
   }
 
   .meetup_{{@index}} > button {
-    float: left;
-    color: white;
+    margin: -1px;
   }
 
   .meetup_{{@index}} > .box {
@@ -14,6 +14,67 @@
     align-items: center;
     justify-content: center;
     color: white;
+    margin-bottom: 20px;
+    padding: 11px 18px 22px 18px;
+    border: 1px solid #4F4F4F;
+    box-sizing: border-box;
+  }
+
+  .box > * {
+    margin: 0;
+  }
+
+  .box > .figures {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+  }
+
+  .big {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 52px;
+    line-height: 122.9%;
+    /* or 64px */
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 4 */
+    color: #BDBDBD;
+  }
+
+  .small {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 122.9%;
+    /* or 17px */
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 3 */
+    color: #828282;
+  }
+
+  .separators {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 35px;
+    line-height: 122.9%;
+    /* or 43px */
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 4 */
+    color: #BDBDBD;
   }
 </style>
 
@@ -21,7 +82,7 @@
 {{#each msg}}
 
 {{#if (match 'h3' type)}}
-  <p class="{{class}}">{{msg}}</p>
+  <h3 class="{{class}}">{{msg}}</h3>
 {{/if}}
 
 {{#if (match 'button' type)}}
@@ -31,22 +92,22 @@
 {{#if (match 'date' type)}}
   <div class="box">
     <p class="figures">
-      <span class="big">12</span><br>
+      <span class="big">12</span>
       <span class="small">Days</span>
     </p>
     <p class="separators">:</p>
     <p class="figures">
-      <span class="big">22</span><br>
+      <span class="big">22</span>
       <span class="small">Hours</span>
     </p>
     <p class="separators">:</p>
     <p class="figures">
-      <span class="big">12</span><br>
+      <span class="big">12</span>
       <span class="small">Minutes</span>
     </p>
     <p class="separators">:</p>
     <p class="figures">
-      <span class="big">12</span><br>
+      <span class="big">12</span>
       <span class="small">Seconds</span>
     </p>
   </div>

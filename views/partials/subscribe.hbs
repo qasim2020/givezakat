@@ -4,9 +4,28 @@
     grid-row: span {{height}};
   }
 
+  .subscribe_{{@index}} > h6 {
+    margin: 19px 0;
+  }
+
   .subscribe_{{@index}} > button {
-    color: white;
     display: block;
+    margin-left: -1px;
+  }
+
+  .subscribe_{{@index}} > input {
+    width: 80%;
+    height: 54px;
+
+    /* Gray 2 */
+    border: 1px solid #4F4F4F;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-family: Roboto;
+    padding: 0 8px;
+    background: transparent;
+    color: white;
+    margin-bottom: 12px;
   }
 </style>
 
@@ -14,14 +33,12 @@
 {{#each msg}}
 
 {{#if (match 'h6' type)}}
-  <p class="{{class}}">{{msg}}</p>
+  <h6 class="{{class}}">{{msg}}</h6>
 {{/if}}
 
 {{#if (match 'input' type)}}
   <input type="text" name="" value="" placeholder="{{msg}}">
 {{/if}}
-
-
 
 {{#if (match 'button' type)}}
   <button type="button" name="button" class="{{class}}">{{msg}}</button>
