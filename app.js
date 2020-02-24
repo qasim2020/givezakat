@@ -78,6 +78,34 @@ let authenticate = (req,res,next) => {
   });
 };
 
+let getBlogData = function(ser) {
+  readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
+
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0 && val.Ser == req.query.serialNo);
+
+    sorted = sorted.map(val => {
+      if (!val.Content) return;
+      val.Content = val.Content.split('\r\n').map(val => {
+        console.log(val);
+        return {
+          type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+          msg: val.split(': ')[1].trim(),
+          class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.').slice(1,4).join(' ') : ''
+        }
+      });
+      val.Date = val.Date.toString().split(' ').slice(1,4).join('-')
+      return val;
+    })
+  })
+}
+
 app.get('/hacks',(req,res) => {
 
   req.query.Date = req.query.Date || new Date();
@@ -85,6 +113,7 @@ app.get('/hacks',(req,res) => {
     let sorted = rows.filter((val, index) => index != 0).map(val => {
       val = val.map(v => {
         return typeof v != 'string' ? v : v.split('\r\n').reduce((total,val) => {
+
           console.log(val.split(': ')[0],/type|width|height/gi.test(val.split(': ')[0]));
 
           switch (true) {
@@ -93,22 +122,25 @@ app.get('/hacks',(req,res) => {
                 [val.split(': ')[0]] : val.split(': ')[1]
               })
               break;
+            case (/blog/gi.test(total.type) && /ser/gi.test(val.split(': ')[0])):
+              total.msg = {type: 'h3', msg: 'What I grasped from Surah Fatiha..', author: 'Qasim', date: '1 Feb 2020'}
+              // total.msg = getBlogData(val.split(': ')[1]);
+              break;
             default:
-              // total.msg = total.msg || [];
-              // return total.msg.push({
-              //   type: val.split(': ')[0],
-              //   msg: val.split(': ')[1]
-              // });
+              total.msg = total.msg || [];
+              total.msg.push({
+                type: val.split(': ')[0],
+                msg: val.split(': ')[1]
+              });
           }
 
           return total;
         },{})
       });
       return val;
-    }).filter(val => val[0].toString().split(' ').slice(1,4).join(' ') == req.query.Date.toString().split(' ').slice(1,4).join(' '));
+    });
 
-
-    console.log(JSON.stringify(sorted,0,2));
+    console.log(JSON.stringify(sorted[sorted.length-1],0,2));
 
     return res.render('1-home_new.hbs',{data: [
     {type:'person',width:2, height:1, msg:[
