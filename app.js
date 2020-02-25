@@ -79,7 +79,7 @@ let authenticate = (req,res,next) => {
 };
 
 let getBlogData = function(ser) {
-  readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+  return readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
     let sorted = rows.map((val) =>
       val.reduce((total,inner,index) => {
 
@@ -88,12 +88,12 @@ let getBlogData = function(ser) {
         })
         return total;
       },{})
-    ).filter((val,index) => index != 0 && val.Ser == req.query.serialNo);
+    ).filter((val,index) => index != 0 && val.Ser == ser);
 
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val);
+        // console.log(val);
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
@@ -103,11 +103,41 @@ let getBlogData = function(ser) {
       val.Date = val.Date.toString().split(' ').slice(1,4).join('-')
       return val;
     })
+
+    // {type:'blog', width:2, height:1, msg:[
+    //   {type: 'h3', msg: 'What I grasped from Surah Fatiha?'},
+    //   {type: 'p', msg: "I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran."},
+    //   {type: 'date', msg: '1 Jan 2020'},
+    //   {type: 'author', msg: 'Qasim'}
+    // ]},
   })
 }
 
-app.get('/hacks',(req,res) => {
+let getCourseData = function(ser) {
+  let req = {query: {}};
+  return readXlsxFile(__dirname+'/static/life.xlsx').then((rows) => {
+    let array = [];
+    // console.log(rows[0]);
+    let sorted = rows.filter((val,index) => index < 2);
+    let required = ser.split(',').map((val, index) => {
+      return {
+        ser: Number(val),
+        course: sorted[0][Number(val)+1],
+        active: index == 0,
+        name: sorted[1][Number(val)+1].split('Subject: ')[1].split(';')[0]
+      }
+    })
 
+    // console.log(required);
+
+    return required;
+
+  })
+}
+
+let amazing = function () {
+  let req = {query: {}};
+  let promises = [];
   req.query.Date = req.query.Date || new Date();
   readXlsxFile(__dirname+'/static/dashboard.xlsx').then((rows) => {
     let sorted = rows.filter((val, index) => index != 0).map(val => {
@@ -123,8 +153,14 @@ app.get('/hacks',(req,res) => {
               })
               break;
             case (/blog/gi.test(total.type) && /ser/gi.test(val.split(': ')[0])):
-              total.msg = {type: 'h3', msg: 'What I grasped from Surah Fatiha..', author: 'Qasim', date: '1 Feb 2020'}
+              // total.msg = {type: 'h3', msg: 'What I grasped from Surah Fatiha..', author: 'Qasim', date: '1 Feb 2020'}
               // total.msg = getBlogData(val.split(': ')[1]);
+              promises.push(getBlogData(val.split(': ')[1]));
+              break;
+            case (/course/gi.test(total.type) && /ser/gi.test(val.split(': ')[0])):
+              // total.msg = {type: 'h3', msg: 'What I grasped from Surah Fatiha..', author: 'Qasim', date: '1 Feb 2020'}
+              // total.msg = getBlogData(val.split(': ')[1]);
+              promises.push(getCourseData(val.split(': ')[1]));
               break;
             default:
               total.msg = total.msg || [];
@@ -140,7 +176,14 @@ app.get('/hacks',(req,res) => {
       return val;
     });
 
+    console.log(promises);
     console.log(JSON.stringify(sorted[sorted.length-1],0,2));
+  })
+}
+
+amazing();
+
+app.get('/hacks',(req,res) => {
 
     return res.render('1-home_new.hbs',{data: [
     {type:'person',width:2, height:1, msg:[
@@ -186,8 +229,7 @@ app.get('/hacks',(req,res) => {
       {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
     ]}
   ]});
-}).catch(e => res.status(400).send(e));
-});
+})
 
 app.get('/profile/:token',authenticate,(req,res) => {
 
