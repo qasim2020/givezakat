@@ -78,7 +78,9 @@ let authenticate = (req,res,next) => {
   });
 };
 
-let getBlogData = function(ser) {
+let getBlogData = function(val) {
+  let req = {query: {}},
+      ser = val.msg;
   return readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
     let sorted = rows.map((val) =>
       val.reduce((total,inner,index) => {
@@ -104,20 +106,25 @@ let getBlogData = function(ser) {
       return val;
     })
 
-    // {type:'blog', width:2, height:1, msg:[
-    //   {type: 'h3', msg: 'What I grasped from Surah Fatiha?'},
-    //   {type: 'p', msg: "I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran."},
-    //   {type: 'date', msg: '1 Jan 2020'},
-    //   {type: 'author', msg: 'Qasim'}
-    // ]},
-  })
+    let required = [
+      {type: 'h3', msg: sorted[0].Content[0].msg},
+      {type: 'tags', msg: sorted[0].Tags},
+      {type: 'ayats', msg: sorted[0].Ayats},
+      {type: 'p', msg: sorted[0].Content[1].msg},
+      {type: 'date', msg: sorted[0].Date},
+      {type: 'author', msg: sorted[0].Author},
+    ]
+
+    return {input: val, required: required};
+  }).catch(e => e);
+
 }
 
-let getCourseData = function(ser) {
-  let req = {query: {}};
+let getCourseData = function(val) {
+  let req = {query: {}},
+      ser = val.msg;
   return readXlsxFile(__dirname+'/static/life.xlsx').then((rows) => {
     let array = [];
-    // console.log(rows[0]);
     let sorted = rows.filter((val,index) => index < 2);
     let required = ser.split(',').map((val, index) => {
       return {
@@ -128,23 +135,20 @@ let getCourseData = function(ser) {
       }
     })
 
-    // console.log(required);
+    return {input: val, required};
 
-    return required;
-
-  })
+  }).catch(e => e);
 }
 
-let amazing = function () {
-  let req = {query: {}};
-  let promises = [];
-  req.query.Date = req.query.Date || new Date();
-  readXlsxFile(__dirname+'/static/dashboard.xlsx').then((rows) => {
-    let sorted = rows.filter((val, index) => index != 0).map(val => {
-      val = val.map(v => {
-        return typeof v != 'string' ? v : v.split('\r\n').reduce((total,val) => {
+app.get('/hacks',(req,res) => {
 
-          console.log(val.split(': ')[0],/type|width|height/gi.test(val.split(': ')[0]));
+  let sorted = []
+  // req.query.Date = req.query.Date || new Date();
+  readXlsxFile(__dirname+'/static/dashboard.xlsx')
+  .then(rows => {
+    sorted = rows.filter((val, index) => index != 0).map(val => {
+      val = val.map(v => {
+        return typeof v != 'string' ? {type: 'Date', msg: v} : v.split('\r\n').reduce((total,val) => {
 
           switch (true) {
             case (/type|width|height/gi.test(val.split(': ')[0])):
@@ -152,21 +156,12 @@ let amazing = function () {
                 [val.split(': ')[0]] : val.split(': ')[1]
               })
               break;
-            case (/blog/gi.test(total.type) && /ser/gi.test(val.split(': ')[0])):
-              // total.msg = {type: 'h3', msg: 'What I grasped from Surah Fatiha..', author: 'Qasim', date: '1 Feb 2020'}
-              // total.msg = getBlogData(val.split(': ')[1]);
-              promises.push(getBlogData(val.split(': ')[1]));
-              break;
-            case (/course/gi.test(total.type) && /ser/gi.test(val.split(': ')[0])):
-              // total.msg = {type: 'h3', msg: 'What I grasped from Surah Fatiha..', author: 'Qasim', date: '1 Feb 2020'}
-              // total.msg = getBlogData(val.split(': ')[1]);
-              promises.push(getCourseData(val.split(': ')[1]));
-              break;
             default:
               total.msg = total.msg || [];
               total.msg.push({
-                type: val.split(': ')[0],
-                msg: val.split(': ')[1]
+                type: val.split(': ')[0].indexOf('.') ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+                msg: val.split(': ')[1],
+                class: val.split(': ')[0].indexOf('.') ? val.split(': ')[0].split('.').splice(1,1).join(' ') : '',
               });
           }
 
@@ -175,60 +170,102 @@ let amazing = function () {
       });
       return val;
     });
-
-    console.log(promises);
-    console.log(JSON.stringify(sorted[sorted.length-1],0,2));
+    // console.log(sorted.filter(val => console.log(val[0].msg.toString().split(' ').slice(1,4).join(' '))));
+    // return req.query.hasOwnProperty('Date') ? sorted.find(val => val[0].msg.toString().split(' ').slice(1,4).join(' ') == req.query.Date().toString().split(' ').slice(1,4).join(' ')) : sorted[sorted.length - 1];
+		sorted = sorted[sorted.length - 1];
+    // return sorted[sorted.length - 1];//.filter(val => console.log(val[0].msg.toString().split(' ').slice(1,4).join(' ')));
+		return sorted;
   })
-}
+  .then(sorted => {
+		console.log('asdfasdfasdf',sorted);
+    let p = sorted.reduce((total,val,index) => {
+          if (/course|blog/.test(val.type) == false) return total;
+          total.push({
+            index: index,
+            query: val.type,
+            msg: val.msg[0].msg
+          })
 
-amazing();
+          return total;
 
-app.get('/hacks',(req,res) => {
+      },[]);
+    return Promise.all(p.map(val => {
+      switch (true) {
+        case /blog/gi.test(val.query):
+          return getBlogData(val)
+          break;
+        case /course/gi.test(val.query):
+          return getCourseData(val)
+          break;
+        default:
+          break;
+      }
+    }))
+  })
+  .then(values => {
+    sorted = sorted.map((val,index) => {
+      let found = values.filter(val => {
+        return val.input.index == index
+      });
+      if (found.length > 0) {
+        return Object.assign(val, {
+          msg: found[0].required
+        })
+      }
+      return val;
+    })
+    console.log(sorted);
+    console.log(JSON.stringify(sorted[4],0,2));
 
-    return res.render('1-home_new.hbs',{data: [
-    {type:'person',width:2, height:1, msg:[
-      {type: 'img', msg: 'magazine/person.png'},
-      {type: 'facebook', msg: 'facebook.com/zakatlists'},
-      {type: 'twitter', msg: 'twitter.com/zakatlists'},
-      {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
-      {type: 'intro', msg: 'He is a good boy, working hard to make zakatlists work. 💪'},
-      {type: 'url', msg: 'https://www.zakatlists.com'},
-    ]},
-    {type:'blog', width:2, height:1, msg:[
-      {type: 'h3', msg: 'What I grasped from Surah Fatiha?'},
-      {type: 'p', msg: "I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran."},
-      {type: 'date', msg: '1 Jan 2020'},
-      {type: 'author', msg: 'Qasim'}
-    ]},
-    {type:'course', width:2, height:2, courses:[
-      {course: "STQA", active: true, name: "Software Testing and Quality Assurance"},
-      {course: "ATOC", active: false, name: "Advanced Theory of Computation"},
-      {course: "AOS", active: false, name: "Advanced Operating Systems"},
-    ]},
-    {type:'signin', width:2, height:1, msg:[
-      {type: 'h3', msg: 'Sign up to get unlimited access to the entire content of zakatlists', class:"width-half"},
-      {type: 'button', msg: 'Sign In', class: 'primary'},
-      {type: 'button', msg: 'Sign Up for Rs 300 / Month', class:'secondary'},
-    ]},
-    {type:'meetup', width:2, height:1, msg:[
-      {type: 'h3', msg: "Meetup coming in"},
-      {type: 'date', msg: "1 Mar 2020"},
-      {type: 'button', msg: 'Speak', class: "default"},
-      {type: 'button', msg: 'Attend', class: "default"},
-      {type: 'button', msg: 'Details', class: "default"},
-    ]},
-    {type:'subscribe', width:2, height:1, msg:[
-      {type: 'h6', msg: "Subscribe to stay tuned to zakatlists"},
-      {type: 'input', msg: "enter your email here"},
-      {type: 'button', msg: "Submit", class: "default"},
-    ]},
-    {type:'footer', width:6, height:1, msg:[
-      {type: 'p', msg: "Eat from their fruits, and give the due alms on the day of harvest. <br> - Al Quran 6:141", class: "small"},
-      {type: 'facebook', msg: 'facebook.com/zakatlists'},
-      {type: 'twitter', msg: 'twitter.com/zakatlists'},
-      {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
-    ]}
-  ]});
+    return res.render('1-home_new.hbs',{data: sorted});
+
+  })
+  .catch(e => console.log('ERRORRRR:',e));
+
+  //   return res.render('1-home_new.hbs',{data: [
+  //   {type:'person',width:2, height:1, msg:[
+  //     {type: 'img', msg: 'magazine/person.png'},
+  //     {type: 'facebook', msg: 'facebook.com/zakatlists'},
+  //     {type: 'twitter', msg: 'twitter.com/zakatlists'},
+  //     {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
+  //     {type: 'intro', msg: 'He is a good boy, working hard to make zakatlists work. 💪'},
+  //     {type: 'url', msg: 'https://www.zakatlists.com'},
+  //   ]},
+  //   {type:'blog', width:2, height:1, msg:[
+  //     {type: 'h3', msg: 'What I grasped from Surah Fatiha?'},
+  //     {type: 'p', msg: "I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran."},
+  //     {type: 'date', msg: '1 Jan 2020'},
+  //     {type: 'author', msg: 'Qasim'}
+  //   ]},
+  //   {type:'course', width:2, height:2, courses:[
+  //     {course: "STQA", active: true, name: "Software Testing and Quality Assurance"},
+  //     {course: "ATOC", active: false, name: "Advanced Theory of Computation"},
+  //     {course: "AOS", active: false, name: "Advanced Operating Systems"},
+  //   ]},
+  //   {type:'signin', width:2, height:1, msg:[
+  //     {type: 'h3', msg: 'Sign up to get unlimited access to the entire content of zakatlists', class:"width-half"},
+  //     {type: 'button', msg: 'Sign In', class: 'primary'},
+  //     {type: 'button', msg: 'Sign Up for Rs 300 / Month', class:'secondary'},
+  //   ]},
+  //   {type:'meetup', width:2, height:1, msg:[
+  //     {type: 'h3', msg: "Meetup coming in"},
+  //     {type: 'date', msg: "1 Mar 2020"},
+  //     {type: 'button', msg: 'Speak', class: "default"},
+  //     {type: 'button', msg: 'Attend', class: "default"},
+  //     {type: 'button', msg: 'Details', class: "default"},
+  //   ]},
+  //   {type:'subscribe', width:2, height:1, msg:[
+  //     {type: 'h6', msg: "Subscribe to stay tuned to zakatlists"},
+  //     {type: 'input', msg: "enter your email here"},
+  //     {type: 'button', msg: "Submit", class: "default"},
+  //   ]},
+  //   {type:'footer', width:6, height:1, msg:[
+  //     {type: 'p', msg: "Eat from their fruits, and give the due alms on the day of harvest. <br> - Al Quran 6:141", class: "small"},
+  //     {type: 'facebook', msg: 'facebook.com/zakatlists'},
+  //     {type: 'twitter', msg: 'twitter.com/zakatlists'},
+  //     {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
+  //   ]}
+  // ]});
 })
 
 app.get('/profile/:token',authenticate,(req,res) => {
