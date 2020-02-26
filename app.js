@@ -398,7 +398,7 @@ hbs.registerHelper("matchWithCaller", function(value1,value2,options) {
 })
 
 hbs.registerHelper("checkActiveSponsor", function(sponsors) {
-  if (sponsors._id == sponsors.caller) return '';
+  if (sponsors && sponsors._id == sponsors.caller) return '';
   return 'd-none';
 })
 
