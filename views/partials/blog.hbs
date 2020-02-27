@@ -1,4 +1,5 @@
 <style media="screen">
+
   .blog_{{@index}} {
     grid-column: span {{width}};
     grid-row: span {{height}};
@@ -13,7 +14,7 @@
 
     font-family: Roboto;
     font-style: normal;
-    font-weight: normal;
+    font-weight: 300;
     font-size: 16px;
     line-height: 157.9%;
   }
@@ -25,16 +26,14 @@
 
   .blog_{{@index}} > p {
     font-family: Roboto;
-    font-style: italic;
-    font-weight: normal;
+    font-weight: 300;
     font-size: 16px;
     line-height: 157.9%;
-
-    /* Gray 3 */
   }
+
 </style>
 
-<div class="blog_{{@index}}">
+<div class="card blog blog_{{@index}}" onclick="window.location.href = `/blogpost?serialNo={{msg.[0].msg}}`">
   {{#each msg}}
 
   {{#if (match 'h3' type)}}
@@ -70,3 +69,7 @@
 
   {{/each}}
 </div>
+
+<script type="text/javascript">
+
+</script>

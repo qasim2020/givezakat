@@ -78,6 +78,34 @@ let authenticate = (req,res,next) => {
   });
 };
 
+hbs.registerHelper("buildBox", function(value, options) {
+  console.log(value);
+  let date = new Date(value);
+  console.log(date);
+  let today = new Date();
+
+  // get total seconds between the times
+var delta = Math.abs(date - today) / 1000;
+
+// calculate (and subtract) whole days
+var days = Math.floor(delta / 86400);
+delta -= days * 86400;
+
+// calculate (and subtract) whole hours
+var hours = Math.floor(delta / 3600) % 24;
+delta -= hours * 3600;
+
+// calculate (and subtract) whole minutes
+var minutes = Math.floor(delta / 60) % 60;
+delta -= minutes * 60;
+
+// what's left is seconds
+var seconds = Math.floor(delta % 60);  // in theory the modulus is not required
+
+console.log({days,hours,minutes,seconds});
+})
+
+
 let getBlogData = function(val) {
   let req = {query: {}},
       ser = val.msg;
@@ -106,7 +134,10 @@ let getBlogData = function(val) {
       return val;
     })
 
+    console.log(sorted);
+
     let required = [
+      {type: 'ser', msg: sorted[0].Ser},
       {type: 'h3', msg: sorted[0].Content[0].msg},
       {type: 'tags', msg: sorted[0].Tags},
       {type: 'ayats', msg: sorted[0].Ayats},
@@ -160,7 +191,8 @@ app.get('/hacks',(req,res) => {
               total.msg = total.msg || [];
               total.msg.push({
                 type: val.split(': ')[0].indexOf('.') ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
-                msg: val.split(': ')[1],
+                msg: val.split(': ')[1].indexOf('*') ? val.split(': ')[1].split('*')[0] : val.split(': ')[1],
+                url: val.split(': ')[1].indexOf('*') ? val.split(': ')[1].split('*')[1] : '',
                 class: val.split(': ')[0].indexOf('.') ? val.split(': ')[0].split('.').splice(1,1).join(' ') : '',
               });
           }
@@ -170,10 +202,7 @@ app.get('/hacks',(req,res) => {
       });
       return val;
     });
-    // console.log(sorted.filter(val => console.log(val[0].msg.toString().split(' ').slice(1,4).join(' '))));
-    // return req.query.hasOwnProperty('Date') ? sorted.find(val => val[0].msg.toString().split(' ').slice(1,4).join(' ') == req.query.Date().toString().split(' ').slice(1,4).join(' ')) : sorted[sorted.length - 1];
 		sorted = sorted[sorted.length - 1];
-    // return sorted[sorted.length - 1];//.filter(val => console.log(val[0].msg.toString().split(' ').slice(1,4).join(' ')));
 		return sorted;
   })
   .then(sorted => {

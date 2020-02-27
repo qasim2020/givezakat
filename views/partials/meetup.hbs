@@ -77,9 +77,24 @@
     /* Gray 4 */
     color: #BDBDBD;
   }
+
+  .box.inprogress {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    padding: 19px 18px;
+    color: #828282;
+    white-space: nowrap;
+  }
+
+  .box.inprogress > a{
+    color: white;
+  }
 </style>
 
-<div class="meetup_{{@index}}">
+<div class="card meetup meetup_{{@index}}">
 {{#each msg}}
 
 {{#if (match 'h3' type)}}
@@ -87,32 +102,81 @@
 {{/if}}
 
 {{#if (match 'button' type)}}
-  <button type="button" name="button" class="{{class}}">{{msg}}</button>
+  <button type="button" name="button" class="{{class}}" onclick="{{url}}">{{msg}}</button>
 {{/if}}
 
 {{#if (match 'date' type)}}
-  <div class="box">
+  <div class="box" data="{{{msg}}}">
     <p class="figures">
-      <span class="big">12</span>
+      <span id="days" class="big">00</span>
       <span class="small">Days</span>
     </p>
     <p class="separators">:</p>
     <p class="figures">
-      <span class="big">22</span>
+      <span id="hours" class="big">00</span>
       <span class="small">Hours</span>
     </p>
     <p class="separators">:</p>
     <p class="figures">
-      <span class="big">12</span>
+      <span id="minutes" class="big">00</span>
       <span class="small">Minutes</span>
     </p>
     <p class="separators">:</p>
     <p class="figures">
-      <span class="big">12</span>
+      <span id="seconds" class="big">00</span>
       <span class="small">Seconds</span>
     </p>
   </div>
+
 {{/if}}
 
 {{/each}}
 </div>
+
+<script type="text/javascript">
+setInterval(function() {
+
+  let date = new Date(2020,2,1,10,30,0,0);
+  // let date = new Date($('.box').attr('data'));
+  let today = new Date();
+
+  if (Math.abs((date-today)/1000/60/60 < 0)) {
+    $('.box').addClass('inprogress').html("Meetup is in progress at <a href=https://ramadanmakers.com/live target=_blank>&nbspthis Link</a>")
+    return;
+  };
+
+  // if (Math.abs((date-today)/1000/60/60 < 2)) {
+  //   $('.box').html('Meetup has happened')
+  //   return;
+  // };
+
+    // get total seconds between the times
+  var delta = Math.abs(date - today) / 1000;
+
+  // calculate (and subtract) whole days
+  var days = Math.floor(delta / 86400);
+  delta -= days * 86400;
+
+  // calculate (and subtract) whole hours
+  var hours = Math.floor(delta / 3600) % 24;
+  delta -= hours * 3600;
+
+  // calculate (and subtract) whole minutes
+  var minutes = Math.floor(delta / 60) % 60;
+  delta -= minutes * 60;
+
+  // what's left is seconds
+  var seconds = Math.floor(delta % 60);  // in theory the modulus is not required
+
+  // console.log({days,hours,minutes,seconds});
+
+  console.log(days.toString().length < 2 ? `0${days}` : `${days}` );
+
+  $('#days').html(days.toString().length < 2 ? `0${days}` : `${days}`);
+  $('#hours').html(hours.toString().length < 2 ? `0${hours}` : `${hours}`);
+  $('#minutes').html(minutes.toString().length < 2 ? `0${minutes}` : `${minutes}`)
+  $('#seconds').html(seconds.toString().length < 2 ? `0${seconds}` : `${seconds}`);
+
+}, 1000); // 60 * 1000 milsec
+
+</script>

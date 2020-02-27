@@ -10,7 +10,7 @@
   }
 </style>
 
-<div class="signin_{{@index}}">
+<div class="card signin_{{@index}}">
 {{#each msg}}
 
 {{#if (match 'h3' type)}}
@@ -18,7 +18,7 @@
 {{/if}}
 
 {{#if (match 'button' type)}}
-  <button type="button" name="button" class="{{class}}">{{msg}}</button>
+  <button type="button" name="button" class="{{class}}" onclick="{{url}}">{{msg}}</button>
 {{/if}}
 
 {{#if (match 'p' type)}}
