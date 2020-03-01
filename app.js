@@ -173,6 +173,8 @@ let getCourseData = function(val) {
 
 app.get('/hacks',(req,res) => {
 
+  return res.render('facebook.hbs',{});
+
   let sorted = []
   // req.query.Date = req.query.Date || new Date();
   readXlsxFile(__dirname+'/static/dashboard.xlsx')
