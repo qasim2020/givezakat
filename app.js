@@ -58,7 +58,7 @@ app.use(function(req, res, next) {
 
 let authenticate = (req,res,next) => {
   console.log(req.query);
-  let token = req.params.token || req.body.token || req.query.token;
+  let token = req.params.token || req.body.token || req.query.token || req.session.token;
   if (!token) return res.status(400).render('1-redirect.hbs', {
     timer: 3,
     message: 'You are not signed in to perform this action',
@@ -78,10 +78,247 @@ let authenticate = (req,res,next) => {
   });
 };
 
+let getBlogData = function(val) {
+  let req = {query: {}},
+      ser = val.msg;
+  return readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+    let sorted = rows.map((val) =>
+      val.reduce((total,inner,index) => {
 
-app.get('/hacks',(req,res) => {
-  res.render('1-fp.hbs');
-});
+        if (inner) Object.assign(total,{
+          [rows[0][index]]: inner
+        })
+        return total;
+      },{})
+    ).filter((val,index) => index != 0 && val.Ser == ser);
+
+    sorted = sorted.map(val => {
+      if (!val.Content) return;
+      val.Content = val.Content.split('\r\n').map(val => {
+        // console.log(val);
+        return {
+          type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+          msg: val.split(': ')[1].trim(),
+          class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.').slice(1,4).join(' ') : ''
+        }
+      });
+      val.Date = val.Date.toString().split(' ').slice(1,4).join('-')
+      return val;
+    })
+
+    console.log(sorted);
+
+    let required = [
+      {type: 'ser', msg: sorted[0].Ser},
+      {type: 'h3', msg: sorted[0].Content[0].msg},
+      {type: 'tags', msg: sorted[0].Tags},
+      {type: 'ayats', msg: sorted[0].Ayats},
+      {type: 'p', msg: sorted[0].Content[1].msg},
+      {type: 'date', msg: sorted[0].Date},
+      {type: 'author', msg: sorted[0].Author},
+    ]
+
+    return {input: val, required: required};
+  }).catch(e => e);
+
+}
+
+let getCourseData = function(val) {
+  let req = {query: {}},
+      ser = val.msg;
+  return readXlsxFile(__dirname+'/static/life.xlsx').then((rows) => {
+    let array = [];
+    let sorted = rows.filter((val,index) => index < 2);
+    let required = ser.split(',').map((val, index) => {
+      return {
+        ser: Number(val),
+        course: sorted[0][Number(val)+1],
+        active: index == 0,
+        name: sorted[1][Number(val)+1].split('Subject: ')[1].split(';')[0]
+      }
+    })
+
+    return {input: val, required};
+
+  }).catch(e => e);
+}
+
+app.post('/create-customer', (req,res) => {
+  console.log(req.body);
+
+  Users.findOne({
+    "email": req.body.email,
+    "phoneCode": req.body.phoneCode
+  })
+  .then(result => {
+    if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
+    return stripe.customers.create({
+      payment_method: req.body.payment_method,
+      email: req.body.email,
+      invoice_settings: {
+        default_payment_method: 'req.body.payment_method',
+      },
+    })
+  })
+  .then(msg => {
+    return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
+          "name":req.body.name,
+          "password": 'fake_password',
+          "phoneCode": process.env.phoneCode,
+          "username": req.body.username,
+          stripe: msg
+        }}, {new: true, upsert: true});
+  })
+  .then((returned) => {
+    if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
+    returned.password = req.body.password;
+    return returned.generateAuthToken(req);
+  })
+  .then((msg) => {
+    return res.status(200).send(msg.tokens[0].token);
+  })
+  .catch(e => {
+    console.log(e);
+    return res.status(400).send(e)
+  })
+})
+
+app.get('/public-key', (req,res) => {
+  console.log('asking public key', process.env.stripePublishableKey);
+  return res.status(200).send({publicKey:process.env.stripePublishableKey})
+})
+
+app.get('/',(req,res) => {
+
+  // return res.render('facebook.hbs',{});
+
+  let sorted = []
+  // req.query.Date = req.query.Date || new Date();
+  readXlsxFile(__dirname+'/static/dashboard.xlsx')
+  .then(rows => {
+    sorted = rows.filter((val, index) => index != 0).map(val => {
+      val = val.map(v => {
+        return typeof v != 'string' ? {type: 'Date', msg: v} : v.split('\r\n').reduce((total,val) => {
+
+          switch (true) {
+            case (/type|width|height/gi.test(val.split(': ')[0])):
+              Object.assign(total, {
+                [val.split(': ')[0]] : val.split(': ')[1]
+              })
+              break;
+            default:
+              total.msg = total.msg || [];
+              total.msg.push({
+                type: val.split(': ')[0].indexOf('.') ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
+                msg: val.split(': ')[1].indexOf('*') ? val.split(': ')[1].split('*')[0] : val.split(': ')[1],
+                url: val.split(': ')[1].indexOf('*') ? val.split(': ')[1].split('*')[1] : '',
+                class: val.split(': ')[0].indexOf('.') ? val.split(': ')[0].split('.').splice(1,1).join(' ') : '',
+              });
+          }
+
+          return total;
+        },{})
+      });
+      return val;
+    });
+		sorted = sorted[sorted.length - 1];
+		return sorted;
+  })
+  .then(sorted => {
+		console.log('asdfasdfasdf',sorted);
+    let p = sorted.reduce((total,val,index) => {
+          if (/course|blog/.test(val.type) == false) return total;
+          total.push({
+            index: index,
+            query: val.type,
+            msg: val.msg[0].msg
+          })
+
+          return total;
+
+      },[]);
+    return Promise.all(p.map(val => {
+      switch (true) {
+        case /blog/gi.test(val.query):
+          return getBlogData(val)
+          break;
+        case /course/gi.test(val.query):
+          return getCourseData(val)
+          break;
+        default:
+          break;
+      }
+    }))
+  })
+  .then(values => {
+    sorted = sorted.map((val,index) => {
+      let found = values.filter(val => {
+        return val.input.index == index
+      });
+      if (found.length > 0) {
+        return Object.assign(val, {
+          msg: found[0].required
+        })
+      }
+      return val;
+    })
+    console.log(sorted);
+    console.log(JSON.stringify(sorted[4],0,2));
+    console.log(req.session);
+
+    return res.render('1-home_new.hbs',{
+      data: sorted,
+      session: req.session
+    });
+
+  })
+  .catch(e => res.status(400).send(e));
+
+  //   return res.render('1-home_new.hbs',{data: [
+  //   {type:'person',width:2, height:1, msg:[
+  //     {type: 'img', msg: 'magazine/person.png'},
+  //     {type: 'facebook', msg: 'facebook.com/zakatlists'},
+  //     {type: 'twitter', msg: 'twitter.com/zakatlists'},
+  //     {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
+  //     {type: 'intro', msg: 'He is a good boy, working hard to make zakatlists work. 💪'},
+  //     {type: 'url', msg: 'https://www.zakatlists.com'},
+  //   ]},
+  //   {type:'blog', width:2, height:1, msg:[
+  //     {type: 'h3', msg: 'What I grasped from Surah Fatiha?'},
+  //     {type: 'p', msg: "I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran."},
+  //     {type: 'date', msg: '1 Jan 2020'},
+  //     {type: 'author', msg: 'Qasim'}
+  //   ]},
+  //   {type:'course', width:2, height:2, courses:[
+  //     {course: "STQA", active: true, name: "Software Testing and Quality Assurance"},
+  //     {course: "ATOC", active: false, name: "Advanced Theory of Computation"},
+  //     {course: "AOS", active: false, name: "Advanced Operating Systems"},
+  //   ]},
+  //   {type:'signin', width:2, height:1, msg:[
+  //     {type: 'h3', msg: 'Sign up to get unlimited access to the entire content of zakatlists', class:"width-half"},
+  //     {type: 'button', msg: 'Sign In', class: 'primary'},
+  //     {type: 'button', msg: 'Sign Up for Rs 300 / Month', class:'secondary'},
+  //   ]},
+  //   {type:'meetup', width:2, height:1, msg:[
+  //     {type: 'h3', msg: "Meetup coming in"},
+  //     {type: 'date', msg: "1 Mar 2020"},
+  //     {type: 'button', msg: 'Speak', class: "default"},
+  //     {type: 'button', msg: 'Attend', class: "default"},
+  //     {type: 'button', msg: 'Details', class: "default"},
+  //   ]},
+  //   {type:'subscribe', width:2, height:1, msg:[
+  //     {type: 'h6', msg: "Subscribe to stay tuned to zakatlists"},
+  //     {type: 'input', msg: "enter your email here"},
+  //     {type: 'button', msg: "Submit", class: "default"},
+  //   ]},
+  //   {type:'footer', width:6, height:1, msg:[
+  //     {type: 'p', msg: "Eat from their fruits, and give the due alms on the day of harvest. <br> - Al Quran 6:141", class: "small"},
+  //     {type: 'facebook', msg: 'facebook.com/zakatlists'},
+  //     {type: 'twitter', msg: 'twitter.com/zakatlists'},
+  //     {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
+  //   ]}
+  // ]});
+})
 
 app.get('/profile/:token',authenticate,(req,res) => {
 
@@ -250,7 +487,7 @@ hbs.registerHelper("matchWithCaller", function(value1,value2,options) {
 })
 
 hbs.registerHelper("checkActiveSponsor", function(sponsors) {
-  if (sponsors._id == sponsors.caller) return '';
+  if (sponsors && sponsors._id == sponsors.caller) return '';
   return 'd-none';
 })
 
@@ -277,6 +514,7 @@ hbs.registerHelper("checkDue", function(value, options) {
 })
 
 hbs.registerHelper("length", function(value, options) {
+  console.log(value);
   if (!value) return 0;
   return value.length;
 })
@@ -297,7 +535,7 @@ hbs.registerHelper("checkloadMore", function(value) {
   return false;
 })
 
-app.get('/',(req,res) => {
+app.get('/hacks',(req,res) => {
 
   console.log({user: req.query.user, url: req.url});
 
@@ -615,9 +853,17 @@ let getPjaxMyData = function(req) {
   ])
 }
 
-app.get('/home', authenticate, (req,res) => {
+app.get('/home', authenticate, (req,res,next) => {
 
-  console.log({home_query: req.query});
+  req.url = `/`;
+  req.query = {
+    user: '1234',
+    showQty: 12,
+    expression: 'delivered|pending|inprogress'
+  };
+  app._router.handle(req, res, next);
+
+return console.log({home_query: req.query});
 
   let user = req.query.user || '';
   if (user.indexOf(',') != -1) {
@@ -1434,45 +1680,57 @@ app.post('/signing',(req,res) => {
     return res.status(200).send(req.session.due);
   };
 
+  if (req.body.query === 'Stripe_Register') {
+    stripe.customers.create({
+      payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
+      email: 'jenny.rosen@example.com',
+      invoice_settings: {
+        default_payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
+      },
+    })
+    .then(res => res.status(200).send(msg))
+    .catch(e => res.status(400).send(msg));
+  }
+
   if (req.body.query === 'Register') {
-    Users.findOne({
-      "email": req.body.email,
-      "phoneCode": req.body.phoneCode
-    }).then((result) => {
-      if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
-      if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
-        "name":req.body.name,
-        "password": 'fake_password',
-        "phoneCode": process.env.phoneCode,
-        "username": req.body.username
-      }}, {new: true, upsert: true});
-    }).then((returned) => {
-      if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
-      returned.password = req.body.password;
-      return returned.generateAuthToken(req);
-    }).then((msg) => {
-      return res.status(200).send(msg.tokens[0].token);
-    }).catch((e) => {
-      console.log(e);
-      return res.status(401).send(e);
-    });
+    // Users.findOne({
+    //   "email": req.body.email,
+    //   "phoneCode": req.body.phoneCode
+    // }).then((result) => {
+    //   if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
+    //   if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
+    //   return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
+    //     "name":req.body.name,
+    //     "password": 'fake_password',
+    //     "phoneCode": process.env.phoneCode,
+    //     "username": req.body.username
+    //   }}, {new: true, upsert: true});
+    // }).then((returned) => {
+    //   if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
+    //   returned.password = req.body.password;
+    //   return returned.generateAuthToken(req);
+    // }).then((msg) => {
+    //   return res.status(200).send(msg.tokens[0].token);
+    // }).catch((e) => {
+    //   console.log(e);
+    //   return res.status(401).send(e);
+    // });
   };
 
-  if (req.body.query === 'Google_ID') {
-    testGoogleToken(req).then((res) => {
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google'}}, {new: true, upsert: true});
-    }).then((returned) => {
-      if (!returned) return Promise.reject('Invalid Request');
-      return returned.generateAuthToken(req);
-    }).then((returned) => {
-      return res.status(200).send(returned.tokens[0].token);
-    }).catch((e) => {
-      console.log(e);
-      return res.status(400).send(`${e}`);
-    });
-
-  };
+  // if (req.body.query === 'Google_ID') {
+  //   testGoogleToken(req).then((res) => {
+  //     return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google'}}, {new: true, upsert: true});
+  //   }).then((returned) => {
+  //     if (!returned) return Promise.reject('Invalid Request');
+  //     return returned.generateAuthToken(req);
+  //   }).then((returned) => {
+  //     return res.status(200).send(returned.tokens[0].token);
+  //   }).catch((e) => {
+  //     console.log(e);
+  //     return res.status(400).send(`${e}`);
+  //   });
+  //
+  // };
 
   if (req.body.query === 'Login') {
     var user = _.pick(req.body,['email','password']);
@@ -1488,24 +1746,54 @@ app.post('/signing',(req,res) => {
     });
   };
 
+  if (req.body.query === 'FP_Email_Verify') {
+    var phoneCode = Math.floor(100000 + Math.random() * 900000);
+    if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
+    Users.findOne({"email":req.body.email})
+    .then(newUser => {
+      if (!newUser) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
+      return Promise.all([
+        sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Verification Code'),
+        Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true})
+      ])
+    })
+    .then((user) => {
+      console.log(user);
+      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode, mailStatus: user[0]});
+    })
+    .catch((e) => {
+      console.log(e);
+      if (e.errno) return res.status(404).send(e.errno);
+      if (e.code == 401) return res.status(404).send(e.response.body);
+      res.status(400).send(`${e}`);
+    });
+  }
+
+  // Users.findOne({"email":req.body.email}).then((user) => {
+  //   if (req.body.registerNew) {
+  //     let user = new Users({name: req.body.name, email: req.body.email, SigninType: 'Google'});
+  //     return user.save().catch(e => Promise.reject('You are already in our database. Try using Forgot Password.'));
+  //   }
+  //   if (!user) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
+  //   return Promise.resolve(user);
+  // }).then(newUser => {
+  //   return
+
   if (req.body.query === 'Email_Verify') {
     var phoneCode = Math.floor(100000 + Math.random() * 900000);
     if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
-    Users.findOne({"email":req.body.email}).then((user) => {
-      if (req.body.registerNew) {
-        let user = new Users({name: req.body.name, email: req.body.email, SigninType: 'Google'});
-        return user.save().catch(e => Promise.reject('You are already registered !'));
-      }
-      if (!user) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
-      return Promise.resolve(user);
-    }).then(newUser => {
-      sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
-    }).then((user) => {
-      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode});
-    }).catch((e) => {
+    Promise.all([
+        sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Verification Code'),
+        Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true})
+    ])
+    .then((user) => {
+      console.log(user);
+      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode, mailStatus: user[0]});
+    })
+    .catch((e) => {
       console.log(e);
       if (e.errno) return res.status(404).send(e.errno);
+      if (e.code == 401) return res.status(404).send(e.response.body);
       res.status(400).send(`${e}`);
     });
   };
@@ -1614,7 +1902,7 @@ app.get('/quranDaily', (req,res) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val, val.split(': ')[0].indexOf('.'));
+        // console.log(val, val.split(': ')[0].indexOf('.'));
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
@@ -1626,23 +1914,36 @@ app.get('/quranDaily', (req,res) => {
     let days = [];
     for (var i = 1; i <= sorted.length; i++) {
       // console.log(sorted[0]);
+      console.log(req.session.token, req.session.hasOwnProperty('token'));
       days.push({
         index: i,
-        data: sorted[i-1] != undefined ? 'active' : 'inactive'
+        data: sorted[i-1] != undefined ? 'active' : 'inactive',
+        locked: (sorted.length - i) < 3 || req.session.hasOwnProperty('token') ? '' : 'locked'
       })
     };
 
-    console.log(sorted);
-
     res.status(200).render('1-qurandaily.hbs', {
       data: sorted,
-      days
+      days,
+      token: req.session.token,
+      note: req.note
     });
   })
 })
 
-app.get('/blogpost', (req,res) => {
+app.get('/blogpost', (req,res,next) => {
+
   readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+
+    console.log(req.query.serialNo,rows.length, req.session.hasOwnProperty('token'), req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false);
+
+    if (req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false) {
+      req.url = `/quranDaily`;
+      req.note = `Article ${req.query.serialNo} is a premium article. Please join the community to read this article.`;
+      return app._router.handle(req, res, next);
+    }
+
+
     let sorted = rows.map((val) =>
       val.reduce((total,inner,index) => {
 
@@ -1656,7 +1957,6 @@ app.get('/blogpost', (req,res) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val);
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
@@ -1667,7 +1967,7 @@ app.get('/blogpost', (req,res) => {
       return val;
     })
 
-    console.log(JSON.stringify(sorted, 0, 2));
+
     res.render('1-blogpost.hbs',{
       data: sorted[0],
       tags: sorted[0].Tags.split(',')
@@ -1746,7 +2046,7 @@ hbs.registerHelper("getObjectUsingKey", (data, key) => {
   return object[key];
 })
 
-app.get('/school',(req,res) => {
+app.get('/school', (req,res) => {
 
   // console.log('herere', req.query);
 
@@ -1815,7 +2115,7 @@ app.get('/school',(req,res) => {
         sorted,
         [askedPage.toLowerCase()]: 'active',
         pagerequest: askedPage.toUpperCase(),
-        token: '123',
+        token: req.session.token,
         courses: courses
       });
   });

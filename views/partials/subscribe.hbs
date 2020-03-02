@@ -1,0 +1,129 @@
+<style media="screen">
+  .subscribe_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+    margin: 0 20px;
+  }
+
+  .subscribe_{{@index}} > h6 {
+    margin: 19px 0;
+  }
+
+  .subscribe_{{@index}} > button {
+    display: block;
+    margin-left: -1px;
+  }
+
+  .subscribe_{{@index}} > input {
+    width: 80%;
+    height: 54px;
+
+    /* Gray 2 */
+    border: 1px solid #4F4F4F;
+    box-sizing: border-box;
+    font-size: 18px;
+    font-family: Roboto;
+    padding: 0 8px;
+    background: transparent;
+    color: white;
+    margin-bottom: 12px;
+  }
+
+  .subscribe_{{@index}} > .error, .subscribe_{{@index}} > .success {
+    font-family: Roboto;
+    font-size: 16px;
+    font-weight: 300;
+  }
+
+  @media (max-width: 769px) {
+
+    .subscribe_{{@index}} > input, .subscribe_{{@index}} > .error, .subscribe_{{@index}} > .success {
+      font-family: Roboto;
+      font-size: 16px;
+      font-weight: 300;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .subscribe_{{@index}} {
+      margin: 5px;
+    }
+
+    .subscribe_{{@index}} > input {
+      width: 90%;
+    }
+  }
+
+</style>
+
+<div class="card subscribe_{{@index}}">
+{{#each msg}}
+
+{{#if (match 'h6' type)}}
+  <h6 class="{{class}}">{{msg}}</h6>
+{{/if}}
+
+{{#if (match 'input' type)}}
+  <input id="email" type="text" name="" value="" placeholder="{{msg}}">
+{{/if}}
+
+{{#if (match 'button' type)}}
+  <button id="subscribe" type="button" name="button" class="{{class}}">{{msg}}</button>
+{{/if}}
+
+{{/each}}
+
+<p class="error"></p>
+</div>
+
+<script type="text/javascript">
+$(document).on('click','#subscribe',function(){
+
+  let string = $('#email').val();
+
+  if (/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(string) == false) return alert('Please enter a valid email address.')
+
+  let data = {
+    "query": 'subscription',
+    "email": $('#email').val(),
+  };
+
+  data = JSON.stringify(data);
+
+  $.ajax({
+    url: '/signing',
+    type: 'post',
+    data,
+    headers: {
+        'content-type': 'application/json',
+    }
+  }).done((msg) => {
+    console.log(msg);
+    $('.error').html('Thank you, I will keep you updated.');
+  }).fail((e) => {
+    $('.error').html(e.responseText);
+    console.log(e.responseText);
+  });
+});
+
+$("#subscribe-input").validate({
+
+  rules: {
+    'email' : {
+      required: true,
+      email: true
+    }
+  },
+  messages: {
+    'email' : {
+      required: `Please enter your email address above`,
+      email: `Email is invalid`,
+    },
+  },
+  errorPlacement: function(error, element) {
+    $('.error:not(input)').remove();
+    error.appendTo('.subscription');
+  },
+
+});
+</script>

@@ -6,10 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-signin-client_id" content="133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+
     <link rel=icon href=/favicon.png>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="StripeElements.css">
     <link rel="stylesheet" href="/styles.css">
 
     <style media="screen">
@@ -19,6 +24,55 @@
 
       .px-8px {
         padding: 0 8px;
+      }
+
+      /**
+      * Shows how you can use CSS to style your Element's container.
+      */
+      .MyCardElement {
+        /* height: 40px; */
+        padding: 10px 12px;
+        width: 100%;
+        color: #32325d;
+        background-color: white;
+        /* border: 1px solid transparent; */
+        /* border-radius: 4px; */
+
+        box-shadow: 0 1px 3px 0 #e6ebf1;
+        -webkit-transition: box-shadow 150ms ease;
+        transition: box-shadow 150ms ease;
+
+        border: 1px solid darkcyan;
+      }
+
+      .MyCardElement--focus {
+        box-shadow: 0 1px 3px 0 #cfd7df;
+      }
+
+      .MyCardElement--invalid {
+        border-color: #fa755a;
+      }
+
+      .MyCardElement--webkit-autofill {
+        background-color: #fefde5 !important;
+      }
+
+
+      .stripe.container {
+        margin-left: 0;
+        box-sizing: border-box;
+        padding: 0;
+        box-shadow: none;
+        padding-right: 25px;
+      }
+
+      form.disabled {
+        opacity: 0.3;
+        cursor: disabled !important;
+        pointer-events: none;
+      }
+
+      form.disabled > * {
       }
     </style>
 
@@ -31,7 +85,9 @@
 
     <div class="container form-placement">
       <h4>Sign up</h4>
+
       <hr>
+
       <form class="" id="sign-up" action="" method="get">
 
 
@@ -46,32 +102,50 @@
         </div>
         <button id="click-sendCode" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Get Verification Code</button>
         <p class="success-msg mb-2 d-none px-8px">Verification code sent to your email address.</p>
+
         <div class="d-flex justify-content-start align-items-center border my-point5 flex-grow-1" style="opacity: 0.3">
           <input id="user-code" class="form-control flex-grow-1" type="text" name="user-code" value="" placeholder="Email Verification Code" disabled>
           <p class="success-msg d-none px-8px">Verified !</p>
         </div>
+
         <input id="user-token" type="text" name="token" value="" class="d-none">
         <p class="error px-8px d-none">Wrong attempt 1. 4 attempts left !</p>
-        <button id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button" disabled style="opacity: 0.3">Sign Up</button>
+        <!-- <button id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button" disabled style="opacity: 0.3">Sign Up</button> -->
 
       </form>
+
+      <div class="stripe container form-placement">
+        <form id="subscription-form" class="disabled">
+         <div id="card-element" class="MyCardElement">
+         </div>
+
+         <div id="card-errors" class="error" role="alert"></div>
+         <button type="submit" id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign Up for Rs 300 / Month</button>
+         <p type="button" name="button">Do not have credit card? <a href="https://docs.google.com/forms/d/e/1FAIpQLSeFqrkbzGIAx2M5xwEPLBEtuh4EE2cGQdlI6qQ6Cq3huq23XQ/viewform?usp=sf_link" target="_blank"> Click here</p>
+        <form>
+
+      </div>
+
       <hr>
       <div class="d-flex flex-col align-items-start">
         <a class="" href="/signin/home">Sign in?</a>
         <a class="my-point5" href="/forgotpw">Forgot password?</a>
       </div>
 
-
     </div>
+
+
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
     <script type="text/javascript" src="/javascript.js"></script>
+    <!-- <script src="/client.js"></script> -->
 
     <script type="text/javascript">
 
     $('#click-sendCode').click(function(e) {
+
       console.log('clicked send code');
 
       if (!($("#sign-up").valid())) {
@@ -137,9 +211,10 @@
         $(this).siblings('.success-msg').removeClass('d-none');
         $('#click-signup').attr({disabled: false});
         $('.error').addClass('d-none');
+        $('form.disabled').removeClass('disabled');
       }).fail((e) => {
         console.log(e);
-        $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
+        alert(e.responseText);
       })
     })
 
@@ -147,42 +222,44 @@
 
       console.log('ok clicked');
 
-      if (!($("#sign-up").valid())) {
-
-        return;
-
-      }
-
-      console.log('valid entries');
-
-      let data = {
-        'query': 'Register',
-        "name": $('#user-name').val(),
-        "email": $('#user-email').val(),
-        "password": $('#user-pass').val(),
-        "phoneCode": $('#user-code').val(),
-      };
-
-      console.log(data);
-
-      data = JSON.stringify(data);
-
-      $.ajax({
-          url: '/signing',
-          type: 'post',
-          data,
-          headers: {
-              'content-type': 'application/json',
-          }
-        }).done((token) => {
-          console.log('successful: ', token);
-          // $('#sign-up').attr('action',`/home/?token=${token}`);
-          window.location.assign(`/home/?token=${token}`);
-          // $("#sign-up").submit();
-        }).fail((e) => {
-          $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
-          console.log('error here', e);
-        });
+      // if (!($("#sign-up").valid())) {
+      //
+      //   return;
+      //
+      // }
+      //
+      // console.log('valid entries');
+      //
+      // let data = {
+      //   'query': 'Register',
+      //   "name": $('#user-name').val(),
+      //   "email": $('#user-email').val(),
+      //   "password": $('#user-pass').val(),
+      //   "phoneCode": $('#user-code').val(),
+      // };
+      //
+      // console.log(data);
+      //
+      // data = JSON.stringify(data);
+      //
+      // $.ajax({
+      //     url: '/signing',
+      //     type: 'post',
+      //     data,
+      //     headers: {
+      //         'content-type': 'application/json',
+      //     }
+      //   }).done((token) => {
+      //     console.log('successful: ', token);
+      //     // $('#sign-up').attr('action',`/home/?token=${token}`);
+      //     window.location.assign(`/home/?token=${token}`);
+      //     // $("#sign-up").submit();
+      //   }).fail((e) => {
+      //     let errors = { 'user-pass': e.responseText };
+      //     $("#sign-up").validate().showErrors(errors);
+      //     // $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
+      //     console.log('error here', e);
+      //   });
 
     });
 
@@ -224,6 +301,111 @@
       },
 
     });
+
+    // Set your publishable key: remember to change this to your live publishable key in production
+    // See your keys here: https://dashboard.stripe.com/account/apikeys
+    var stripe = Stripe('pk_test_WJQN2iDakpSKGN9Va0KeHEDT');
+    var elements = stripe.elements();
+
+    // Set up Stripe.js and Elements to use in checkout form
+    var style = {
+      base: {
+        color: "#32325d",
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: "antialiased",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4"
+        }
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a"
+      }
+    };
+
+    var cardElement = elements.create("card", { style: style });
+    cardElement.mount("#card-element");
+
+    cardElement.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    var form = document.getElementById('subscription-form');
+
+    form.addEventListener('submit', function(event) {
+      // We don't want to let default form submission happen here,
+      // which would refresh the page.
+      event.preventDefault();
+
+      stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          email: $('#user-email').val()
+        },
+      }).then(stripePaymentMethodHandler);
+    });
+
+    // $('#user-name').val(),
+
+    function stripePaymentMethodHandler(result, email) {
+      if (result.error) {
+        // Show error in payment form
+        console.log(result.error);
+      } else {
+        if (!($("#sign-up").valid())) {
+
+          return;
+
+        }
+
+        console.log('valid entries');
+
+        let data = {
+          'query': 'Register',
+          "name": $('#user-name').val(),
+          "email": $('#user-email').val(),
+          "password": $('#user-pass').val(),
+          "phoneCode": $('#user-code').val(),
+        };
+
+        console.log(data);
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+          url: '/create-customer',
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          data: JSON.stringify({
+            payment_method: result.paymentMethod.id,
+            name: $('#user-name').val(),
+            email: $('#user-email').val(),
+            password: $('#user-pass').val(),
+            phoneCode: $('#user-code').val(),
+          }),
+        }).done((token) => {
+          console.log('successful: ', token);
+          // $('#sign-up').attr('action',`/home/?token=${token}`);
+          window.location.assign(`/home/?token=${token}`);
+          // $("#sign-up").submit();
+        }).fail((e) => {
+          let errors = { 'user-pass': e.responseText };
+          // $("#sign-up").validate().showErrors(errors);
+          $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
+          console.log('error here', e);
+          alert(errors);
+        });
+      }
+    }
+
+
 
     </script>
 

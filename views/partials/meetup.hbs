@@ -1,0 +1,238 @@
+<style media="screen">
+  .meetup_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+    text-align: center;
+    margin: 0 20px;
+  }
+
+  .meetup_{{@index}} > button {
+    margin: -1px;
+  }
+
+  .meetup_{{@index}} > .box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-bottom: 20px;
+    padding: 11px 18px 22px 18px;
+    border: 1px solid #4F4F4F;
+    box-sizing: border-box;
+  }
+
+  .box > * {
+    margin: 0;
+  }
+
+  .box > .figures {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 8px;
+  }
+
+  .meetup_{{@index}} .seconds {
+    min-width: 5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .big {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 52px;
+    line-height: 122.9%;
+    /* or 64px */
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 4 */
+    color: #BDBDBD;
+  }
+
+  .small {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 122.9%;
+    /* or 17px */
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 3 */
+    color: #828282;
+  }
+
+  .separators {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 35px;
+    line-height: 122.9%;
+    /* or 43px */
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    /* Gray 4 */
+    color: #BDBDBD;
+  }
+
+  .box.inprogress {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    padding: 19px 18px;
+    color: #828282;
+    white-space: nowrap;
+  }
+
+  .box.inprogress > a{
+    color: white;
+  }
+
+
+
+  @media (max-width: 1024px) {
+    .meetup_{{@index}} {
+      margin: 0 2px;
+    }
+  }
+
+  @media (max-width: 769px) {
+    .meetup_{{@index}} {
+      grid-column: span {{width}};
+      grid-row: span {{height}};
+      text-align: center;
+      margin: 0 2px;
+    }
+
+    .big {
+      font-size: 28px;
+      line-height: 122.9%;
+    }
+
+    .small {
+      font-size: 6px;
+      line-height: 122.9%;
+    }
+
+    .meetup_{{@index}} .seconds {
+      min-width: 3rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+
+    .big {
+      font-size: 47px;
+    }
+
+    .small {
+      font-size: 10px;
+    }
+  }
+
+</style>
+
+<div class="card meetup meetup_{{@index}}">
+{{#each msg}}
+
+{{#if (match 'h3' type)}}
+  <h3 class="{{class}}">{{msg}}</h3>
+{{/if}}
+
+{{#if (match 'button' type)}}
+  <button type="button" name="button" class="{{class}}" onclick="{{url}}">{{msg}}</button>
+{{/if}}
+
+{{#if (match 'date' type)}}
+  <div class="box" data="{{{msg}}}">
+    <p class="figures">
+      <span id="days" class="big">00</span>
+      <span class="small">Days</span>
+    </p>
+    <p class="separators">:</p>
+    <p class="figures">
+      <span id="hours" class="big">00</span>
+      <span class="small">Hours</span>
+    </p>
+    <p class="separators">:</p>
+    <p class="figures">
+      <span id="minutes" class="big">00</span>
+      <span class="small">Minutes</span>
+    </p>
+    <p class="separators">:</p>
+    <p class="figures">
+      <span id="seconds" class="big seconds">00</span>
+      <span class="small">Seconds</span>
+    </p>
+  </div>
+
+{{/if}}
+
+{{/each}}
+</div>
+
+<script type="text/javascript">
+setInterval(function() {
+
+  // let date = new Date(2020,2,1,10,30,0,0);
+  let data = $('.box').attr('data').split(',').map(val => Number(val));
+  // console.log({data});
+  let date = new Date(data[0],data[1],data[2],data[3],data[4],data[5]);
+  // console.log($('.box').attr('data').split(',').map(val => Number(val)));
+  let today = new Date();
+
+  // console.log(Math.abs((date-today)/1000/60/60));
+
+  if (Math.abs((date-today)/1000/60/60) < 0) {
+    $('.box').addClass('inprogress').html("Meetup is in progress at <a href=https://ramadanmakers.com/live target=_blank>&nbspthis Link</a>")
+    return;
+  };
+
+  // if (Math.abs((date-today)/1000/60/60 < 2)) {
+  //   $('.box').html('Meetup has happened')
+  //   return;
+  // };
+
+    // get total seconds between the times
+  var delta = Math.abs(date - today) / 1000;
+
+  // calculate (and subtract) whole days
+  var days = Math.floor(delta / 86400);
+  delta -= days * 86400;
+
+  // calculate (and subtract) whole hours
+  var hours = Math.floor(delta / 3600) % 24;
+  delta -= hours * 3600;
+
+  // calculate (and subtract) whole minutes
+  var minutes = Math.floor(delta / 60) % 60;
+  delta -= minutes * 60;
+
+  // what's left is seconds
+  var seconds = Math.floor(delta % 60);  // in theory the modulus is not required
+
+  // console.log({days,hours,minutes,seconds});
+
+  // console.log(days.toString().length < 2 ? `0${days}` : `${days}` );
+
+  $('#days').html(days.toString().length < 2 ? `0${days}` : `${days}`);
+  $('#hours').html(hours.toString().length < 2 ? `0${hours}` : `${hours}`);
+  $('#minutes').html(minutes.toString().length < 2 ? `0${minutes}` : `${minutes}`)
+  $('#seconds').html(seconds.toString().length < 2 ? `0${seconds}` : `${seconds}`);
+
+}, 1000); // 60 * 1000 milsec
+
+</script>

@@ -1,0 +1,60 @@
+<style media="screen">
+  .signin_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+    margin: 0 20px;
+  }
+
+  .signin_{{@index}} > button {
+    float: left;
+  }
+
+  .signin_{{@index}} > p {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 157.9%;
+  }
+
+  .signin_{{@index}} .note > span {
+    line-height: 1.5;
+    color: #afafaf;
+  }
+
+  @media (max-width: 500px) {
+    .signin_{{@index}} {
+      margin: 5px;
+    }
+  }
+
+</style>
+
+<div class="card signin_{{@index}}">
+
+{{#if (length session.token)}}
+
+  <h3 class="note w-half">You are signed in as <span>{{session.name}}</span>.</h3>
+  <button type="button" name="button" class="danger" onclick="goto(`/logout/{{session.token}}`)">Sign out</button>
+
+{{else}}
+
+{{#each msg}}
+
+{{#if (match 'h3' type)}}
+  <h3 class="{{class}}">{{msg}}</h3>
+{{/if}}
+
+{{#if (match 'button' type)}}
+  <button type="button" name="button" class="{{class}}" onclick="{{url}}">{{msg}}</button>
+{{/if}}
+
+{{#if (match 'p' type)}}
+  <p class="{{class}}">{{msg}}</p>
+{{/if}}
+
+{{/each}}
+
+{{/if}}
+
+
+</div>
