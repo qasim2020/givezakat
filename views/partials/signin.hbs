@@ -8,9 +8,30 @@
   .signin_{{@index}} > button {
     float: left;
   }
+
+  .signin_{{@index}} > p {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 157.9%;
+  }
+
+  .signin_{{@index}} .note > span {
+    line-height: 1.5;
+    color: #afafaf;
+  }
+
 </style>
 
 <div class="card signin_{{@index}}">
+
+{{#if (length session.token)}}
+
+  <h3 class="note w-half">You are signed in as <span>{{session.name}}</span>.</h3>
+  <button type="button" name="button" class="danger" onclick="goto(`/logout/{{session.token}}`)">Sign out</button>
+
+{{else}}
+
 {{#each msg}}
 
 {{#if (match 'h3' type)}}
@@ -26,4 +47,8 @@
 {{/if}}
 
 {{/each}}
+
+{{/if}}
+
+
 </div>

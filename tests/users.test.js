@@ -228,7 +228,10 @@ describe('Sign In related tests', () => {
       email: 'qasimali24@gmail.com',
     })
     .expect((res) => {
+      console.log(res.body.mailStatus);
       phoneCode = res.body.phoneCode;
+      expect(res.body.mailStatus).not.toBe(null)
+      // mailStatus != res.body.mailStatus;
     })
     .expect(200)
     await request(app).post('/signing').set('Accept',process.env.test_call).send({

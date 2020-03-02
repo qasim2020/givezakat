@@ -6,10 +6,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-signin-client_id" content="133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+
     <link rel=icon href=/favicon.png>
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700,800,900&display=swap" rel="stylesheet">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="StripeElements.css">
     <link rel="stylesheet" href="/styles.css">
 
     <style media="screen">
@@ -19,6 +24,35 @@
 
       .px-8px {
         padding: 0 8px;
+      }
+
+      /**
+      * Shows how you can use CSS to style your Element's container.
+      */
+      .MyCardElement {
+        height: 40px;
+        padding: 10px 12px;
+        width: 100%;
+        color: #32325d;
+        background-color: white;
+        border: 1px solid transparent;
+        border-radius: 4px;
+
+        box-shadow: 0 1px 3px 0 #e6ebf1;
+        -webkit-transition: box-shadow 150ms ease;
+        transition: box-shadow 150ms ease;
+      }
+
+      .MyCardElement--focus {
+        box-shadow: 0 1px 3px 0 #cfd7df;
+      }
+
+      .MyCardElement--invalid {
+        border-color: #fa755a;
+      }
+
+      .MyCardElement--webkit-autofill {
+        background-color: #fefde5 !important;
       }
     </style>
 
@@ -31,6 +65,18 @@
 
     <div class="container form-placement">
       <h4>Sign up</h4>
+
+      <!-- Use the CSS tab above to style your Element's container. -->
+       <form id="subscription-form">
+        <div id="card-element" class="MyCardElement">
+          <!-- Elements will create input elements here -->
+        </div>
+
+        <!-- We'll put the error messages in this element -->
+        <div id="card-errors" role="alert"></div>
+        <button type="submit">Subscribe</button>
+      <form>
+
       <hr>
       <form class="" id="sign-up" action="" method="get">
 
@@ -68,6 +114,7 @@
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
     <script type="text/javascript" src="/javascript.js"></script>
+    <!-- <script src="/client.js"></script> -->
 
     <script type="text/javascript">
 
@@ -224,6 +271,81 @@
       },
 
     });
+
+    // Set your publishable key: remember to change this to your live publishable key in production
+    // See your keys here: https://dashboard.stripe.com/account/apikeys
+    var stripe = Stripe('pk_test_WJQN2iDakpSKGN9Va0KeHEDT');
+    var elements = stripe.elements();
+
+    // Set up Stripe.js and Elements to use in checkout form
+    var style = {
+      base: {
+        color: "#32325d",
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: "antialiased",
+        fontSize: "16px",
+        "::placeholder": {
+          color: "#aab7c4"
+        }
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a"
+      }
+    };
+
+    var cardElement = elements.create("card", { style: style });
+    cardElement.mount("#card-element");
+
+    card.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    var form = document.getElementById('subscription-form');
+
+    form.addEventListener('submit', function(event) {
+      // We don't want to let default form submission happen here,
+      // which would refresh the page.
+      event.preventDefault();
+
+      stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          email: 'jenny.rosen@example.com',
+        },
+      }).then(stripePaymentMethodHandler);
+    });
+
+    function stripePaymentMethodHandler(result, email) {
+      if (result.error) {
+        // Show error in payment form
+        console.log(result.error);
+      } else {
+        // Otherwise send paymentMethod.id to your server
+        fetch('/create-customer', {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            email: 'jenny.rosen@example.com',
+            payment_method: result.paymentMethod.id
+          }),
+        }).then(function(result) {
+          console.log(result);
+         return result.json();
+        }).then(function(customer) {
+          console.log(customer);
+          // The customer has been created
+        });
+      }
+    }
+
+    
 
     </script>
 

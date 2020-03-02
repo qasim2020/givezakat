@@ -7,15 +7,13 @@ const sgMail = require('@sendgrid/mail');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 var sendmail = (toEmail,code,subject) => {
   const msg = {
-    to: 'qasimali24@gmail.com',
-    from: 'hashim@yahoo.com',
-    subject: 'Sending with Twilio SendGrid is Fun',
-    text: 'and easy to do anywhere, even with Node.js',
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-  };
-  sgMail.send(msg);
-  console.log('all done');
-  // resolve('done');
+  to: toEmail,
+  from: 'support@zakatlists.com',
+  subject: subject,
+  text: `Please enter ${code} under the verification input.`,
+  html: `<strong>Please enter ${code} under the verification input</strong>`,
+};
+  return sgMail.send(msg)
 }
 
 // Generate test SMTP service account from ethereal.email

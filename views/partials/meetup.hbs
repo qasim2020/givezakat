@@ -33,6 +33,14 @@
     padding: 0 8px;
   }
 
+  .meetup_{{@index}} .seconds {
+    min-width: 5rem;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .big {
     font-family: Montserrat;
     font-style: normal;
@@ -92,6 +100,8 @@
   .box.inprogress > a{
     color: white;
   }
+
+
 </style>
 
 <div class="card meetup meetup_{{@index}}">
@@ -123,7 +133,7 @@
     </p>
     <p class="separators">:</p>
     <p class="figures">
-      <span id="seconds" class="big">00</span>
+      <span id="seconds" class="big seconds">00</span>
       <span class="small">Seconds</span>
     </p>
   </div>
@@ -136,11 +146,16 @@
 <script type="text/javascript">
 setInterval(function() {
 
-  let date = new Date(2020,2,1,10,30,0,0);
-  // let date = new Date($('.box').attr('data'));
+  // let date = new Date(2020,2,1,10,30,0,0);
+  let data = $('.box').attr('data').split(',').map(val => Number(val));
+  console.log({data});
+  let date = new Date(data[0],data[1],data[2],data[3],data[4],data[5]);
+  // console.log($('.box').attr('data').split(',').map(val => Number(val)));
   let today = new Date();
 
-  if (Math.abs((date-today)/1000/60/60 < 0)) {
+  console.log(Math.abs((date-today)/1000/60/60));
+
+  if (Math.abs((date-today)/1000/60/60) < 0) {
     $('.box').addClass('inprogress').html("Meetup is in progress at <a href=https://ramadanmakers.com/live target=_blank>&nbspthis Link</a>")
     return;
   };

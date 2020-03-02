@@ -58,7 +58,7 @@ app.use(function(req, res, next) {
 
 let authenticate = (req,res,next) => {
   console.log(req.query);
-  let token = req.params.token || req.body.token || req.query.token;
+  let token = req.params.token || req.body.token || req.query.token || req.session.token;
   if (!token) return res.status(400).render('1-redirect.hbs', {
     timer: 3,
     message: 'You are not signed in to perform this action',
@@ -77,34 +77,6 @@ let authenticate = (req,res,next) => {
     })
   });
 };
-
-hbs.registerHelper("buildBox", function(value, options) {
-  console.log(value);
-  let date = new Date(value);
-  console.log(date);
-  let today = new Date();
-
-  // get total seconds between the times
-var delta = Math.abs(date - today) / 1000;
-
-// calculate (and subtract) whole days
-var days = Math.floor(delta / 86400);
-delta -= days * 86400;
-
-// calculate (and subtract) whole hours
-var hours = Math.floor(delta / 3600) % 24;
-delta -= hours * 3600;
-
-// calculate (and subtract) whole minutes
-var minutes = Math.floor(delta / 60) % 60;
-delta -= minutes * 60;
-
-// what's left is seconds
-var seconds = Math.floor(delta % 60);  // in theory the modulus is not required
-
-console.log({days,hours,minutes,seconds});
-})
-
 
 let getBlogData = function(val) {
   let req = {query: {}},
@@ -171,9 +143,33 @@ let getCourseData = function(val) {
   }).catch(e => e);
 }
 
-app.get('/hacks',(req,res) => {
+app.post('/create-customer', (req,res) => {
+  Promise.all([
+    stripe.customers.create({
+      payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
+      email: 'jenny.rosen@example.com',
+      invoice_settings: {
+        default_payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
+      },
+    }),
+    stripe.subscriptions.create({
+      customer: "cus_Gk0uVzT2M4xOKD",
+      items: [{ plan: "plan_FSDjyHWis0QVwl" }],
+      expand: ["latest_invoice.payment_intent"]
+    })
+  ])
+  .then(msg => res.status(200).send(msg))
+  .catch(e => res.status(400).send(e));
+})
 
-  return res.render('facebook.hbs',{});
+app.get('/public-key', (req,res) => {
+  console.log('asking public key', process.env.stripePublishableKey);
+  return res.status(200).send({publicKey:process.env.stripePublishableKey})
+})
+
+app.get('/',(req,res) => {
+
+  // return res.render('facebook.hbs',{});
 
   let sorted = []
   // req.query.Date = req.query.Date || new Date();
@@ -247,11 +243,15 @@ app.get('/hacks',(req,res) => {
     })
     console.log(sorted);
     console.log(JSON.stringify(sorted[4],0,2));
+    console.log(req.session);
 
-    return res.render('1-home_new.hbs',{data: sorted});
+    return res.render('1-home_new.hbs',{
+      data: sorted,
+      session: req.session
+    });
 
   })
-  .catch(e => console.log('ERRORRRR:',e));
+  .catch(e => res.status(400).send(e));
 
   //   return res.render('1-home_new.hbs',{data: [
   //   {type:'person',width:2, height:1, msg:[
@@ -493,6 +493,7 @@ hbs.registerHelper("checkDue", function(value, options) {
 })
 
 hbs.registerHelper("length", function(value, options) {
+  console.log(value);
   if (!value) return 0;
   return value.length;
 })
@@ -513,7 +514,7 @@ hbs.registerHelper("checkloadMore", function(value) {
   return false;
 })
 
-app.get('/',(req,res) => {
+app.get('/hacks',(req,res) => {
 
   console.log({user: req.query.user, url: req.url});
 
@@ -831,9 +832,17 @@ let getPjaxMyData = function(req) {
   ])
 }
 
-app.get('/home', authenticate, (req,res) => {
+app.get('/home', authenticate, (req,res,next) => {
 
-  console.log({home_query: req.query});
+  req.url = `/`;
+  req.query = {
+    user: '1234',
+    showQty: 12,
+    expression: 'delivered|pending|inprogress'
+  };
+  app._router.handle(req, res, next);
+
+return console.log({home_query: req.query});
 
   let user = req.query.user || '';
   if (user.indexOf(',') != -1) {
@@ -1650,6 +1659,18 @@ app.post('/signing',(req,res) => {
     return res.status(200).send(req.session.due);
   };
 
+  if (req.body.query === 'Stripe_Register') {
+    stripe.customers.create({
+      payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
+      email: 'jenny.rosen@example.com',
+      invoice_settings: {
+        default_payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
+      },
+    })
+    .then(res => res.status(200).send(msg))
+    .catch(e => res.status(400).send(msg));
+  }
+
   if (req.body.query === 'Register') {
     Users.findOne({
       "email": req.body.email,
@@ -1710,18 +1731,22 @@ app.post('/signing',(req,res) => {
     Users.findOne({"email":req.body.email}).then((user) => {
       if (req.body.registerNew) {
         let user = new Users({name: req.body.name, email: req.body.email, SigninType: 'Google'});
-        return user.save().catch(e => Promise.reject('You are already registered !'));
+        return user.save().catch(e => Promise.reject('You are already in our database. Try using Forgot Password.'));
       }
       if (!user) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
       return Promise.resolve(user);
     }).then(newUser => {
-      sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Zakat Lists');
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true});
+      return Promise.all([
+        sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Verification Code'),
+        Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true})
+      ])
     }).then((user) => {
-      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode});
+      console.log(user);
+      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode, mailStatus: user});
     }).catch((e) => {
       console.log(e);
       if (e.errno) return res.status(404).send(e.errno);
+      if (e.code == 401) return res.status(404).send(e.response.body);
       res.status(400).send(`${e}`);
     });
   };
@@ -1962,7 +1987,7 @@ hbs.registerHelper("getObjectUsingKey", (data, key) => {
   return object[key];
 })
 
-app.get('/school',(req,res) => {
+app.get('/school', (req,res) => {
 
   // console.log('herere', req.query);
 
@@ -2031,7 +2056,7 @@ app.get('/school',(req,res) => {
         sorted,
         [askedPage.toLowerCase()]: 'active',
         pagerequest: askedPage.toUpperCase(),
-        token: '123',
+        token: req.session.token,
         courses: courses
       });
   });

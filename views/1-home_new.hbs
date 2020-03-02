@@ -68,6 +68,11 @@
         margin: 2px;
       }
 
+      button:hover {
+        cursor: pointer;
+        opacity: 0.7;
+      }
+
       button.primary {
         background: #F2F2F2;
         color: #27AE60;
@@ -81,6 +86,12 @@
       button.default {
         background: #4F4F4F;
         color: #a5a5a5;
+      }
+
+      button.danger {
+        background: #952a2a;
+        color: #e4b9b9;
+
       }
 
       .w-half {
@@ -145,9 +156,15 @@
       {{>course}}
     {{/if}}
 
+
+
     {{#if (match 'signin' type)}}
-      {{>signin}}
+
+        {{>signin session=../session}}
+
+
     {{/if}}
+
 
     {{#if (match 'meetup' type)}}
       {{>meetup}}
