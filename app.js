@@ -156,7 +156,7 @@ app.post('/create-customer', (req,res) => {
       payment_method: req.body.payment_method,
       email: req.body.email,
       invoice_settings: {
-        default_payment_method: 'req.body.payment_method',
+        default_payment_method: req.body.payment_method,
       },
     })
   })
