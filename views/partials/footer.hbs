@@ -10,6 +10,18 @@
     color: white;
     display: block;
   }
+
+  .footer_{{@index}} .small {
+    font-size: 12px;
+  }
+
+@media (max-width: 500px) {
+  .footer_{{@index}} .small {
+    font-size: 13px;
+    line-height: 2;
+    color: #9a9a9a;
+  }
+}
 </style>
 
 <div class="footer_{{@index}}">

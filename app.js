@@ -144,22 +144,43 @@ let getCourseData = function(val) {
 }
 
 app.post('/create-customer', (req,res) => {
-  Promise.all([
-    stripe.customers.create({
-      payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
-      email: 'jenny.rosen@example.com',
+  console.log(req.body);
+
+  Users.findOne({
+    "email": req.body.email,
+    "phoneCode": req.body.phoneCode
+  })
+  .then(result => {
+    if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
+    return stripe.customers.create({
+      payment_method: req.body.payment_method,
+      email: req.body.email,
       invoice_settings: {
-        default_payment_method: 'pm_1FU2bgBF6ERF9jhEQvwnA7sX',
+        default_payment_method: 'req.body.payment_method',
       },
-    }),
-    stripe.subscriptions.create({
-      customer: "cus_Gk0uVzT2M4xOKD",
-      items: [{ plan: "plan_FSDjyHWis0QVwl" }],
-      expand: ["latest_invoice.payment_intent"]
     })
-  ])
-  .then(msg => res.status(200).send(msg))
-  .catch(e => res.status(400).send(e));
+  })
+  .then(msg => {
+    return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
+          "name":req.body.name,
+          "password": 'fake_password',
+          "phoneCode": process.env.phoneCode,
+          "username": req.body.username,
+          stripe: msg
+        }}, {new: true, upsert: true});
+  })
+  .then((returned) => {
+    if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
+    returned.password = req.body.password;
+    return returned.generateAuthToken(req);
+  })
+  .then((msg) => {
+    return res.status(200).send(msg.tokens[0].token);
+  })
+  .catch(e => {
+    console.log(e);
+    return res.status(400).send(e)
+  })
 })
 
 app.get('/public-key', (req,res) => {
@@ -1672,44 +1693,44 @@ app.post('/signing',(req,res) => {
   }
 
   if (req.body.query === 'Register') {
-    Users.findOne({
-      "email": req.body.email,
-      "phoneCode": req.body.phoneCode
-    }).then((result) => {
-      if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
-      if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
-        "name":req.body.name,
-        "password": 'fake_password',
-        "phoneCode": process.env.phoneCode,
-        "username": req.body.username
-      }}, {new: true, upsert: true});
-    }).then((returned) => {
-      if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
-      returned.password = req.body.password;
-      return returned.generateAuthToken(req);
-    }).then((msg) => {
-      return res.status(200).send(msg.tokens[0].token);
-    }).catch((e) => {
-      console.log(e);
-      return res.status(401).send(e);
-    });
+    // Users.findOne({
+    //   "email": req.body.email,
+    //   "phoneCode": req.body.phoneCode
+    // }).then((result) => {
+    //   if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
+    //   if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
+    //   return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
+    //     "name":req.body.name,
+    //     "password": 'fake_password',
+    //     "phoneCode": process.env.phoneCode,
+    //     "username": req.body.username
+    //   }}, {new: true, upsert: true});
+    // }).then((returned) => {
+    //   if (!returned) return Promise.reject('User update failed. It should not fail. Please check this line !');
+    //   returned.password = req.body.password;
+    //   return returned.generateAuthToken(req);
+    // }).then((msg) => {
+    //   return res.status(200).send(msg.tokens[0].token);
+    // }).catch((e) => {
+    //   console.log(e);
+    //   return res.status(401).send(e);
+    // });
   };
 
-  if (req.body.query === 'Google_ID') {
-    testGoogleToken(req).then((res) => {
-      return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google'}}, {new: true, upsert: true});
-    }).then((returned) => {
-      if (!returned) return Promise.reject('Invalid Request');
-      return returned.generateAuthToken(req);
-    }).then((returned) => {
-      return res.status(200).send(returned.tokens[0].token);
-    }).catch((e) => {
-      console.log(e);
-      return res.status(400).send(`${e}`);
-    });
-
-  };
+  // if (req.body.query === 'Google_ID') {
+  //   testGoogleToken(req).then((res) => {
+  //     return Users.findOneAndUpdate({"email": req.body.email}, {$set : {"name":req.body.name , "SigninType":'Google'}}, {new: true, upsert: true});
+  //   }).then((returned) => {
+  //     if (!returned) return Promise.reject('Invalid Request');
+  //     return returned.generateAuthToken(req);
+  //   }).then((returned) => {
+  //     return res.status(200).send(returned.tokens[0].token);
+  //   }).catch((e) => {
+  //     console.log(e);
+  //     return res.status(400).send(`${e}`);
+  //   });
+  //
+  // };
 
   if (req.body.query === 'Login') {
     var user = _.pick(req.body,['email','password']);
@@ -1725,25 +1746,51 @@ app.post('/signing',(req,res) => {
     });
   };
 
-  if (req.body.query === 'Email_Verify') {
+  if (req.body.query === 'FP_Email_Verify') {
     var phoneCode = Math.floor(100000 + Math.random() * 900000);
     if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
-    Users.findOne({"email":req.body.email}).then((user) => {
-      if (req.body.registerNew) {
-        let user = new Users({name: req.body.name, email: req.body.email, SigninType: 'Google'});
-        return user.save().catch(e => Promise.reject('You are already in our database. Try using Forgot Password.'));
-      }
-      if (!user) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
-      return Promise.resolve(user);
-    }).then(newUser => {
+    Users.findOne({"email":req.body.email})
+    .then(newUser => {
+      if (!newUser) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
       return Promise.all([
         sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Verification Code'),
         Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true})
       ])
-    }).then((user) => {
+    })
+    .then((user) => {
       console.log(user);
-      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode, mailStatus: user});
-    }).catch((e) => {
+      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode, mailStatus: user[0]});
+    })
+    .catch((e) => {
+      console.log(e);
+      if (e.errno) return res.status(404).send(e.errno);
+      if (e.code == 401) return res.status(404).send(e.response.body);
+      res.status(400).send(`${e}`);
+    });
+  }
+
+  // Users.findOne({"email":req.body.email}).then((user) => {
+  //   if (req.body.registerNew) {
+  //     let user = new Users({name: req.body.name, email: req.body.email, SigninType: 'Google'});
+  //     return user.save().catch(e => Promise.reject('You are already in our database. Try using Forgot Password.'));
+  //   }
+  //   if (!user) return Promise.reject('Sorry you have not registered with this email before, please Sign up !');
+  //   return Promise.resolve(user);
+  // }).then(newUser => {
+  //   return
+
+  if (req.body.query === 'Email_Verify') {
+    var phoneCode = Math.floor(100000 + Math.random() * 900000);
+    if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
+    Promise.all([
+        sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Verification Code'),
+        Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true})
+    ])
+    .then((user) => {
+      console.log(user);
+      res.status(200).send({msg: 'Mail sent !', phoneCode: req.body.phoneCode, mailStatus: user[0]});
+    })
+    .catch((e) => {
       console.log(e);
       if (e.errno) return res.status(404).send(e.errno);
       if (e.code == 401) return res.status(404).send(e.response.body);
@@ -1855,7 +1902,7 @@ app.get('/quranDaily', (req,res) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val, val.split(': ')[0].indexOf('.'));
+        // console.log(val, val.split(': ')[0].indexOf('.'));
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
@@ -1867,23 +1914,36 @@ app.get('/quranDaily', (req,res) => {
     let days = [];
     for (var i = 1; i <= sorted.length; i++) {
       // console.log(sorted[0]);
+      console.log(req.session.token, req.session.hasOwnProperty('token'));
       days.push({
         index: i,
-        data: sorted[i-1] != undefined ? 'active' : 'inactive'
+        data: sorted[i-1] != undefined ? 'active' : 'inactive',
+        locked: (sorted.length - i) < 3 || req.session.hasOwnProperty('token') ? '' : 'locked'
       })
     };
 
-    console.log(sorted);
-
     res.status(200).render('1-qurandaily.hbs', {
       data: sorted,
-      days
+      days,
+      token: req.session.token,
+      note: req.note
     });
   })
 })
 
-app.get('/blogpost', (req,res) => {
+app.get('/blogpost', (req,res,next) => {
+
   readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
+
+    console.log(req.query.serialNo,rows.length, req.session.hasOwnProperty('token'), req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false);
+
+    if (req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false) {
+      req.url = `/quranDaily`;
+      req.note = `Article ${req.query.serialNo} is a premium article. Please join the community to read this article.`;
+      return app._router.handle(req, res, next);
+    }
+
+
     let sorted = rows.map((val) =>
       val.reduce((total,inner,index) => {
 
@@ -1897,7 +1957,6 @@ app.get('/blogpost', (req,res) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val);
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
@@ -1908,7 +1967,7 @@ app.get('/blogpost', (req,res) => {
       return val;
     })
 
-    console.log(JSON.stringify(sorted, 0, 2));
+
     res.render('1-blogpost.hbs',{
       data: sorted[0],
       tags: sorted[0].Tags.split(',')

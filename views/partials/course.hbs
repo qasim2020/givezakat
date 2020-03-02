@@ -59,6 +59,24 @@
   .sticky-nav > *:not(:nth-child(1)) {
     margin-bottom: 10px;
   }
+
+  @media (max-width: 769px) {
+    .subj-card > p:nth-child(1) {
+    display: none;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .sticky-nav > * {
+      max-width: 243px;
+      margin-right: auto;
+      margin-left: 25px;
+    }
+
+    .sticky-nav > h3 {
+      margin-left: 10px;
+    }
+  }
 </style>
 
 <div class="card course_{{@index}} sticky-nav">

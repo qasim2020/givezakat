@@ -71,6 +71,9 @@ var UsersSchema = new mongoose.Schema({
   attemptedTime: {
     type: Number,
     default: 0,
+  },
+  stripe: {
+    type: Object
   }
 });
 

@@ -30,17 +30,19 @@
       * Shows how you can use CSS to style your Element's container.
       */
       .MyCardElement {
-        height: 40px;
+        /* height: 40px; */
         padding: 10px 12px;
         width: 100%;
         color: #32325d;
         background-color: white;
-        border: 1px solid transparent;
-        border-radius: 4px;
+        /* border: 1px solid transparent; */
+        /* border-radius: 4px; */
 
         box-shadow: 0 1px 3px 0 #e6ebf1;
         -webkit-transition: box-shadow 150ms ease;
         transition: box-shadow 150ms ease;
+
+        border: 1px solid darkcyan;
       }
 
       .MyCardElement--focus {
@@ -54,6 +56,24 @@
       .MyCardElement--webkit-autofill {
         background-color: #fefde5 !important;
       }
+
+
+      .stripe.container {
+        margin-left: 0;
+        box-sizing: border-box;
+        padding: 0;
+        box-shadow: none;
+        padding-right: 25px;
+      }
+
+      form.disabled {
+        opacity: 0.3;
+        cursor: disabled !important;
+        pointer-events: none;
+      }
+
+      form.disabled > * {
+      }
     </style>
 
     <title>Zakat Lists</title>
@@ -66,18 +86,8 @@
     <div class="container form-placement">
       <h4>Sign up</h4>
 
-      <!-- Use the CSS tab above to style your Element's container. -->
-       <form id="subscription-form">
-        <div id="card-element" class="MyCardElement">
-          <!-- Elements will create input elements here -->
-        </div>
-
-        <!-- We'll put the error messages in this element -->
-        <div id="card-errors" role="alert"></div>
-        <button type="submit">Subscribe</button>
-      <form>
-
       <hr>
+
       <form class="" id="sign-up" action="" method="get">
 
 
@@ -92,23 +102,39 @@
         </div>
         <button id="click-sendCode" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Get Verification Code</button>
         <p class="success-msg mb-2 d-none px-8px">Verification code sent to your email address.</p>
+
         <div class="d-flex justify-content-start align-items-center border my-point5 flex-grow-1" style="opacity: 0.3">
           <input id="user-code" class="form-control flex-grow-1" type="text" name="user-code" value="" placeholder="Email Verification Code" disabled>
           <p class="success-msg d-none px-8px">Verified !</p>
         </div>
+
         <input id="user-token" type="text" name="token" value="" class="d-none">
         <p class="error px-8px d-none">Wrong attempt 1. 4 attempts left !</p>
-        <button id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button" disabled style="opacity: 0.3">Sign Up</button>
+        <!-- <button id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button" disabled style="opacity: 0.3">Sign Up</button> -->
 
       </form>
+
+      <div class="stripe container form-placement">
+        <form id="subscription-form" class="disabled">
+         <div id="card-element" class="MyCardElement">
+         </div>
+
+         <div id="card-errors" class="error" role="alert"></div>
+         <button type="submit" id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign Up for Rs 300 / Month</button>
+         <p type="button" name="button">Do not have credit card? <a href="https://docs.google.com/forms/d/e/1FAIpQLSeFqrkbzGIAx2M5xwEPLBEtuh4EE2cGQdlI6qQ6Cq3huq23XQ/viewform?usp=sf_link" target="_blank"> Click here</p>
+        <form>
+
+      </div>
+
       <hr>
       <div class="d-flex flex-col align-items-start">
         <a class="" href="/signin/home">Sign in?</a>
         <a class="my-point5" href="/forgotpw">Forgot password?</a>
       </div>
 
-
     </div>
+
+
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
@@ -119,6 +145,7 @@
     <script type="text/javascript">
 
     $('#click-sendCode').click(function(e) {
+
       console.log('clicked send code');
 
       if (!($("#sign-up").valid())) {
@@ -184,9 +211,10 @@
         $(this).siblings('.success-msg').removeClass('d-none');
         $('#click-signup').attr({disabled: false});
         $('.error').addClass('d-none');
+        $('form.disabled').removeClass('disabled');
       }).fail((e) => {
         console.log(e);
-        $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
+        alert(e.responseText);
       })
     })
 
@@ -194,42 +222,44 @@
 
       console.log('ok clicked');
 
-      if (!($("#sign-up").valid())) {
-
-        return;
-
-      }
-
-      console.log('valid entries');
-
-      let data = {
-        'query': 'Register',
-        "name": $('#user-name').val(),
-        "email": $('#user-email').val(),
-        "password": $('#user-pass').val(),
-        "phoneCode": $('#user-code').val(),
-      };
-
-      console.log(data);
-
-      data = JSON.stringify(data);
-
-      $.ajax({
-          url: '/signing',
-          type: 'post',
-          data,
-          headers: {
-              'content-type': 'application/json',
-          }
-        }).done((token) => {
-          console.log('successful: ', token);
-          // $('#sign-up').attr('action',`/home/?token=${token}`);
-          window.location.assign(`/home/?token=${token}`);
-          // $("#sign-up").submit();
-        }).fail((e) => {
-          $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
-          console.log('error here', e);
-        });
+      // if (!($("#sign-up").valid())) {
+      //
+      //   return;
+      //
+      // }
+      //
+      // console.log('valid entries');
+      //
+      // let data = {
+      //   'query': 'Register',
+      //   "name": $('#user-name').val(),
+      //   "email": $('#user-email').val(),
+      //   "password": $('#user-pass').val(),
+      //   "phoneCode": $('#user-code').val(),
+      // };
+      //
+      // console.log(data);
+      //
+      // data = JSON.stringify(data);
+      //
+      // $.ajax({
+      //     url: '/signing',
+      //     type: 'post',
+      //     data,
+      //     headers: {
+      //         'content-type': 'application/json',
+      //     }
+      //   }).done((token) => {
+      //     console.log('successful: ', token);
+      //     // $('#sign-up').attr('action',`/home/?token=${token}`);
+      //     window.location.assign(`/home/?token=${token}`);
+      //     // $("#sign-up").submit();
+      //   }).fail((e) => {
+      //     let errors = { 'user-pass': e.responseText };
+      //     $("#sign-up").validate().showErrors(errors);
+      //     // $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
+      //     console.log('error here', e);
+      //   });
 
     });
 
@@ -297,7 +327,7 @@
     var cardElement = elements.create("card", { style: style });
     cardElement.mount("#card-element");
 
-    card.addEventListener('change', function(event) {
+    cardElement.addEventListener('change', function(event) {
       var displayError = document.getElementById('card-errors');
       if (event.error) {
         displayError.textContent = event.error.message;
@@ -317,35 +347,65 @@
         type: 'card',
         card: cardElement,
         billing_details: {
-          email: 'jenny.rosen@example.com',
+          email: $('#user-email').val()
         },
       }).then(stripePaymentMethodHandler);
     });
+
+    // $('#user-name').val(),
 
     function stripePaymentMethodHandler(result, email) {
       if (result.error) {
         // Show error in payment form
         console.log(result.error);
       } else {
-        // Otherwise send paymentMethod.id to your server
-        fetch('/create-customer', {
+        if (!($("#sign-up").valid())) {
+
+          return;
+
+        }
+
+        console.log('valid entries');
+
+        let data = {
+          'query': 'Register',
+          "name": $('#user-name').val(),
+          "email": $('#user-email').val(),
+          "password": $('#user-pass').val(),
+          "phoneCode": $('#user-code').val(),
+        };
+
+        console.log(data);
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+          url: '/create-customer',
           method: 'post',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({
-            email: 'jenny.rosen@example.com',
-            payment_method: result.paymentMethod.id
+          data: JSON.stringify({
+            payment_method: result.paymentMethod.id,
+            name: $('#user-name').val(),
+            email: $('#user-email').val(),
+            password: $('#user-pass').val(),
+            phoneCode: $('#user-code').val(),
           }),
-        }).then(function(result) {
-          console.log(result);
-         return result.json();
-        }).then(function(customer) {
-          console.log(customer);
-          // The customer has been created
+        }).done((token) => {
+          console.log('successful: ', token);
+          // $('#sign-up').attr('action',`/home/?token=${token}`);
+          window.location.assign(`/home/?token=${token}`);
+          // $("#sign-up").submit();
+        }).fail((e) => {
+          let errors = { 'user-pass': e.responseText };
+          // $("#sign-up").validate().showErrors(errors);
+          $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
+          console.log('error here', e);
+          alert(errors);
         });
       }
     }
 
-    
+
 
     </script>
 

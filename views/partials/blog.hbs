@@ -31,6 +31,45 @@
     line-height: 157.9%;
   }
 
+
+
+  @media screen and (max-width: 1024px) {
+    .blog_{{@index}} {
+      padding: 0 8px;
+    }
+
+    .blog_{{@index}} > p, .blog_{{@index}} > .foot {
+        font-size: 18px;
+        line-height: 1.8;
+      }
+    }
+
+  @media screen and (max-width: 769px) {
+    .blog_{{@index}} {
+      padding: 0 2px;
+    }
+
+    .blog_{{@index}} > p, .blog_{{@index}} > .foot {
+        font-size: 12px;
+        line-height: 1.8;
+        margin: 0;
+      }
+  }
+
+  @media screen and (max-width: 500px) {
+    .blog_{{@index}} {
+      padding: 0 2px;
+      margin: 5px;
+      padding-bottom: 1rem;
+    }
+
+    .blog_{{@index}} > p, .blog_{{@index}} > .foot {
+        font-size: 17px;
+        line-height: 1.8;
+        margin: 0;
+    }
+  }
+
 </style>
 
 <div class="card blog blog_{{@index}}" onclick="window.location.href = `/blogpost?serialNo={{msg.[0].msg}}`">

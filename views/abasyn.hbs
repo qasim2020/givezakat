@@ -668,7 +668,7 @@
       margin-top: 8px;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 769px) {
 
       .modal {
         width: 80%;
@@ -676,7 +676,7 @@
       }
 
       .logo-area {
-        padding: 0 8px;
+        padding: 0 24px;
       }
 
 
@@ -1082,6 +1082,19 @@
             transform: translate(-50%);
             z-index: -10;
           }
+
+          .intro {
+            padding: 0 16px;
+          }
+
+          .intro .error {
+            padding: 21px 1px;
+            color: red;
+            font-weight: normal;
+            text-align: left;
+            margin-top: 1px;
+          }
+
           .intro > svg.first {
             position: absolute;
             z-index: -10;
@@ -1117,7 +1130,7 @@
             padding: 1rem 0;
           }
 
-          .intro > button {
+          .intro > form > button {
             padding: 14px 13px;
 
             font-family: Montserrat;
@@ -1131,7 +1144,7 @@
 
           }
 
-          .intro > input {
+          .intro > form > input {
             display: block;
             padding: 13px 13px;
             background: #26ae602b;
@@ -1142,12 +1155,12 @@
             width: 42%;
           }
 
-          .intro > button.primary {
+          .intro > form > button.primary {
             background: #27AE60;
             color: #F2F2F2;
           }
 
-          .intro > button.secondary {
+          .intro > form > button.secondary {
             background: #F2F2F2;
             color: #27AE60;
           }
@@ -1156,7 +1169,7 @@
             padding-bottom: 0px;
           }
 
-          @media (max-width:700px) {
+          @media (max-width:768px) {
             .intro > input {
               width: 100%;
               box-sizing: border-box;
@@ -1188,6 +1201,7 @@
             .sticky-nav {
               order: 1;
               margin-top: 2rem;
+              display: none;
             }
 
           }
@@ -1199,10 +1213,13 @@
           <h1>Welcome to zakatlists school. </h1>
           <p>For now only students from <b>Abasyn university</b> can get benefit from it.</p>
           <p>Sign in to access course curriculum.</p>
-          <input type="email" name="" value="" placeholder="Your email address">
-          <input type="password" name="" value="" placeholder="Your password">
-          <button class="secondary" type="button" name="button">Sign In</button>
-          <button class="primary" type="button" name="button" onclick="$('.modal').removeClass('d-none')">Sign Up for Rs 300 / Month</button>
+          <form class="" action="" method="">
+            <input type="email" name="in-email" id="in-email" value="" placeholder="Your email address">
+            <input type="password" name="in-pass" id="in-pass" value="" placeholder="Your password">
+            <button id="signin" type="button" class="secondary" type="button" name="button">Sign In</button>
+            <button class="primary" type="button" name="button" onclick="$('.modal').removeClass('d-none')">Sign Up for Rs 300 / Month</button>
+            <p class="error d-none">Please enter the data above</p>
+          </form>
         </div>
         {{/unless}}
       </div>
@@ -1216,7 +1233,6 @@
       <div class="modal d-none">
         <p>Please deposit Rs 300 to following account and whatsapp me the deposit slip on my cell number listed below.</p>
         <p><b>Amount</b>. Rs 300</p>
-        <p><b>Account Title</b>. Qasim Ali</p>
         <p><b>Account No</b>. 00 47 0210109039‬</p>
         <p><b>Bank</b>. Askari Bank Haider Road Rawalpindi</p>
         <p><b>WhatsApp no</b>. +92 323 5168638</p>
@@ -1352,6 +1368,42 @@
       if ($(`.${target}.d-none`).length > 0) return $(this).html('Support');
       $(this).html('x Close')
     })
+
+    {{#unless token}}
+    $(document).on('click','#signin',function() {
+
+      console.log($('#in-email').val().length < 3 || $('#in-pass').val().length < 3);
+
+      // return ;
+      if ($('#in-email').val().length < 3 || $('#in-pass').val().length < 3) {
+        return $('.intro .error').removeClass('d-none').html("Please fill in the required fields.");
+      }
+
+      let data = {
+        "query": 'Login',
+        "email": $('#in-email').val(),
+        "password": $('#in-pass').val()
+      };
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((token) => {
+          console.log('successful login: ', token);
+          window.location.assign(`/school/?token=${token}`);
+        }).fail((e) => {
+          console.log(e);
+          let errors = { password: e.responseText };
+          $('.intro .error').removeClass('d-none').html(e.responseText);
+        });
+    })
+    {{/unless}}
   </script>
 
   </body>

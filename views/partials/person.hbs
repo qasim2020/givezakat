@@ -44,6 +44,41 @@
     padding-left: 1rem;
   }
 
+  @media (max-width: 769px) {
+    .person_{{@index}} {
+      padding: 2px 10px 20px 10px;
+      box-sizing: border-box;
+    }
+
+    .person_{{@index}} > p, .person_{{@index}} > a {
+      font-size: 12px;
+    }
+    .person_{{@index}} > h3 {
+      font-size: 16px;
+    }
+
+    .person_{{@index}} > h6 {
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .person_{{@index}} {
+      margin: 5px;
+    }
+
+    .person_{{@index}} > p, .person_{{@index}} > a {
+      font-size: 17px;
+    }
+    .person_{{@index}} > h3 {
+      font-size: 20px;
+    }
+
+    .person_{{@index}} > h6 {
+      font-size: 18px;
+    }
+  }
+
 </style>
 
 <div class="card person person_{{@index}}">

@@ -1080,6 +1080,7 @@
         margin-top: -20vh;
         margin-bottom: 20vh;
         width: 360px;
+        max-width: 100%;
         padding-bottom: 15px;
         background: #FFFFFF;
         box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
@@ -1339,6 +1340,7 @@
         color: red;
         margin-top: 0.6rem;
         display: block;
+        overflow-wrap: break-word;
       }
 
       .modal {

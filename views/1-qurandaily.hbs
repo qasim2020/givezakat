@@ -45,7 +45,7 @@
     .logo-area > p {
       padding-left: 10px;
       /* Quran Daily */
-
+      margin-left: auto;
       font-family: Montserrat;
       font-style: normal;
       font-weight: bold;
@@ -188,6 +188,24 @@
       margin: auto;
     }
 
+    .locked {
+      opacity: 0.3;
+      pointer-events: none;
+      cursor: not-allowed;
+    }
+
+    .note {
+      padding: 24px;
+      background: #323232;
+      color: white;
+    }
+
+    .note > p {
+      color: lightgrey;
+      line-height: 1.5;
+      font-size: 18px;
+    }
+
     @media (max-width:799px) {
       .container {
         /* padding: 0 20px; */
@@ -231,15 +249,26 @@
       <p>Quran Daily</p>
     </div>
 
+    {{#if note}}
+    <div class="note">
+      <svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="22" cy="22" r="22" fill="#333333"/>
+      <path d="M30 12H14C12.9 12 12.01 12.9 12.01 14L12 32L16 28H30C31.1 28 32 27.1 32 26V14C32 12.9 31.1 12 30 12ZM23 24H21V22H23V24ZM23 20H21V16H23V20Z" fill="#F2F2F2"/>
+      </svg>
+      <p class="">{{note}}</p>
+    </div>
+    {{/if}}
+
     <div class="container">
       <div class="left-part">
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M49.9993 141.667H74.9993L91.666 108.333V58.3333H41.666V108.333H66.666L49.9993 141.667ZM116.666 141.667H141.666L158.333 108.333V58.3333H108.333V108.333H133.333L116.666 141.667Z" fill="#F2F2F2"/>
         </svg>
-
         <p>This year I am committing to read Quran daily and write a post about the experience here.</p>
         <iframe src="" width="" height="">Video lies here</iframe>
-        <p class="muted">This is a project by zakatlists.com where I have listed people who are in need of help. Contribute to build lives.</p>
+        {{#unless token}}
+        <p style="margin-bottom: 1rem" class="muted">Zakatlists has gone premium. Only last 3 days blog are visible for reading. Please subscribe at Rs 300 / Month to access remaining blogs by <a href="/signin/quranDaily"> clicking here.</a></p>
+        {{/unless}}
         <!-- <a href="https://www.buymeacoffee.com/qasimali" target="_blank">
           <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M20 15H4V25C4 27.21 5.79 29 8 29H14C16.21 29 18 27.21 18 25V22H20C21.11 22 22 21.1 22 20V17C22 15.89 21.11 15 20 15ZM20 20H18V17H20V20ZM4 31H20V33H4V31Z" fill="#219653"/>
@@ -253,7 +282,7 @@
 
       <div class="right-part">
         {{#each days}}
-          <span class="{{this.data}}">{{this.index}}</span>
+          <span class="{{locked}} {{this.data}}">{{this.index}}</span>
         {{/each}}
       </div>
     </div>
