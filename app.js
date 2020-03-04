@@ -221,11 +221,12 @@ app.get('/',(req,res) => {
       });
       return val;
     });
+    // console.log(sorted);
 		sorted = sorted[sorted.length - 1];
 		return sorted;
   })
   .then(sorted => {
-		console.log('asdfasdfasdf',sorted);
+		// console.log('asdfasdfasdf',sorted);
     let p = sorted.reduce((total,val,index) => {
           if (/course|blog/.test(val.type) == false) return total;
           total.push({
@@ -253,7 +254,8 @@ app.get('/',(req,res) => {
   .then(values => {
     sorted = sorted.map((val,index) => {
       let found = values.filter(val => {
-        return val.input.index == index
+        console.log(val.input);
+        return val.input && val.input.index == index
       });
       if (found.length > 0) {
         return Object.assign(val, {
@@ -262,9 +264,11 @@ app.get('/',(req,res) => {
       }
       return val;
     })
-    console.log(sorted);
-    console.log(JSON.stringify(sorted[4],0,2));
-    console.log(req.session);
+    // console.log('------++++++-------');
+    // console.log(sorted);
+    // console.log('------++++++-------');
+    // console.log(JSON.stringify(sorted[4],0,2));
+    // console.log(req.session);
 
     return res.render('1-home_new.hbs',{
       data: sorted,
@@ -272,7 +276,10 @@ app.get('/',(req,res) => {
     });
 
   })
-  .catch(e => res.status(400).send(e));
+  .catch(e => {
+    console.log(e);
+    res.status(400).send(e);
+  })
 
   //   return res.render('1-home_new.hbs',{data: [
   //   {type:'person',width:2, height:1, msg:[
