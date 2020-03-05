@@ -1011,7 +1011,8 @@ app.get('/signin/:call',(req,res) => {
 
 app.get('/signup',(req,res) => {
   res.render('1-signup.hbs',{
-    signin: 'active'
+    signin: 'active',
+    publishableKey: process.env.stripePublishableKey
   });
 })
 
@@ -1188,7 +1189,6 @@ app.get('/due',authenticate,(req,res) => {
         email: req.params.user.email,
         localCurrency: req.session.browserCurrency.currency_code,
         publishableKey: process.env.stripePublishableKey
-
       });
     }).catch((error) => {
       console.log(error);
