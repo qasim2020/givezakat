@@ -1706,7 +1706,7 @@ app.post('/signing',(req,res) => {
     // }).then((result) => {
     //   if (!result) return Promise.reject('You need to verify your email before proceeding forward !');
     //   if (result && result.SigninType != 'Google') return Promise.reject("An account with this email already exists, please sign in !");
-    //   return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
+    // return Users.findOneAndUpdate({"email": req.body.email}, {$set : {
     //     "name":req.body.name,
     //     "password": 'fake_password',
     //     "phoneCode": process.env.phoneCode,
@@ -1791,7 +1791,7 @@ app.post('/signing',(req,res) => {
     if (req.headers.accept == process.env.test_call) req.body.phoneCode = phoneCode;
     Promise.all([
         sendmail(req.body.email,`Your Email Code: <b>${phoneCode}</b>, please enter it on webpage.`,'Verification Code'),
-        Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true})
+        Users.findOneAndUpdate({"email": req.body.email}, {$set : {"phoneCode":phoneCode}}, {new: true, upsert: true})
     ])
     .then((user) => {
       console.log(user);

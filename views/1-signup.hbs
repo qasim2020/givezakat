@@ -18,6 +18,49 @@
     <link rel="stylesheet" href="/styles.css">
 
     <style media="screen">
+
+      .lds-facebook {
+        display: inline-block;
+        position: relative;
+        width: 80px;
+        height: 80px;
+      }
+      .lds-facebook div {
+        display: inline-block;
+        position: absolute;
+        left: 8px;
+        width: 16px;
+        background: #fff;
+        animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+      }
+      .lds-facebook div:nth-child(1) {
+        left: 8px;
+        animation-delay: -0.24s;
+      }
+      .lds-facebook div:nth-child(2) {
+        left: 32px;
+        animation-delay: -0.12s;
+      }
+      .lds-facebook div:nth-child(3) {
+        left: 56px;
+        animation-delay: 0;
+      }
+      @keyframes lds-facebook {
+        0% {
+          top: 8px;
+          height: 64px;
+        }
+        50%, 100% {
+          top: 24px;
+          height: 32px;
+        }
+      }
+
+      .btn.active {
+        /* content: `<div class="lds-heart"><div></div></div>`; */
+
+      }
+
       .success-msg {
         color: darkcyan;
       }
@@ -100,7 +143,10 @@
         <div class="d-flex justify-content-start border my-point5 flex-grow-1">
           <input id="user-pass" class="form-control flex-grow-1" type="password" name="user-pass" value="" placeholder="Password">
         </div>
-        <button id="click-sendCode" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Get Verification Code</button>
+        <button id="click-sendCode" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">
+          <span>Get Verification Code</span>
+          <!-- <span><div class="lds-facebook"><div></div><div></div><div></div></div></span> -->
+        </button>
         <p class="success-msg mb-2 d-none px-8px">Verification code sent to your email address.</p>
 
         <div class="d-flex justify-content-start align-items-center border my-point5 flex-grow-1" style="opacity: 0.3">
@@ -110,7 +156,6 @@
 
         <input id="user-token" type="text" name="token" value="" class="d-none">
         <p class="error px-8px d-none">Wrong attempt 1. 4 attempts left !</p>
-        <!-- <button id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button" disabled style="opacity: 0.3">Sign Up</button> -->
 
       </form>
 
@@ -120,8 +165,11 @@
          </div>
 
          <div id="card-errors" class="error" role="alert"></div>
-         <button type="submit" id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">Sign Up for Rs 300 / Month</button>
-         <p type="button" name="button">Do not have credit card? <a href="https://docs.google.com/forms/d/e/1FAIpQLSeFqrkbzGIAx2M5xwEPLBEtuh4EE2cGQdlI6qQ6Cq3huq23XQ/viewform?usp=sf_link" target="_blank"> Click here</p>
+         <button type="submit" id="click-signup" class="mt-1 mb-2 btn btn-secondary d-flex align-items-center" type="button" name="button">
+           <span>Sign Up for Rs 300 / Month</span>
+           <!-- <span><div class="lds-facebook"><div></div><div></div><div></div></div></span> -->
+         </button>
+         <p>Do not have credit card? <a href="https://docs.google.com/forms/d/e/1FAIpQLSeFqrkbzGIAx2M5xwEPLBEtuh4EE2cGQdlI6qQ6Cq3huq23XQ/viewform?usp=sf_link" target="_blank"> Click here</p>
         <form>
 
       </div>
@@ -400,7 +448,7 @@
           // $("#sign-up").validate().showErrors(errors);
           $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
           console.log('error here', e);
-          alert(errors);
+          alert(e);
         });
       }
     }
