@@ -1,0 +1,83 @@
+<style media="screen">
+
+  .video_{{@index}} {
+    grid-column: span {{width}};
+    grid-row: span {{height}};
+    color: #828282;
+    padding: 0 31px;
+    padding-bottom: 1rem;
+    background: black;
+  }
+
+  .video_{{@index}} > p {
+    font-family: Roboto;
+    font-weight: 300;
+    font-size: 16px;
+    line-height: 157.9%;
+  }
+
+
+
+  @media screen and (max-width: 1024px) {
+    .video_{{@index}} {
+      padding: 0 8px;
+    }
+
+    .video_{{@index}} > p {
+        font-size: 18px;
+        line-height: 1.8;
+      }
+    }
+
+  @media screen and (max-width: 769px) {
+    .video_{{@index}} {
+      padding: 0 2px;
+    }
+
+    .video_{{@index}} > p {
+        font-size: 12px;
+        line-height: 1.8;
+        margin: 0;
+      }
+  }
+
+  @media screen and (max-width: 500px) {
+    .video_{{@index}} {
+      padding: 0 2px;
+      margin: 5px;
+      padding-bottom: 1rem;
+    }
+
+    .video_{{@index}} > p {
+        font-size: 17px;
+        line-height: 1.8;
+        margin: 0;
+    }
+  }
+
+</style>
+
+<div class="card video video_{{@index}}">
+  {{#each msg}}
+
+  {{#if (match 'h3' type)}}
+    <h3 class="{{class}}">{{{msg}}}</h3>
+  {{/if}}
+
+  {{#if (match 'p' type)}}
+    <p class="{{class}}">{{{msg}}}</p>
+  {{/if}}
+
+  {{#if (match 'button' type)}}
+    <button type="button" name="button" class="{{class}}" onclick="window.open(
+  {{{url}}},
+  '_blank' // <- This is what makes it open in a new window.
+);">{{msg}}</button>
+  {{/if}}
+
+  {{/each}}
+</div>
+
+<script type="text/javascript">
+
+</script>

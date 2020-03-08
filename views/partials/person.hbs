@@ -3,6 +3,7 @@
     grid-column: span {{width}};
     grid-row: span {{height}};
     padding: 0 31px;
+    padding-bottom: 1rem;
     background: #F2F2F2;
     box-sizing: border-box;
     margin: 20px;
@@ -11,6 +12,7 @@
   .person_{{@index}} > img {
     display: block;
     padding-bottom: 21px;
+    max-width: 70%;
   }
 
   .person_{{@index}} > p, .person_{{@index}} > a {
@@ -128,7 +130,7 @@
 {{/if}}
 
 {{#if (match 'url' type)}}
-<a href="{{msg}}" target="_blank">{{msg}}</a>
+  {{{msg}}}
 {{/if}}
 
 {{/each}}

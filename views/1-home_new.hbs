@@ -43,7 +43,7 @@
         font-weight: 300;
         font-size: 24px;
         line-height: 122.9%;
-        color: #828282;
+        color: #bfbaba;
       }
 
       h6 {
@@ -108,6 +108,11 @@
         /* color: black; */
         cursor: pointer;
         opacity: 0.7;
+      }
+
+      button.youtube {
+        background: #ff00004f;
+        color: #c7b6b6;
       }
 
       @media (max-width: 1024px) {
@@ -247,12 +252,8 @@
 
 
     {{#if (match 'signin' type)}}
-
-        {{>signin session=../session}}
-
-
+      {{>signin session=../session}}
     {{/if}}
-
 
     {{#if (match 'meetup' type)}}
       {{>meetup}}
@@ -260,6 +261,10 @@
 
     {{#if (match 'subscribe' type)}}
       {{>subscribe}}
+    {{/if}}
+
+    {{#if (match 'video' type)}}
+      {{>video}}
     {{/if}}
 
     {{#if (match 'footer' type)}}
@@ -278,6 +283,7 @@
       function goto(msg) {
         window.location.href = msg;
       }
+      
     </script>
   </body>
 </html>

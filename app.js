@@ -208,6 +208,7 @@ app.get('/',(req,res) => {
               break;
             default:
               total.msg = total.msg || [];
+              // console.log(val);
               total.msg.push({
                 type: val.split(': ')[0].indexOf('.') ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
                 msg: val.split(': ')[1].indexOf('*') ? val.split(': ')[1].split('*')[0] : val.split(': ')[1],
