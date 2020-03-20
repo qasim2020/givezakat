@@ -188,6 +188,10 @@ app.get('/public-key', (req,res) => {
   return res.status(200).send({publicKey:process.env.stripePublishableKey})
 })
 
+app.get('/covid19', (req,res) => {
+  return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY} );
+})
+
 app.get('/',(req,res) => {
 
   // return res.render('facebook.hbs',{});
