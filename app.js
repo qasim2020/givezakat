@@ -13,6 +13,8 @@ const readXlsxFile = require('read-excel-file/node');
 const axios = require('axios');
 const {OAuth2Client} = require('google-auth-library');
 const moment = require('moment');
+const request = require('request');
+
 
 
 const stripe = require('stripe')(process.env.stripePrivate);
@@ -188,8 +190,51 @@ app.get('/public-key', (req,res) => {
   return res.status(200).send({publicKey:process.env.stripePublishableKey})
 })
 
+function getInfectedCities() {
+  return new Promise(function(resolve, reject) {
+    // request('http://localhost:3000/wiki.text', function(err, res, body) {
+    request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
+      return resolve(body)
+    });
+  });
+};
+
+// getInfectedCities().then(msg => {
+//   let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
+  // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('</tbody></table>')[0].split('</t').map((val,index) => {
+  //   val = val.split('>');
+  //   return val[val.length-2].split('\n')[val[val.length-2].split('\n').length-1].indexOf('text-align') > 0 ? val[val.length-1].replace('\n','') : val[val.length-2].split('\n')[val[val.length-2].split('\n').length-1].replace(/<\/a|<\/b/gi,'');
+  // }).filter((val,index) => {
+  //   // console.log(val, /d|h|r/gi.test(val) && val.length < 2);
+  //   return index > 6 && (/d|h|r/gi.test(val) && val.length < 2) == false;
+  // }).reduce((total,val,index) => {
+  //   switch (true) {
+  //     case index % 5 == 0:
+  //       total.index = index / 5;
+  //       total[index / 5] = {
+  //         city: val
+  //       }
+  //       break;
+  //     default:
+  //       console.log(val);
+  //       // Object.assign(total[total.index],{
+  //       //   active: val
+  //       // })
+  //   }
+  //   return total;
+  // },[]);
+//   console.log(out.trim())
+// }).catch(e => console.log(e));
+
 app.get('/covid19', (req,res) => {
-  return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY} );
+  getInfectedCities(req,res)
+  .then(msg => {
+    let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
+    // let out = msg.split('</p>')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0].trim()
+    // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('</tbody></table>')[0].split('</tr>');
+    // console.log(msg);
+    return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY, out: out} );
+  })
 })
 
 app.get('/',(req,res) => {
