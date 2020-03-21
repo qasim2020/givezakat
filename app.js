@@ -14,8 +14,8 @@ const axios = require('axios');
 const {OAuth2Client} = require('google-auth-library');
 const moment = require('moment');
 const request = require('request');
-
-
+const tabletojson = require('tabletojson').Tabletojson;
+const cheerio = require('cheerio');
 
 const stripe = require('stripe')(process.env.stripePrivate);
 
@@ -191,16 +191,19 @@ app.get('/public-key', (req,res) => {
 })
 
 function getInfectedCities() {
+
   return new Promise(function(resolve, reject) {
     // request('http://localhost:3000/wiki.text', function(err, res, body) {
     request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
+      const $ = cheerio.load(body);
+      console.log(tabletojson.convert($('.wikitable').html()));
       return resolve(body)
     });
   });
 };
 
-// getInfectedCities().then(msg => {
-//   let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
+getInfectedCities()//.then(msg => {
+  let ou//t = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
   // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('</tbody></table>')[0].split('</t').map((val,index) => {
   //   val = val.split('>');
   //   return val[val.length-2].split('\n')[val[val.length-2].split('\n').length-1].indexOf('text-align') > 0 ? val[val.length-1].replace('\n','') : val[val.length-2].split('\n')[val[val.length-2].split('\n').length-1].replace(/<\/a|<\/b/gi,'');
@@ -217,9 +220,9 @@ function getInfectedCities() {
   //       break;
   //     default:
   //       console.log(val);
-  //       // Object.assign(total[total.index],{
-  //       //   active: val
-  //       // })
+        // Object.assign(total[total.index],{
+        //   active: val
+        // })
   //   }
   //   return total;
   // },[]);
