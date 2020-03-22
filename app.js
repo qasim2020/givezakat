@@ -195,48 +195,42 @@ function getInfectedCities() {
   return new Promise(function(resolve, reject) {
     // request('http://localhost:3000/wiki.text', function(err, res, body) {
     request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
-      const $ = cheerio.load(body);
-      console.log(tabletojson.convert($('.wikitable').html()));
-      return resolve(body)
+      const $ = cheerio.load(body, {
+        xml: {
+          normalizeWhitespace: true,
+        }
+      });
+      let row = [[],[],[],[],[],[],[],[],[],[],[],[],[]];
+      $('.wikitable.sortable').find('th,td').each(function(index) {
+        row[Math.floor(index / 6)].push($(this).html());
+      });
+      row = row.filter((val,index) => {
+        // console.log(index == 0, index);
+        return (val.length > 0 && index != 0);
+      });
+      resolve(row)
     });
   });
 };
 
-getInfectedCities()//.then(msg => {
-  let ou//t = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
-  // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('</tbody></table>')[0].split('</t').map((val,index) => {
-  //   val = val.split('>');
-  //   return val[val.length-2].split('\n')[val[val.length-2].split('\n').length-1].indexOf('text-align') > 0 ? val[val.length-1].replace('\n','') : val[val.length-2].split('\n')[val[val.length-2].split('\n').length-1].replace(/<\/a|<\/b/gi,'');
-  // }).filter((val,index) => {
-  //   // console.log(val, /d|h|r/gi.test(val) && val.length < 2);
-  //   return index > 6 && (/d|h|r/gi.test(val) && val.length < 2) == false;
-  // }).reduce((total,val,index) => {
-  //   switch (true) {
-  //     case index % 5 == 0:
-  //       total.index = index / 5;
-  //       total[index / 5] = {
-  //         city: val
-  //       }
-  //       break;
-  //     default:
-  //       console.log(val);
-        // Object.assign(total[total.index],{
-        //   active: val
-        // })
-  //   }
-  //   return total;
-  // },[]);
-//   console.log(out.trim())
-// }).catch(e => console.log(e));
+getInfectedCities().then(out => {
+  // console.log(out[0])
+  return request(`https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=${process.env.MAP_API_KEY}`);
+})
+.then(msg => {
+  console.log('successfully');
+  console.log(msg);
+})
+.catch(e => console.log(e));
 
 app.get('/covid19', (req,res) => {
   getInfectedCities(req,res)
   .then(msg => {
-    let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
+    // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
     // let out = msg.split('</p>')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0].trim()
     // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('</tbody></table>')[0].split('</tr>');
     // console.log(msg);
-    return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY, out: out} );
+    return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY, out: msg} );
   })
 })
 

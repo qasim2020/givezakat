@@ -4,6 +4,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>Marker Clustering</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:100,300i,400,400i,700,900&display=swap" rel="stylesheet">
     <style>
       /* Always set the map height explicitly to define the size of the div
        * element that contains the map. */
@@ -19,7 +20,7 @@
 
       .out {
         position: absolute;
-        background: white;
+        /* background: white; */
         right: 10px;
         top: 10px;
         max-width: 50%;
@@ -28,13 +29,80 @@
         z-index: 10;
         font-size: 80%;
       }
+
+      .card {
+        width: 233px;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 7px;
+        background: #ffffff;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        font-family: Roboto;
+        color: #4F4F4F;
+        padding: 0.5rem 1rem;
+        box-sizing: border-box;
+      }
+
+      .card > p:nth-child(1) {
+        width: 100%;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 21px;
+        /* line-height: 35px; */
+        margin: 0px;
+      }
+
+      .card > p:nth-child(1) > span {
+        display: none;
+      }
+
+      .card > p:nth-child(1) > a, .card > p:nth-child(1) > b {
+        text-decoration: none;
+        color: inherit;
+        font-weight: normal;
+      }
+
+      .card > p:not(:nth-child(1)) {
+        font-weight: normal;
+        margin-right: 1rem;
+        padding: 2px 4px;
+        margin-bottom: 0;
+        display: flex;
+        background: #f3f3f3;
+        font-size: 15px;
+        min-width: 37px;
+        text-align: center;
+      }
+
+      .card span {
+        font-size: 12px;
+        display: inline-flex;
+        margin-top: 0px;
+        padding-left: 4px;
+        font-weight: bold;
+      }
     </style>
   </head>
   <body>
     <div id="map"></div>
     <div class="out">
-      <table>
-      {{{out}}}
+      {{#each out}}
+        <div class="card">
+          <p>{{{this.[0]}}}</p>
+          <p>
+            {{{this.[1]}}}
+            <span>C</span>
+          </p>
+          <p>
+            {{{this.[2]}}}
+            <span>D</span>
+          </p>
+          <p>
+            {{{this.[3]}}}
+            <span>R</span>
+          </p>
+        </div>
+      {{/each}}
     </div>
     <script>
 
