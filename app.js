@@ -208,38 +208,38 @@ function getInfectedCities() {
         // console.log(index == 0, index);
         return (val.length > 0 && index != 0);
       });
+      let coords = {
+        Punjab: {lat: 31.1704, lng: 72.7097},
+        Sindh: {lat: 25.8943, lng: 68.5247},
+        "Khyber Pakhtunkhwa": {lat: 34.9526, lng: 72.3311},
+        Balochistan: {lat: 28.4907, lng: 65.0958},
+        "Azad Kashmir": {lat: 33.9259, lng: 73.7810},
+        "Gilgit-Baltistan": {lat: 35.8026, lng: 74.9832},
+        Islamabad: {lat: 33.6844, lng: 73.0479},
+      };
+      row.locations = row.map(val => {
+        return {
+          loc: val[0].split('</a>')[0].split('">')[2],
+          cases: val[1],
+          coords: coords[`${val[0].split('</a>')[0].split('">')[2]}`]
+        };
+      }).filter(val => val.loc);
+
+      console.log(row);
       resolve(row)
     });
   });
 };
 
 // getInfectedCities().then(out => {
-//   let coords = {
-//     Punjab: {lat: 31.1704, lng: 72.7097},
-//     Sindh: {lat: 25.8943, lng: 68.5247},
-//     "Khyber Pakhtunkhwa": {lat: 34.9526, lng: 72.3311},
-//     Balochistan: {lat: 28.4907, lng: 65.0958},
-//     "Azad Kashmir": {lat: 33.9259, lng: 73.7810},
-//     "Gilgit-Baltistan": {lat: 35.8026, lng: 74.9832},
-//     Islamabad: {lat: 33.6844, lng: 73.0479},
-//   };
-//   console.log(out.map(val => {
-//     return {
-//       loc: val[0].split('</a>')[0].split('">')[2],
-//       cases: val[1],
-//       coords: coords[`${val[0].split('</a>')[0].split('">')[2]}`]
-//     };
-//   }).filter(val => val.loc));
+//   // console.log(out);
+//   console.log('test done');
 // })
 // .catch(e => console.log(e));
 
 app.get('/covid19', (req,res) => {
   getInfectedCities(req,res)
   .then(msg => {
-    // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0]
-    // let out = msg.split('</p>')[1].split('<h2><span class="mw-headline" id="Timeline">Timeline</span></h2>')[0].trim()
-    // let out = msg.split('<table class="wikitable sortable" align="center">')[1].split('</tbody></table>')[0].split('</tr>');
-    // console.log(msg);
     return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY, out: msg} );
   })
 })
@@ -2021,7 +2021,7 @@ app.get('/blogpost', (req,res,next) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val);
+        // console.log(val);
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
