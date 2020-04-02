@@ -19,16 +19,21 @@
       }
 
       .out {
-        width: 216px;
+        width: 233px;
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 7px;
         background: #ffffff;
         font-family: Roboto;
         color: #4F4F4F;
-        padding: 4px 8px;
+        padding: 8px 4px 0 4px;
         box-sizing: border-box;
-        border: 1px solid #adadad;
+        /* border: 1px solid #adadad; */
+        position: absolute;
+        right: 7px;
+        top: 5px;
+        align-items: center;
+        justify-content: center;
       }
 
       .card {
@@ -88,7 +93,7 @@
   <body>
     <div id="map"></div>
     <div class="out">
-      {{#each out}}
+      {{#each out.[locations]}}
         <div class="card">
           <p>{{{this.[0]}}}</p>
           <p>
@@ -134,7 +139,7 @@
             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
       }
       var locations = [
-        {{#each out.locations}}
+        {{#each out.data}}
           {
             "lat": {{this.lat}},
             "lng": {{this.lng}}

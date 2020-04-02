@@ -29,6 +29,7 @@ const {sendmail} = require('./js/sendmail');
 const {serverRunning,checkCurrencyExists} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
 const {CountryInfo} = require('./models/countryinfo');
+const {Covid} = require('./models/covid');
 
 var app = express();
 var port = process.env.PORT || 3000;
@@ -194,26 +195,32 @@ function getInfectedCities() {
 
   return new Promise(function(resolve, reject) {
     // request('http://localhost:3000/wiki.text', function(err, res, body) {
-    request('http://localhost:3000/wiki2.text', function(err, res, body) {
+    // request('http://localhost:3000/wiki2.text', function(err, res, body) {
     // request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
+    Covid.findOne().then(body => {
+      // console.log(body.);
       // console.log(body);
-      const $ = cheerio.load(body, {
+      const $ = cheerio.load(body.page, {
         xml: {
           normalizeWhitespace: true,
         }
       });
-      let row = [[],[],[],[],[],[],[],[],[],[],[],[],[]];
+      let row = [];
       $('.wikitable.sortable > tbody').find('th,td').each(function(index) {
-        // console.log($(this).find(`*:not(:has("*"))`).html());
-        // row[Math.floor(index / 6)].push($(this).html());
-        console.log($(this).html());
-      });
-      row = row.filter((val,index) => {
-        // console.log(index == 0, index);
-        return (val.length > 0 && index != 0);
+        row.push($(this).text().trim());
       });
 
-      // console.log(row);
+      let root = {
+        mainhdg: row.shift(),
+        colhdg: row.filter((val,index) => index < 6),
+        locations: [],
+        data: [],
+        updated: row.pop()
+      }
+      while(row.length) root.locations.push(row.splice(0,6));
+      root.locations.shift();
+      // console.log(root);
+
       let coords = {
         Punjab: {lat: 31.1704, lng: 72.7097},
         Sindh: {lat: 25.8943, lng: 68.5247},
@@ -223,21 +230,30 @@ function getInfectedCities() {
         "Gilgit-Baltistan": {lat: 35.8026, lng: 74.9832},
         Islamabad: {lat: 33.6844, lng: 73.0479},
       };
-      row.locations = row.map(val => {
+
+      // return console.log(root);
+
+      root.data = root.locations.map(val => {
+        // console.log(coords[val[0]]);
         return {
-          loc: val[0].split('</a>')[0].split('">')[2],
+          loc: val[0],
           cases: val[1],
-          coords: coords[`${val[0].split('</a>')[0].split('">')[2]}`]
+          deaths: val[2],
+          rec: val[3],
+          coords: coords[val[0]]
         };
-      }).filter(val => val.loc).reduce((total,val) => {
+      })
+      .filter(val => val.coords)
+      .reduce((total,val) => {
+        // console.log(val.loc, val.cases,val.coords);
         for (var i = 0; i < val.cases; i++) {
           total.push(val.coords)
         }
         return total;
       },[]);
 
-      console.log(row.locations);
-      resolve(row)
+      // console.log(root);
+      resolve(root)
     });
   });
 };
@@ -251,6 +267,8 @@ function getInfectedCities() {
 app.get('/covid19', (req,res) => {
   getInfectedCities(req,res)
   .then(msg => {
+    console.log('=================');
+    console.log(msg.locations);
     return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY, out: msg} );
   })
 })

@@ -1,6 +1,8 @@
 const {Users} = require('../models/users');
 const {CountryInfo} = require('../models/countryinfo');
+const {Covid} = require('../models/covid');
 const {CurrencyRates} = require('../models/currencyrates');
+const request = require('request');
 const axios = require('axios');
 
 var serverRunning = () => {
@@ -21,15 +23,29 @@ var serverRunning = () => {
   });
 
   checkCurrencyExists().catch(e => console.log(e));
-  // console.log('server running');
+
   CountryInfo.find().then(msg => {
     if (!msg.length) return getCountryInfo();
-    // console.log('country Info is already saved !');
   });
 
-  return setTimeout(() => serverRunning(),1000*3);
+  Covid.find().then(msg => {
+    // if (!msg.length) return getNewCovid();
+    // console.log((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1);
+    if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1) return getNewCovid();
+  })
+  .catch(e => console.log(e));
+
+  return setTimeout(() => serverRunning(),1000*5);
 
 }
+
+let getNewCovid = function() {
+  request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
+    if (err) return Promise.reject(err);
+    let covid = new Covid({page: body});
+    return covid.save();
+  });
+};
 
 let getCountryInfo = function() {
   // console.log('get rates');
@@ -85,5 +101,17 @@ let updateCurrencyRate = function(today) {
     });
   });
 };
+
+function addDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function subtractDays(date, days) {
+  var result = new Date(date);
+  result.setDate(result.getDate() - days);
+  return result;
+}
 
 module.exports = {serverRunning, checkCurrencyExists};
