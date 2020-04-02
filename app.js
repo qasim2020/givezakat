@@ -272,7 +272,7 @@ app.get('/covid19', (req,res) => {
     // console.log(msg.locations);
     return res.status(200).render('corona.hbs', {
       MAP_API_KEY: process.env.MAP_API_KEY,
-      out: msg, 
+      out: msg,
       cases: req.query.type == 'cases',
       deaths: req.query.type == 'deaths',
       rec: req.query.type == 'rec',

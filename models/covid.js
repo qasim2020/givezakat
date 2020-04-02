@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
 //   date: '2019-07-30',
 //   rates: { PKR: 179.324997
 var Covid = mongoose.model('covid', {
-  page: {
-    type: String,
+  root: {
+    type: Object,
     required: true,
   }
 });
