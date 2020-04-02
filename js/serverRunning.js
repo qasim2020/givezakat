@@ -28,13 +28,19 @@ var serverRunning = () => {
     if (!msg.length) return getCountryInfo();
   });
 
-  Covid.find().then(msg => {
+  // Covid.deleteMany({}).then(msg => console.log(msg));
+
+  Covid.find()
+  .then(msg => {
     // if (!msg.length) return getNewCovid();
     // console.log((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1);
-    return;
-    if (msg.length < 1) return getNewCovid();
-    if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/1 > 1) return getNewCovid();
+    // console.log(msg.length);
+    if (msg.length < 1) return Covid.deleteMany({});
+    if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/1 > 1) return Covid.deleteMany({});
+    // console.log('Covid data exists');
+    return Promise.reject(`Covid data exists >> Length: ${msg.length}`);
   })
+  .then(msg => getNewCovid())
   .catch(e => console.log(e));
 
   return setTimeout(() => serverRunning(),1000*5);
