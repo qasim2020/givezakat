@@ -32,7 +32,7 @@ var serverRunning = () => {
     // if (!msg.length) return getNewCovid();
     // console.log((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1);
     if (msg.length < 1) return getNewCovid();
-    if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1) return getNewCovid();
+    if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/1 > 1) return getNewCovid();
   })
   .catch(e => console.log(e));
 

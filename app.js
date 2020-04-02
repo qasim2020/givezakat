@@ -191,7 +191,7 @@ app.get('/public-key', (req,res) => {
   return res.status(200).send({publicKey:process.env.stripePublishableKey})
 })
 
-function getInfectedCities() {
+function getInfectedCities(req,res) {
 
   return new Promise(function(resolve, reject) {
     // request('http://localhost:3000/wiki.text', function(err, res, body) {
@@ -246,7 +246,7 @@ function getInfectedCities() {
       .filter(val => val.coords)
       .reduce((total,val) => {
         // console.log(val.loc, val.cases,val.coords);
-        for (var i = 0; i < val.cases; i++) {
+        for (var i = 0; i < val[req.query.type]; i++) {
           total.push(val.coords)
         }
         return total;
@@ -265,11 +265,18 @@ function getInfectedCities() {
 // .catch(e => console.log(e));
 
 app.get('/covid19', (req,res) => {
+  req.query.type = req.query.type || 'cases';
   getInfectedCities(req,res)
   .then(msg => {
-    console.log('=================');
-    console.log(msg.locations);
-    return res.status(200).render('corona.hbs', {MAP_API_KEY: process.env.MAP_API_KEY, out: msg} );
+    // console.log('=================');
+    // console.log(msg.locations);
+    return res.status(200).render('corona.hbs', {
+      MAP_API_KEY: process.env.MAP_API_KEY,
+      out: msg, 
+      cases: req.query.type == 'cases',
+      deaths: req.query.type == 'deaths',
+      rec: req.query.type == 'rec',
+    } );
   })
 })
 
