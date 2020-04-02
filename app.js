@@ -193,21 +193,27 @@ app.get('/public-key', (req,res) => {
 function getInfectedCities() {
 
   return new Promise(function(resolve, reject) {
-    request('http://localhost:3000/wiki.text', function(err, res, body) {
+    // request('http://localhost:3000/wiki.text', function(err, res, body) {
+    request('http://localhost:3000/wiki2.text', function(err, res, body) {
     // request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
+      // console.log(body);
       const $ = cheerio.load(body, {
         xml: {
           normalizeWhitespace: true,
         }
       });
       let row = [[],[],[],[],[],[],[],[],[],[],[],[],[]];
-      $('.wikitable.sortable').find('th,td').each(function(index) {
-        row[Math.floor(index / 6)].push($(this).html());
+      $('.wikitable.sortable > tbody').find('th,td').each(function(index) {
+        // console.log($(this).find(`*:not(:has("*"))`).html());
+        // row[Math.floor(index / 6)].push($(this).html());
+        console.log($(this).html());
       });
       row = row.filter((val,index) => {
         // console.log(index == 0, index);
         return (val.length > 0 && index != 0);
       });
+
+      // console.log(row);
       let coords = {
         Punjab: {lat: 31.1704, lng: 72.7097},
         Sindh: {lat: 25.8943, lng: 68.5247},
@@ -223,9 +229,14 @@ function getInfectedCities() {
           cases: val[1],
           coords: coords[`${val[0].split('</a>')[0].split('">')[2]}`]
         };
-      }).filter(val => val.loc);
+      }).filter(val => val.loc).reduce((total,val) => {
+        for (var i = 0; i < val.cases; i++) {
+          total.push(val.coords)
+        }
+        return total;
+      },[]);
 
-      console.log(row);
+      console.log(row.locations);
       resolve(row)
     });
   });

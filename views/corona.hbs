@@ -19,35 +19,37 @@
       }
 
       .out {
-        position: absolute;
-        /* background: white; */
-        right: 10px;
-        top: 10px;
-        max-width: 50%;
-        color: black;
-        overflow: scroll;
-        z-index: 10;
-        font-size: 80%;
-      }
-
-      .card {
-        width: 233px;
+        width: 216px;
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 7px;
         background: #ffffff;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         font-family: Roboto;
         color: #4F4F4F;
-        padding: 0.5rem 1rem;
+        padding: 4px 8px;
         box-sizing: border-box;
+        border: 1px solid #adadad;
+      }
+
+      .card {
+        width: 216px;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 7px;
+        background: #ffffff;
+        /* box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.25); */
+        font-family: Roboto;
+        color: #4F4F4F;
+        padding: 4px 8px;
+        box-sizing: border-box;
+        border: 1px solid #ededed;
       }
 
       .card > p:nth-child(1) {
         width: 100%;
         font-style: normal;
         font-weight: 500;
-        font-size: 21px;
+        font-size: 16px;
         /* line-height: 35px; */
         margin: 0px;
       }
@@ -132,10 +134,15 @@
             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
       }
       var locations = [
-        {{#each location}}
-        {lat: 31.1704, lng: 72.7097},
+        {{#each out.locations}}
+          {
+            "lat": {{this.lat}},
+            "lng": {{this.lng}}
+          },
         {{/each}}
       ]
+
+
     </script>
     <!-- Replace following script src -->
     <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js">
