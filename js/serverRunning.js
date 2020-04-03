@@ -32,17 +32,17 @@ var serverRunning = () => {
 
   // TODO: findOneAndUpdate
 
-  Covid.find()
-  .then(msg => {
-  //   // if (!msg.length) return getNewCovid();
-  //   // console.log((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1);
-    console.log(msg.length);
-    if (msg.length < 1) return getNewCovid();
-    if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1) return getNewCovid();
-    return Promise.reject(`Covid data exists >> Length: ${msg.length}`);
-  })
-  .then(msg => console.log(msg))
-  .catch(e => console.log(e));
+  // Covid.find()
+  // .then(msg => {
+  // //   // if (!msg.length) return getNewCovid();
+  // //   // console.log((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1);
+  //   console.log(msg.length);
+  //   if (msg.length < 1) return getNewCovid();
+  //   if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1) return getNewCovid();
+  //   return Promise.reject(`Covid data exists >> Length: ${msg.length}`);
+  // })
+  // .then(msg => console.log(msg))
+  // .catch(e => console.log(e));
 
   return setTimeout(() => serverRunning(),1000*5);
 
