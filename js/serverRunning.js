@@ -30,18 +30,19 @@ var serverRunning = () => {
 
   // Covid.deleteMany({}).then(msg => console.log(msg));
 
-  // Covid.find()
-  // .then(msg => {
+  // TODO: findOneAndUpdate
+
+  Covid.find()
+  .then(msg => {
   //   // if (!msg.length) return getNewCovid();
   //   // console.log((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1);
-  //   // console.log(msg.length);
-  //   if (msg.length < 1) return Covid.deleteMany({});
-  //   if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/1 > 1) return Covid.deleteMany({});
-  //   // console.log('Covid data exists');
-  //   return Promise.reject(`Covid data exists >> Length: ${msg.length}`);
-  // })
-  // .then(msg => getNewCovid())
-  // .catch(e => console.log(e));
+    console.log(msg.length);
+    if (msg.length < 1) return getNewCovid();
+    if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1) return getNewCovid();
+    return Promise.reject(`Covid data exists >> Length: ${msg.length}`);
+  })
+  .then(msg => console.log(msg))
+  .catch(e => console.log(e));
 
   return setTimeout(() => serverRunning(),1000*5);
 
@@ -50,7 +51,7 @@ var serverRunning = () => {
 let getNewCovid = function() {
   request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
     if (err) return Promise.reject(err);
-    let covid = new Covid({page: body});
+    let covid = new Covid({root: body});
     return covid.save();
   });
 };

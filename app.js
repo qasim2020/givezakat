@@ -193,6 +193,12 @@ app.get('/public-key', (req,res) => {
 
 function getInfectedCities(req,res) {
 
+  req = {
+    query: {
+      type: req && req.query && req.query.type || 'cases'
+    }
+  };
+
   return new Promise(function(resolve, reject) {
     // request('http://localhost:3000/wiki.text', function(err, res, body) {
     // request('http://localhost:3000/wiki2.text', function(err, res, body) {
@@ -200,7 +206,7 @@ function getInfectedCities(req,res) {
     Covid.findOne().then(body => {
       // console.log(body.);
       // console.log(body);
-      const $ = cheerio.load(body.page, {
+      const $ = cheerio.load(body.root, {
         xml: {
           normalizeWhitespace: true,
         }
@@ -258,11 +264,11 @@ function getInfectedCities(req,res) {
   });
 };
 
-// getInfectedCities().then(out => {
-//   // console.log(out);
-//   console.log('test done');
-// })
-// .catch(e => console.log(e));
+getInfectedCities().then(out => {
+  // console.log(out);
+  console.log('test done');
+})
+.catch(e => console.log(e));
 
 app.get('/covid19', (req,res) => {
   req.query.type = req.query.type || 'cases';
