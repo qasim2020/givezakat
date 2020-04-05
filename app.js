@@ -264,11 +264,11 @@ function getInfectedCities(req,res) {
   });
 };
 
-getInfectedCities().then(out => {
-  // console.log(out);
-  console.log('test done');
-})
-.catch(e => console.log(e));
+// getInfectedCities().then(out => {
+//   // console.log(out);
+//   console.log('test done');
+// })
+// .catch(e => console.log(e));
 
 app.get('/covid19', (req,res) => {
   req.query.type = req.query.type || 'cases';
@@ -284,6 +284,10 @@ app.get('/covid19', (req,res) => {
       rec: req.query.type == 'rec',
     } );
   })
+})
+
+app.get('/techshek', (req,res) => {
+  res.status(200).render('techshek.hbs');
 })
 
 app.get('/',(req,res) => {
