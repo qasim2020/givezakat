@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    {{>googleAnalytics}}
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Primary Meta Tags -->
+    <title>Rules by Aashir</title>
+
+    <meta name="title" content="Rules by Aashir">
+    <meta name="description" content="There are two types of patriotism here in Pakistan, one is about love with the country and the second is about love with nature and traditions.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.zakatlists.com/featured_blog">
+    <meta property="og:title" content="Rules by Aashir">
+    <meta property="og:description" content="There are two types of patriotism here in Pakistan, one is about love with the country and the second is about love with nature and traditions.">
+    <meta property="og:image" content="https://www.zakatlists.com/quranDailyImages/featured_blog.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://www.zakatlists.com/featured_blog">
+    <meta property="twitter:title" content="Rules by Aashir">
+    <meta property="twitter:description" content="There are two types of patriotism here in Pakistan, one is about love with the country and the second is about love with nature and traditions.">
+    <meta property="twitter:image" content="https://www.zakatlists.com/quranDailyImages/featured_blog.png">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:100,300i,400,400i,700,900&display=swap" rel="stylesheet">
+    <style media="screen">
+    iframe {
+      display: block;
+      margin: auto;
+      max-width: 100%;
+    }
+
+    .d-flex {
+      display: flex;
+    }
+
+    .m-auto {
+      margin: auto;
+    }
+
+    .lavendar {
+      color: brown;
+    }
+
+    .twitter {
+      color: rgba(29,161,242,1.00);
+    }
+
+    body {
+      padding-bottom: 8rem;
+    }
+
+    body > * {
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .width-m-600 {
+      max-width: 600px;
+    }
+
+    .voilet {
+      color: #dc0ea5;
+    }
+
+    .logo-area {
+      display: flex;
+      height: 44px;
+      align-items: center;
+      padding: 0 20px;
+      cursor: pointer;
+    }
+
+    .logo-area > p:hover {
+      color: black;
+    }
+
+    .logo-area > p {
+      padding-left: 10px;
+      /* Quran Daily */
+
+      font-family: Montserrat;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 14px;
+      line-height: 157.9%;
+      /* identical to box height, or 32px */
+      display: flex;
+      align-items: center;
+
+      /* Gray 2 */
+      color: #4F4F4F;
+      margin-left: auto;
+    }
+
+    .date {
+      font-family: Roboto;
+      font-weight: 400;
+      font-size: 18px;
+      color: #828282;
+    }
+
+    h1 {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 61px;
+      line-height: 157.9%;
+      /* or 96px */
+      display: flex;
+      align-items: center;
+
+      /* Gray 2 */
+      color: #4F4F4F;
+      margin: 0px;
+    }
+
+    .note {
+      font-family: Roboto;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 22px;
+      color: #828282;
+    }
+
+    .quote {
+      position: relative;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 22px;
+      color: #828282;
+    }
+
+    .quote > svg {
+      position: absolute;
+      z-index: -10;
+      top: -71px;
+      left: -67px;
+    }
+
+    h3 {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 42px;
+      line-height: 157.9%;
+
+      /* Gray 2 */
+      color: #4F4F4F;
+    }
+
+    p {
+
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 22px;
+      line-height: 184.9%;
+      /* display: flex; */
+      align-items: center;
+      color: #828282;
+
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+      font-style: italic;
+    }
+
+    .tags > span {
+      background: #4f4f4f;
+      font-size: 14px;
+      color: #e6e6e6;
+      padding: 3px 5px;
+      white-space: nowrap;
+    }
+
+    .font-normal {
+      font-weight: normal;
+    }
+
+
+    .b-left {
+      padding-left: 28px;
+      border-left: 10px solid lightgrey;
+    }
+
+    img {
+      max-width: 100%;
+      /* text-align: center; */
+      margin: auto;
+      /* left: 50%; */
+      /* border: 1px solid lavender; */
+      display: block;
+    }
+
+    .no-border {
+      border: 1px solid transparent;
+    }
+
+    .width-half {
+      width: 50%;
+    }
+
+    .width-m-half {
+      width: 50%;
+    }
+
+    .width-m-75 {
+      width: 75%;
+    }
+
+    h5 {
+      font-family: Roboto;
+      font-style: normal;
+      font-size: 22px;
+      line-height: 184.9%;
+      align-items: center;
+      color: #4f4f4f;
+      font-weight: bold;
+    }
+
+    h6 {
+      font-family: Roboto;
+      font-style: normal;
+      font-size: 22px;
+      line-height: 184.9%;
+      align-items: center;
+      color: #4f4f4f;
+      font-weight: bold;
+      margin-bottom: -19px;
+    }
+
+    h6 > span, h6 > i {
+      color: #828282;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    .caption {
+      font-family: Roboto;
+      font-weight: 300;
+      font-size: 17px;
+      color: #000000;
+    }
+
+    .caption > a {
+      font-weight: 400;
+      color: darkcyan;
+    }
+
+    .subscribe > input {
+      box-sizing: border-box;
+      height: 3rem;
+      font-family: Roboto;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 22px;
+      color: #828282;
+      border: 1px solid #d4d4d4;
+      padding: 0 26px;
+    }
+
+    .subscribe > input::placeholder {
+      box-sizing: border-box;
+      height: 3rem;
+      color: #828282;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 22px;
+    }
+
+    .subscribe > button {
+      display: block;
+      height: 3rem;
+      background: #f7f7f7;
+      border: 0px solid transparent;
+      box-sizing: border-box;
+      padding: 8px 27px;
+      font-family: Roboto;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 20px;
+      color: #717171;
+      margin-top: 1rem;
+    }
+
+    .subscribe > .success {
+      font-weight: normal;
+      font-size: 17px;
+      font-style: italic;
+      color: darkcyan;
+    }
+
+    .subscribe > .error {
+      font-weight: normal;
+      font-size: 17px;
+      font-style: italic;
+      color: darkred;
+    }
+
+    .d-none {
+      display: none;
+    }
+
+    .normal {
+      font-weight: 400;
+    }
+
+    @media (max-width: 799px) {
+
+      body {
+        padding-bottom: 1rem;
+      }
+
+      .subscribe > input {
+        height: 2.5rem;
+        font-size: 18px;
+      }
+
+      .subscribe > input::placeholder {
+        height: 2.5rem;
+        font-size: 18px;
+      }
+
+      .subscribe > button {
+        height: 2.5rem;
+        background: #f1f1f1;
+        font-size: 18px;
+        color: #717171;
+        margin-top: 1rem;
+      }
+
+      .subscribe > .success {
+        font-weight: normal;
+        font-size: 16px;
+        font-style: italic;
+        color: darkcyan;
+      }
+
+      .subscribe > .error {
+        font-weight: normal;
+        font-size: 17px;
+        font-style: italic;
+        color: darkred;
+      }
+
+      h1 {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 45px;
+        line-height: 123%;
+        display: flex;
+        align-items: center;
+        color: #4F4F4F;
+      }
+
+      h3 {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 157.9%;
+        color: #4F4F4F;
+      }
+
+      h6, h5 {
+        font-size: 20px;
+      }
+
+      p {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 18px;
+        line-height: 184.9%;
+        /* display: flex; */
+        align-items: center;
+        color: #828282;
+      }
+
+      .note, .quote {
+        font-size: 18px;
+      }
+
+      .logo-area {
+        margin-left: 0px;
+        padding: 0px;
+      }
+
+      .logo-area > p {
+        padding-left: 10px;
+      }
+
+      .b-left {
+        padding-left: 10px;
+        border-left: 5px solid lightgrey;
+      }
+
+      .width-m-half, .width-m-75, .width-m-600 {
+        width: 100%;
+      }
+    }
+    </style>
+  </head>
+  <body>
+    <div class="logo-area" onclick="window.location.href = '/'">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#4F4F4F"/>
+      </svg>
+
+      <p>Featured Blog</p>
+    </div>
+
+    <section id="blog">
+
+      <h1 class="">Being a Good Desi</h1>
+      <!-- <p class="tags">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </p> -->
+
+      <p class="note">
+        This blog was written by brother Aashir, on personal request of Qasim running zakatlists. You can follow him on twitter at <a href="https://twitter.com/justaashir" target="_blank">@justaashir</a>.
+      </p>
+
+      <p>There are two types of "patriotism" here in Pakistan, one is about love with the country and the second is about love with nature and traditions.</p>
+      <p>So the first one is by far the easiest because it's a natural thing to have love with your country mostly.</p>
+      <p>Being a good desi is difficult because there are so many things that you have to love because of the peer-pressure from your family, friends, and relatives. These traditions sometimes can be fully fun and sometimes it can be the opposite of it. So if you want to be a good desi, these are the challenges for you:</p>
+
+      <h3 class="">1. Eat Halwa Poori</h3>
+
+      <p>Halwa Poori* is the traditional breakfast of Pakistan, and the first step to being a good desi, It's the heaviest breakfast you would ever eat.</p>
+
+      <p class="b-left"><b class="lavendar">Poori</b> = soft salty patties filled up with lots of oil and ghee</p>
+      <p class="b-left"><b class="lavendar">Halwa</b> = It's a type of pudding, soft and hard at the same time and maybe the sweetest thing you'll ever it.</p>
+      <p class="b-left"><b class="lavendar">Curry</b> = It's usually served with different Curries, mostly Potato Curry and Chana Curry.</p>
+
+      <p>If you're a super care-taker of your food and don't eat so much of oil or heavy things than you're out!</p>
+      <p>So If you want to be a good desi, then this is the first step. Go eat this traditional breakfast.</p>
+
+      <h3>2. Love Cricket more than anything</h3>
+
+      <p>So, It will not be wrong if I say that desi people love cricket more than anything, and they usually talk about cricket in any gathering whether it's a wedding or a funeral. So if you want to build a good social image and stay in the community circle, Be a die-hard cricket fan.</p>
+      <p class="b-left">Be sure you know the name of almost every player</p>
+
+      <p>And if you don't like Cricket than I have to say you're not enough desi. It's the only sport, there is no such thing as Football.</p>
+
+      <h3>3. Laugh at all the jokes</h3>
+      <p>So, Let me tell you one thing desi people here love to joke about anything and almost every time, they don't care about the occasion or the audience and they expect everyone to laugh.</p>
+      <p>The jokes can be sometimes really good, and most of the time they are un-relatable and really bad.</p>
+      <p>So if you want to be a good desi, learn to laugh on any joke whether it's good or bad or even worse.</p>
+
+      <h3>4. Bargain a lot otherwise you'll be bankrupt</h3>
+      <p>So this is the truth, all the salesmen and shopkeepers in Pakistan always tell you the wrong price mostly 40-50% more than original and if you don't know how to bargain you'll be bankrupt after some time. This is a mandatory skill of any good desi.</p>
+
+      <h3>5. Be a Super-Jugaddi</h3>
+
+      <p>Pakistani people give respect to doctors and engineers, but the most respected person in Pakistan is the one who can solve the problem in an alternate way to save money and time!</p>
+      <p>This is a certified skill here in Pakistan called "Jugaddi", basically, the person tries to find a hack to solve any problem.</p>
+      <p>So If you can learn this skill, desi people will give you lots of respect and love and you'll be a certified Desi.</p>
+
+      <h3>6. Be Happy, Don't take things seriously</h3>
+      <p>Desi people are very light-hearted people, and they stay happy every time and don't take the hate or humiliation seriously and turn to fight. They try to solve the matter with verbal communication. </p>
+      <p>You also don't take anything seriously if any desi person says it to you, they are lovely human beings filled up with lots of love but they don't think very hard before talking sarcastic.</p>
+      <p>So be a good desi, care about other people around you, follow them, follow there traditions with lots of love.</p>
+
+
+      <p class="note">Subscribe to our mailing list to get newsletters and updates.</p>
+      <form class="subscribe">
+        <input class="width-m-half" type="email" id="subscribe-input" name="email" value="" placeholder="youremail@email.com">
+        <button type="button" name="button">Subscribe</button>
+        <p class="success d-none">Hooray ! You have subscribed to zakatlists. Thanks</p>
+        <p class="error d-none"></p>
+      </form>
+
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.7/jquery.validate.min.js"></script>
+
+    <script type="text/javascript">
+      $(document).on('click','.subscribe>button',function() {
+
+        if (!($(".subscribe").valid())) {
+
+          return;
+
+        }
+
+        $('.subscribe>.success').addClass('d-none');
+        $('.subscribe>.error:not(input)').addClass('d-none');
+
+        let data = {
+          "query": 'subscription',
+          "email": $('#subscribe-input').val(),
+        };
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+          url: '/signing',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log(msg);
+          $('.subscribe>.success').removeClass('d-none');
+          // $('button').attr('disabled',true);
+        }).fail((e) => {
+          $('.error').removeClass('d-none').html(e.responseText);
+          console.log(e.responseText);
+        });
+      })
+
+      $(".subscribe").validate({
+
+        rules: {
+          'email' : {
+            required: true,
+            email: true
+          }
+        },
+        messages: {
+          'email' : {
+            required: `Email is required before you press this button.`,
+            email: `Email is invalid`,
+          },
+        },
+        errorPlacement: function(error, element) {
+          console.log(error,element);
+          $(element).siblings('.error').removeClass('d-none').html(error);
+        },
+
+      });
+
+    </script>
+  </body>
+</html>

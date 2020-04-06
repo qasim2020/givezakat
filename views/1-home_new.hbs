@@ -237,6 +237,10 @@
 
     {{#each data}}
 
+    {{#if (match 'featured_blog' type)}}
+      {{>featured_blog}}
+    {{/if}}
+
     {{#if (match 'person' type)}}
       {{>person}}
     {{/if}}
@@ -248,8 +252,6 @@
     {{#if (match 'course' type)}}
       {{>course}}
     {{/if}}
-
-
 
     {{#if (match 'signin' type)}}
       {{>signin session=../session}}
@@ -283,7 +285,7 @@
       function goto(msg) {
         window.location.href = msg;
       }
-      
+
     </script>
   </body>
 </html>

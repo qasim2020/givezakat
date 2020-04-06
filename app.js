@@ -286,6 +286,10 @@ app.get('/covid19', (req,res) => {
   })
 })
 
+app.get('/featured_blog', (req,res) => {
+  res.status(200).render('aashir_blog.hbs');
+})
+
 app.get('/techshek', (req,res) => {
   res.status(200).render('techshek.hbs');
 })
