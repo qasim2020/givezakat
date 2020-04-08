@@ -39,7 +39,7 @@ var hourlyRunning = () => {
   .then(msg => console.log('msg',msg))
   .catch(e => console.log(e));
 
-  return setTimeout(() => serverRunning(),1000*60*60);
+  return setTimeout(() => serverRunning(),1000*60*60*12);
 
 }
 
