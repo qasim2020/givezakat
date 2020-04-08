@@ -4,6 +4,7 @@ const {Covid} = require('../models/covid');
 const {CurrencyRates} = require('../models/currencyrates');
 const request = require('request');
 const axios = require('axios');
+const cheerio = require('cheerio');
 
 var serverRunning = () => {
 
@@ -28,32 +29,43 @@ var serverRunning = () => {
     if (!msg.length) return getCountryInfo();
   });
 
-  // Covid.deleteMany({}).then(msg => console.log(msg));
-
-  // TODO: findOneAndUpdate
-
-  // Covid.find()
-  // .then(msg => {
-  // //   // if (!msg.length) return getNewCovid();
-  // //   // console.log((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1 || msg.length < 1);
-  //   console.log(msg.length);
-  //   if (msg.length < 1) return getNewCovid();
-  //   if ((new Date() - msg[0]._id.getTimestamp())/1000/60/60/12 > 1) return getNewCovid();
-  //   return Promise.reject(`Covid data exists >> Length: ${msg.length}`);
-  // })
-  // .then(msg => console.log(msg))
-  // .catch(e => console.log(e));
-
   return setTimeout(() => serverRunning(),1000*5);
 
 }
 
+var hourlyRunning = () => {
+
+  getNewCovid()
+  .then(msg => console.log('msg',msg))
+  .catch(e => console.log(e));
+
+  return setTimeout(() => serverRunning(),1000*60*60);
+
+}
+
 let getNewCovid = function() {
-  request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
-    if (err) return Promise.reject(err);
-    let covid = new Covid({root: body});
-    return covid.save();
+  // return Covid.findOneAndUpdate({},{ $set: {"page": ['row']} },{upsert: true, new: true});
+  return new Promise(function(resolve, reject) {
+    console.log('starting page request');
+    request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
+      if (err) return Promise.reject(err);
+      const $ = cheerio.load(body, {
+        xml: {
+          normalizeWhitespace: true,
+        }
+      });
+      let row = [];
+      $('.wikitable.sortable > tbody').find('th,td').each(function(index) {
+        row.push($(this).text().trim());
+      });
+      console.log({msg: 'new download', row: row, length: row.length, type: typeof(row)});
+      // console.log(`downloaded fresh data of corona >> length of row >> ${row.length}, typeOf row >> ${typeof(row)}`);
+      Covid.findOneAndUpdate({},{ $set: {"page": row} },{upsert: true, new: true})
+      .then(msg => resolve(msg))
+      .catch(e => reject(e));
+    })
   });
+
 };
 
 let getCountryInfo = function() {
@@ -123,4 +135,4 @@ function subtractDays(date, days) {
   return result;
 }
 
-module.exports = {serverRunning, checkCurrencyExists};
+module.exports = {serverRunning, checkCurrencyExists, hourlyRunning};

@@ -24,7 +24,7 @@
       }
 
       .out {
-        width: 233px;
+        width: min-content;
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 7px;
@@ -42,7 +42,7 @@
       }
 
       .card {
-        width: 216px;
+        width: fit-content;
         display: flex;
         flex-wrap: wrap;
         margin-bottom: 7px;
@@ -82,7 +82,7 @@
         display: flex;
         background: #f3f3f3;
         font-size: 15px;
-        min-width: 37px;
+        min-width: 3rem;
         text-align: center;
       }
 
@@ -108,7 +108,7 @@
         color: black;
         margin-bottom: 6px;
         margin-right: 2px;
-        background: #efe3e3;
+        background: #efecec;
         box-sizing: border-box;
         white-space: nowrap;
       }
@@ -117,9 +117,13 @@
         opacity: 0.7;
       }
 
-      .out a.true {
-        background: #ffc2c2;
+      .out a.true, p.true {
+        background: #ffc2c2 !important;
         font-weight: bold;
+      }
+
+      .card.Total {
+        /* background: #efecec; */
       }
 
       @media (max-width: 700px) {
@@ -151,22 +155,23 @@
       <div class="btns">
         <a class="{{cases}}" href="/covid19?type=cases">Cases (C)</a>
         <a class="{{deaths}}" href="/covid19?type=deaths">Deaths (D)</a>
-        <a class="{{rec}}" href="/covid19?type=rec">Recoveries (R)</a>
+        <!-- <a class="{{rec}}" href="/covid19?type=rec">Recoveries (R)</a> -->
+        <a class="{{permillion}}" href="/covid19?type=permillion">Cases per Million (CPM)</a>
       </div>
       {{#each out.[locations]}}
-        <div class="card">
+        <div class="card {{this.[0]}}">
           <p>{{{this.[0]}}}</p>
-          <p>
+          <p class="{{../cases}}">
             {{{this.[1]}}}
             <span>C</span>
           </p>
-          <p>
+          <p class="{{../deaths}}">
             {{{this.[2]}}}
             <span>D</span>
           </p>
-          <p>
+          <p class="{{../permillion}}">
             {{{this.[3]}}}
-            <span>R</span>
+            <span>CPM</span>
           </p>
         </div>
       {{/each}}

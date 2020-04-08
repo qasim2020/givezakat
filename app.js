@@ -26,7 +26,7 @@ const {Orders} = require('./models/orders');
 const {CurrencyRates} = require('./models/currencyrates');
 const {Users} = require('./models/users');
 const {sendmail} = require('./js/sendmail');
-const {serverRunning,checkCurrencyExists} = require('./js/serverRunning');
+const {serverRunning,checkCurrencyExists,hourlyRunning} = require('./js/serverRunning');
 const {Subscription} = require('./models/subscription');
 const {CountryInfo} = require('./models/countryinfo');
 const {Covid} = require('./models/covid');
@@ -203,27 +203,23 @@ function getInfectedCities(req,res) {
     // request('http://localhost:3000/wiki.text', function(err, res, body) {
     // request('http://localhost:3000/wiki2.text', function(err, res, body) {
     // request('https://en.wikipedia.org/wiki/2020_coronavirus_pandemic_in_Pakistan', function(err, res, body) {
-    Covid.findOne().then(body => {
+    Covid.findOne().lean().then(body => {
       // console.log(body.);
-      // console.log(body);
-      const $ = cheerio.load(body.root, {
-        xml: {
-          normalizeWhitespace: true,
-        }
-      });
-      let row = [];
-      $('.wikitable.sortable > tbody').find('th,td').each(function(index) {
-        row.push($(this).text().trim());
-      });
+      // console.log(body.page);
+
+      let row = body.page;
+      let partition = (row.length-2) / 9;
 
       let root = {
         mainhdg: row.shift(),
-        colhdg: row.filter((val,index) => index < 6),
+        colhdg: row.filter((val,index) => index < partition),
         locations: [],
         data: [],
         updated: row.pop()
       }
-      while(row.length) root.locations.push(row.splice(0,6));
+      console.log(row, row.length/9);
+
+      while(row.length) root.locations.push(row.splice(0,partition));
       root.locations.shift();
       // console.log(root);
 
@@ -241,17 +237,22 @@ function getInfectedCities(req,res) {
 
       root.data = root.locations.map(val => {
         // console.log(coords[val[0]]);
+        // return val.reduce(total,v,index => {
+        //   Object.assign(total,...{
+        //     [colhdg[index]]:v
+        //   })
+        // },{})
         return {
           loc: val[0],
           cases: val[1],
           deaths: val[2],
-          rec: val[3],
+          permillion: val[3],
           coords: coords[val[0]]
         };
       })
       .filter(val => val.coords)
       .reduce((total,val) => {
-        // console.log(val.loc, val.cases,val.coords);
+        console.log(req.query.type, val[req.query.type]);
         for (var i = 0; i < val[req.query.type]; i++) {
           total.push(val.coords)
         }
@@ -282,6 +283,7 @@ app.get('/covid19', (req,res) => {
       cases: req.query.type == 'cases',
       deaths: req.query.type == 'deaths',
       rec: req.query.type == 'rec',
+      permillion: req.query.type == 'permillion',
     } );
   })
 })
@@ -2280,6 +2282,7 @@ app.get('/:username',(req,res, next) => {
 })
 
 serverRunning();
+hourlyRunning();
 
 
 module.exports = {app,http,mongoose,People,Orders,CurrencyRates,Users};
