@@ -36,7 +36,7 @@ var serverRunning = () => {
 var hourlyRunning = () => {
 
   getNewCovid()
-  .then(msg => console.log('msg',msg))
+  .then(msg => console.log('downloaded fresh corona data'))
   .catch(e => console.log(e));
 
   return setTimeout(() => serverRunning(),1000*60*60*12);
@@ -58,7 +58,7 @@ let getNewCovid = function() {
       $('.wikitable.sortable > tbody').find('th,td').each(function(index) {
         row.push($(this).text().trim());
       });
-      console.log({msg: 'new download', row: row, length: row.length, type: typeof(row)});
+      // console.log({msg: 'new download', row: row, length: row.length, type: typeof(row)});
       // console.log(`downloaded fresh data of corona >> length of row >> ${row.length}, typeOf row >> ${typeof(row)}`);
       Covid.findOneAndUpdate({},{ $set: {"page": row} },{upsert: true, new: true})
       .then(msg => resolve(msg))

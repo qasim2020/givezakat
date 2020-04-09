@@ -2047,11 +2047,20 @@ app.get('/quranDaily', (req,res) => {
   })
 })
 
+hbs.registerHelper("getTarget", function(value) {
+  // console.log(value);
+  return value.split('+')[0];
+})
+
+hbs.registerHelper("getMsg", function(value) {
+  return value.split('+')[1];
+})
+
 app.get('/blogpost', (req,res,next) => {
 
   readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
 
-    console.log(req.query.serialNo,rows.length, req.session.hasOwnProperty('token'), req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false);
+    // console.log(req.query.serialNo,rows.length, req.session.hasOwnProperty('token'), req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false);
 
     if (req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false) {
       req.url = `/quranDaily`;

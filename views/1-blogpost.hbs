@@ -316,6 +316,92 @@
         font-weight: 400;
       }
 
+      .title-bar {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 22px;
+        line-height: 184.9%;
+        color: #828282;
+      }
+
+      .title-bar:hover {
+        background: #efefef;
+        cursor: pointer;
+      }
+
+      .title-bar > div {
+        flex-grow: 1;
+      }
+
+      .title-bar > div > *{
+        padding-right: 10px;
+        color: brown;
+      }
+
+      div.hdg > span:nth-child(1) {
+        color: brown;
+        font-style: normal;
+        font-weight: lighter;
+      }
+
+      .lower-bar {
+        padding: 0 10px;
+        background: #f5f5f5;
+      }
+
+      .title-bar.not-collapsed .closed {
+        display: none;
+      }
+
+      .title-bar:not(.not-collapsed) .opened {
+        display: none;
+      }
+
+      .lower-bar.d-none {
+        display: none !important;
+      }
+
+      .lower-bar > p, .lower-bar > ul {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 22px;
+        line-height: 184.9%;
+        /* display: flex; */
+        align-items: center;
+        color: #717171;
+        padding: 10px 0;
+        margin: 0;
+        list-style-position: inside;
+      }
+
+      .collapse_all {
+        display: block;
+        height: 3rem;
+        background: #f7f7f7;
+        border: 0px solid transparent;
+        box-sizing: border-box;
+        padding: 8px 27px;
+        font-family: Roboto;
+        font-weight: 300;
+        font-size: 20px;
+        color: #717171;
+        margin: 10px;
+      }
+
+      .w-50 {
+        padding-left: 31px;
+        min-width: 11rem;
+        display: inline-block;
+        border-left: 10px solid lightgrey;
+        line-height: 2.5;
+      }
+
       @media (max-width: 799px) {
 
         body {
@@ -389,8 +475,12 @@
           color: #828282;
         }
 
-        .note, .quote {
+        .note, .quote, .title-bar, .lower-bar > ul, .collapse_all {
           font-size: 18px;
+        }
+
+        div.hdg > span:nth-child(1) {
+          display: block;
         }
 
         .logo-area {
@@ -471,6 +561,33 @@
         <iframe class="{{{class}}}" width="560" height="315" src="{{{msg}}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       {{/if}}
 
+      {{#if (match 'dropdownH' type)}}
+        <div data-target="connected_{{getTarget msg}}" class="title-bar" style="">
+          <!-- <p>19 Jan 2020</p> -->
+          <div class="hdg {{{class}}}">{{{getMsg msg}}}</div>
+          <!-- <button type="button" name="button">Video</button> -->
+
+          <svg class="opened" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7.41 8.58997L12 13.17L16.59 8.58997L18 9.99997L12 16L6 9.99997L7.41 8.58997Z" fill="#BDBDBD" />
+          </svg>
+
+          <svg class="closed" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16.59 15.41L12 10.83L7.41 15.41L6 14L12 8.00003L18 14L16.59 15.41Z" fill="#BDBDBD" />
+          </svg>
+
+        </div>
+      {{/if}}
+
+      {{#if (match 'dropdownF' type)}}
+        <div data-show="connected_{{getTarget msg}}" class=" lower-bar">
+          <ul class="{{{class}}}"><li>{{{getMsg msg}}}</li> </ul>
+        </div>
+      {{/if}}
+
+      {{#if (match 'button' type)}}
+        <button type="button" name="button" class="{{{class}}}">{{{msg}}}</button>
+      {{/if}}
+
       {{/each}}
 
       <form class="subscribe">
@@ -541,6 +658,26 @@
         },
 
       });
+
+      $('.title-bar').on('click',function() {
+        let target = $(this).attr('data-target');
+        $(`[data-show=${target}]`).toggleClass('d-none');
+        $(this).toggleClass('not-collapsed');
+        if ($('.lower-bar.d-none').length > 0) $('.collapse_all').html('Show All');
+        else $('.collapse_all').html('Collapse All');
+      })
+
+      $('.collapse_all').on('click',function() {
+        let collapsedCheck = $('.lower-bar.d-none').length > 0;
+        if (collapsedCheck) {
+          $('.lower-bar').removeClass('d-none');
+          $('.title-bar').addClass('not-collapsed');
+          return $(this).html('Collapse All');
+        }
+        $('.lower-bar').addClass('d-none');
+        $('.title-bar').removeClass('not-collapsed');
+        $(this).html('Show All');
+      })
 
     </script>
   </body>
