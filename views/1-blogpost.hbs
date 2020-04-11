@@ -402,7 +402,51 @@
         line-height: 2.5;
       }
 
+      table,th,td {
+        border: 1px solid #d2d2d2;
+        /* margin: 0; */
+        /* padding: 0; */
+        border-collapse: collapse;
+        padding: 10px;
+        text-align: center;
+        font-size: 16px;
+        margin: auto;
+
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 22px;
+        line-height: 184.9%;
+        /* display: flex; */
+        color: #717171;
+      }
+
+      tr:nth-child(1), tr:nth-last-child(1) {
+        background: brown;
+      }
+
+      tr:nth-child(1) > th, tr:nth-child(1) > td, tr:nth-last-child(1) > th, tr:nth-last-child(1) > td {
+        color: white;
+      }
+
+      h4 {
+        font-family: Roboto;
+        font-size: 22px;
+      }
+
       @media (max-width: 799px) {
+
+        h4 {
+          font-size: 18px;
+        }
+
+        table,th,td {
+          padding: 0;
+          overflow: scroll;
+          padding: 0;
+          max-width: 100%;
+          font-size: 16px;
+        }
 
         body {
           padding-bottom: 1rem;
@@ -536,6 +580,10 @@
       <h3 class="{{{class}}}">{{{msg}}}</h3>
       {{/if}}
 
+      {{#if (match 'h4' type)}}
+      <h4 class="{{{class}}}">{{{msg}}}</h4>
+      {{/if}}
+
       {{#if (match 'quote' type)}}
       <p class="quote {{{class}}}">
         <svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -586,6 +634,12 @@
 
       {{#if (match 'button' type)}}
         <button type="button" name="button" class="{{{class}}}">{{{msg}}}</button>
+      {{/if}}
+
+      {{#if (match 'table' type)}}
+        <table class="{{{class}}}">
+          {{{msg}}}
+        </table>
       {{/if}}
 
       {{/each}}
