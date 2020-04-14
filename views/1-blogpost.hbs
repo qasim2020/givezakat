@@ -120,7 +120,7 @@
         margin: 0px;
       }
 
-      .note {
+      .note, li.note {
         font-family: Roboto;
         font-style: italic;
         font-weight: 300;
@@ -434,7 +434,39 @@
         font-size: 22px;
       }
 
+      ul.img {
+        list-style: none;
+      }
+
+      ul.quote {
+        font-weight: bold;
+      }
+
+      span.circle {
+        background: brown;
+        color: white;
+        padding: 2px;
+        box-sizing: border-box;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: inline-block;
+        text-align: center;
+        font-size: 63%;
+        line-height: 2.1;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+
+      li.nobullet {
+        list-style: none;
+      }
+
       @media (max-width: 799px) {
+
+        span.circle {
+          line-height: 2.5;
+        }
 
         h4 {
           font-size: 18px;
@@ -443,7 +475,7 @@
         table,th,td {
           padding: 0;
           overflow: scroll;
-          padding: 0;
+          padding: 7px;
           max-width: 100%;
           font-size: 16px;
         }
@@ -615,11 +647,11 @@
           <div class="hdg {{{class}}}">{{{getMsg msg}}}</div>
           <!-- <button type="button" name="button">Video</button> -->
 
-          <svg class="opened" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="closed" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M7.41 8.58997L12 13.17L16.59 8.58997L18 9.99997L12 16L6 9.99997L7.41 8.58997Z" fill="#BDBDBD" />
           </svg>
 
-          <svg class="closed" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg class="opened" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M16.59 15.41L12 10.83L7.41 15.41L6 14L12 8.00003L18 14L16.59 15.41Z" fill="#BDBDBD" />
           </svg>
 
@@ -627,8 +659,8 @@
       {{/if}}
 
       {{#if (match 'dropdownF' type)}}
-        <div data-show="connected_{{getTarget msg}}" class=" lower-bar">
-          <ul class="{{{class}}}"><li>{{{getMsg msg}}}</li> </ul>
+        <div data-show="connected_{{getTarget msg}}" class="d-none lower-bar">
+          <ul class="{{{class}}}"><li class="{{{class}}}">{{{getMsg msg}}}</li> </ul>
         </div>
       {{/if}}
 

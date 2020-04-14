@@ -2049,11 +2049,11 @@ app.get('/quranDaily', (req,res) => {
 
 hbs.registerHelper("getTarget", function(value) {
   // console.log(value);
-  return value.split('+')[0];
+  return value.split('+ ')[0];
 })
 
 hbs.registerHelper("getMsg", function(value) {
-  return value.split('+')[1];
+  return value.split('+ ')[1];
 })
 
 app.get('/blogpost', (req,res,next) => {
