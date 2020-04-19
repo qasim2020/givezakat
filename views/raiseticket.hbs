@@ -2,60 +2,109 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Raise a Ticket</title>
-    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funds 4 {{msg.heading}}</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700,900|Roboto:100,300i,400,400i,700,900&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+
     <style media="screen">
 
-    body {
-      font-family: Roboto;
-    }
-      nav {
-        display: flex;
-        max-width: 900px;
-        align-items: center;
-        margin: auto;
-      }
-
-      nav > p {
-        padding-left: 10px;
+      p {
+        font-family: Roboto;
+        font-weight: normal;
+        font-size: 25px;
+        line-height: 1.8;
+        color: #828282;
       }
 
       .container {
         /* border: 1px solid red; */
-        max-width: 1300px;
+        width: 1300px;
+        max-width: 100vw;
         margin: 0 auto;
+        padding: 0 20px;
+        box-sizing: border-box;
       }
 
       .container > * {
         /* border: 1px solid blue; */
       }
 
+      h1 {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 46px;
+        line-height: 39px;
+        width: 100%;
+        font-weight: bold;
+      }
+
+      .brown {
+        color: brown;
+      }
+
       .upper {
         display: flex;
+        flex-wrap: wrap;
       }
 
       .upper > .text {
-        max-width: 60%;
+        width: 60%;
+      }
+
+      .text > p {
+
+        font-size: 22px;
+        line-height: 1.8;
+        color: lightslategrey;
       }
 
       .upper > .photo {
-        max-width: 40%;
+        width: 40%;
+        border-radius: 50%;
+        padding: 20px;
+        box-sizing: border-box;
+        display: flex;
       }
 
-      .bar {
-        /* Orange */
-        background: #F2994A;
-        /* Gray 1 */
-        border: 1px solid #333333;
+      .photo > img {
+        width: 74%;
+        max-width: 250px;
+        /* height: 300px; */
+        border-radius: 50%;
+        padding: 20px;
         box-sizing: border-box;
-        max-width: 60%;
-        height: 20px;
+        background: #f7f7f7;
+        margin: auto;
+        margin-top: 0;
+      }
 
+      .status_bar {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translate(-50%);
+        background: white;
+        border-top: 4px solid brown;
+        padding: 20px 20px 0 20px;
+        box-sizing: border-box;
       }
 
       .bar {
         position: relative;
         margin-top: 4rem;
+        background: #f5f4f4;
+        /* box-sizing: border-box; */
+        /* max-width: 60%; */
+        height: 20px;
+        width: 779px;
+        border-radius: 10px;
+        max-width: 100%;
       }
 
       .green_bar {
@@ -66,113 +115,397 @@
         /* border: 1px solid black; */
         height: 20px;
         box-sizing: border-box;
+        border-radius: 10px;
       }
 
 
       .greencircle {
         position: absolute;
-      top: -42px;
-      left: 20px;
+        top: -39px;
+        left: 0;
       }
 
       .greencircle > span, .yellowcircle > span {
         position: absolute;
         white-space: nowrap;
-        border: 1px solid grey;
-        top: -16%;
-        left: 50%;
-        transform: translate(-50%,-50%);
+        top: -41%;
+        padding: 12px 29px;
+        background: white;
+        font-size: 22px;
+        color: lightslategrey;
+        font-weight: bold;
+      }
+
+      .greencircle > span {
+        left: 0;
+        border: 1px solid green;
+      }
+
+      .yellowcircle > span {
+        right: 0;
+        border: 1px solid lightgray;
       }
 
       .yellowcircle {
         position: absolute;
-        top: -42px;
-        left: 100%;
+        top: -39px;
+        left: 97%;
       }
 
-      .counter_text {
-        float: right;
-        margin-top: -20px;
+      .counter {
+        font-weight: bold;
+        font-size: x-large;
+        margin-left: auto;
       }
 
-      .counter_text > .bolder {
+      .status_bar > button {
+        /* float: left; */
+      }
+
+      .status_bar > *:nth-child(2) {
+        display: flex;
+        width: 100%;
+        padding: 20px 12px;
+        box-sizing: border-box;
+        align-items: center;
+        max-width: 799px;
+      }
+
+      button {
+        padding: 12px 16px;
+        border: none;
+        font-family: Roboto;
+        font-size: 18px;
+        font-weight: 400;
+        margin-right: 8px;
+        margin-bottom: 13px;
+      }
+
+      button.primary {
+        color: white;
+        background: green;
+        border: 1px solid green;
+      }
+
+      button.secondary {
+        color: green;
+        background: white;
+        border: 1px solid green;
+      }
+
+      button.danger {
+        color: white;
+        background: brown;
+        border: 1px solid brown;
+      }
+
+      .modal {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: white;
+        border: 4px solid brown;
+        box-sizing: border-box;
+        padding: 0 20px;
+        overflow: scroll;
+      }
+
+      .selectBox > span {
+        width: 86px;
+        height: 45px;
+        background: white;
+        border: 1px solid lightgrey;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin: 2px 0;
+        font-family: Montserrat;
+        color: grey;
+      }
+
+      span.active {
+        background: green;
+        color: white;
+        border: 1px solid green;
+      }
+
+      .selectBoxOut > *:nth-child(1) {
+
         font-family: Montserrat;
         font-style: normal;
         font-weight: bold;
-        font-size: 101px;
-        line-height: 146%;
-        /* or 147px */
+        font-size: 121px;
+        line-height: 147px;
 
-        /* Orange */
-        color: #F2994A;
+        /* Green 1 */
+        color: green;
       }
 
-      .counter_text > span:nth-child(1) {
-        font-family: Montserrat;
+      .selectBoxOut > *:nth-child(2) {
+        color: green;
         font-style: normal;
-        font-weight: bold;
-        font-size: 15px;
-        line-height: 146%;
-        /* identical to box height, or 22px */
-
-        /* Orange */
-        color: #F2994A;
       }
 
+      .stripe.container {
+        margin-left: 0;
+        box-sizing: border-box;
+        padding: 0;
+        box-shadow: none;
+        padding-right: 25px;
+        max-width: 600px;
+      }
+
+      .MyCardElement {
+        /* height: 40px; */
+        padding: 10px 12px;
+        width: 100%;
+        color: #32325d;
+        background-color: white;
+        /* border: 1px solid transparent; */
+        /* border-radius: 4px; */
+
+        box-shadow: 0 1px 3px 0 #e6ebf1;
+        -webkit-transition: box-shadow 150ms ease;
+        transition: box-shadow 150ms ease;
+
+        border: 1px solid lightgrey;
+        margin-bottom: 20px;
+      }
+
+      .MyCardElement--focus {
+        box-shadow: 0 1px 3px 0 #cfd7df;
+      }
+
+      .MyCardElement--invalid {
+        border-color: #fa755a;
+      }
+
+      .MyCardElement--webkit-autofill {
+        background-color: #fefde5 !important;
+      }
+
+      .bold {
+        font-weight: bold;
+      }
+
+      .green {
+        color: green;
+      }
+
+      .d-none {
+        display: none;
+      }
     </style>
   </head>
   <body>
-    <nav>
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M21 11H6.83L10.41 7.41L9 6L3 12L9 18L10.41 16.59L6.83 13H21V11Z" fill="#333333"/>
-      </svg>
-
-      <p>Zakatlists</p>
-    </nav>
 
     <div class="container">
 
+      {{> breadcrumb page=this.page}}
+
+
       <div class="upper">
+        <h1 class="brown">{{msg.heading}}</h1>
         <div class="text">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
-          <p>Nemo enim ipsam voluptatem quia voluptas sit aspern est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. </p>
+          <p>{{msg.description}}</p>
         </div>
         <div class="photo">
-          photo area
-        </div>
-      </div>
-
-      <div class="status_bar">
-        <div class="bar">
-          <div class="green_bar">
-
-          </div>
-
-          <div class="greencircle">
-            <svg width="24" height="61" viewBox="0 0 24 61" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="12.5" y1="2.18557e-08" x2="12.5" y2="38" stroke="#333333"/>
-              <circle cx="12" cy="49" r="11.5" fill="#219653" stroke="#333333"/>
-              </svg>
-
-            <span>Raised till now: Rs 10000</span>
-          </div>
-
-          <div class="yellowcircle">
-            <svg width="24" height="61" viewBox="0 0 24 61" fill="none" xmlns="http://www.w3.org/2000/svg">
-<line x1="12.5" y1="2.18557e-08" x2="12.5" y2="38" stroke="#333333"/>
-<circle cx="12" cy="49" r="11.5" fill="#F2994A" stroke="#333333"/>
-</svg>
-
-            <span>Target: Rs 50000</span>
-          </div>
-
-        </div>
-        <div class="counter_text">
-          <span>ticket expires in</span>
-          <span class="bolder">30:34</span>
+          <img src="{{msg.img}}" alt="">
         </div>
       </div>
 
     </div>
+
+    <div class="status_bar">
+      <div class="bar">
+        <div class="green_bar">
+        </div>
+
+        <div class="greencircle">
+          <svg width="24" height="61" viewBox="0 0 24 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="12.5" y1="2.18557e-08" x2="12.5" y2="38" stroke="green"/>
+            <circle cx="12" cy="49" r="11.5" fill="green" stroke="darkcyan"/>
+            </svg>
+
+          <span class="">Raised till now: Rs 10000</span>
+        </div>
+
+        <div class="yellowcircle">
+          <svg width="24" height="61" viewBox="0 0 24 61" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="12.5" y1="2.18557e-08" x2="12.5" y2="38" stroke="lightgrey"/>
+          <circle cx="12" cy="49" r="11.5" fill="#f5f4f4" stroke="lightgrey"/>
+          </svg>
+
+          <span class="">Target: Rs 50000</span>
+        </div>
+
+      </div>
+      <div class="div_2">
+        <button class="primary" type="button" name="button" onclick="toggleModal()">Donate</button>
+        <button class="secondary" type="button" name="button">Read Blog</button>
+        <button class="secondary" type="button" name="button">WhatsApp</button>
+        <div class="counter brown">
+          00:89:30:34
+        </div>
+      </div>
+    </div>
+
+    <div class="modal d-none">
+        <h1 class="brown">Donate Box</h1>
+
+        <p>Thank you. Please press on one of the buttons to select the amount you want to donate in this cause.</p>
+        <div class="selectBox">
+          <span class="active">10</span>
+          <span>20</span>
+          <span>30</span>
+          <span>40</span>
+          <br>
+          <span>50</span>
+          <span>80</span>
+          <span>100</span>
+          <span>200</span>
+        </div>
+
+        <p class="selectBoxOut">
+          <span>10.00</span>
+          <span>USD</span>
+        </p>
+
+        <p>will go to <span class="green bold">Laurel Home School</span> Funds. Please enter your credit card details below to make the payment.</p>
+
+        <div class="stripe container form-placement">
+          <form id="subscription-form" class="disabled">
+           <div id="card-element" class="MyCardElement">
+           </div>
+
+           <div id="card-errors" class="error" role="alert"></div>
+           <button type="submit" id="click-signup" class="primary" type="button" name="button">
+             Donate Now
+           </button>
+          <form>
+
+        </div>
+
+        <p>Or use one of the following payment methods to make the donation.</p>
+
+        <div class="otherButtons">
+          <button class="secondary" type="button" name="button">Paypal</button>
+          <button class="secondary" type="button" name="button">Online Bank Transfer</button>
+          <button class="secondary" type="button" name="button">Easy Paisa</button>
+        </div>
+
+        <button class="danger" type="button" name="button" onclick="toggleModal()">Close</button>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+
+    let toggleModal = function() {
+      $('.modal').toggleClass('d-none');
+    }
+
+    var stripe = Stripe(`{{publishableKey}}`);
+    var elements = stripe.elements();
+
+    // Set up Stripe.js and Elements to use in checkout form
+    var style = {
+      base: {
+        color: "#32325d",
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: "antialiased",
+        fontSize: "20px",
+        "::placeholder": {
+          color: "#aab7c4"
+        }
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a"
+      }
+    };
+
+    var cardElement = elements.create("card", { style: style });
+    cardElement.mount("#card-element");
+
+    cardElement.addEventListener('change', function(event) {
+      var displayError = document.getElementById('card-errors');
+      if (event.error) {
+        displayError.textContent = event.error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    var form = document.getElementById('subscription-form');
+
+    form.addEventListener('submit', function(event) {
+      // We don't want to let default form submission happen here,
+      // which would refresh the page.
+      event.preventDefault();
+
+      stripe.createPaymentMethod({
+        type: 'card',
+        card: cardElement,
+        billing_details: {
+          email: $('#user-email').val()
+        },
+      }).then(stripePaymentMethodHandler);
+    });
+
+    // $('#user-name').val(),
+
+    function stripePaymentMethodHandler(result, email) {
+      if (result.error) {
+        // Show error in payment form
+        console.log(result.error);
+      } else {
+        if (!($("#sign-up").valid())) {
+
+          return;
+
+        }
+
+        console.log('valid entries');
+
+        let data = {
+          'query': 'Register',
+          "name": $('#user-name').val(),
+          "email": $('#user-email').val(),
+          "password": $('#user-pass').val(),
+          "phoneCode": $('#user-code').val(),
+        };
+
+        console.log(data);
+
+        data = JSON.stringify(data);
+
+        $.ajax({
+          url: '/create-customer',
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          data: JSON.stringify({
+            payment_method: result.paymentMethod.id,
+            name: $('#user-name').val(),
+            email: $('#user-email').val(),
+            password: $('#user-pass').val(),
+            phoneCode: $('#user-code').val(),
+          }),
+        }).done((token) => {
+          console.log('successful: ', token);
+          // $('#sign-up').attr('action',`/home/?token=${token}`);
+          window.location.assign(`/home/?token=${token}`);
+          // $("#sign-up").submit();
+        }).fail((e) => {
+          let errors = { 'user-pass': e.responseText };
+          // $("#sign-up").validate().showErrors(errors);
+          $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
+          console.log('error here', e);
+          alert(e);
+        });
+      }
+    }
+    </script>
   </body>
 </html>

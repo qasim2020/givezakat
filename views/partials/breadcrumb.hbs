@@ -1,0 +1,73 @@
+<style media="screen">
+  body {
+    font-family: Roboto;
+    margin: 20px 0 15rem 0;
+    /* padding: 0 10px; */
+  }
+
+  nav {
+    display: flex;
+    max-width: 1300px;
+    align-items: center;
+    margin: auto;
+  }
+
+  nav > p {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 157.9%;
+    display: flex;
+    align-items: center;
+    color: #333333;
+    margin-left: 20px;
+    flex-grow: 1;
+  }
+  nav > button {
+    flex-grow: 0;
+    display: flex;
+    border: 0px;
+    font-size: 15px;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    border-bottom: 2px solid brown;
+    padding-bottom: 5px;
+    font-weight: bold;
+    font-family: Montserrat;
+  }
+
+  nav > button > img {
+    width: 15px;
+    padding-left: 10px;
+  }
+
+  nav a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .bold {
+    font-weight: bold;
+  }
+</style>
+
+<nav>
+  <img src="/icons/logo.svg" alt="">
+
+  <p>
+    <a href='/'>Home</a> &nbsp / &nbsp
+    {{#if tier}}
+        <span class="bold">Funds Requests</span>
+    {{else}}
+        <a href='/tickets' >Funds Requests</a>
+        <span class="bold">&nbsp / &nbsp {{page}}</span>
+    {{/if}}
+  </p>
+
+  <button class="" type="button" name="button" onclick="window.location.assign(`/createticket`)">
+    Create Fund Raising Request
+    <img src="/icons/edit.svg" alt="">
+  </button>
+</nav>

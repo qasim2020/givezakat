@@ -19,9 +19,11 @@ const cheerio = require('cheerio');
 
 const stripe = require('stripe')(process.env.stripePrivate);
 
+const {uploadCloudinary} = require('./js/cloudinary');
 const {sheet} = require('./server/sheets.js');
 const {mongoose} = require('./db/mongoose');
 const {People} = require('./models/people');
+const {Tickets} = require('./models/tickets');
 const {Orders} = require('./models/orders');
 const {CurrencyRates} = require('./models/currencyrates');
 const {Users} = require('./models/users');
@@ -2109,8 +2111,134 @@ hbs.registerHelper('match', function(val1,val2) {
 
 
 app.get('/ticket',(req,res) => {
-  res.status(200).render('raiseticket.hbs');
+  Tickets.findOne({ser:req.query.ser}).lean()
+  .then(msg => {
+    console.log(msg);
+    if (!msg) return Promise.reject('No ticket exists at this link.')
+    res.status(200).render('raiseticket.hbs', {publishableKey: process.env.stripePublishableKey, msg: msg, page: msg.heading});
+  })
+  .catch(e => {
+    res.status(400).render('1-redirect.hbs', {
+      timer: 3,
+      message: e,
+      page: 'Error',
+    })
+  })
+
 })
+
+app.get('/deleteticket', (req,res,next) => {
+  Tickets.deleteOne({ser: req.query.ser})
+  .then(msg => {
+    req.url = `/tickets`;
+    app._router.handle(req, res, next);
+  })
+  .catch(e => {
+    res.status(400).render('1-redirect.hbs', {
+      timer: 3,
+      message: e,
+      page: 'Error',
+    })
+  })
+})
+
+app.get('/createticket', (req,res) => {
+  res.status(200).render('createticket.hbs', {
+    msg: {
+      ser: new Date().getTime(),
+      heading: 'Heading goes here...',
+      description: 'Make a good description of your request. Try to write like you are talking to a real person and making him trust you. Give as much details as possible.',
+      personal: `account: Account Title, Account Number, IBAN
+paypal: abi1023@hotmail.com
+whatsapp: +923235168638
+email: qasimali24@gmail.com
+details: https://www.zakatlists.com/qurandaily?blogpost=100`,
+      img: '/quranDailyImages/colors.jpg',
+    },
+    page: 'Create Ticket'
+  });
+})
+
+
+app.get('/editticket', (req,res) => {
+  Tickets.findOne({ser: req.query.ser}).lean()
+  .then(msg => {
+    console.log(msg);
+    if (!msg) return Promise.reject('No data found for this card.')
+    return res.status(200).render('createticket.hbs', {
+      msg,
+      page: 'Edit Ticket'
+    });
+  })
+  .catch(e => {
+    res.status(400).render('1-redirect.hbs',{
+      timer: 3,
+      message: e,
+      page: 'tickets',
+      page: 'Error',
+    })
+  })
+})
+
+
+app.get('/tickets', (req,res) => {
+  Tickets.find().lean()
+  .then(msg => {
+    if (!msg) return res.status(200).render('tickets.hbs');
+    msg = msg.map(val => {
+      val.description = val.description.slice(0,145)+'...';
+      return val;
+    })
+    // msg.description = msg.description.slice(1,45);
+    return res.status(200).render('tickets.hbs',{msg});
+  })
+  .catch(e => {
+    return res.status(400).send(e);
+  })
+
+})
+
+app.post('/updateticket', (req,res) => {
+  uploadCloudinary(req.body.blah, req.body.public_id)
+  .then(res1 => {
+    return Tickets.findOneAndUpdate({ser: req.body.ser}, {
+      ser: req.body.ser,
+      heading: req.body.heading,
+      description: req.body.description,
+      personal: req.body.personal,
+      img: res1.url,
+      public_id: res1.public_id
+    }, {upsert: true, new: true})
+  })
+  .then(output => {
+    res.status(200).send(output)
+  })
+  .catch(e => {
+    res.status(300).send(e)
+  });
+})
+
+app.post('/saveticket',(req,res) => {
+
+  uploadCloudinary(req.body.blah)
+  .then(res1 => {
+    return Tickets.findOneAndUpdate({ser: req.body.ser}, {
+      ser: req.body.ser,
+      heading: req.body.heading,
+      description: req.body.description,
+      personal: req.body.personal,
+      img: res1.url,
+      public_id: res1.public_id
+    }, {upsert: true, new: true})
+  })
+  .then(output => {
+    res.status(200).send(output)
+  })
+  .catch(e => {
+    res.status(300).send(e)
+  });
+
+});
 
 hbs.registerHelper("ifTopic",function (data, compareTo) {
   console.log(data,compareTo);
