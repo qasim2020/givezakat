@@ -2108,7 +2108,9 @@ hbs.registerHelper('match', function(val1,val2) {
   return val1.toUpperCase() == val2.toUpperCase() ? true : false;
 })
 
-
+app.get('/updateDonations', (req,res) => {
+  res.status(200).render('updateDonations.hbs');
+})
 
 app.get('/ticket',(req,res) => {
   Tickets.findOne({ser:req.query.ser}).lean()
