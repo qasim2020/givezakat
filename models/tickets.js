@@ -24,6 +24,13 @@ var Tickets = mongoose.Schema({
   public_id: {
     type: String,
     required: true,
+  },
+  secret: {
+    type: String,
+    required: true,
+  },
+  donations: {
+    type: [],
   }
 });
 

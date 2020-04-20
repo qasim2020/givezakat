@@ -324,6 +324,10 @@
 
       <textarea id="personal" name="name" rows="8" cols="80" placeholder="Write here">{{msg.personal}}</textarea>
 
+      <p>Please enter a secret key to edit / delete / add donations to this ticket in future. Do not forget it.</p>
+
+      <input id="secret" type="text" name="" value="your_secret">
+
       <button id="createTicket" type="button" name="button" class="primary mt-1" onclick="">
         {{#if msg._id}}
         Update Ticket
@@ -395,6 +399,8 @@
           break;
         case $('#description').val().length < 1:
           return alert ('please write the description in the field above.');
+        case $('#secret').val().length < 1:
+          return alert ('please enter your secret key.');
         case $('#personal').val().length < 1:
           return alert ('please write the personal in the field above.');
       }
@@ -407,7 +413,8 @@
         heading: $('#heading').val(),
         description: $('#description').val(),
         personal: $('#personal').val(),
-        public_id: `{{msg.public_id}}`
+        public_id: `{{msg.public_id}}`,
+        secret: $('#secret').val(),
       }
 
       // return console.log(data);

@@ -2108,16 +2108,18 @@ hbs.registerHelper('match', function(val1,val2) {
   return val1.toUpperCase() == val2.toUpperCase() ? true : false;
 })
 
-app.get('/updateDonations', (req,res) => {
-  res.status(200).render('updateDonations.hbs');
-})
 
 app.get('/ticket',(req,res) => {
   Tickets.findOne({ser:req.query.ser}).lean()
   .then(msg => {
     console.log(msg);
     if (!msg) return Promise.reject('No ticket exists at this link.')
-    res.status(200).render('raiseticket.hbs', {publishableKey: process.env.stripePublishableKey, msg: msg, page: msg.heading});
+    res.status(200).render('raiseticket.hbs', {
+      publishableKey: process.env.stripePublishableKey,
+      msg: msg,
+      page: msg.heading,
+      donations: 'd-none'
+    });
   })
   .catch(e => {
     res.status(400).render('1-redirect.hbs', {
@@ -2200,6 +2202,26 @@ app.get('/tickets', (req,res) => {
 
 })
 
+app.post('/addDonation', (req,res) => {
+  Tickets.findOneAndUpdate(
+    {ser: req.body.ser, secret: req.body.secret}, {
+    $push: {
+      donations: {
+        time: new Date().toString(),
+        amount: req.body.amount
+      }
+    }
+  }, {new: true})
+  .then(output => {
+    if (!output) return Promise.reject('Secret key did not match the token.')
+    res.status(200).send(output)
+  })
+  .catch(e => {
+  res.status(300).send(e)
+  });
+})
+
+
 app.post('/updateticket', (req,res) => {
   uploadCloudinary(req.body.blah, req.body.public_id)
   .then(res1 => {
@@ -2209,7 +2231,8 @@ app.post('/updateticket', (req,res) => {
       description: req.body.description,
       personal: req.body.personal,
       img: res1.url,
-      public_id: res1.public_id
+      public_id: res1.public_id,
+      secret: req.body.secret,
     }, {upsert: true, new: true})
   })
   .then(output => {
@@ -2230,7 +2253,8 @@ app.post('/saveticket',(req,res) => {
       description: req.body.description,
       personal: req.body.personal,
       img: res1.url,
-      public_id: res1.public_id
+      public_id: res1.public_id,
+      secret: req.body.secret,
     }, {upsert: true, new: true})
   })
   .then(output => {
