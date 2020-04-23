@@ -2221,6 +2221,14 @@ app.post('/addDonation', (req,res) => {
   });
 })
 
+app.post('/deleteDonation', (req,res) => {
+  Tickets.findOneAndUpdate(
+    {ser: req.body.ser, secret: req.body.secret},{
+    $pull: {}
+    }
+  )
+})
+
 
 app.post('/updateticket', (req,res) => {
   uploadCloudinary(req.body.blah, req.body.public_id)
