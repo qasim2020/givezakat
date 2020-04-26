@@ -148,6 +148,19 @@ let getCourseData = function(val) {
   }).catch(e => e);
 }
 
+app.get('/secret', (req,res) => {
+  const intent = stripe.paymentIntents.create({
+    amount: req.query.amount,
+    currency: 'usd'
+  }).then((msg) => {
+    console.log(msg);
+    res.status(200).send(msg.client_secret)
+  }).catch(e => {
+    console.log(e);
+    res.status(400).send(e);
+  });
+})
+
 app.post('/create-customer', (req,res) => {
   console.log(req.body);
 

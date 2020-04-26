@@ -252,10 +252,19 @@
         color: grey;
       }
 
+      .selectBox > span:hover {
+        opacity: 0.6;
+        cursor: pointer;
+      }
+
       span.active {
         background: green;
         color: white;
         border: 1px solid green;
+      }
+
+      span.active:hover {
+        opacity: 1;
       }
 
       .selectBoxOut > *:nth-child(1) {
@@ -408,7 +417,7 @@
       <p>How much did you recieve just now?</p>
       <input id="amount" type="text" name="" value="100">
       <p>Just a small detail of how you got it.</p>
-      <input id="amount" type="text" name="" value="Close friend in Lahore.">
+      <input id="text" type="text" name="" value="Close friend in Lahore.">
       <button id="addDonation" class="primary my-20" type="button" name="button" onclick="">Update</button>
 
       <p>Click on a value to edit it.</p>
@@ -465,9 +474,10 @@
 
         <p>will go to <span class="green bold">Laurel Home School</span> Funds. Please enter your credit card details below to make the payment.</p>
 
-        <div class="stripe container form-placement">
+        <!-- <div id="payment-form"  class="stripe container form-placement">
           <form id="subscription-form" class="disabled">
            <div id="card-element" class="MyCardElement">
+
            </div>
 
            <div id="card-errors" class="error" role="alert"></div>
@@ -476,7 +486,22 @@
            </button>
           <form>
 
+        </div> -->
+
+        <div id="payment-form"  class="stripe container form-placement">
+          <form id="payment-form">
+            <div id="card-element" class="MyCardElement">
+              <!-- Elements will create input elements here -->
+            </div>
+
+            <!-- We'll put the error messages in this element -->
+            <div id="card-errors" role="alert"></div>
+
+            <button id="submit" class="primary">Donate 10.00 USD</button>
+          </form>
         </div>
+
+
 
         <p>Or use one of the following payment methods to make the donation.</p>
 
@@ -492,113 +517,17 @@
 
     <script type="text/javascript">
 
+    $(document).ready(function() {
+      console.log('hello');
+      $('.selectBox > span:eq(0)').trigger('click');
+    })
+
     let toggleModal = function() {
       $('.modal').toggleClass('d-none');
     }
 
     let toggleDonation = function() {
       $('.donations').toggleClass('d-none');
-    }
-
-    var stripe = Stripe(`{{publishableKey}}`);
-    var elements = stripe.elements();
-
-    // Set up Stripe.js and Elements to use in checkout form
-    var style = {
-      base: {
-        color: "#32325d",
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: "antialiased",
-        fontSize: "20px",
-        "::placeholder": {
-          color: "#aab7c4"
-        }
-      },
-      invalid: {
-        color: "#fa755a",
-        iconColor: "#fa755a"
-      }
-    };
-
-    var cardElement = elements.create("card", { style: style });
-    cardElement.mount("#card-element");
-
-    cardElement.addEventListener('change', function(event) {
-      var displayError = document.getElementById('card-errors');
-      if (event.error) {
-        displayError.textContent = event.error.message;
-      } else {
-        displayError.textContent = '';
-      }
-    });
-
-    var form = document.getElementById('subscription-form');
-
-    form.addEventListener('submit', function(event) {
-      // We don't want to let default form submission happen here,
-      // which would refresh the page.
-      event.preventDefault();
-
-      stripe.createPaymentMethod({
-        type: 'card',
-        card: cardElement,
-        billing_details: {
-          email: $('#user-email').val()
-        },
-      }).then(stripePaymentMethodHandler);
-    });
-
-    // $('#user-name').val(),
-
-    function stripePaymentMethodHandler(result, email) {
-      if (result.error) {
-        // Show error in payment form
-        console.log(result.error);
-      } else {
-        if (!($("#sign-up").valid())) {
-
-          return;
-
-        }
-
-        console.log('valid entries');
-
-        let data = {
-          'query': 'Register',
-          "name": $('#user-name').val(),
-          "email": $('#user-email').val(),
-          "password": $('#user-pass').val(),
-          "phoneCode": $('#user-code').val(),
-        };
-
-        console.log(data);
-
-        data = JSON.stringify(data);
-
-        $.ajax({
-          url: '/create-customer',
-          method: 'post',
-          headers: {'Content-Type': 'application/json'},
-          data: JSON.stringify({
-            payment_method: result.paymentMethod.id,
-            name: $('#user-name').val(),
-            email: $('#user-email').val(),
-            password: $('#user-pass').val(),
-            phoneCode: $('#user-code').val(),
-          }),
-        }).done((token) => {
-          console.log('successful: ', token);
-          // $('#sign-up').attr('action',`/home/?token=${token}`);
-          window.location.assign(`/home/?token=${token}`);
-          // $("#sign-up").submit();
-        }).fail((e) => {
-          let errors = { 'user-pass': e.responseText };
-          // $("#sign-up").validate().showErrors(errors);
-          $('.error:eq(-1)').removeClass('d-none').html(e.responseText);
-          console.log('error here', e);
-          alert(e);
-        });
-      }
     }
 
     $('#addDonation').click(function() {
@@ -642,6 +571,89 @@
 
 
     })
+
+    $('.selectBox > span').on('click', function() {
+      $('.selectBox > span').removeClass('active');
+      $(this).toggleClass('active');
+      let value = $(this).text();
+      $('.selectBoxOut > span:nth-child(1)').html(`${value}.00`);
+      $.get( `/secret?amount=${$(this).text()}00`, function( data ) {
+        console.log(data);
+        $('#payment-form').attr('code',data);
+        $(`#payment-form > #submit`).html(`Donate ${value}.00 USD`);
+      })
+      .catch(e => {
+        console.log(e);
+        $('#payment-form > #submit').html(e.responseText);
+      })
+    })
+
+// STRIPE Payment
+
+    var stripe = Stripe(`{{publishableKey}}`);
+    var elements = stripe.elements();
+
+    // Set up Stripe.js and Elements to use in checkout form
+    var style = {
+      base: {
+        color: "#32325d",
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: "antialiased",
+        fontSize: "20px",
+        "::placeholder": {
+          color: "#aab7c4"
+        }
+      },
+      invalid: {
+        color: "#fa755a",
+        iconColor: "#fa755a"
+      }
+    };
+
+    var card = elements.create("card", { style: style });
+
+    card.mount("#card-element");
+
+    card.addEventListener('change', ({error}) => {
+      const displayError = document.getElementById('card-errors');
+      if (error) {
+        displayError.textContent = error.message;
+      } else {
+        displayError.textContent = '';
+      }
+    });
+
+    var form = document.getElementById('payment-form');
+
+    form.addEventListener('submit', function(ev) {
+      ev.preventDefault();
+      stripe.confirmCardPayment($('#payment-form').attr('code'), {
+        payment_method: {
+          card: card,
+          // billing_details: {
+          //   name: 'Jenny Rosen',
+          //   email: 'qasimali24@gmail.com'
+          // }
+        }
+      }).then(function(result) {
+        if (result.error) {
+          // Show error to your customer (e.g., insufficient funds)
+          console.log(result.error);
+          $('#payment-form > #submit').html(result.error.message);
+        } else {
+          // The payment has been processed!
+          console.log(result);
+          if (result.paymentIntent.status === 'succeeded') {
+            $('#payment-form > #submit').html('Payment was successful. Thanks');
+            // Show a success message to your customer
+            // There's a risk of the customer closing the window before callback
+            // execution. Set up a webhook or plugin to listen for the
+            // payment_intent.succeeded event that handles any business critical
+            // post-payment actions.
+          }
+        }
+      });
+    });
     </script>
   </body>
 </html>
