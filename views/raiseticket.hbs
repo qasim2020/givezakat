@@ -109,10 +109,8 @@
 
       .green_bar {
         position: absolute;
-        width: 20%;
-        /* z-index: 10; */
+        width: {{msg.difference}}%;
         background-color: green;
-        /* border: 1px solid black; */
         height: 20px;
         box-sizing: border-box;
         border-radius: 10px;
@@ -199,7 +197,7 @@
         border: 1px solid brown;
       }
 
-      .modal, .donations {
+      .modal {
         position: fixed;
         left: 0;
         top: 0;
@@ -210,33 +208,6 @@
         box-sizing: border-box;
         padding: 0 20px;
         overflow: scroll;
-      }
-
-      .donations {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        padding: 0px 20px;
-      }
-
-      .donations > * {
-        margin-bottom: 8px;
-      }
-
-      .donations p {
-        font-size: 18px;
-      }
-
-      .my-20 {
-        margin-top: 20px;
-        margin-bottom: 20px;
-      }
-
-      .donations input {
-        font-size: 18px;
-        width: 100%;
-        max-width: 400px;
-        padding: 12px 20px;
       }
 
       .selectBox > span {
@@ -334,24 +305,35 @@
         display: none;
       }
 
-      table {
-        border-collapse: collapse;
-        width: 100%;
-        max-width: 445px;
-        text-align: center;
+
+      .drop_target {
+        background: #007f01;
+        padding: 1px 10px;
+        box-sizing: border-box;
+        margin: 20px 0;
       }
 
-      .donations th,td {
-        padding: 10px;
-        background: white;
-        border: 1px solid #e2e2e2;
-        color: darkslategrey;
-        min-width: 52px;
-        height: 28px;
+      .drop_target > p {
+        color: white;
+        font-size: 18px;
       }
 
-      .donation_row:hover {
-        cursor: pointer;
+      .drop_target > h6 {
+        font-size: 18px;
+        margin: 0;
+        font-style: italic;
+        color: white;
+        text-decoration: underline;
+      }
+
+      .drop_target a {
+        text-decoration: none;
+        color: lightskyblue;
+      }
+
+      button:focus {
+        background: green;
+        color: white;
       }
     </style>
   </head>
@@ -385,7 +367,7 @@
             <circle cx="12" cy="49" r="11.5" fill="green" stroke="darkcyan"/>
             </svg>
 
-          <span class="">Raised till now: Rs 10000</span>
+          <span class="">Raised till now: USD {{msg.raised}}</span>
         </div>
 
         <div class="yellowcircle">
@@ -394,61 +376,20 @@
           <circle cx="12" cy="49" r="11.5" fill="#f5f4f4" stroke="lightgrey"/>
           </svg>
 
-          <span class="">Target: Rs 50000</span>
+          <span class="">Target: USD {{msg.target}}</span>
         </div>
 
       </div>
       <div class="div_2">
         <button class="primary" type="button" name="button" onclick="toggleModal()">Donate</button>
-        <button class="secondary" type="button" name="button">Read Blog</button>
-        <button class="secondary" type="button" name="button">WhatsApp</button>
-        <button class="secondary" type="button" name="button" onclick="toggleDonation()">Add Donation</button>
+        <button class="secondary" type="button" name="button" onclick="window.location.assign(`{{msg.learnMore}}`)">Read Blog</button>
+        <button class="secondary" type="button" name="button" onclick="window.location.assign(`https://wa.me/{{msg.whatsapp}}`)">WhatsApp</button>
+        <button class="secondary" type="button" name="button" onclick="window.location.assign(`/updateDonations?ser={{msg.ser}}`)">Add Donation</button>
         <!-- window.location.assign('/updateticketx?ser={{msg.ser}}') -->
         <div class="counter brown">
           00:89:30:34
         </div>
       </div>
-    </div>
-
-    <div class="donations {{donations}}">
-      <h1>Update Donations</h1>
-      <p>Enter your secret key for this ticket. Contact Qasim, if you have forgotten.</p>
-      <input id="secret" type="text" name="" value="your_secret">
-      <p>How much did you recieve just now?</p>
-      <input id="amount" type="text" name="" value="100">
-      <p>Just a small detail of how you got it.</p>
-      <input id="text" type="text" name="" value="Close friend in Lahore.">
-      <button id="addDonation" class="primary my-20" type="button" name="button" onclick="">Update</button>
-
-      <p>Click on a value to edit it.</p>
-
-      <table>
-        <tr>
-          <th colspan="4">List of Donations received so far.</th>
-        </tr>
-        <tr>
-          <th>Ser</th>
-          <th>Time</th>
-          <th>Amount</th>
-          <th>Delete</th>
-        </tr>
-        {{#each msg.donations}}
-        <tr class="donation_row" onclick="">
-          <td>{{inc @index}}</td>
-          <td>{{this.time}}</td>
-          <td>{{this.amount}}</td>
-          <td onclick="window.location.assign('/deletedonation?time={{this.time}}')">
-            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#E0E0E0"/>
-            </svg>
-          </td>
-        </tr>
-        {{/each}}
-
-
-      </table>
-
-      <button class="danger my-20" type="button" name="button" onclick="toggleDonation()">Close</button>
     </div>
 
     <div class="modal d-none">
@@ -474,20 +415,6 @@
 
         <p>will go to <span class="green bold">Laurel Home School</span> Funds. Please enter your credit card details below to make the payment.</p>
 
-        <!-- <div id="payment-form"  class="stripe container form-placement">
-          <form id="subscription-form" class="disabled">
-           <div id="card-element" class="MyCardElement">
-
-           </div>
-
-           <div id="card-errors" class="error" role="alert"></div>
-           <button type="submit" id="click-signup" class="primary" type="button" name="button">
-             Donate Now
-           </button>
-          <form>
-
-        </div> -->
-
         <div id="payment-form"  class="stripe container form-placement">
           <form id="payment-form">
             <div id="card-element" class="MyCardElement">
@@ -506,9 +433,32 @@
         <p>Or use one of the following payment methods to make the donation.</p>
 
         <div class="otherButtons">
-          <button class="secondary" type="button" name="button">Paypal</button>
-          <button class="secondary" type="button" name="button">Online Bank Transfer</button>
-          <button class="secondary" type="button" name="button">Easy Paisa</button>
+          <button data-target="paypal" class="drop_toggle secondary" type="button" name="button">Paypal</button>
+          <button data-target="bank" class="drop_toggle secondary" type="button" name="button">Online Bank Transfer</button>
+          <button data-target="easypaisa" class="drop_toggle secondary" type="button" name="button">Easy Paisa</button>
+        </div>
+
+        <div class="d-none drop_target" data-parent="paypal">
+          <p>Please make the payment on following paypal account. Send the receipt on <a href="https://wa.me/923235168638" target=_blank>WhatsApp number</a>.</p>
+          <p>abi1023@gmail.com</p>
+        </div>
+
+        <div class="d-none drop_target" data-parent="bank">
+          <p>Please make the payment on following account number. If you are located outside Pakistan you can use <a href="https://transferwise.com/" target=_blank>Transferwise</a> to make the payment.</p>
+          <h6>Account Title</h6>
+          <p>0123123123421323214</p>
+          <h6>Account No</h6>
+          <p>0123123123421323214</p>
+          <h6>Account IBAN</h6>
+          <p>IBAN08123AKJKASD123R9094091</p>
+        </div>
+
+        <div class="d-none drop_target" data-parent="easypaisa">
+          <p>Please make a transfer on following easypaisa account. Send the payment receipt on this <a href="https://wa.me/923235168638" target=_blank>WhatsApp number</a>.</p>
+          <h6>Name</h6>
+          <p>Ahmed Ali</p>
+          <h6>Mobile No</h6>
+          <p>0323 5168435</p>
         </div>
 
         <button class="danger" type="button" name="button" onclick="toggleModal()">Close</button>
@@ -529,48 +479,6 @@
     let toggleDonation = function() {
       $('.donations').toggleClass('d-none');
     }
-
-    $('#addDonation').click(function() {
-
-      switch (true) {
-        case $('#amount').val() == '':
-          return alert('Please enter the amount you want to update.')
-          break;
-        case $('#secret').val() == '':
-          return alert ('Please enter your secret code for this ticket.');
-          break;
-      }
-
-      let data = {
-        ser: `{{msg.ser}}`,
-        amount: $('#amount').val(),
-        secret: $('#secret').val(),
-      }
-
-      // return console.log(data);
-      $(this).html('Saving Donation...');
-
-      data = JSON.stringify(data);
-
-      $.ajax({
-          url: '/addDonation',
-          type: 'post',
-          data,
-          headers: {
-              'content-type': 'application/json',
-          }
-        }).done((msg) => {
-          console.log(msg);
-          $(this).html('Donation Added !');
-          // $('.stage').toggleClass('d-none');
-          // window.location.assign('/tickets');
-        }).fail((e) => {
-          $(this).html(`Error: ${e.responseText}`);
-          console.log(e);
-        });
-
-
-    })
 
     $('.selectBox > span').on('click', function() {
       $('.selectBox > span').removeClass('active');
@@ -617,7 +525,7 @@
     card.addEventListener('change', ({error}) => {
       const displayError = document.getElementById('card-errors');
       if (error) {
-        displayError.textContent = error.message;
+        $('#payment-form > #submit').html(error.message);
       } else {
         displayError.textContent = '';
       }
@@ -646,15 +554,52 @@
           console.log(result);
           if (result.paymentIntent.status === 'succeeded') {
             $('#payment-form > #submit').html('Payment was successful. Thanks');
-            // Show a success message to your customer
-            // There's a risk of the customer closing the window before callback
-            // execution. Set up a webhook or plugin to listen for the
-            // payment_intent.succeeded event that handles any business critical
-            // post-payment actions.
+            updateDonation(result.paymentIntent.amount.toString().slice(0, -2));
           }
         }
       });
     });
+
+    let updateDonation = (amount) => {
+
+      let data = {
+        ser: `{{msg.ser}}`,
+        amount: amount,
+        client_secret: $('#payment-form').attr('code'),
+        comment: 'Credit Card Payment'
+      }
+
+      console.log(data);
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/addStripeDonation',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log(msg);
+          // $(this).html('Donation Added !');
+          // window.location.assign('/updateDonations?ser={{msg.ser}}');
+          // $('.stage').toggleClass('d-none');
+          // window.location.assign('/tickets');
+        }).fail((e) => {
+          // $(this).html(`Error: ${e.responseText}`);
+          console.log(e);
+        });
+
+    }
+
+    // STRIPE ends here
+
+    $('.drop_toggle').on('click',function() {
+      let target = $(this).attr('data-target');
+      $('.drop_target').addClass('d-none');
+      $(`[data-parent=${target}]`).toggleClass('d-none');
+    })
     </script>
   </body>
 </html>

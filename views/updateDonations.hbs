@@ -3,21 +3,297 @@
   <head>
     <meta charset="utf-8">
     <title>Update Donations</title>
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:500,700,900|Roboto:100,300i,400,400i,700,900&display=swap" rel="stylesheet">
+    <style media="screen">
+    p {
+      font-family: Roboto;
+      font-weight: normal;
+      font-size: 25px;
+      line-height: 1.8;
+      color: #828282;
+    }
+
+    .container {
+      /* border: 1px solid red; */
+      width: 1300px;
+      max-width: 100vw;
+      margin: 0 auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .container > * {
+      /* border: 1px solid blue; */
+    }
+
+    h1 {
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 46px;
+      line-height: 39px;
+      width: 100%;
+      font-weight: bold;
+    }
+
+    .brown {
+      color: brown;
+    }
+
+    .bold {
+      font-weight: bold;
+    }
+
+    .green {
+      color: green;
+    }
+
+    .d-none {
+      display: none;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 445px;
+      text-align: center;
+      font-family: Roboto;
+    }
+
+    .donations th,td {
+      padding: 10px;
+      background: white;
+      border: 1px solid #e2e2e2;
+      color: darkslategrey;
+      min-width: 52px;
+      height: 28px;
+    }
+
+    .donation_row:hover {
+      cursor: pointer;
+    }
+
+    button {
+      padding: 12px 16px;
+      border: none;
+      font-family: Roboto;
+      font-size: 18px;
+      font-weight: 400;
+      margin-right: 8px;
+      margin-bottom: 13px;
+    }
+
+    button.primary {
+      color: white;
+      background: green;
+      border: 1px solid green;
+    }
+
+    button.secondary {
+      color: green;
+      background: white;
+      border: 1px solid green;
+    }
+
+    button.danger {
+      color: white;
+      background: brown;
+      border: 1px solid brown;
+    }
+
+    .donations {
+      display: flex;
+      flex-direction: column;
+      align-items: start;
+      width: 1300px;
+      max-width: 100vw;
+      margin: 0 auto;
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
+
+    .donations > * {
+      margin-bottom: 8px;
+    }
+
+    .donations p {
+      font-size: 18px;
+    }
+
+    .my-20 {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    .donations input {
+      font-size: 18px;
+      width: 100%;
+      max-width: 400px;
+      padding: 12px 20px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 700px;
+      text-align: center;
+    }
+
+    table .date {
+      text-align: left;
+      font-size: 16px;
+    }
+
+    .donations th,td {
+      padding: 10px;
+      background: white;
+      border: 1px solid #e2e2e2;
+      color: darkslategrey;
+      min-width: 52px;
+      height: 28px;
+    }
+
+    .donation_row:hover {
+      cursor: pointer;
+    }
+    </style>
   </head>
   <body>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Mode</th>
-        <th>date</th>
-      </tr>
-      <tr>
-        <td><input type="text" name="" value=""> </td>
-        <td><input type="text" name="" value=""> </td>
-        <td><input type="text" name="" value=""> </td>
-        <td><input type="text" name="" value=""> </td>
-      </tr>
-    </table>
+    {{> breadcrumb page=this.page}}
+
+    <div class="donations {{donations}}">
+      <h1>Update Donations</h1>
+      <p>Enter your secret key for this ticket. Contact Qasim, if you have forgotten.</p>
+      <input id="secret" type="text" name="" value="your_secret">
+      <p>How much did you recieve just now?</p>
+      <input id="amount" type="text" name="" value="100">
+      <p>Just a small detail of how you got it.</p>
+      <input id="text" type="text" name="" value="Close friend in Lahore.">
+      <button id="addDonation" class="primary my-20" type="button" name="button" onclick="">Update</button>
+
+      {{#if msg.donations}}
+      <p>Click on a value to edit it.</p>
+
+      <table>
+        <tr>
+          <th colspan="5">List of Donations received so far.</th>
+        </tr>
+        <tr>
+          <th>Ser</th>
+          <th>Time</th>
+          <th>Amount</th>
+          <th>Comment</th>
+          <th>Delete</th>
+        </tr>
+        {{#each msg.donations}}
+        <tr class="donation_row" onclick="">
+          <td>{{inc @index}}</td>
+          <td class="date">{{this.time}}</td>
+          <td>{{this.amount}}</td>
+          <td>{{this.comment}}</td>
+          <td class="deleteDonation" data-id="{{this.id}}">
+            <svg width="14" height="18" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M1 16C1 17.1 1.9 18 3 18H11C12.1 18 13 17.1 13 16V4H1V16ZM14 1H10.5L9.5 0H4.5L3.5 1H0V3H14V1Z" fill="#E0E0E0"/>
+            </svg>
+          </td>
+        </tr>
+        {{/each}}
+
+      </table>
+
+      {{else}}
+        <p>No Donations added so far.</p>
+      {{/if}}
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+    $('#addDonation').click(function() {
+
+      switch (true) {
+        case $('#amount').val() == '':
+          return $(this).html('Please enter the amount you want to update.');
+          break;
+        case $('#secret').val() == '':
+          return $(this).html('Please enter your secret code for this ticket.');
+          break;
+        case $('#text').val() == '':
+          return $(this).html('Please enter a small comment for this ticket.');
+          break;
+      }
+
+      let data = {
+        ser: `{{msg.ser}}`,
+        amount: $('#amount').val(),
+        secret: $('#secret').val(),
+        comment: $('#text').val()
+      }
+
+      // return console.log(data);
+      $(this).html('Saving Donation...');
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/addDonation',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log(msg);
+          $(this).html('Donation Added !');
+          window.location.assign('/updateDonations?ser={{msg.ser}}');
+          // $('.stage').toggleClass('d-none');
+          // window.location.assign('/tickets');
+        }).fail((e) => {
+          $(this).html(`Error: ${e.responseText}`);
+          console.log(e);
+        });
+
+
+    })
+
+    $('.deleteDonation').on('click', function(){
+      switch (true) {
+        case $('#secret').val() == '':
+          return alert('Please enter your secret code for this ticket.');
+          break;
+      }
+
+      let data = {
+        ser: `{{msg.ser}}`,
+        secret: $('#secret').val(),
+        id: $(this).closest('td').attr('data-id')
+      }
+
+      console.log(data);
+      $('#addDonation').html('Updating Donation...');
+
+      data = JSON.stringify(data);
+
+      $.ajax({
+          url: '/deleteDonation',
+          type: 'post',
+          data,
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log(msg);
+          $('#addDonation').html('Donation deleted !');
+          window.location.assign('/updateDonations?ser={{msg.ser}}');
+        }).fail((e) => {
+          // $(this).html(`Error: ${e.responseText}`);
+          alert(e.responseText);
+          console.log(e);
+        });
+
+    })
+
+    </script>
   </body>
 </html>

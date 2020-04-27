@@ -153,7 +153,8 @@ app.get('/secret', (req,res) => {
     amount: req.query.amount,
     currency: 'usd'
   }).then((msg) => {
-    console.log(msg);
+    // console.log(msg);
+    req.session.client_secret = msg.client_secret;
     res.status(200).send(msg.client_secret)
   }).catch(e => {
     console.log(e);
@@ -2127,11 +2128,19 @@ app.get('/ticket',(req,res) => {
   .then(msg => {
     console.log(msg);
     if (!msg) return Promise.reject('No ticket exists at this link.')
+    msg.raised = msg.donations.reduce((total,val) => {
+      return total += Number(val.amount);
+    },0)
+    msg.target = msg.personal.split('\n').filter(val => /target/.test(val))[0].split(': ')[1].trim();
+    msg.difference = msg.raised / Number(msg.target) * 100;
+    // console.log(msg.difference);
+    msg.learnMore = msg.personal.split('\n').filter(val => /details/.test(val))[0].split(': ')[1].trim();
+    msg.whatsapp = msg.personal.split('\n').filter(val => /whatsapp/.test(val))[0].split(': ')[1].trim();
+    console.log(msg.learnMore);
     res.status(200).render('raiseticket.hbs', {
       publishableKey: process.env.stripePublishableKey,
       msg: msg,
-      page: msg.heading,
-      donations: 'd-none'
+      page: msg.heading
     });
   })
   .catch(e => {
@@ -2169,7 +2178,9 @@ app.get('/createticket', (req,res) => {
 paypal: abi1023@hotmail.com
 whatsapp: +923235168638
 email: qasimali24@gmail.com
-details: https://www.zakatlists.com/qurandaily?blogpost=100`,
+easypaisa: Name, Phone No
+details: https://www.zakatlists.com/qurandaily?blogpost=100
+target: in USD`,
       img: '/quranDailyImages/colors.jpg',
     },
     page: 'Create Ticket'
@@ -2215,13 +2226,42 @@ app.get('/tickets', (req,res) => {
 
 })
 
+app.post('/addStripeDonation', (req,res) => {
+
+  if (req.body.client_secret == req.session.client_secret) {
+    Tickets.findOneAndUpdate(
+      {ser: req.body.ser}, {
+      $push: {
+        donations: {
+          id: mongoose.Types.ObjectId(),
+          time: new Date().toString(),
+          amount: req.body.amount,
+          comment: req.body.comment,
+        }
+      }
+    }, {new: true})
+    .then(output => {
+      if (!output) return Promise.reject('Secret key did not match the token.')
+      res.status(200).send(output)
+    })
+    .catch(e => {
+    res.status(300).send(e)
+    });
+  } else {
+    res.status(300).send('Did not find the payment intent');
+  }
+})
+
 app.post('/addDonation', (req,res) => {
+
   Tickets.findOneAndUpdate(
     {ser: req.body.ser, secret: req.body.secret}, {
     $push: {
       donations: {
+        id: mongoose.Types.ObjectId(),
         time: new Date().toString(),
-        amount: req.body.amount
+        amount: req.body.amount,
+        comment: req.body.comment,
       }
     }
   }, {new: true})
@@ -2236,10 +2276,46 @@ app.post('/addDonation', (req,res) => {
 
 app.post('/deleteDonation', (req,res) => {
   Tickets.findOneAndUpdate(
-    {ser: req.body.ser, secret: req.body.secret},{
-    $pull: {}
+    {
+      ser: req.body.ser,
+      secret: req.body.secret
+    },
+    {
+      $pull: {
+        donations: {
+          id: mongoose.Types.ObjectId(req.body.id)
+        }
+      }
+    },
+    {
+      new: true
     }
   )
+  .then(msg => {
+    res.status(200).send(msg);
+  })
+  .catch(e => {
+    res.status(400).send(e);
+  })
+})
+
+app.get('/updateDonations', (req,res) => {
+  Tickets.findOne({ser:req.query.ser}).lean()
+  .then(msg => {
+    console.log(msg);
+    if (!msg) return Promise.reject('No ticket exists at this link.');
+    res.status(200).render('updateDonations.hbs', {
+      msg: msg,
+      page: 'Add Donations'
+    });
+  })
+  .catch(e => {
+    res.status(400).render('1-redirect.hbs', {
+      timer: 3,
+      message: e,
+      page: 'Error',
+    })
+  })
 })
 
 
