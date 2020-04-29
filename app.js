@@ -2098,7 +2098,7 @@ app.get('/blogpost', (req,res,next) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        console.log(val);
+        // console.log(val);
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
@@ -2126,17 +2126,15 @@ hbs.registerHelper('match', function(val1,val2) {
 app.get('/ticket',(req,res) => {
   Tickets.findOne({ser:req.query.ser}).lean()
   .then(msg => {
-    console.log(msg);
     if (!msg) return Promise.reject('No ticket exists at this link.')
-    msg.raised = msg.donations.reduce((total,val) => {
+    msg.raised = msg.donations && msg.donations.reduce((total,val) => {
       return total += Number(val.amount);
-    },0)
+    },0) || 0;
     msg.target = msg.personal.split('\n').filter(val => /target/.test(val))[0].split(': ')[1].trim();
     msg.difference = msg.raised / Number(msg.target) * 100;
     // console.log(msg.difference);
     msg.learnMore = msg.personal.split('\n').filter(val => /details/.test(val))[0].split(': ')[1].trim();
     msg.whatsapp = msg.personal.split('\n').filter(val => /whatsapp/.test(val))[0].split(': ')[1].trim();
-    console.log(msg.learnMore);
     res.status(200).render('raiseticket.hbs', {
       publishableKey: process.env.stripePublishableKey,
       msg: msg,
@@ -2148,18 +2146,77 @@ app.get('/ticket',(req,res) => {
       timer: 3,
       message: e,
       page: 'Error',
+      goto: 'tickets'
     })
+  })
+})
+
+app.get('/tickets', (req,res) => {
+  console.log('opening tickets');
+  Tickets.find().lean()
+  .then(msg => {
+    if (!msg) return res.status(200).render('tickets.hbs');
+    msg = msg.map(val => {
+      console.log(val);
+      val.description = val.description.slice(0,145)+'...';
+      try {
+        val.name = val.personal.split('\n').filter(val => /name/.test(val))[0].split(': ')[1].trim();
+      } catch (e) {
+        val.name = ""
+      }
+      console.log(val.name);
+      return val;
+    })
+    // msg.description = msg.description.slice(1,45);
+    return res.status(200).render('tickets.hbs',{msg});
+  })
+  .catch(e => {
+    return res.status(400).send(e);
   })
 
 })
 
-app.get('/deleteticket', (req,res,next) => {
-  Tickets.deleteOne({ser: req.query.ser})
+let authenticateTicket = (req,res,next) => {
+  console.log(req.query);
+  let ser = req.params.ser || req.body.ser || req.query.ser || req.session.ser;
+  let secret = req.session.key;
+  Tickets.findOne({ser,secret})
+  .then(msg => {
+    console.log(msg);
+    if (!msg) return Promise.reject({code: 404, msg: `Please enter your secret key to proceed with ${req.url.split('?')[0] || 'operations'}`});
+    req.ticket = msg;
+    next();
+  })
+  .catch((e) => {
+    res.status(400).render('enterSecret.hbs',{
+      ser,
+      target: req.url,
+      msg: e.msg
+    })
+  });
+};
+
+app.get('/newSession', (req,res, next) => {
+  console.log(req.query);
+  req.session.key = req.query.secret;
+  req.url = `${req.query.target}`;
+  app._router.handle(req, res, next);
+})
+
+app.get('/destroySession', (req,res, next) => {
+  req.session.destroy();
+  req.url = `/tickets`;
+  app._router.handle(req, res, next);
+})
+
+app.get('/deleteticket',authenticateTicket, (req,res,next) => {
+  Tickets.deleteOne({ser: req.ticket.ser})
   .then(msg => {
     req.url = `/tickets`;
     app._router.handle(req, res, next);
   })
   .catch(e => {
+    console.log(e);
     res.status(400).render('1-redirect.hbs', {
       timer: 3,
       message: e,
@@ -2174,7 +2231,8 @@ app.get('/createticket', (req,res) => {
       ser: new Date().getTime(),
       heading: 'Heading goes here...',
       description: 'Make a good description of your request. Try to write like you are talking to a real person and making him trust you. Give as much details as possible.',
-      personal: `account: Account Title, Account Number, IBAN
+      personal: `name: Ahmed
+account: Account Title, Account Number, IBAN
 paypal: abi1023@hotmail.com
 whatsapp: +923235168638
 email: qasimali24@gmail.com
@@ -2188,41 +2246,12 @@ target: in USD`,
 })
 
 
-app.get('/editticket', (req,res) => {
-  Tickets.findOne({ser: req.query.ser}).lean()
-  .then(msg => {
-    console.log(msg);
-    if (!msg) return Promise.reject('No data found for this card.')
+app.get('/editticket', authenticateTicket, (req,res) => {
+
     return res.status(200).render('createticket.hbs', {
-      msg,
+      msg: req.ticket,
       page: 'Edit Ticket'
     });
-  })
-  .catch(e => {
-    res.status(400).render('1-redirect.hbs',{
-      timer: 3,
-      message: e,
-      page: 'tickets',
-      page: 'Error',
-    })
-  })
-})
-
-
-app.get('/tickets', (req,res) => {
-  Tickets.find().lean()
-  .then(msg => {
-    if (!msg) return res.status(200).render('tickets.hbs');
-    msg = msg.map(val => {
-      val.description = val.description.slice(0,145)+'...';
-      return val;
-    })
-    // msg.description = msg.description.slice(1,45);
-    return res.status(200).render('tickets.hbs',{msg});
-  })
-  .catch(e => {
-    return res.status(400).send(e);
-  })
 
 })
 

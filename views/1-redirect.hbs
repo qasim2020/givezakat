@@ -3,7 +3,7 @@
   <head>
     {{>googleAnalytics}}
 
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-signin-client_id" content="133536550317-q6m1gun90s198i2un77l91d9qsv9cck6.apps.googleusercontent.com">
@@ -56,7 +56,7 @@
       timer++;
       if ({{timer}} - timer == 0) {
         if (`{{token}}`.length > 0) return window.location.replace(`/home/?token={{token}}`);
-        window.location.replace(`/`);
+        window.location.replace(`/{{goto}}`);
       };
       return setTimeout(() => running(timer),1000);
     };
