@@ -52,9 +52,73 @@
   .bold {
     font-weight: bold;
   }
+
+  .mobile {
+    display: none;
+  }
+
+  .desktop {
+    display: block;
+  }
+
+  .d-none {
+    display: none;
+  }
+
+  .mobile > .nav-items {
+    position: absolute;
+    text-align: right;
+    right: 0;
+    margin-top: 12px;
+    border-bottom: 1px dashed #385465;
+    box-sizing: border-box;
+  }
+
+  .mobile > .nav-items > * {
+    text-decoration: none;
+    list-style-type: none;
+    font-family: Montserrat;
+    font-size: 15px;
+    font-weight: bold;
+    width: 100%;
+    box-sizing: border-box;
+    width: 100vw;
+    padding: 11px 15px;
+    color: #385465;
+    background: white;
+  }
+
+  .nav-items a, .nav-items-desktop a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  @media (max-width: 700px) {
+    .mobile {
+      display: block;
+      z-index: 10;
+      margin-top: -3px;
+    }
+
+    .toggler {
+      margin: 0;
+      border: 1px solid transparent;
+      padding: 0;
+      margin: 0;
+    }
+
+    .desktop {
+      display: none;
+    }
+
+    nav > p {
+      margin-left: 10px;
+    }
+  }
 </style>
 
-<nav>
+<nav class="">
+
   <img src="/icons/logo.svg" alt="">
 
   <p>
@@ -67,14 +131,41 @@
     {{/if}}
   </p>
 
-  <button class="" type="button" name="button" onclick="window.location.assign(`/createticket`)">
+  <div class="mobile">
+
+    <button class="toggler" target-class="nav-items" type="button" name="button">
+      Menu
+    </button>
+
+    <div class="nav-items d-none">
+      <li><a href="/createticket">Create New Ticket</a></li>
+      <li><a href="/destroySession">Destroy Session</a></li>
+    </div>
+
+  </div>
+
+  <button class="toggle-btns desktop" type="button" name="button" onclick="window.location.assign(`/createticket`)">
     <!-- <img class="" src="/icons/edit.svg" alt=""> -->
     Create New Ticket
   </button>
 
-  <button type="button" name="button" onclick="window.location.assign(`/destroySession`)">
+  <button class="toggle-btns desktop" type="button" name="button" onclick="window.location.assign(`/destroySession`)">
     <!-- <img class="" src="/icons/delete.svg" alt=""> -->
     Destroy Session
   </button>
 
 </nav>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+  $(document).on('click','.toggler',function() {
+    let target = $(this).attr('target-class');
+    console.log(target);
+    $(`.${target}`).toggleClass('d-none');
+    console.log($(`.${target}.d-none`).length);
+    if ($(`.${target}.d-none`).length > 0) return $(this).html('Menu');
+    $(this).html('Close')
+  })
+</script>
