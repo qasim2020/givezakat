@@ -335,6 +335,65 @@
         background: green;
         color: white;
       }
+
+      .donation {
+        width: 33%;
+        background: #aab7c42b;
+        /* border-bottom: 3px solid brown; */
+        padding: 10px;
+        margin: 2px 2px 2px 0;
+        display: inline-block;
+        width: 25%;
+        min-height: 269px;
+        /* left: 98px; */
+        /* top: 138px; */
+        background: #FFFFFF;
+        box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.25);
+      }
+
+      .donation .number {
+        display: inline;
+        background: brown;
+        padding: 7px;
+        color: white;
+      }
+
+      .donation p {
+        font-size: 18px;
+      }
+
+      .donation .amount {
+        font-family: Montserrat;
+        font-weight: bolder;
+        font-size: 57px;
+        color: brown;
+        line-height: 1;
+        margin: 27px 0 0 0;
+      }
+
+      .donation .comment {
+        color: black;
+        font-weight: bold;
+        padding: 1px;
+        margin-top: 25px;
+        line-height: 2.2;
+      }
+
+      .amount span {
+        font-size: 25px;
+      }
+
+      .donation small {
+        color: brown;
+      }
+
+      .text h3 {
+        color: brown;
+        border-bottom: 3px solid brown;
+        background-color: white;
+        margin-top: 40px;
+        font-size: 25px;
+      }
     </style>
   </head>
   <body>
@@ -348,6 +407,17 @@
         <h1 class="brown">{{msg.heading}}</h1>
         <div class="text">
           <p>{{msg.description}}</p>
+          {{#if msg.donations}}
+          <h3>Donations</h3>
+          {{#each msg.donations}}
+          <div class="donation">
+            <p class="number">#{{inc @index}}</p>
+            <p class="amount"> <span>$</span> {{this.amount}}</p>
+            <p class="comment">{{this.comment}}</p>
+            <small>{{this.time}}</small>
+          </div>
+          {{/each}}
+          {{/if}}
         </div>
         <div class="photo">
           <img src="{{msg.img}}" alt="">
@@ -385,7 +455,7 @@
         <button class="secondary" type="button" name="button" onclick="window.location.assign(`{{msg.learnMore}}`)">Read Blog</button>
         <button class="secondary" type="button" name="button" onclick="window.location.assign(`https://wa.me/{{msg.whatsapp}}`)">WhatsApp</button>
         <button class="secondary" type="button" name="button" onclick="window.location.assign(`/updateDonations?ser={{msg.ser}}`)">Add Donation</button>
-        <!-- window.location.assign('/updateticketx?ser={{msg.ser}}') -->
+
         <div class="counter brown">
           00:89:30:34
         </div>
@@ -463,6 +533,7 @@
 
         <button class="danger" type="button" name="button" onclick="toggleModal()">Close</button>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="  crossorigin="anonymous"></script>
 
     <script type="text/javascript">
