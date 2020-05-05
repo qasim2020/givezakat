@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Corona Dashboard for Pakistan</title>
+
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Corona Dashboard for Pakistan">
+    <meta name="description" content="Get city wise data of corona patients in Pakistan.">
+
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Roboto:100,300i,400,400i,700,900&display=swap" rel="stylesheet">
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+
+        font-family: Roboto;
+      }
+
+      .note {
+        /* Rectangle 135 */
+
+        position: absolute;
+        max-width: 465px;
+        left: 10px;
+        top: 10px;
+
+        background: #FFFFFF;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+
+        padding: 20px;
+      }
+
+      .note {
+        font-size: 15px;
+        line-height: 21px;
+        color: #565656;
+      }
+
+      .lower-bar {
+        color: #474747;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-weight: bolder;
+      }
+
+      .note > p {
+        font-style: italic;
+        font-weight: bold;
+        line-height: 1.67;
+        margin-bottom: 29px;
+      }
+
+      .note > button {
+        padding: 8px 14px;
+        background: #F4F4F4;
+        border: 1px solid transparent;
+        color: #474747;
+        font-weight: bolder;
+        font-size: 13px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <div class="note">
+      <div class="lower-bar">
+        <p>Napolean attacked Spain and Portugal</p>
+        <p class="date">4 May 2020</p>
+      </div>
+      <p>It was a fine example of war in the planes where Napolean fought un-waveringly to establish his writ in the Northern parts of the Europe. He declared himself an emperor a year earlier and later he called it a bluff.</p>
+      <button type="button" name="button">Show Notes</button>
+      <button type="button" name="button">Edit this Note</button>
+    </div>
+    <script>
+
+      function initMap() {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 6,
+          center:   {lat: 31.1704, lng: 72.7097}
+        });
+
+        // Create an array of alphabetical characters used to label the markers.
+        var labels = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        // Add some markers to the map.
+        // Note: The code uses the JavaScript Array.prototype.map() method to
+        // create an array of markers based on a given "locations" array.
+        // The map() method here has nothing to do with the Google Maps API.
+        var markers = locations.map(function(location, i) {
+          return new google.maps.Marker({
+            position: location,
+            label: labels[i % labels.length]
+          });
+        });
+
+        // Add a marker clusterer to manage the markers.
+        var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+      }
+      var locations = [
+        {{#each out.data}}
+          {
+            "lat": {{this.lat}},
+            "lng": {{this.lng}}
+          },
+        {{/each}}
+      ]
+
+
+    </script>
+    <!-- Replace following script src -->
+    <script src="https://unpkg.com/@google/markerclustererplus@4.0.1/dist/markerclustererplus.min.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTE0vJHLe4kcI_d1DCsGsrQoZTYSINB2E&callback=initMap">
+    </script>
+  </body>
+</html>

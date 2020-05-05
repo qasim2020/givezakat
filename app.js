@@ -2554,6 +2554,14 @@ app.get('/test',(req,res) => {
   return res.status(200).render('test.hbs');
 })
 
+app.get('/timeline', (req,res) => {
+  return res.status(200).render('timeline.hbs');
+})
+
+app.get('/timeopen', (req,res) => {
+  return res.status(200).render('timeopen.hbs');
+})
+
 
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {
