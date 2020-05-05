@@ -2122,6 +2122,10 @@ hbs.registerHelper('match', function(val1,val2) {
   return val1.toUpperCase() == val2.toUpperCase() ? true : false;
 })
 
+hbs.registerHelper('date', function(val) {
+  return val.split(' ').slice(1,4).join(' ');
+})
+
 
 app.get('/ticket',(req,res) => {
   Tickets.findOne({ser:req.query.ser}).lean()
@@ -2238,7 +2242,8 @@ whatsapp: +923235168638
 email: qasimali24@gmail.com
 easypaisa: Name, Phone No
 details: https://www.zakatlists.com/qurandaily?blogpost=100
-target: in USD`,
+target: 1000`
+,
       img: '/quranDailyImages/colors.jpg',
     },
     page: 'Create Ticket'

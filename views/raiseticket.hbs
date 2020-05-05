@@ -336,63 +336,45 @@
         color: white;
       }
 
+      .text h3 {
+        border-bottom: 4px solid brown;
+        color: brown;
+      }
+
       .donation {
-        width: 33%;
-        background: #aab7c42b;
-        /* border-bottom: 3px solid brown; */
-        padding: 10px;
         margin: 2px 2px 2px 0;
         display: inline-block;
         width: 25%;
-        min-height: 269px;
-        /* left: 98px; */
-        /* top: 138px; */
         background: #FFFFFF;
-        box-shadow: 0px 4px 100px rgba(0, 0, 0, 0.25);
+        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.25);
       }
 
-      .donation .number {
-        display: inline;
-        background: brown;
-        padding: 7px;
-        color: white;
-      }
-
-      .donation p {
-        font-size: 18px;
+      .donation > * {
+        margin: 0;
+        padding: 0;
       }
 
       .donation .amount {
-        font-family: Montserrat;
-        font-weight: bolder;
-        font-size: 57px;
-        color: brown;
-        line-height: 1;
-        margin: 27px 0 0 0;
+        font-weight: bold;
+        font-size: 35px;
+        color: white;
+        text-align: center;
+        background: brown;
+        padding: 10px;
       }
 
       .donation .comment {
-        color: black;
-        font-weight: bold;
-        padding: 1px;
-        margin-top: 25px;
-        line-height: 2.2;
-      }
-
-      .amount span {
-        font-size: 25px;
+        font-size: 16px;
+          /* color: #5f5f5f; */
+        line-height: 1.4;
+        padding: 10px;
       }
 
       .donation small {
-        color: brown;
-      }
-
-      .text h3 {
-        color: brown;
-        border-bottom: 3px solid brown;
-        background-color: white;
-        margin-top: 40px;
-        font-size: 25px;
+        margin-top: -3px;
+        display: block;
+        color: #b5b5b5;
+        padding: 10px;
       }
     </style>
   </head>
@@ -411,10 +393,9 @@
           <h3>Donations</h3>
           {{#each msg.donations}}
           <div class="donation">
-            <p class="number">#{{inc @index}}</p>
-            <p class="amount"> <span>$</span> {{this.amount}}</p>
+            <p class="amount">{{this.amount}} USD</p>
             <p class="comment">{{this.comment}}</p>
-            <small>{{this.time}}</small>
+            <small>{{date this.time}}</small>
           </div>
           {{/each}}
           {{/if}}
@@ -456,9 +437,9 @@
         <button class="secondary" type="button" name="button" onclick="window.location.assign(`https://wa.me/{{msg.whatsapp}}`)">WhatsApp</button>
         <button class="secondary" type="button" name="button" onclick="window.location.assign(`/updateDonations?ser={{msg.ser}}`)">Add Donation</button>
 
-        <div class="counter brown">
+        <!-- <div class="counter brown">
           00:89:30:34
-        </div>
+        </div> -->
       </div>
     </div>
 
