@@ -2165,10 +2165,10 @@ let getunformatteddata = function(data) {
   Object.entries(data).forEach(val => {
     switch (true) {
       case typeof val[1] == 'object':
-        data[val[0]] = val[1].toString().replace(/[,]+/g,'*')
+        data[val[0]] = val[1].toString().replace(/[,]+/g,'*').replace(/[ ]+/g,' ');
         break;
       case val[1].indexOf(':') >= 0:
-        data[val[0]] = val[1].toString().replace(/[:]+/g,'&')
+        data[val[0]] = val[1].toString().replace(/[:]+/g,'&').replace(/[ ]+/g,' ');
         break;
       default:
 
@@ -2179,7 +2179,7 @@ let getunformatteddata = function(data) {
     .replace(/["]+|[{}]+/g,'')
     .replace(/[:]+/g,': ')
     .replace(/[,]+/g,'\n')
-    .replace(/[*]+/g,', ')
+    .replace(/[*]+/g,',')
     .replace(/[&]+/g,':');
 
     return newData;
