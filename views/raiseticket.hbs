@@ -62,7 +62,6 @@
 
       .upper > .photo {
         width: 40%;
-        border-radius: 50%;
         padding: 20px;
         box-sizing: border-box;
         display: flex;
@@ -72,7 +71,6 @@
         width: 74%;
         max-width: 250px;
         /* height: 300px; */
-        border-radius: 50%;
         /* padding: 20px; */
         box-sizing: border-box;
         background: #f7f7f7;
@@ -209,6 +207,11 @@
         box-sizing: border-box;
         padding: 0 20px;
         overflow: scroll;
+        z-index: 10;
+      }
+
+      .selectBox {
+        max-width: 400px;
       }
 
       .selectBox > span {
@@ -262,7 +265,8 @@
         padding: 0;
         box-shadow: none;
         padding-right: 25px;
-        max-width: 600px;
+        width: 600px;
+        max-width: 80vw;
       }
 
       .MyCardElement {
@@ -322,9 +326,8 @@
       .drop_target > h6 {
         font-size: 18px;
         margin: 0;
-        font-style: italic;
         color: white;
-        text-decoration: underline;
+        border-bottom: 2px solid white;
       }
 
       .drop_target a {
@@ -435,6 +438,15 @@
             padding: 12px 15px;
             font-size: 12px;
         }
+
+        .selectBoxOut > *:nth-child(1) {
+            font-size: 93px;
+        }
+
+        button, input[type="submit"] {
+            padding: 10px 13px;
+            font-size: 15px;
+        }
       }
     </style>
   </head>
@@ -493,8 +505,8 @@
       </div>
       <div class="div_2">
         <button class="primary" type="button" name="button" onclick="toggleModal()">Donate</button>
-        <button class="secondary" type="button" name="button" onclick="window.location.assign(`{{msg.learnMore}}`)">Read Blog</button>
-        <button class="secondary" type="button" name="button" onclick="window.location.assign(`https://wa.me/{{msg.whatsapp}}`)">WhatsApp</button>
+        <button class="secondary" type="button" name="button" onclick="window.location.assign(`{{msg.personal.details}}`)">Read Blog</button>
+        <button class="secondary" type="button" name="button" onclick="window.location.assign(`https://wa.me/{{msg.personal.whatsapp}}`)">WhatsApp</button>
         <button class="secondary" type="button" name="button" onclick="window.location.assign(`/updateDonations?ser={{msg.ser}}`)">Add Donation</button>
 
         <!-- <div class="counter brown">
@@ -512,7 +524,6 @@
           <span>20</span>
           <span>30</span>
           <span>40</span>
-          <br>
           <span>50</span>
           <span>80</span>
           <span>100</span>
@@ -551,25 +562,28 @@
 
         <div class="d-none drop_target" data-parent="paypal">
           <p>Please make the payment on following paypal account. Send the receipt on <a href="https://wa.me/923235168638" target=_blank>WhatsApp number</a>.</p>
-          <p>abi1023@gmail.com</p>
+          <h6>Paypal Email</h6>
+          <p>{{msg.personal.paypal}}</p>
         </div>
 
         <div class="d-none drop_target" data-parent="bank">
           <p>Please make the payment on following account number. If you are located outside Pakistan you can use <a href="https://transferwise.com/" target=_blank>Transferwise</a> to make the payment.</p>
           <h6>Account Title</h6>
-          <p>0123123123421323214</p>
+          <p>{{msg.personal.account.[0]}}</p>
           <h6>Account No</h6>
-          <p>0123123123421323214</p>
+          <p>{{msg.personal.account.[1]}}</p>
           <h6>Account IBAN</h6>
-          <p>IBAN08123AKJKASD123R9094091</p>
+          <p>{{msg.personal.account.[2]}}</p>
         </div>
 
         <div class="d-none drop_target" data-parent="easypaisa">
           <p>Please make a transfer on following easypaisa account. Send the payment receipt on this <a href="https://wa.me/923235168638" target=_blank>WhatsApp number</a>.</p>
           <h6>Name</h6>
-          <p>Ahmed Ali</p>
+          <p>{{msg.personal.easypaisa.[0]}}</p>
+
           <h6>Mobile No</h6>
-          <p>0323 5168435</p>
+          <p>{{msg.personal.easypaisa.[1]}}</p>
+
         </div>
 
         <button class="danger" type="button" name="button" onclick="toggleModal()">Close</button>
@@ -651,10 +665,6 @@
       stripe.confirmCardPayment($('#payment-form').attr('code'), {
         payment_method: {
           card: card,
-          // billing_details: {
-          //   name: 'Jenny Rosen',
-          //   email: 'qasimali24@gmail.com'
-          // }
         }
       }).then(function(result) {
         if (result.error) {
@@ -694,10 +704,6 @@
           }
         }).done((msg) => {
           console.log(msg);
-          // $(this).html('Donation Added !');
-          // window.location.assign('/updateDonations?ser={{msg.ser}}');
-          // $('.stage').toggleClass('d-none');
-          // window.location.assign('/tickets');
         }).fail((e) => {
           // $(this).html(`Error: ${e.responseText}`);
           console.log(e);

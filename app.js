@@ -2126,6 +2126,67 @@ hbs.registerHelper('date', function(val) {
   return val.split(' ').slice(1,4).join(' ');
 })
 
+// let data = `
+// name: Ahmed
+// account: Account Title, Account Number, IBAN
+// paypal: abi1023@hotmail.com
+// whatsapp: +923235168638
+// email: qasimali24@gmail.com
+// easypaisa: Name, Phone No
+// details: https://www.zakatlists.com/qurandaily?blogpost=100
+// target: 1000
+// `;
+
+let getformatteddata = function(data) {
+
+  data = data.split('\n').filter(val => val).reduce((total,val) => {
+    switch (true) {
+      case val.split(': ')[1].indexOf(',') >= 0:
+        total[val.split(': ')[0]] = val.split(': ')[1].trim().split(',');
+        break;
+      case val.split(': ')[1].indexOf(',') < 0:
+        total[val.split(': ')[0]] = val.split(': ')[1].trim();
+        break;
+      default:
+    }
+    return total;
+  },{});
+
+  return data;
+
+}
+
+// let data = {
+//   name: 'ahmed',
+//   account: ['123123123', 'asdfasdfasdf', 'asdasdfa'],
+// };
+
+let getunformatteddata = function(data) {
+  Object.entries(data).forEach(val => {
+    switch (true) {
+      case typeof val[1] == 'object':
+        data[val[0]] = val[1].toString().replace(/[,]+/g,'*')
+        break;
+      case val[1].indexOf(':') >= 0:
+        data[val[0]] = val[1].toString().replace(/[:]+/g,'&')
+        break;
+      default:
+
+    }
+  });
+
+    let newData = JSON.stringify(data)
+    .replace(/["]+|[{}]+/g,'')
+    .replace(/[:]+/g,': ')
+    .replace(/[,]+/g,'\n')
+    .replace(/[*]+/g,', ')
+    .replace(/[&]+/g,':');
+
+    return newData;
+}
+
+// getformatteddata(data);
+// getunformatteddata(data);
 
 app.get('/ticket',(req,res) => {
   Tickets.findOne({ser:req.query.ser}).lean()
@@ -2134,11 +2195,8 @@ app.get('/ticket',(req,res) => {
     msg.raised = msg.donations && msg.donations.reduce((total,val) => {
       return total += Number(val.amount);
     },0) || 0;
-    msg.target = msg.personal.split('\n').filter(val => /target/.test(val))[0].split(': ')[1].trim();
+    msg.target = msg.personal.target;
     msg.difference = msg.raised / Number(msg.target) * 100;
-    // console.log(msg.difference);
-    msg.learnMore = msg.personal.split('\n').filter(val => /details/.test(val))[0].split(': ')[1].trim();
-    msg.whatsapp = msg.personal.split('\n').filter(val => /whatsapp/.test(val))[0].split(': ')[1].trim();
     res.status(200).render('raiseticket.hbs', {
       publishableKey: process.env.stripePublishableKey,
       msg: msg,
@@ -2186,7 +2244,7 @@ let authenticateTicket = (req,res,next) => {
   let secret = req.session.key;
   Tickets.findOne({ser,secret})
   .then(msg => {
-    console.log(msg);
+    // console.log(msg);
     if (!msg) return Promise.reject({code: 404, msg: `Please enter your secret key to proceed with ${req.url.split('?')[0] || 'operations'}`});
     req.ticket = msg;
     next();
@@ -2238,7 +2296,7 @@ app.get('/createticket', (req,res) => {
       personal: `name: Ahmed
 account: Account Title, Account Number, IBAN
 paypal: abi1023@hotmail.com
-whatsapp: +923235168638
+whatsapp: 923235168638
 email: qasimali24@gmail.com
 easypaisa: Name, Phone No
 details: https://www.zakatlists.com/qurandaily?blogpost=100
@@ -2253,6 +2311,7 @@ target: 1000`
 
 app.get('/editticket', authenticateTicket, (req,res) => {
 
+    req.ticket.personal = getunformatteddata(req.ticket.personal);
     return res.status(200).render('createticket.hbs', {
       msg: req.ticket,
       page: 'Edit Ticket'
@@ -2333,7 +2392,7 @@ app.post('/deleteDonation', (req,res) => {
   })
 })
 
-app.get('/updateDonations', (req,res) => {
+app.get('/updateDonations', authenticateTicket, (req,res) => {
   Tickets.findOne({ser:req.query.ser}).lean()
   .then(msg => {
     console.log(msg);
@@ -2375,7 +2434,7 @@ app.post('/updateticket', (req,res) => {
 })
 
 app.post('/saveticket',(req,res) => {
-
+  req.body.personal = getformatteddata(req.body.personal);
   uploadCloudinary(req.body.blah)
   .then(res1 => {
     return Tickets.findOneAndUpdate({ser: req.body.ser}, {
@@ -2392,6 +2451,7 @@ app.post('/saveticket',(req,res) => {
     res.status(200).send(output)
   })
   .catch(e => {
+    console.log(e);
     res.status(300).send(e)
   });
 

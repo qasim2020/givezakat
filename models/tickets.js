@@ -14,7 +14,7 @@ var Tickets = mongoose.Schema({
     required: true,
   },
   personal: {
-    type: String,
+    type: Object,
     required: true,
   },
   img: {

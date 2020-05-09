@@ -51,7 +51,6 @@
       }
 
       .text {
-
         font-size: 22px;
         line-height: 1.8;
         color: lightslategrey;
@@ -59,7 +58,6 @@
 
       .upper > .photo {
         width: 40%;
-        border-radius: 50%;
         padding: 20px;
         box-sizing: border-box;
         display: flex;
@@ -75,7 +73,6 @@
       }
 
       .photo > img {
-        border-radius: 50%;
         padding: 10px;
         box-sizing: border-box;
         background: #f7f7f7;
@@ -298,6 +295,35 @@
       .ser {
         border-bottom: 4px solid brown;
       }
+
+      @media (max-width: 700px) {
+        p {
+          font-size: 17px;
+        }
+
+        h1 {
+          font-size: 22px;
+        }
+
+        textarea, textarea::placeholder {
+            font-size: 16px;
+        }
+
+        .upper > .text {
+            width: 100%;
+            order: 2;
+        }
+
+        .upper > .photo {
+            width: 100%;
+            order: 1;
+        }
+
+        button, input[type="submit"] {
+            padding: 10px 13px;
+            font-size: 15px;
+        }
+      }
     </style>
   </head>
   <body>
@@ -322,7 +348,7 @@
 
       <h1><b class="brown">Step 2</b>. Write important details about you. If in hurry, enter WhatsApp number.</h1>
 
-      <textarea id="personal" name="name" rows="8" cols="80" placeholder="Write here">{{msg.personal}}</textarea>
+      <textarea id="personal" name="name" rows="12" cols="80" placeholder="Write here">{{msg.personal}}</textarea>
 
       <p>Please enter a secret key to edit / delete / add donations to this ticket in future. Do not forget it.</p>
 
@@ -404,7 +430,6 @@
         case $('#personal').val().length < 1:
           return alert ('please write the personal in the field above.');
       }
-      // return console.log('all good');
 
       let data = {
         ser: `{{msg.ser}}`,
@@ -441,6 +466,8 @@
               break;
             case /createticket/.test(window.location.href):
               $('#Turl').html(`${window.location.href.split('createticket')[0]}ticket?ser=${msg.ser}`);
+            case /newSession/.test(window.location.href):
+              $('#Turl').html(`${window.location.href.split('newSession')[0]}ticket?ser=${msg.ser}`);
               break;
           }
           $('.stage').toggleClass('d-none');
