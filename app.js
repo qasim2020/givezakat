@@ -2078,7 +2078,7 @@ app.get('/blogpost', (req,res,next) => {
 
     // console.log(req.query.serialNo,rows.length, req.session.hasOwnProperty('token'), req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false);
 
-    if (req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false) {
+    if (req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false && req.query.status != 'unlocked') {
       req.url = `/quranDaily`;
       req.note = `Article ${req.query.serialNo} is a premium article. Please join the community to read this article.`;
       return app._router.handle(req, res, next);
