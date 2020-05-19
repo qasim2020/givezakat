@@ -2,7 +2,6 @@
   .subscribe_{{@index}} {
     grid-column: span {{width}};
     grid-row: span {{height}};
-    margin: 0 20px;
   }
 
   .subscribe_{{@index}} > h6 {
@@ -46,7 +45,6 @@
 
   @media (max-width: 500px) {
     .subscribe_{{@index}} {
-      margin: 5px;
     }
 
     .subscribe_{{@index}} > input {
@@ -61,6 +59,10 @@
 
 {{#if (match 'h6' type)}}
   <h6 class="{{class}}">{{msg}}</h6>
+{{/if}}
+
+{{#if (match 'h3' type)}}
+  <h3 class="{{class}}">{{msg}}</h3>
 {{/if}}
 
 {{#if (match 'input' type)}}

@@ -16,8 +16,35 @@
     <style media="screen">
 
       html {
-        background: #333333;
+        background: #040404;
         color: white;
+      }
+
+      .card {
+        background: rgb(16, 16, 14);
+        padding: 20px;
+        margin: 0px;
+        color: #828282;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card .svg {
+        position: absolute;
+        width: 100%;
+        opacity: 0.2;
+        right: -50%;
+        top: 50%;
+        transform: translate(0%, -50%);
+      }
+
+      .card > p {
+        font-size: 16px;
+        max-width: 75%;
+      }
+
+      .card h3 {
+        color: #d4d4d4;
       }
 
       nav {
@@ -89,7 +116,7 @@
       }
 
       button.default {
-        background: #4F4F4F;
+        background: #191818;
         color: #a5a5a5;
       }
 
@@ -123,7 +150,7 @@
         }
 
         nav {
-          padding-left: 24px;
+          padding-left: 8px;
         }
 
         h3 {
@@ -183,12 +210,11 @@
 
         .container > div {
           grid-column: span 6;
-          padding-bottom: 3rem;
-          margin-bottom: 0px;
+          margin-bottom: 7px;
         }
 
         .container > div:not(.meetup) {
-          border-bottom: 1px solid #5d5d5d;
+          /* border-bottom: 1px solid #5d5d5d; */
         }
 
         button {
@@ -202,7 +228,7 @@
   <body>
     <nav>
         <p class="brand">
-          <svg width="141" height="39" viewBox="0 0 141 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg width="120" height="39" viewBox="0 0 141 39" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M66.704 25.938V27H59V26.154L64.958 18.612H59.108V17.532H66.596V18.378L60.638 25.938H66.704Z" fill="#828282"/>
           <path d="M72.5314 17.46C73.7674 17.46 74.7154 17.772 75.3754 18.396C76.0354 19.008 76.3654 19.92 76.3654 21.132V27H75.1414V25.524C74.8534 26.016 74.4274 26.4 73.8634 26.676C73.3114 26.952 72.6514 27.09 71.8834 27.09C70.8274 27.09 69.9874 26.838 69.3634 26.334C68.7394 25.83 68.4274 25.164 68.4274 24.336C68.4274 23.532 68.7154 22.884 69.2914 22.392C69.8794 21.9 70.8094 21.654 72.0814 21.654H75.0874V21.078C75.0874 20.262 74.8594 19.644 74.4034 19.224C73.9474 18.792 73.2814 18.576 72.4054 18.576C71.8054 18.576 71.2294 18.678 70.6774 18.882C70.1254 19.074 69.6514 19.344 69.2554 19.692L68.6794 18.738C69.1594 18.33 69.7354 18.018 70.4074 17.802C71.0794 17.574 71.7874 17.46 72.5314 17.46ZM72.0814 26.082C72.8014 26.082 73.4194 25.92 73.9354 25.596C74.4514 25.26 74.8354 24.78 75.0874 24.156V22.608H72.1174C70.4974 22.608 69.6874 23.172 69.6874 24.3C69.6874 24.852 69.8974 25.29 70.3174 25.614C70.7374 25.926 71.3254 26.082 72.0814 26.082Z" fill="#828282"/>
           <path d="M83.3465 22.248L81.1145 24.3V27H79.8365V13.644L81.1145 12V22.698L86.7665 17.532H88.3505L84.3005 21.402L88.7285 27H87.1625L83.3465 22.248Z" fill="#828282"/>

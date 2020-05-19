@@ -3,16 +3,13 @@
   .featured_blog_{{@index}} {
     grid-column: span {{width}};
     grid-row: span {{height}};
-    color: #828282;
-    padding: 0 31px;
-    padding-bottom: 1rem;
   }
 
   .featured_blog_{{@index}} > p {
     font-family: Roboto;
     font-weight: 300;
-    font-size: 16px;
     line-height: 157.9%;
+    max-width: 75%;
   }
 
   .featured_blog_{{@index}} > h3 {
@@ -41,9 +38,6 @@
 
   @media screen and (max-width: 1024px) {
     .featured_blog_{{@index}} {
-      /* padding: 0 8px; */
-      padding: 0 2px;
-      margin: 5px;
       border: 0px;
     }
 

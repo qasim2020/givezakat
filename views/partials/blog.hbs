@@ -3,8 +3,6 @@
   .blog_{{@index}} {
     grid-column: span {{width}};
     grid-row: span {{height}};
-    color: #828282;
-    padding: 0 31px;
   }
 
   .blog_{{@index}} > .foot {
@@ -27,15 +25,14 @@
   .blog_{{@index}} > p {
     font-family: Roboto;
     font-weight: 300;
-    font-size: 16px;
     line-height: 157.9%;
+    max-width: 75%;
   }
 
 
 
   @media screen and (max-width: 1024px) {
     .blog_{{@index}} {
-      padding: 0 8px;
     }
 
     .blog_{{@index}} > p, .blog_{{@index}} > .foot {
@@ -46,7 +43,6 @@
 
   @media screen and (max-width: 769px) {
     .blog_{{@index}} {
-      padding: 0 2px;
     }
 
     .blog_{{@index}} > p, .blog_{{@index}} > .foot {
@@ -58,8 +54,6 @@
 
   @media screen and (max-width: 500px) {
     .blog_{{@index}} {
-      padding: 0 2px;
-      margin: 5px;
       padding-bottom: 1rem;
     }
 

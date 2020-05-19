@@ -2,7 +2,6 @@
   .signin_{{@index}} {
     grid-column: span {{width}};
     grid-row: span {{height}};
-    margin: 0 20px;
   }
 
   .signin_{{@index}} > button {
@@ -12,19 +11,15 @@
   .signin_{{@index}} > p {
     font-family: Roboto;
     font-weight: 300;
-    font-size: 16px;
     line-height: 157.9%;
-    color: #afafaf;
   }
 
   .signin_{{@index}} .note > span {
     line-height: 1.5;
-    color: #afafaf;
   }
 
   @media (max-width: 500px) {
     .signin_{{@index}} {
-      margin: 5px;
     }
   }
 
@@ -51,6 +46,10 @@
 
 {{#if (match 'p' type)}}
   <p class="{{class}}">{{msg}}</p>
+{{/if}}
+
+{{#if (match 'svg' type)}}
+  <img src="{{msg}}" class="svg" alt="">
 {{/if}}
 
 {{/each}}
