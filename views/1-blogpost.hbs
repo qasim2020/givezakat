@@ -492,6 +492,8 @@
         margin: 0;
         padding: 15px 40px;
         font-size: 16px;
+        box-sizing: border-box;
+        overflow-wrap: anywhere;
       }
 
       .code > button {
@@ -520,6 +522,11 @@
       }
 
       @media (max-width: 799px) {
+
+        .code {
+          padding: 15px 17px;
+          font-size: 14px;
+        }
 
         span.circle {
           line-height: 2;
