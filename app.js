@@ -2622,6 +2622,11 @@ app.get('/timeopen', (req,res) => {
   return res.status(200).render('timeopen.hbs');
 })
 
+app.get('/developer', (req,res) => {
+  let qasim = 'My name is Qasim. I am 32 years old. My website is https://www.qasimali.xyz';
+  return res.status(200).send(qasim);
+})
+
 
 app.get('/:username',(req,res, next) => {
   Users.findOne({username: req.params.username}).then(result => {

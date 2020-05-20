@@ -485,6 +485,40 @@
         margin-top: 56px;
       }
 
+      .code {
+        background: #191818;
+        color: #d2d2d2;
+        font-family: monospace;
+        margin: 0;
+        padding: 15px 40px;
+        font-size: 16px;
+      }
+
+      .code > button {
+        padding: 8px 12px;
+        background: orange;
+        color: black;
+        font-weight: bold;
+        border: 1px solid transparent;
+        margin-bottom: 7px;
+      }
+
+      .code.comment {
+        color: darkgrey;
+      }
+
+      .sign {
+        font-size: 0.9em;
+        white-space: pre-wrap;
+        font-weight: normal;
+        background: lightgoldenrodyellow;
+        padding: 0 4px;
+      }
+
+      .code.response {
+        color: orange;
+      }
+
       @media (max-width: 799px) {
 
         span.circle {
@@ -697,6 +731,12 @@
         </table>
       {{/if}}
 
+      {{#if (match 'code' type)}}
+        <p class="{{{class}}}">
+          {{msg}}
+        </p>
+      {{/if}}
+
       {{/each}}
 
       <form class="subscribe">
@@ -787,6 +827,25 @@
         $('.title-bar').removeClass('not-collapsed');
         $(this).html('Show All');
       })
+
+      let ajax = function(link,target) {
+        console.log(link,target);
+        $('.code > button').html('Sending Request to Server...')
+        $.ajax({
+          url: '/developer',
+          type: 'get',
+          headers: {
+              'content-type': 'application/json',
+          }
+        }).done((msg) => {
+          console.log(msg);
+          $('.code > button').html('Successfully recieved the response!');
+          $(target).html(msg);
+        }).fail((e) => {
+          $('.code > button').html(e.responseText);
+          console.log(e.responseText);
+        });
+      }
 
     </script>
   </body>
