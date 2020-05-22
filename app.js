@@ -320,7 +320,9 @@ app.get('/',(req,res) => {
   // req.query.Date = req.query.Date || new Date();
   readXlsxFile(__dirname+'/static/dashboard.xlsx')
   .then(rows => {
-    sorted = rows.filter((val, index) => index != 0).map(val => {
+    sorted = rows
+    .filter((val, index) => index != 0)
+    .map(val => {
       val = val.map(v => {
         return typeof v != 'string' ? {type: 'Date', msg: v} : v.split('\r\n').reduce((total,val) => {
 
