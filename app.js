@@ -2048,11 +2048,11 @@ app.get('/quranDaily', (req,res) => {
     let days = [];
     for (var i = 1; i <= sorted.length; i++) {
       // console.log(sorted[0]);
-      console.log(req.session.token, req.session.hasOwnProperty('token'));
+      // console.log(req.session.token, req.session.hasOwnProperty('token'));
       days.push({
         index: i,
         data: sorted[i-1] != undefined ? 'active' : 'inactive',
-        locked: (sorted.length - i) < 3 || req.session.hasOwnProperty('token') ? '' : 'locked'
+        locked: (sorted.length - i) < 3 || req.session.hasOwnProperty('token') || freeBlogs(i) == false ? '' : 'locked'
       })
     };
 
@@ -2065,6 +2065,10 @@ app.get('/quranDaily', (req,res) => {
   })
 })
 
+let freeBlogs = function(ser) {
+  return [100,136,102].some(val => val == ser) == false;
+}
+
 hbs.registerHelper("getTarget", function(value) {
   // console.log(value);
   return value.split('+ ')[0];
@@ -2076,11 +2080,13 @@ hbs.registerHelper("getMsg", function(value) {
 
 app.get('/blogpost', (req,res,next) => {
 
+  // req.query.serialNo
+
   readXlsxFile(__dirname+'/static/1.quranDaily.xlsx').then((rows) => {
 
     // console.log(req.query.serialNo,rows.length, req.session.hasOwnProperty('token'), req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false);
 
-    if (req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false && req.query.status != 'unlocked') {
+    if (req.query.serialNo < (rows.length - 4) && req.session.hasOwnProperty('token') == false && freeBlogs(req.query.serialNo)) {
       req.url = `/quranDaily`;
       req.note = `Article ${req.query.serialNo} is a premium article. Please join the community to read this article.`;
       return app._router.handle(req, res, next);
