@@ -2052,7 +2052,7 @@ app.get('/quranDaily', (req,res) => {
       days.push({
         index: i,
         data: sorted[i-1] != undefined ? 'active' : 'inactive',
-        locked: (sorted.length - i) < 3 || req.session.hasOwnProperty('token') || freeBlogs(i) == false ? '' : 'locked'
+        locked: (sorted.length - i) < 3 || req.session.hasOwnProperty('token') ? '' : 'locked'
       })
     };
 

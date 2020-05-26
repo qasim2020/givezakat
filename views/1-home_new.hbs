@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en" dir="ltr"  class="producthunt">
   <head>
     {{>googleAnalytics}}
 
@@ -15,8 +15,38 @@
 
     <style media="screen">
 
+      .producthunt {
+        background: #40241b;
+        color: white;
+      }
+
+      .producthunt .container {
+        grid-gap: 13px;
+      }
+
+      .producthunt .card {
+        background: rgb(25, 24, 24);
+        color: #6f6f6f;
+        border-radius: 9px;
+      }
+
+      .producthunt button.default {
+        background: #40241b;
+        color: #a5a5a5;
+      }
+
+      @media (max-width:1024px) {
+        .producthunt .container {
+          grid-gap: 5px;
+        }
+
+        .producthunt .card {
+          margin-bottom: 0px;
+        }
+      }
+
       html {
-        background: #040404;
+        background: black;
         color: white;
       }
 
@@ -41,8 +71,11 @@
       }
 
       .card > p {
+        font-family: Roboto;
         font-size: 16px;
         max-width: 75%;
+        line-height: 1.5;
+        font-weight: 300;
       }
 
       .card h3 {
