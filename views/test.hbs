@@ -2,123 +2,228 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>APIs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600;700;900&display=swap" rel="stylesheet">
     <style media="screen">
-      table,th,td {
-        border: 1px solid #d2d2d2;
-        /* margin: 0; */
-        /* padding: 0; */
-        border-collapse: collapse;
-        padding: 10px;
-        text-align: center;
-        font-size: 16px;
+      html {
+        font-family: 'Source Sans Pro', sans-serif;
+      }
+      nav,.container {
+        max-width: 1100px;
         margin: auto;
       }
+
+      .container {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .header {
+        height: 20vh;
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      .base {
+        width: 100%;
+        display: flex;
+      }
+
+      .base > *:nth-child(1) {
+        max-width: 200px;
+        padding-right: 20px;
+        white-space: nowrap;
+      }
+
+      .base > *:nth-child(2) {
+        flex-grow: 1;
+      }
+
+      button, .desc a, .header a {
+        padding: 9px;
+        background: white;
+        border: 1px solid lightgrey;
+        font-weight: bold;
+        font-size: 16px;
+        text-decoration: none;
+        color: black;
+      }
+
+      .d-block {
+        display: block;
+      }
+      .m-auto {
+        margin: auto;
+      }
+      .w-90 {
+        max-width: 90%;
+      }
+
+      .base > *:nth-child(2) {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        grid-gap: 8px;
+      }
+
+      .card {
+        border: 1px solid #eaeaea;
+        padding: 20px;
+        border-radius: 3px;
+        box-sizing: border-box;
+        word-break: break-all;
+      }
+
+      .desc {
+        grid-column: 1/-1;
+        padding: 20px;
+        border: 1px solid #eaeaea;
+      }
+
+      .desc > p {
+        font-size: 21px;
+        line-height: 2;
+      }
+
+      .desc > h1 {
+        color: darkred;
+      }
+
+      .desc input {
+        padding: 10px;
+      }
+
+      .badge {
+        background: lightgrey;
+        padding: 2px 10px;
+        border-radius: 2px;
+        color: black;
+      }
+
+      .sidebar > p {
+        line-height: 2.0;
+        font-size: 18px;
+      }
+
+      .sidebar a {
+        color: black;
+        text-decoration: none;
+      }
+
+      .sidebar a.active {
+        color: darkred;
+      }
+
+      .d-none {
+        display: none;
+      }
+
+      input {
+        border: 1px solid lightgrey;
+        font-size: 16px;
+      }
+
     </style>
   </head>
   <body>
-    <table>
-      <tr>
-        <th>Class</th>
-        <th>No of Students</th>
-        <th>Subjects</th>
-        <th>Monthly Income</th>
-      </tr>
-      <tr>
-        <td>Play & Nursery</td>
-        <td>26</td>
-        <td rowspan="11">English <br> Urdu <br> Math <br> General Knowledge </td>
-        <td>Rs 26,000</td>
-      </tr>
+    <nav>
+      <a href="/">Home</a>
+    </nav>
+    <div class="container">
+      <div class="header">
+        <h1 style="text-align:center">Test API end points to get some <span style="color:darkred">ideas</span> for your next app.</h1>
+        <p>
+          <a href="{{data.more.learnmore}}">Learn More</a>
+          <a href="{{data.more.website}}">Buy me a coffee</a>
+        </p>
 
-      <tr>
-        <td>Prep</td>
-        <td>20</td>
-        <td>Rs 20,000</td>
-      </tr>
+      </div>
 
-      <tr>
-        <td>One</td>
-        <td>15</td>
-        <td>Rs 15,000</td>
-      </tr>
+      <div class="base">
 
-      <tr>
-        <td>Two</td>
-        <td>14</td>
-        <td>Rs 14,000</td>
-      </tr>
+        <div class="sidebar">
+          <p><a style="text-decoration:none" class="{{nounproject}}" href="/api?api=nounproject">The Noun Project</a></p>
+          <p><a style="text-decoration:none" class="{{wiki}}" href="/api?api=wiki">The Wikimedia API</a></p>
+        </div>
 
-      <tr>
-        <td>Three</td>
-        <td>13</td>
-        <td>Rs 13,000</td>
-      </tr>
+        <div class="">
 
-      <tr>
-        <td>Four</td>
-        <td>11</td>
-        <td>Rs 11,000</td>
-      </tr>
+          <div class="desc">
+            {{#each data.more.info}}
 
-      <tr>
-        <td>Five</td>
-        <td>14</td>
-        <td>Rs 12,000</td>
-      </tr>
+            {{#if this.h1}}
+              <h1 class="{{this.class}}">{{{this.h1}}}</h1>
+            {{/if}}
 
-      <tr>
-        <td>Six</td>
-        <td>5</td>
-        <td>Rs 5,500</td>
-      </tr>
+            {{#if this.p}}
+              <p class="{{this.class}}">{{{this.p}}}</p>
+            {{/if}}
 
-      <tr>
-        <td>Seven</td>
-        <td>6</td>
-        <td>Rs 7,000</td>
-      </tr>
+            {{#if this.a}}
+              <a href="{{this.a}}" class="{{this.class}}">{{{this.title}}}</a>
+            {{/if}}
 
-      <tr>
-        <td>Eight</td>
-        <td>4</td>
-        <td>Rs 5,000</td>
-      </tr>
+            {{#if this.form}}
+              <form class="" action="{{this.query}}" method="get">
+                {{#each this.inputs}}
+                  <input class="{{this.class}}" type="{{this.type}}" name="{{this.name}}" value="{{{this.val}}}" placeholder="{{this.placeholder}}">
+                {{/each}}
+                <button type="submit">Submit</button>
+              </form>
+            {{/if}}
 
-      <tr>
-        <td>Special</td>
-        <td>13</td>
-        <td>Rs 10,000</td>
-      </tr>
 
-      <tr>
-        <td>Quran Hifz</td>
-        <td>12</td>
-        <td>Quran <br> English <br> Urdu <br> Math </td>
-        <td>Rs 5,000</td>
-      </tr>
+            {{/each}}
+          </div>
 
-      <tr>
-        <td colspan="3">Staff Pays</td>
-        <td>Rs 1,20,000</td>
-      </tr>
+          {{#if (matchWithCaller 'cards' data.more.type)}}
 
-      <tr>
-        <td colspan="3">Building Rent</td>
-        <td>88,000</td>
-      </tr>
+          {{#each data}}
+            <div class="card">
+              {{#each this}}
 
-      <tr>
-        <td colspan="3">Miscellaneous Bills</td>
-        <td>12,000</td>
-      </tr>
+              {{#if this.h1}}
+                <h1 class="{{this.class}}">{{{this.h1}}}</h1>
+              {{/if}}
 
-      <tr>
-        <th colspan="3">Net Loss</th>
-        <th>- Rs 30,000</th>
-      </tr>
+              {{#if this.h2}}
+                <h2 class="{{this.class}}">{{{this.h2}}}</h2>
+              {{/if}}
 
-    </table>
+              {{#if this.h3}}
+                <h3 class="{{this.class}}">{{{this.h3}}}</h3>
+              {{/if}}
 
+              {{#if this.h4}}
+                <h4 class="{{this.class}}">{{{this.h4}}}</h4>
+              {{/if}}
+
+              {{#if this.p}}
+                <p class="{{this.class}}">{{{this.p}}}</p>
+              {{/if}}
+
+              {{#if this.small}}
+                <small class="{{this.class}}">{{{this.small}}}</small>
+              {{/if}}
+
+              {{#if this.img}}
+                <img src="{{this.img}}" class="{{{this.class}}}" alt="">
+              {{/if}}
+
+
+              {{/each}}
+
+            </div>
+          {{/each}}
+
+          {{/if}}
+        </div>
+
+      </div>
+
+    </div>
   </body>
 </html>

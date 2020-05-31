@@ -2106,7 +2106,7 @@ app.get('/blogpost', (req,res,next) => {
     sorted = sorted.map(val => {
       if (!val.Content) return;
       val.Content = val.Content.split('\r\n').map(val => {
-        // console.log(val);
+        console.log(val);
         return {
           type: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.')[0] : val.split(': ')[0],
           msg: val.split(': ')[1].trim(),
@@ -2618,8 +2618,23 @@ app.get('/signinschool',(req,res) => {
   })
 })
 
-app.get('/test',(req,res) => {
-  return res.status(200).render('test.hbs');
+const apis = {
+  "nounproject": require('./apis/nounproject').nounproject,
+  "wiki" : require('./apis/wiki').wiki,
+}
+
+app.get('/api/',(req,res) => {
+  apis[`${req.query.api}`](req.query)
+  .then(data => {
+    console.log(data);
+    return res.status(200).render('test.hbs',{
+      data: data,
+      [req.query.api]: 'active'
+    });
+  })
+  .catch(e => {
+    return res.status(400).send(e);
+  });
 })
 
 app.get('/timeline', (req,res) => {
