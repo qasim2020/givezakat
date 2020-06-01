@@ -2113,7 +2113,7 @@ app.get('/blogpost', (req,res,next) => {
           class: val.split(': ')[0].indexOf('.') != -1 ? val.split(': ')[0].split('.').slice(1,4).join(' ') : ''
         }
       });
-      val.Date = val.Date.toString().split(' ').slice(1,4).join('-')
+      val.Date = val.Date.toString().split(' ').slice(1,3).join(' ')
       return val;
     })
 
