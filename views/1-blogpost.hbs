@@ -775,6 +775,10 @@
         <iframe class="{{{class}}}" width="560" height="315" src="{{{msg}}}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       {{/if}}
 
+      {{#if (match 'youtube' type)}}
+        {{{msg}}}
+      {{/if}}
+
       {{#if (match 'dropdownH' type)}}
         <div data-target="connected_{{getTarget msg}}" class="title-bar" style="">
 
