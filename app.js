@@ -2066,7 +2066,7 @@ app.get('/quranDaily', (req,res) => {
 })
 
 let freeBlogs = function(ser) {
-  return [100,136,102,140,147,148,154,156,161,168].some(val => val == ser) == false;
+  return [100,136,102,140,147,148,154,156,161,168,173].some(val => val == ser) == false;
 }
 
 hbs.registerHelper("getTarget", function(value) {
