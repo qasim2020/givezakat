@@ -1,6 +1,7 @@
 node_modules/
 config/config.json
 config/credentials.json
+**.json
 .DS_Store
 static/.DS_Store
 sendgrid.env
