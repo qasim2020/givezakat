@@ -1,3 +1,5 @@
+console.log("ZAKATLISTS started");
+
 const {app, http} = require('./app');
 const reload = require('reload');
 

@@ -391,11 +391,6 @@ app.get('/',(req,res) => {
       }
       return val;
     })
-    // console.log('------++++++-------');
-    // console.log(sorted);
-    // console.log('------++++++-------');
-    // console.log(JSON.stringify(sorted[4],0,2));
-    // console.log(req.session);
 
     return res.render('1-home_new.hbs',{
       data: sorted,
@@ -408,50 +403,6 @@ app.get('/',(req,res) => {
     res.status(400).send(e);
   })
 
-  //   return res.render('1-home_new.hbs',{data: [
-  //   {type:'person',width:2, height:1, msg:[
-  //     {type: 'img', msg: 'magazine/person.png'},
-  //     {type: 'facebook', msg: 'facebook.com/zakatlists'},
-  //     {type: 'twitter', msg: 'twitter.com/zakatlists'},
-  //     {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
-  //     {type: 'intro', msg: 'He is a good boy, working hard to make zakatlists work. 💪'},
-  //     {type: 'url', msg: 'https://www.zakatlists.com'},
-  //   ]},
-  //   {type:'blog', width:2, height:1, msg:[
-  //     {type: 'h3', msg: 'What I grasped from Surah Fatiha?'},
-  //     {type: 'p', msg: "I have made a commitment to read quran daily this year. Grasp its meanng. How it talks to me. Where is the Wow factor in it. I want to keep these tafaseer and discussions safe. Thus, I am starting this project where I will try to share, How I felt each day's message of Quran."},
-  //     {type: 'date', msg: '1 Jan 2020'},
-  //     {type: 'author', msg: 'Qasim'}
-  //   ]},
-  //   {type:'course', width:2, height:2, courses:[
-  //     {course: "STQA", active: true, name: "Software Testing and Quality Assurance"},
-  //     {course: "ATOC", active: false, name: "Advanced Theory of Computation"},
-  //     {course: "AOS", active: false, name: "Advanced Operating Systems"},
-  //   ]},
-  //   {type:'signin', width:2, height:1, msg:[
-  //     {type: 'h3', msg: 'Sign up to get unlimited access to the entire content of zakatlists', class:"width-half"},
-  //     {type: 'button', msg: 'Sign In', class: 'primary'},
-  //     {type: 'button', msg: 'Sign Up for Rs 300 / Month', class:'secondary'},
-  //   ]},
-  //   {type:'meetup', width:2, height:1, msg:[
-  //     {type: 'h3', msg: "Meetup coming in"},
-  //     {type: 'date', msg: "1 Mar 2020"},
-  //     {type: 'button', msg: 'Speak', class: "default"},
-  //     {type: 'button', msg: 'Attend', class: "default"},
-  //     {type: 'button', msg: 'Details', class: "default"},
-  //   ]},
-  //   {type:'subscribe', width:2, height:1, msg:[
-  //     {type: 'h6', msg: "Subscribe to stay tuned to zakatlists"},
-  //     {type: 'input', msg: "enter your email here"},
-  //     {type: 'button', msg: "Submit", class: "default"},
-  //   ]},
-  //   {type:'footer', width:6, height:1, msg:[
-  //     {type: 'p', msg: "Eat from their fruits, and give the due alms on the day of harvest. <br> - Al Quran 6:141", class: "small"},
-  //     {type: 'facebook', msg: 'facebook.com/zakatlists'},
-  //     {type: 'twitter', msg: 'twitter.com/zakatlists'},
-  //     {type: 'makerlog', msg: 'makerlog.com/@punch__lines'},
-  //   ]}
-  // ]});
 })
 
 app.get('/profile/:token',authenticate,(req,res) => {
@@ -2535,7 +2486,7 @@ app.get('/school', (req,res) => {
 
   let dateToday = moment().format('YYYY-MM-DD');
 
-  readXlsxFile(__dirname+'/static/life.xlsx').then((rows) => {
+  readXlsxFile(__dirname+'/static/school.xlsx').then((rows) => {
     let sorted = rows.map((val) =>
       val.reduce((total,inner,index) => {
 
@@ -2594,7 +2545,8 @@ app.get('/school', (req,res) => {
         sorted,
         [askedPage.toLowerCase()]: 'active',
         pagerequest: askedPage.toUpperCase(),
-        token: req.session.token,
+        token: "12344", 
+        // token: req.session.token,
         courses: courses
       });
   });
